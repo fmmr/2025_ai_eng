@@ -52,3 +52,30 @@ data class Usage(
     @SerialName("completion_tokens") val completionTokens: Int,
     @SerialName("total_tokens") val totalTokens: Int
 )
+
+@Serializable
+data class EmbeddingRequest(
+    val input: String,
+    val model: String
+)
+
+@Serializable
+data class EmbeddingData(
+    val embedding: List<Double>,
+    val index: Int,
+    @SerialName("object") val objectType: String
+)
+
+@Serializable
+data class EmbeddingUsage(
+    @SerialName("prompt_tokens") val promptTokens: Int,
+    @SerialName("total_tokens") val totalTokens: Int
+)
+
+@Serializable
+data class EmbeddingResponse(
+    val data: List<EmbeddingData>,
+    val model: String,
+    @SerialName("object") val objectType: String,
+    val usage: EmbeddingUsage
+)

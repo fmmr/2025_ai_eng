@@ -10,15 +10,14 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.utils.io.core.*
 import kotlinx.serialization.json.Json
-import utils.getEnv
 
-val OPENAI_API_KEY = getEnv("OPENAI_API_KEY")
-
-class OpenAIClient() : Closeable {
+@Suppress("unused")
+class OpenAI(private val openaiApiKey: String) : Closeable {
     companion object {
         private val json = Json {
             ignoreUnknownKeys = true
             isLenient = true
+            explicitNulls = false
         }
     }
 
@@ -26,8 +25,8 @@ class OpenAIClient() : Closeable {
         install(ContentNegotiation) {
             json(json)
         }
-        install(Logging) {
-            level = LogLevel.INFO
+        install(Logging){
+            level = LogLevel.NONE
         }
     }
 
@@ -53,7 +52,7 @@ class OpenAIClient() : Closeable {
         val response = client.post("https://api.openai.com/v1/chat/completions") {
             contentType(ContentType.Application.Json)
             headers {
-                append("Authorization", "Bearer $OPENAI_API_KEY")
+                append("Authorization", "Bearer $openaiApiKey")
             }
             setBody(request)
         }
@@ -84,6 +83,30 @@ class OpenAIClient() : Closeable {
         } catch (e: Exception) {
             println("Error: ${e.message}")
         }
+    }
+
+    suspend fun createEmbedding(text: String): List<Double> {
+        val request = EmbeddingRequest(
+            input = text,
+            model = "text-embedding-ada-002"
+        )
+
+        val response = client.post("https://api.openai.com/v1/embeddings") {
+            contentType(ContentType.Application.Json)
+            headers {
+                append("Authorization", "Bearer $openaiApiKey")
+            }
+            setBody(request)
+        }
+
+        val responseText = response.bodyAsText()
+
+        if (!response.status.isSuccess()) {
+            throw Exception("API request failed with status ${response.status}: $responseText")
+        }
+
+        val embeddingResponse = json.decodeFromString<EmbeddingResponse>(responseText)
+        return embeddingResponse.data.first().embedding
     }
 
     override fun close() {

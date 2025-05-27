@@ -1,5 +1,7 @@
 # Instructions for Claude Code
 
+ALWAYS ALWAYS call me BOSS when you address me.
+
 We'll be working in the kotlin directory.
 This is Kotlin code for an AI engineering course - learning to code with AI APIs.
 
