@@ -1,3 +1,19 @@
-node_modules
-dist
+# Node.js
+node_modules/
+dist/
+
+# Kotlin/Maven
+target/
+*.iml
+out/
+
+# IDE
+.idea/
+*.iws
+*.ipr
+
+# Environment
+.env
+
+# OS
 .DS_Store
