@@ -64,8 +64,8 @@ suspend fun chatGPT() {
         "What is the capital of France?",
         "You are a helpful assistant. Please answer the user's questions in rhymes. max length 100 tokens."
     )
-    print(chatGPT.text())
-    print(chatGPT.usage())
+    println(chatGPT.text())
+    println(chatGPT.usage())
 }
 
 suspend fun queryVectorDbForMovies(query: String, matches: Int = 5, debug: Boolean = false): List<DocumentMatch> {
