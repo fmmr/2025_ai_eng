@@ -1,5 +1,7 @@
 package openai
 
+import EMBEDDING_MODEL
+import OPEN_AI_MODEL
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -10,6 +12,7 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.utils.io.core.*
 import kotlinx.serialization.json.Json
+
 
 @Suppress("unused")
 class OpenAI(private val openaiApiKey: String) : Closeable {
@@ -33,7 +36,7 @@ class OpenAI(private val openaiApiKey: String) : Closeable {
     suspend fun createChatCompletion(
         prompt: String,
         systemMessage: String? = null,
-        model: String = "gpt-3.5-turbo",
+        model: String = OPEN_AI_MODEL,
         maxTokens: Int = 300,
         temperature: Double = 0.7,
         debug: Boolean = false
@@ -73,22 +76,10 @@ class OpenAI(private val openaiApiKey: String) : Closeable {
         return json.decodeFromString<ChatCompletionResponse>(responseText)
     }
 
-    suspend fun simple(prompt: String) {
-        try {
-            val response = createChatCompletion(prompt)
-            println("Generated text:")
-            println(response.text())
-            println("Usage:")
-            println(response.usage())
-        } catch (e: Exception) {
-            println("Error: ${e.message}")
-        }
-    }
-
     suspend fun createEmbedding(text: String): List<Double> {
         val request = EmbeddingRequest(
             input = text,
-            model = "text-embedding-ada-002"
+            model = EMBEDDING_MODEL
         )
 
         val response = client.post("https://api.openai.com/v1/embeddings") {
@@ -109,7 +100,33 @@ class OpenAI(private val openaiApiKey: String) : Closeable {
         return embeddingResponse.data.first().embedding
     }
 
+    suspend fun createEmbeddings(texts: List<String>): List<List<Double>> {
+        val request = BatchEmbeddingRequest(
+            input = texts,
+            model = EMBEDDING_MODEL
+        )
+
+        val response = client.post("https://api.openai.com/v1/embeddings") {
+            contentType(ContentType.Application.Json)
+            headers {
+                append("Authorization", "Bearer $openaiApiKey")
+            }
+            setBody(request)
+        }
+
+        val responseText = response.bodyAsText()
+
+        if (!response.status.isSuccess()) {
+            throw Exception("API request failed with status ${response.status}: $responseText")
+        }
+
+        val embeddingResponse = json.decodeFromString<EmbeddingResponse>(responseText)
+        return embeddingResponse.data.sortedBy { it.index }.map { it.embedding }
+    }
+
     override fun close() {
         client.close()
     }
 }
+
+

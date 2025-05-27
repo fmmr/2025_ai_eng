@@ -60,6 +60,12 @@ data class EmbeddingRequest(
 )
 
 @Serializable
+data class BatchEmbeddingRequest(
+    val input: List<String>,
+    val model: String
+)
+
+@Serializable
 data class EmbeddingData(
     val embedding: List<Double>,
     val index: Int,

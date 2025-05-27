@@ -16,3 +16,10 @@ data class MatchDocumentsRequest(
     @SerialName("match_threshold") val matchThreshold: Double,
     @SerialName("match_count") val matchCount: Int
 )
+
+@Serializable
+data class Document(
+    val id: Long? = null,
+    val content: String,
+    val embedding: String
+)

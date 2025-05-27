@@ -17,6 +17,7 @@ buildNumber.properties
 # Environment variables
 .env
 *.env
+src/main/resources/.env
 
 # OS
 .DS_Store
