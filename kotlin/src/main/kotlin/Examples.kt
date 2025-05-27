@@ -47,7 +47,7 @@ suspend fun embeddings(file: String, debug: Boolean = false): List<Pair<String, 
     return embeddings
 }
 
-private fun splitText(file: String, debug: Boolean = false): List<String> {
+fun splitText(file: String, debug: Boolean = false): List<String> {
     val text = file.read()
     val splits = Chunker().split(text)
     if (debug) {
