@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<!--suppress HtmlRequiredTitleElement -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: common-head}"></head>
+<body>
+    <div th:replace="~{fragments/navigation :: navbar(${activeTab})}"></div>
+
+    <div class="container my-4">
+        <section class="hero-section">
+            <h1>🔗 RAG (Retrieval-Augmented Generation)</h1>
+            <p>Combine retrieval and generation for enhanced AI responses based on your own data</p>
+            <a href="/" class="btn">← Back to Home</a>
+        </section>
+
+        <section class="demo-section">
+            <h2>Interactive Demo</h2>
+            
+            <div class="demo-controls">
+                <button class="btn demo-btn" data-demo="rag-query">Ask RAG System</button>
+                <button class="btn demo-btn" data-demo="show-sources">Show Retrieved Sources</button>
+            </div>
+            
+            <div class="demo-output" id="rag-query-output">
+                <p>Click "Ask RAG System" to see retrieval-augmented responses...</p>
+            </div>
+        </section>
+
+        <section class="code-section">
+            <h2>Code Example</h2>
+            <div class="code-block">
+                <pre><code>// RAG Pipeline Implementation
+class RAGSystem(private val openAI: OpenAI, private val supabase: Supabase) {
+    
+    suspend fun query(userQuery: String): RAGResponse {
+        // Generate query embedding
+        val queryEmbedding = openAI.createEmbedding(userQuery)
+            .data.first().embedding
+        
+        // Retrieve relevant documents
+        val relevantDocs = supabase.matchDocuments(
+            embedding = queryEmbedding,
+            threshold = 0.78,
+            count = 3
+        )
+        
+        // Build context from retrieved documents
+        val context = relevantDocs.joinToString("\n\n") {
+            "[${it.metadata["source"]}]: ${it.content}"
+        }
+        
+        // Generate contextual response
+        val response = openAI.chatCompletion(listOf(
+            Message("system", "Use only this context: $context"),
+            Message("user", userQuery)
+        ))
+        
+        return RAGResponse(
+            answer = response.choices.first().message.content,
+            sources = relevantDocs.map { it.metadata["source"] as String }
+        )
+    }
+}</code></pre>
+            </div>
+        </section>
+    </div>
+
+    <div th:replace="~{fragments/footer :: common-footer}"></div>
+
+    <div th:replace="~{fragments/scripts :: common-scripts}"></div>
+</body>
+</html>

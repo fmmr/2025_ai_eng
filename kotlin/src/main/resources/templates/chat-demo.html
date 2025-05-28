@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<!--suppress HtmlRequiredTitleElement -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: common-head}"></head>
+<body>
+    <div th:replace="~{fragments/navigation :: navbar(${activeTab})}"></div>
+
+    <div class="container my-4">
+        <section class="hero-section">
+            <h1>💬 Interactive Chat</h1>
+            <p>Create conversational AI interfaces that maintain context and provide intelligent responses</p>
+            <a href="/" class="btn">← Back to Home</a>
+        </section>
+
+        <section class="demo-section">
+            <h2>Interactive Demo</h2>
+            
+            <div class="chat-container">
+                <div class="chat-messages" id="chat-messages">
+                    <div class="message assistant">
+                        <p>Hello! I'm an AI assistant. Ask me anything about the course topics!</p>
+                    </div>
+                </div>
+                
+                <div class="chat-input">
+                    <!--suppress HtmlFormInputWithoutLabel -->
+                    <input type="text" id="user-input" placeholder="Type your message here..." />
+                    <button class="btn demo-btn" id="send-message">Send</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="code-section">
+            <h2>Code Example</h2>
+            <div class="code-block">
+                <pre><code>// Chat Session Management Implementation
+class ChatSession {
+    private val messageHistory = mutableListOf&lt;Message&gt;()
+    private val maxHistoryLength = 20
+    
+    suspend fun processMessage(userInput: String): ChatResponse {
+        // Add user message
+        messageHistory.add(Message("user", userInput))
+        
+        // Trim history if too long
+        if (messageHistory.size &gt; maxHistoryLength) {
+            messageHistory.removeFirst()
+        }
+        
+        // Build conversation context
+        val conversation = buildList {
+            add(Message("system", "You are an AI engineering assistant."))
+            addAll(messageHistory)
+        }
+        
+        // Generate response
+        val response = openAI.chatCompletion(
+            messages = conversation,
+            temperature = 0.7,
+            maxTokens = 500
+        )
+        
+        val assistantReply = response.choices.first().message.content
+        messageHistory.add(Message("assistant", assistantReply))
+        
+        return ChatResponse(assistantReply, messageHistory.size)
+    }
+}</code></pre>
+            </div>
+        </section>
+    </div>
+
+    <div th:replace="~{fragments/footer :: common-footer}"></div>
+
+    <div th:replace="~{fragments/scripts :: common-scripts}"></div>
+</body>
+</html>

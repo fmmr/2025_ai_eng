@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<!--suppress HtmlRequiredTitleElement -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: common-head}"></head>
+<body>
+    <div th:replace="~{fragments/navigation :: navbar(${activeTab})}"></div>
+
+    <div class="container my-4">
+        <section class="hero-section">
+            <h1>✂️ Text Chunking</h1>
+            <p>Master the art of breaking down large texts into meaningful chunks for AI processing</p>
+            <a href="/" class="btn">← Back to Home</a>
+        </section>
+
+        <section class="demo-section">
+            <h2>Interactive Demo</h2>
+            
+            <div class="demo-controls">
+                <button class="btn demo-btn" data-demo="chunk-text">Chunk Sample Text</button>
+                <button class="btn demo-btn" data-demo="chunk-settings">Adjust Chunk Settings</button>
+            </div>
+            
+            <div class="demo-output" id="chunk-text-output">
+                <p>Click "Chunk Sample Text" to see text splitting in action...</p>
+            </div>
+        </section>
+
+        <section class="code-section">
+            <h2>Code Example</h2>
+            <div class="code-block">
+                <pre><code>// Text Chunking Implementation
+class Chunker {
+    fun chunkText(text: String, maxSize: Int, overlap: Int): List&lt;Chunk&gt; {
+        val chunks = mutableListOf&lt;Chunk&gt;()
+        var startIndex = 0
+        
+        while (startIndex < text.length) {
+            val endIndex = minOf(startIndex + maxSize, text.length)
+            val chunkText = text.substring(startIndex, endIndex)
+            
+            chunks.add(Chunk(
+                content = chunkText,
+                startIndex = startIndex,
+                endIndex = endIndex
+            ))
+            
+            startIndex += maxSize - overlap
+        }
+        return chunks
+    }
+    
+    fun chunkBySentence(text: String, targetSize: Int): List&lt;Chunk&gt; {
+        val sentences = text.split(". ")
+        return sentences.chunked(targetSize) { group ->
+            Chunk(content = group.joinToString(". "))
+        }
+    }
+}</code></pre>
+            </div>
+        </section>
+    </div>
+
+    <div th:replace="~{fragments/footer :: common-footer}"></div>
+
+    <div th:replace="~{fragments/scripts :: common-scripts}"></div>
+</body>
+</html>

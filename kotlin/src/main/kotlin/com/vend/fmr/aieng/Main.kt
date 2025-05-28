@@ -1,6 +1,11 @@
-import openai.OpenAI
-import supabase.Supabase
-import utils.env
+@file:Suppress("UnusedImport")
+
+package com.vend.fmr.aieng
+
+import com.vend.fmr.aieng.examples.*
+import com.vend.fmr.aieng.openai.OpenAI
+import com.vend.fmr.aieng.supabase.Supabase
+import com.vend.fmr.aieng.utils.env
 
 val OPEN_AI_KEY = "OPENAI_API_KEY".env()
 val SUPABASE_URL = "SUPABASE_URL".env()

@@ -4,7 +4,12 @@
       "Bash(ls:*)",
       "Bash(mvn:*)",
       "Bash(mkdir:*)",
-      "Bash(mv:*)"
+      "Bash(mv:*)",
+      "Bash(timeout 10 java:*)",
+      "Bash(timeout:*)",
+      "Bash(rm:*)",
+      "WebFetch(domain:getbootstrap.com)",
+      "Bash(rg:*)"
     ],
     "deny": []
   }

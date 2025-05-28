@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<!--suppress HtmlRequiredTitleElement -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: common-head}">
+</head>
+<body>
+    <div th:replace="~{fragments/navigation :: navbar(${activeTab})}"></div>
+
+    <div class="container my-4">
+        <section class="hero-section">
+            <h1>AI Engineering Course</h1>
+            <p>Learning to code with AI APIs - Kotlin, OpenAI, and Supabase</p>
+            <a href="#topics" class="btn btn-primary">Explore Topics</a>
+        </section>
+
+        <section id="topics" class="row g-4 my-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">🤖 OpenAI Integration</h5>
+                        <p class="card-text">Learn to work with OpenAI's APIs including chat completions, embeddings, and more. Build intelligent applications that can understand and generate human-like text.</p>
+                        <a th:href="@{/demo/openai}" class="btn btn-primary">View Demo</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">🗄️ Supabase Vector Database</h5>
+                        <p class="card-text">Explore vector databases and semantic search using Supabase. Store and query embeddings for powerful AI-driven search and recommendation systems.</p>
+                        <a th:href="@{/demo/supabase}" class="btn btn-primary">View Demo</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">✂️ Text Chunking</h5>
+                        <p class="card-text">Master the art of breaking down large texts into meaningful chunks for processing with AI models. Essential for document analysis and RAG systems.</p>
+                        <a th:href="@{/demo/chunking}" class="btn btn-primary">View Demo</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">🔗 RAG (Retrieval-Augmented Generation)</h5>
+                        <p class="card-text">Combine retrieval and generation for enhanced AI responses. Build systems that can answer questions based on your own documents and data.</p>
+                        <a th:href="@{/demo/rag}" class="btn btn-primary">View Demo</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">💬 Interactive Chat</h5>
+                        <p class="card-text">Create conversational AI interfaces that can maintain context and provide intelligent responses. Build chatbots and virtual assistants.</p>
+                        <a th:href="@{/demo/chat}" class="btn btn-primary">View Demo</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">🛠️ Kotlin Best Practices</h5>
+                        <p class="card-text">Learn modern Kotlin development patterns, coroutines for async programming, and how to structure AI-powered applications effectively.</p>
+                        <a th:href="@{/demo/kotlin}" class="btn btn-primary">View Demo</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="demo-section">
+            <h2>Quick Start</h2>
+            <p>This course covers practical AI engineering with real working code examples. Each topic includes:</p>
+            <ul>
+                <li><strong>Live Demos</strong> - Interactive examples you can run and modify</li>
+                <li><strong>Code Examples</strong> - Well-documented Kotlin implementations</li>
+                <li><strong>Practical Applications</strong> - Real-world use cases and patterns</li>
+                <li><strong>Best Practices</strong> - Industry-standard approaches and optimizations</li>
+            </ul>
+            
+            <div class="d-flex gap-2 flex-wrap my-3">
+                <a href="#topics" class="btn btn-success">Choose a Demo Topic</a>
+                <a href="https://github.com/your-repo" class="btn btn-outline-primary" target="_blank">View Source Code</a>
+            </div>
+        </section>
+    </div>
+
+    <div th:replace="~{fragments/footer :: common-footer}"></div>
+
+    <div th:replace="~{fragments/scripts :: common-scripts}"></div>
+</body>
+</html>

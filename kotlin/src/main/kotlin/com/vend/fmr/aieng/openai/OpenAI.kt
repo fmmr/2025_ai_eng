@@ -1,7 +1,7 @@
-package openai
+package com.vend.fmr.aieng.openai
 
-import EMBEDDING_MODEL
-import OPEN_AI_MODEL
+import com.vend.fmr.aieng.EMBEDDING_MODEL
+import com.vend.fmr.aieng.OPEN_AI_MODEL
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*

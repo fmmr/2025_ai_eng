@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<!--suppress HtmlRequiredTitleElement -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: common-head}"></head>
+<body>
+    <div th:replace="~{fragments/navigation :: navbar(${activeTab})}"></div>
+
+    <div class="container my-4">
+        <section class="hero-section">
+            <h1>🗄️ Supabase Vector Database</h1>
+            <p>Explore vector databases and semantic search using Supabase</p>
+            <a href="/" class="btn">← Back to Home</a>
+        </section>
+
+        <section class="demo-section">
+            <h2>Interactive Demo</h2>
+            
+            <div class="demo-controls">
+                <button class="btn demo-btn" data-demo="vector-search">Vector Search</button>
+                <button class="btn demo-btn" data-demo="store-embeddings">Store Embeddings</button>
+            </div>
+            
+            <div class="demo-output" id="vector-search-output">
+                <p>Click "Vector Search" to find similar documents...</p>
+            </div>
+            
+            <div class="demo-output" id="store-embeddings-output">
+                <p>Click "Store Embeddings" to save vectors to database...</p>
+            </div>
+        </section>
+
+        <section class="code-section">
+            <h2>Code Example</h2>
+            <div class="code-block">
+                <pre><code>// Vector Similarity Search Implementation
+suspend fun matchDocuments(
+    embedding: List&lt;Double&gt;,
+    threshold: Double = 0.8,
+    count: Int = 5
+): List&lt;Document&gt; {
+    return postgrest["documents"]
+        .rpc("match_documents") {
+            "query_embedding" to embedding
+            "match_threshold" to threshold
+            "match_count" to count
+        }
+        .decodeList&lt;Document&gt;()
+}
+
+// Document Storage with Embedding
+suspend fun insertDocument(content: String, metadata: Map&lt;String, Any&gt;) {
+    val embedding = openAI.createEmbedding(content)
+    postgrest["documents"].insert(mapOf(
+        "content" to content,
+        "embedding" to embedding.data.first().embedding,
+        "metadata" to metadata
+    ))
+}</code></pre>
+            </div>
+        </section>
+    </div>
+
+    <div th:replace="~{fragments/footer :: common-footer}"></div>
+
+    <div th:replace="~{fragments/scripts :: common-scripts}"></div>
+</body>
+</html>

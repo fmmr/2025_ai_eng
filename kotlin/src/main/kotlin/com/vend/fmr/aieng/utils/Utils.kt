@@ -1,4 +1,4 @@
-package utils
+package com.vend.fmr.aieng.utils
 
 
 private val envContent = object {}.javaClass.getResourceAsStream("/.env")

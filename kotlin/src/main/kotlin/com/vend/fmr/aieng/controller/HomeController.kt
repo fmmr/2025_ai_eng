@@ -1,0 +1,58 @@
+package com.vend.fmr.aieng.controller
+
+import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
+import org.springframework.web.bind.annotation.GetMapping
+
+@Controller
+class HomeController {
+
+    @GetMapping("/")
+    fun home(model: Model): String {
+        model.addAttribute("pageTitle", "Home")
+        model.addAttribute("activeTab", "home")
+        return "home"
+    }
+
+    @GetMapping("/demo/openai")
+    fun openaiDemo(model: Model): String {
+        model.addAttribute("pageTitle", "OpenAI Integration")
+        model.addAttribute("activeTab", "openai")
+        return "openai-demo"
+    }
+
+    @GetMapping("/demo/supabase")
+    fun supabaseDemo(model: Model): String {
+        model.addAttribute("pageTitle", "Supabase Vector Database")
+        model.addAttribute("activeTab", "supabase")
+        return "supabase-demo"
+    }
+
+    @GetMapping("/demo/chunking")
+    fun chunkingDemo(model: Model): String {
+        model.addAttribute("pageTitle", "Text Chunking")
+        model.addAttribute("activeTab", "chunking")
+        return "chunking-demo"
+    }
+
+    @GetMapping("/demo/rag")
+    fun ragDemo(model: Model): String {
+        model.addAttribute("pageTitle", "RAG Implementation")
+        model.addAttribute("activeTab", "rag")
+        return "rag-demo"
+    }
+
+    @GetMapping("/demo/chat")
+    fun chatDemo(model: Model): String {
+        model.addAttribute("pageTitle", "Interactive Chat")
+        model.addAttribute("activeTab", "chat")
+        return "chat-demo"
+    }
+
+    @GetMapping("/demo/kotlin")
+    fun kotlinDemo(model: Model): String {
+        model.addAttribute("pageTitle", "Kotlin Best Practices")
+        model.addAttribute("activeTab", "kotlin")
+        return "kotlin-demo"
+    }
+}

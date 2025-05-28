@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<!--suppress HtmlRequiredTitleElement -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <nav th:fragment="navbar(activeTab)" class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container-fluid" style="max-width: 1200px;">
+            <a class="navbar-brand" th:href="@{/}">AI Engineering Course</a>
+            
+            <div class="navbar-nav ms-auto">
+                <a th:href="@{/}" th:classappend="${activeTab == 'home' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Home">🏠</a>
+                <a th:href="@{/demo/openai}" th:classappend="${activeTab == 'openai' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="OpenAI Integration">🤖</a>
+                <a th:href="@{/demo/supabase}" th:classappend="${activeTab == 'supabase' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Supabase Vector Database">🗄️</a>
+                <a th:href="@{/demo/chunking}" th:classappend="${activeTab == 'chunking' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Text Chunking">✂️</a>
+                <a th:href="@{/demo/rag}" th:classappend="${activeTab == 'rag' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="RAG Implementation">🔗</a>
+                <a th:href="@{/demo/chat}" th:classappend="${activeTab == 'chat' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Interactive Chat">💬</a>
+                <a th:href="@{/demo/kotlin}" th:classappend="${activeTab == 'kotlin' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Kotlin Best Practices">🛠️</a>
+            </div>
+        </div>
+    </nav>
+</body>
+</html>

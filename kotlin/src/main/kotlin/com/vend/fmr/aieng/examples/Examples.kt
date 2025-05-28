@@ -1,9 +1,13 @@
 @file:Suppress("unused")
 
-import chunker.Chunker
-import supabase.Document
-import supabase.DocumentMatch
-import utils.read
+package com.vend.fmr.aieng.examples
+
+import com.vend.fmr.aieng.chunker.Chunker
+import com.vend.fmr.aieng.supabase.Document
+import com.vend.fmr.aieng.supabase.DocumentMatch
+import com.vend.fmr.aieng.utils.read
+import com.vend.fmr.aieng.openAI
+import com.vend.fmr.aieng.supabase
 
 suspend fun enrichedMovieChat(query: String, debug: Boolean = false): String {
     val fromDb = queryVectorDbForMovies(query, 5).joinToString("\n") { it.content }
