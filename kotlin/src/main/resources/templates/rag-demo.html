@@ -15,13 +15,83 @@
         <section class="demo-section">
             <h2>Interactive Demo</h2>
             
-            <div class="demo-controls">
-                <button class="btn demo-btn" data-demo="rag-query">Ask RAG System</button>
-                <button class="btn demo-btn" data-demo="show-sources">Show Retrieved Sources</button>
-            </div>
+            <form id="rag-form" class="mb-4" action="/demo/rag" method="post">
+                <div class="row mb-3">
+                    <div class="col-md-8">
+                        <label for="query" class="form-label">Your Question</label>
+                        <textarea class="form-control" id="query" name="query" rows="3" placeholder="Ask about movies, podcasts, or any content in our database..." th:text="${formData?.query ?: 'I want to watch a movie with the actor from castaway.'}"></textarea>
+                        <div class="form-text">Enter your question to search through our vector database</div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="maxMatches" class="form-label">Max Matches</label>
+                        <input type="number" class="form-control" id="maxMatches" name="maxMatches" th:value="${formData?.maxMatches ?: 3}" min="1" max="10">
+                        <div class="form-text">Number of similar documents to retrieve</div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" id="ragButton">
+                    <span class="button-text">🔗 Query RAG System</span>
+                    <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                </button>
+            </form>
             
-            <div class="demo-output" id="rag-query-output">
-                <p>Click "Ask RAG System" to see retrieval-augmented responses...</p>
+            <div th:if="${ragResult != null}" id="rag-results">
+                <h4>RAG Pipeline Results</h4>
+                
+                <!-- Step 1: Query Embedding -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5 class="mb-0">🔢 Step 1: Query Embedding</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Original Query:</strong> <em th:text="${ragResult.originalQuery}">query</em></p>
+                        <p><strong>Embedding Dimensions:</strong> <span th:text="${ragResult.embeddingDimensions}">0</span></p>
+                        <p><strong>First 10 values:</strong> <span th:text="${ragResult.queryEmbeddingPreview}">preview</span></p>
+                    </div>
+                </div>
+                
+                <!-- Step 2: Vector Search Results -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5 class="mb-0">🔍 Step 2: Vector Search Results</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Matches Found:</strong> <span th:text="${ragResult.matchCount}">0</span></p>
+                        <div th:if="${ragResult.matches != null and #lists.size(ragResult.matches) > 0}">
+                            <div th:each="match, iterStat : ${ragResult.matches}" class="border rounded p-3 mb-2">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="mb-0">Match <span th:text="${iterStat.index + 1}">1</span></h6>
+                                    <span class="badge bg-primary" th:text="'Similarity: ' + ${#numbers.formatDecimal(match.similarity, 1, 3)}">0.123</span>
+                                </div>
+                                <p class="text-muted small mb-1"><strong>Content:</strong></p>
+                                <p class="mb-0" th:text="${match.content}">content</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 3: Generated Context -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5 class="mb-0">📝 Step 3: Context Assembly</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Combined Context:</strong></p>
+                        <div class="border rounded p-3 bg-light">
+                            <pre class="mb-0" th:text="${ragResult.context}">context</pre>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Final Answer -->
+                <div class="card mb-3">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">🤖 Final RAG Response</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-0" th:text="${ragResult.finalAnswer}">answer</p>
+                    </div>
+                </div>
             </div>
         </section>
 

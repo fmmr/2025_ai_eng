@@ -24,7 +24,7 @@ class ChatCompletionController {
     suspend fun processChatCompletion(
         @RequestParam(defaultValue = "") userPrompt: String,
         @RequestParam(defaultValue = "") systemMessage: String,
-        @RequestParam(defaultValue = "gpt-3.5-turbo") modelName: String,
+        @RequestParam(defaultValue = "gpt-4") modelName: String,
         @RequestParam(defaultValue = "300") maxTokens: Int,
         @RequestParam(defaultValue = "0.7") temperature: Double,
         model: Model

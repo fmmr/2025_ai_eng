@@ -15,14 +15,28 @@ This is Kotlin code for an AI engineering course - learning to code with AI APIs
 - When Bootstrap is loaded, use Bootstrap components (navbar, tooltips, etc.)
 - Prefer existing solutions over custom CSS/JS when possible
 - **NO HTML IN JAVASCRIPT** - Never use innerHTML or DOM creation, use templates/fragments only
+- If you add code to debug or test, remove it as soon as it's no longer needed
 
 ## Project Structure
-- Maven-based Kotlin project with Spring Boot
+- Maven-based Kotlin project with Spring Boot 3.5.0
 - Focus on AI API integration and learning
 - Uses Bootstrap 5.3.0 for UI components
 - Thymeleaf templating with fragment system for DRY principles
+- Controller pattern: One controller per demo feature
+
+## Spring Boot Conventions
+- Use suspend functions with reactive streams for async operations
+- Server-side form processing - POST to same endpoint pattern
+- Model attributes: `pageTitle`, `activeTab` for consistent templating
+- Key instantiation: OPEN_AI_KEY, SUPABASE_URL, SUPABASE_KEY patterns
+- Always close API clients after use
 
 ## UI/Frontend Notes
 - Bootstrap navbar: Use `navbar-brand` (left) and `navbar-nav ms-auto` (right) for proper alignment
 - Fragments: head.html, navigation.html, footer.html, scripts.html for consistent includes
 - Tooltips: Use Bootstrap's `data-bs-toggle="tooltip"` instead of custom CSS
+- Form pattern: Preserve form data with `formData` model attribute on errors
+
+## Testing
+- Run `mvn test` to execute all tests
+- Check for compilation errors with `mvn compile`

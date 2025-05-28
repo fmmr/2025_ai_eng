@@ -30,12 +30,6 @@ class HomeController {
     }
 
 
-    @GetMapping("/demo/rag")
-    fun ragDemo(model: Model): String {
-        model.addAttribute("pageTitle", "RAG Implementation")
-        model.addAttribute("activeTab", "rag")
-        return "rag-demo"
-    }
 
 
 }
