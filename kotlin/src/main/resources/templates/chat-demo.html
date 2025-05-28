@@ -15,25 +15,21 @@
         <section class="demo-section">
             <h2>Interactive Demo</h2>
             
-            <div class="chat-container">
-                <div class="chat-messages" id="chat-messages">
-                    <div class="message assistant">
-                        <p>Hello! I'm an AI assistant. Ask me anything about the course topics!</p>
-                    </div>
-                </div>
-                
-                <div class="chat-input">
-                    <!--suppress HtmlFormInputWithoutLabel -->
-                    <input type="text" id="user-input" placeholder="Type your message here..." />
-                    <button class="btn demo-btn" id="send-message">Send</button>
-                </div>
+            <div class="demo-controls">
+                <button class="btn demo-btn" data-demo="chat-session">Start Chat Session</button>
+                <button class="btn demo-btn" data-demo="context-management">Context Management</button>
+                <button class="btn demo-btn" data-demo="conversation-history">Conversation History</button>
             </div>
+            
+            <div id="chat-session-output" class="demo-output"></div>
+            <div id="context-management-output" class="demo-output"></div>
+            <div id="conversation-history-output" class="demo-output"></div>
         </section>
 
         <section class="code-section">
             <h2>Code Example</h2>
             <div class="code-block">
-                <pre><code>// Chat Session Management Implementation
+                <pre><code>// Interactive Chat Session Implementation
 class ChatSession {
     private val messageHistory = mutableListOf&lt;Message&gt;()
     private val maxHistoryLength = 20
@@ -68,10 +64,39 @@ class ChatSession {
 }</code></pre>
             </div>
         </section>
+        
+        <section class="demo-section">
+            <h2>Features</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">💭 Context Awareness</h5>
+                            <p class="card-text">Maintain conversation history and context across multiple exchanges for coherent dialogue.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">🔄 Session Management</h5>
+                            <p class="card-text">Handle multiple concurrent chat sessions with proper state isolation.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">⚡ Real-time Responses</h5>
+                            <p class="card-text">Stream responses and provide immediate feedback for engaging user experience.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 
     <div th:replace="~{fragments/footer :: common-footer}"></div>
-
     <div th:replace="~{fragments/scripts :: common-scripts}"></div>
 </body>
 </html>

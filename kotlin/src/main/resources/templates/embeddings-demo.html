@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<!--suppress HtmlRequiredTitleElement -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: common-head}"></head>
+<body>
+    <div th:replace="~{fragments/navigation :: navbar(${activeTab})}"></div>
+
+    <div class="container my-4">
+        <section class="hero-section">
+            <h1>🔢 OpenAI Embeddings</h1>
+            <p>Convert text into numerical vectors for semantic search and similarity analysis</p>
+            <a href="/" class="btn">← Back to Home</a>
+        </section>
+
+        <section class="demo-section">
+            <h2>Interactive Demo</h2>
+            
+            <form action="/demo/embeddings" method="post" class="mb-4">
+                <div class="mb-3">
+                    <label for="inputText" class="form-label">Text to Embed</label>
+                    <textarea class="form-control" id="inputText" name="inputText" rows="4" 
+                              placeholder="Enter text to convert to embeddings..." 
+                              th:text="${formData?.inputText ?: 'Machine learning is a subset of artificial intelligence that focuses on algorithms that can learn from data.'}"></textarea>
+                    <div class="form-text">Text that will be converted to a numerical vector representation</div>
+                </div>
+                
+                <div class="mb-3 form-check">
+                    <input class="form-check-input" type="checkbox" id="showVector" name="showVector" 
+                           th:checked="${formData?.showVector}">
+                    <label class="form-check-label" for="showVector">
+                        Show full embedding vector (1536 dimensions)
+                    </label>
+                    <div class="form-text">Warning: This will display a very long list of numbers</div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Generate Embeddings</button>
+            </form>
+            
+            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+            
+            <div th:if="${embeddingResult != null}">
+                <h4>Embedding Results</h4>
+                <div class="alert alert-info">
+                    <strong>Text:</strong> "<span th:text="${embeddingResult.text}">Input text</span>"<br>
+                    <strong>Dimensions:</strong> <span th:text="${embeddingResult.dimensions}">1536</span><br>
+                    <strong>First 10 values:</strong> 
+                    <span th:text="${embeddingResult.first10Values}">First 10 embedding values</span>...
+                </div>
+                
+                <div th:if="${embeddingResult.showVector}" class="card">
+                    <div class="card-header">
+                        <h5>Full Embedding Vector</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="code-block" style="max-height: 300px; overflow-y: auto;">
+                            <pre th:text="${embeddingResult.embedding}">Full vector will appear here</pre>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Vector Statistics</h5>
+                                <p class="card-text">
+                                    <strong>Dimensions:</strong> <span th:text="${embeddingResult.dimensions}">1536</span><br>
+                                    <strong>Min Value:</strong> <span th:text="${#numbers.formatDecimal(embeddingResult.minValue, 1, 6)}">-1.0</span><br>
+                                    <strong>Max Value:</strong> <span th:text="${#numbers.formatDecimal(embeddingResult.maxValue, 1, 6)}">1.0</span><br>
+                                    <strong>Average:</strong> <span th:text="${#numbers.formatDecimal(embeddingResult.avgValue, 1, 6)}">0.000000</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Use Cases</h5>
+                                <ul class="card-text">
+                                    <li>Semantic search and similarity</li>
+                                    <li>Document clustering and classification</li>
+                                    <li>Recommendation systems</li>
+                                    <li>Question answering systems</li>
+                                    <li>Content matching and deduplication</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="code-section">
+            <h2>Code Example</h2>
+            <div class="code-block">
+                <pre><code>// OpenAI Embeddings Integration
+val openAI = OpenAI(apiKey = "your-openai-api-key")
+
+// Single text embedding
+val embedding = openAI.createEmbedding("Machine learning is powerful")
+println("Dimensions: ${embedding.size}")
+println("First 5 values: ${embedding.take(5)}")
+
+// Batch embeddings for multiple texts
+val texts = listOf(
+    "Machine learning is a subset of AI",
+    "Deep learning uses neural networks",
+    "Natural language processing handles text"
+)
+val embeddings = openAI.createEmbeddings(texts)
+
+// Calculate similarity between embeddings
+fun cosineSimilarity(a: List&lt;Double&gt;, b: List&lt;Double&gt;): Double {
+    val dotProduct = a.zip(b).sumOf { it.first * it.second }
+    val magnitudeA = sqrt(a.sumOf { it * it })
+    val magnitudeB = sqrt(b.sumOf { it * it })
+    return dotProduct / (magnitudeA * magnitudeB)
+}
+
+openAI.close()</code></pre>
+            </div>
+        </section>
+    </div>
+
+    <div th:replace="~{fragments/footer :: common-footer}"></div>
+    <div th:replace="~{fragments/scripts :: common-scripts}"></div>
+</body>
+</html>

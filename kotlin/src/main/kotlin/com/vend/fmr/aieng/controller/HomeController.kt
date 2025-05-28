@@ -14,12 +14,6 @@ class HomeController {
         return "home"
     }
 
-    @GetMapping("/demo/openai")
-    fun openaiDemo(model: Model): String {
-        model.addAttribute("pageTitle", "OpenAI Integration")
-        model.addAttribute("activeTab", "openai")
-        return "openai-demo"
-    }
 
     @GetMapping("/demo/supabase")
     fun supabaseDemo(model: Model): String {
@@ -43,12 +37,6 @@ class HomeController {
         return "rag-demo"
     }
 
-    @GetMapping("/demo/chat")
-    fun chatDemo(model: Model): String {
-        model.addAttribute("pageTitle", "Interactive Chat")
-        model.addAttribute("activeTab", "chat")
-        return "chat-demo"
-    }
 
     @GetMapping("/demo/kotlin")
     fun kotlinDemo(model: Model): String {

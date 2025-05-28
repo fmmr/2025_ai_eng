@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<!--suppress HtmlRequiredTitleElement -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: common-head}"></head>
+<body>
+    <div th:replace="~{fragments/navigation :: navbar(${activeTab})}"></div>
+
+    <div class="container my-4">
+        <section class="hero-section">
+            <h1>🤖 OpenAI Chat Completion</h1>
+            <p>Generate intelligent responses using OpenAI's chat completion API</p>
+            <a href="/" class="btn">← Back to Home</a>
+        </section>
+
+        <section class="demo-section">
+            <h2>Interactive Demo</h2>
+            
+            <form action="/demo/chat-completion" method="post" class="mb-4">
+                <div class="mb-3">
+                    <label for="userPrompt" class="form-label">User Prompt</label>
+                    <textarea class="form-control" id="userPrompt" name="userPrompt" rows="4" 
+                              placeholder="Enter your prompt here..." 
+                              th:text="${formData?.userPrompt ?: 'Explain the concept of machine learning in simple terms'}"></textarea>
+                    <div class="form-text">The main question or instruction for the AI</div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="systemMessage" class="form-label">System Message (Optional)</label>
+                    <textarea class="form-control" id="systemMessage" name="systemMessage" rows="2" 
+                              placeholder="You are a helpful assistant..."
+                              th:text="${formData?.systemMessage ?: ''}"></textarea>
+                    <div class="form-text">Sets the behavior and context for the AI assistant</div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="modelName" class="form-label">Model</label>
+                        <select class="form-select" id="modelName" name="modelName">
+                            <option value="gpt-3.5-turbo" th:selected="${formData?.model == 'gpt-3.5-turbo'}">GPT-3.5 Turbo</option>
+                            <option value="gpt-4" th:selected="${formData?.model == 'gpt-4'}">GPT-4</option>
+                            <option value="gpt-4-turbo" th:selected="${formData?.model == 'gpt-4-turbo'}">GPT-4 Turbo</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="maxTokens" class="form-label">Max Tokens</label>
+                        <input type="number" class="form-control" id="maxTokens" name="maxTokens" 
+                               th:value="${formData?.maxTokens ?: 300}" min="50" max="4000">
+                        <div class="form-text">Maximum response length</div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="temperature" class="form-label">Temperature</label>
+                        <input type="number" class="form-control" id="temperature" name="temperature" 
+                               th:value="${formData?.temperature ?: 0.7}" min="0" max="2" step="0.1">
+                        <div class="form-text">Creativity level (0-2)</div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Generate Response</button>
+            </form>
+            
+            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+            
+            <div th:if="${chatResult != null}">
+                <h4>Chat Response</h4>
+                <div class="alert alert-success">
+                    <strong>Model:</strong> <span th:text="${chatResult.model}">gpt-3.5-turbo</span><br>
+                    <strong>Usage:</strong> <span th:text="${chatResult.usage}">Tokens used</span>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div style="white-space: pre-wrap; line-height: 1.6;" th:text="${chatResult.response}">AI response will appear here</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="code-section">
+            <h2>Code Example</h2>
+            <div class="code-block">
+                <pre><code>// OpenAI Chat Completion Integration
+val openAI = OpenAI(apiKey = "your-openai-api-key")
+
+val response = openAI.createChatCompletion(
+    prompt = "Explain machine learning",
+    systemMessage = "You are a helpful assistant",
+    model = "gpt-3.5-turbo",
+    maxTokens = 300,
+    temperature = 0.7
+)
+
+println("Response: ${response.text()}")
+println("Usage: ${response.usage()}")
+
+openAI.close()</code></pre>
+            </div>
+        </section>
+    </div>
+
+    <div th:replace="~{fragments/footer :: common-footer}"></div>
+    <div th:replace="~{fragments/scripts :: common-scripts}"></div>
+</body>
+</html>

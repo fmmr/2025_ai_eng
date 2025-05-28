@@ -50,6 +50,18 @@
             <optional>true</optional>
         </dependency>
         
+        <!-- Reactive Streams for suspend function support -->
+        <dependency>
+            <groupId>org.reactivestreams</groupId>
+            <artifactId>reactive-streams</artifactId>
+        </dependency>
+        
+        <!-- Kotlinx Coroutines Reactor for Spring integration -->
+        <dependency>
+            <groupId>org.jetbrains.kotlinx</groupId>
+            <artifactId>kotlinx-coroutines-reactor</artifactId>
+        </dependency>
+        
         <!-- Kotlin Standard Library -->
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>

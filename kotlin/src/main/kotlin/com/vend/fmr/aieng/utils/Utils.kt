@@ -8,7 +8,7 @@ private val envContent = object {}.javaClass.getResourceAsStream("/.env")
     ?.associate { it.substringBefore("=") to it.substringAfter("=") }
     ?: error(".env file not found in classpath")
 
-fun String.env(): String = envContent[this]!!
+fun String.env(): String = envContent[this] ?: System.getenv(this) ?: error("Environment variable '$this' not found")
 
 fun String.read(): String = object {}.javaClass.getResourceAsStream(this)
     ?.bufferedReader()
