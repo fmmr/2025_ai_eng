@@ -63,6 +63,44 @@ body {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Chunking demo styles */
+.chunking-table {
+    font-size: 0.9rem;
+}
+
+.chunking-table td {
+    vertical-align: top;
+    text-align: left !important;
+}
+
+.chunking-table .col-number {
+    width: 6%;
+}
+
+.chunking-table .col-text {
+    width: 76%;
+}
+
+.overlap-legend {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+}
+
+.overlap-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.overlap-legend-color {
+    width: 20px;
+    height: 16px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
 
 /* Code display */
 .code-block {

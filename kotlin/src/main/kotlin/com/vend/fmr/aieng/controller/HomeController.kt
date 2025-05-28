@@ -28,12 +28,6 @@ class HomeController {
         return "supabase-demo"
     }
 
-    @GetMapping("/demo/chunking")
-    fun chunkingDemo(model: Model): String {
-        model.addAttribute("pageTitle", "Text Chunking")
-        model.addAttribute("activeTab", "chunking")
-        return "chunking-demo"
-    }
 
     @GetMapping("/demo/rag")
     fun ragDemo(model: Model): String {

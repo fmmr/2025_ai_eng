@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!--suppress HtmlRequiredTitleElement -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <div th:fragment="overlap-legend">
+        <div class="overlap-legend">
+            <div class="overlap-legend-item">
+                <div class="overlap-legend-color" style="background-color: #ffeb3b;"></div>
+                <span>Overlap with previous chunk</span>
+            </div>
+            <div class="overlap-legend-item">
+                <div class="overlap-legend-color" style="background-color: #4caf50;"></div>
+                <span>Overlap with next chunk</span>
+            </div>
+        </div>
+    </div>
+
+    <div th:fragment="chunking-params" class="mb-3">
+        <div class="alert alert-secondary">
+            <strong>Parameters:</strong> 
+            Chunk Size: <span th:text="${formData.chunkSize}">250</span> characters, 
+            Overlap: <span th:text="${formData.chunkOverlap}">35</span> characters
+        </div>
+    </div>
+
+    <table th:fragment="chunking-table" class="table table-bordered chunking-table">
+        <thead>
+            <tr>
+                <th class="col-number">Chunk #</th>
+                <th class="col-number">Length</th>
+                <th class="col-number">Start Overlap</th>
+                <th class="col-number">End Overlap</th>
+                <th class="col-text">Text</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="chunk : ${chunkingResult.chunks}">
+                <td><span class="badge bg-primary" th:text="${chunk.index}">1</span></td>
+                <td><span class="badge bg-secondary" th:text="${chunk.length}">250</span></td>
+                <td><span class="badge bg-info" th:text="${chunk.prevOverlap.length()}">0</span></td>
+                <td><span class="badge bg-info" th:text="${chunk.nextOverlap.length()}">0</span></td>
+                <td><div style="white-space: pre-wrap; font-family: monospace; line-height: 1.4; word-break: break-word;"><span th:if="${!chunk.prevOverlap.isEmpty()}" style="background-color: #ffeb3b; padding: 2px 4px; border-radius: 3px;" title="Overlaps with previous chunk" th:text="${chunk.prevOverlap}"></span><span th:text="${chunk.text.substring(chunk.prevOverlap.length(), chunk.text.length() - chunk.nextOverlap.length())}"></span><span th:if="${!chunk.nextOverlap.isEmpty()}" style="background-color: #4caf50; padding: 2px 4px; border-radius: 3px;" title="Overlaps with next chunk" th:text="${chunk.nextOverlap}"></span></div></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

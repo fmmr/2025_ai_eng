@@ -57,6 +57,13 @@
             <version>${kotlin.version}</version>
         </dependency>
         
+        <!-- Kotlin Reflection (required for Spring Boot JSON handling) -->
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-reflect</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+        
         <!-- Ktor Client - Modern HTTP client for Kotlin -->
         <dependency>
             <groupId>io.ktor</groupId>

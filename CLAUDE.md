@@ -14,6 +14,7 @@ This is Kotlin code for an AI engineering course - learning to code with AI APIs
 - **USE LIBRARIES AND FRAMEWORKS** - Don't reinvent the wheel
 - When Bootstrap is loaded, use Bootstrap components (navbar, tooltips, etc.)
 - Prefer existing solutions over custom CSS/JS when possible
+- **NO HTML IN JAVASCRIPT** - Never use innerHTML or DOM creation, use templates/fragments only
 
 ## Project Structure
 - Maven-based Kotlin project with Spring Boot

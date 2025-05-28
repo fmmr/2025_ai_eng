@@ -15,13 +15,43 @@
         <section class="demo-section">
             <h2>Interactive Demo</h2>
             
-            <div class="demo-controls">
-                <button class="btn demo-btn" data-demo="chunk-text">Chunk Sample Text</button>
-                <button class="btn demo-btn" data-demo="chunk-settings">Adjust Chunk Settings</button>
-            </div>
+            <form id="chunking-form" class="mb-4" action="/demo/chunking" method="post">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="chunkSize" class="form-label">Chunk Size</label>
+                        <input type="number" class="form-control" id="chunkSize" name="chunkSize" th:value="${formData?.chunkSize ?: 250}" min="50" max="2000">
+                        <div class="form-text">Maximum characters per chunk</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="chunkOverlap" class="form-label">Chunk Overlap</label>
+                        <input type="number" class="form-control" id="chunkOverlap" name="chunkOverlap" th:value="${formData?.chunkOverlap ?: 35}" min="0" max="200">
+                        <div class="form-text">Characters that overlap between chunks</div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="textInput" class="form-label">Text to Chunk</label>
+                    <textarea class="form-control" id="textInput" name="textInput" rows="6" placeholder="Enter your text here..." th:text="${formData?.textInput ?: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.'}"></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" id="chunkButton">
+                    <span class="button-text">Chunk Text</span>
+                    <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                </button>
+            </form>
             
-            <div class="demo-output" id="chunk-text-output">
-                <p>Click "Chunk Sample Text" to see text splitting in action...</p>
+            <div th:if="${chunkingResult != null}" id="chunking-results">
+                <h4>Chunking Results</h4>
+                <div class="alert alert-info">
+                    <strong>Chunking Complete!</strong> 
+                    Generated <span th:text="${chunkingResult.totalChunks}">0</span> chunks 
+                    from <span th:text="${chunkingResult.totalCharacters}">0</span> characters
+                </div>
+                <div id="chunks-container">
+                    <div th:replace="~{fragments/chunking-results :: chunking-params}"></div>
+                    <div th:replace="~{fragments/chunking-results :: overlap-legend}"></div>
+                    <div th:replace="~{fragments/chunking-results :: chunking-table}"></div>
+                </div>
             </div>
         </section>
 

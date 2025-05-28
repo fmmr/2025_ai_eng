@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize demo functionality
     initializeDemos();
     
+    
     // Add smooth scrolling for anchor links
     initializeSmoothScrolling();
     
@@ -50,6 +51,7 @@ async function runDemo(demoType, button) {
             const result = await response.text();
             outputElement.innerHTML = `<pre>${escapeHtml(result)}</pre>`;
         } else {
+            // noinspection ExceptionCaughtLocallyJS
             throw new Error(`Demo failed: ${response.statusText}`);
         }
     } catch (error) {
@@ -122,10 +124,11 @@ function showNotification(message, type = 'info') {
 function initializeBootstrapTooltips() {
     // Initialize all Bootstrap tooltips
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
+    tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+        new bootstrap.Tooltip(tooltipTriggerEl);
     });
 }
+
 
 // Export functions for use in other scripts
 window.AICourseFunctions = {

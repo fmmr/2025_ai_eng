@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<!--suppress HtmlRequiredTitleElement -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: common-head}"></head>
+<body>
+    <div th:replace="~{fragments/navigation :: navbar('error')}"></div>
+
+    <div class="container my-4">
+        <section class="hero-section">
+            <h1>🚫 Error <span th:text="${status}">500</span></h1>
+            <p th:text="${error}">Internal Server Error</p>
+        </section>
+
+        <section class="demo-section">
+            <h2>Something went wrong</h2>
+            <div class="alert alert-danger">
+                <strong>Error:</strong> <span th:text="${message}">An unexpected error occurred</span>
+            </div>
+            
+            <div th:if="${exception}" class="mt-4">
+                <h4>Exception Details</h4>
+                <div class="code-block">
+                    <pre th:text="${exception}">Exception details would appear here</pre>
+                </div>
+            </div>
+            
+            <div th:if="${trace}" class="mt-4">
+                <h4>Stack Trace</h4>
+                <div class="code-block">
+                    <pre th:text="${trace}">Stack trace would appear here</pre>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <a href="/" class="btn btn-primary">← Back to Home</a>
+                <button onclick="window.history.back()" class="btn btn-secondary">← Go Back</button>
+            </div>
+        </section>
+    </div>
+
+    <div th:replace="~{fragments/footer :: common-footer}"></div>
+    <div th:replace="~{fragments/scripts :: common-scripts}"></div>
+</body>
+</html>
