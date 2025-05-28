@@ -3,11 +3,36 @@
 package com.vend.fmr.aieng.examples
 
 import com.vend.fmr.aieng.chunker.Chunker
+import com.vend.fmr.aieng.openAI
+import com.vend.fmr.aieng.polygon
+import com.vend.fmr.aieng.supabase
 import com.vend.fmr.aieng.supabase.Document
 import com.vend.fmr.aieng.supabase.DocumentMatch
 import com.vend.fmr.aieng.utils.read
-import com.vend.fmr.aieng.openAI
-import com.vend.fmr.aieng.supabase
+
+
+suspend fun tickers(vararg tickers: String, debug: Boolean = false): String {
+    val aggregates = polygon.getAggregates(*tickers)
+    if (debug) {
+        println(aggregates)
+    }
+
+    val json = polygon.aggregatesToJson(aggregates)
+    val system = "You handle financial information.  " +
+        "The input will be data in JSON fetched from the polygon.io api - " +
+        "more specifically https://api.polygon.io/v2/aggs/.  " +
+        "the format will be in json " +
+        "It may contain data for multiple companies/tickers.  " +
+        "Your task is to create a short report based on these data to be shown to the end user.  " +
+        "The inputs are known to the user, so no need to repeat this.  " +
+        "If multiple companies are in the input focus on the main differences and what sets them apart. " +
+        "Try to use fewer than 100 words."
+    val response = openAI.createChatCompletion(json, system)
+    if (debug) {
+        println(response.text())
+    }
+    return response.text()
+}
 
 suspend fun enrichedMovieChat(query: String, debug: Boolean = false): String {
     val fromDb = queryVectorDbForMovies(query, 5).joinToString("\n") { it.content }

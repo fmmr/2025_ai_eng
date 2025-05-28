@@ -28,6 +28,13 @@ class HomeController {
         return "supabase-demo"
     }
 
+    @GetMapping("/demo/polygon")
+    fun polygonDemo(model: Model): String {
+        model.addAttribute("pageTitle", "Polygon Stock Data")
+        model.addAttribute("activeTab", "polygon")
+        return "polygon-demo"
+    }
+
 
     @GetMapping("/demo/rag")
     fun ragDemo(model: Model): String {
