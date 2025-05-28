@@ -38,10 +38,4 @@ class HomeController {
     }
 
 
-    @GetMapping("/demo/kotlin")
-    fun kotlinDemo(model: Model): String {
-        model.addAttribute("pageTitle", "Kotlin Best Practices")
-        model.addAttribute("activeTab", "kotlin")
-        return "kotlin-demo"
-    }
 }
