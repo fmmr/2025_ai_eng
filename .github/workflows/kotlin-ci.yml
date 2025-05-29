@@ -4,13 +4,17 @@ on:
   push:
     paths:
       - 'kotlin/Dockerfile'
+      - 'kotlin/.dockerignore'
       - 'kotlin/pom.xml'
       - 'kotlin/src/**'
+      - '.github/workflows/kotlin-ci.yml'
   pull_request:
     paths:
       - 'kotlin/Dockerfile'
+      - 'kotlin/.dockerignore'
       - 'kotlin/pom.xml'
       - 'kotlin/src/**'
+      - '.github/workflows/kotlin-ci.yml'
 
 jobs:
   build-and-test:
