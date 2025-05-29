@@ -67,3 +67,14 @@ jobs:
         docker logs test-container
         docker stop test-container
         docker rm test-container
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USER }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Tag and Push image
+      run: |
+        docker tag aieng:latest ${{ secrets.DOCKERHUB_USER }}/aieng:latest
+        docker push ${{ secrets.DOCKERHUB_USER }}/aieng:latest
