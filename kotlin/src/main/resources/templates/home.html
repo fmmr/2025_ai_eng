@@ -14,72 +14,114 @@
         </section>
 
         <section id="topics" class="row g-4 my-4">
+            <!-- 1. OpenAI Chat Completion (DONE) -->
             <div class="col-md-6 col-lg-4">
-                <div class="card h-100">
+                <div class="card h-100 border-success">
                     <div class="card-body">
-                        <h5 class="card-title">🤖 OpenAI Chat Completion</h5>
+                        <h5 class="card-title">
+                            🤖 OpenAI Chat Completion
+                            <span class="badge bg-success ms-2">✓ Done</span>
+                        </h5>
                         <p class="card-text">Generate intelligent responses using OpenAI's chat completion API. Single-turn conversations with customizable parameters.</p>
-                        <a th:href="@{/demo/chat-completion}" class="btn btn-primary">View Demo</a>
+                        <a th:href="@{/demo/chat-completion}" class="btn btn-success">View Demo</a>
                     </div>
                 </div>
             </div>
 
+            <!-- 2. Polygon Stock Data -->
             <div class="col-md-6 col-lg-4">
-                <div class="card h-100">
+                <div class="card h-100 border-warning">
                     <div class="card-body">
-                        <h5 class="card-title">💬 Interactive Chat</h5>
-                        <p class="card-text">Create conversational AI interfaces with context awareness, session management, and conversation history.</p>
-                        <a th:href="@{/demo/chat}" class="btn btn-primary">View Demo</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">🔢 OpenAI Embeddings</h5>
-                        <p class="card-text">Convert text into numerical vectors for semantic search, similarity analysis, and recommendation systems using OpenAI's embedding models.</p>
-                        <a th:href="@{/demo/embeddings}" class="btn btn-primary">View Demo</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">🗄️ Supabase Vector Database</h5>
-                        <p class="card-text">Explore vector databases and semantic search using Supabase. Store and query embeddings for powerful AI-driven search and recommendation systems.</p>
-                        <a th:href="@{/demo/supabase}" class="btn btn-primary">View Demo</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">📈 Polygon Stock Data</h5>
+                        <h5 class="card-title">
+                            📈 Polygon Stock Data
+                            <span class="badge bg-warning text-dark ms-2">In Progress</span>
+                        </h5>
                         <p class="card-text">Access real-time and historical stock market data using Polygon.io API. Perfect for financial analysis and AI-driven trading insights.</p>
-                        <a th:href="@{/demo/polygon}" class="btn btn-primary">View Demo</a>
+                        <a th:href="@{/demo/polygon}" class="btn btn-warning">View Demo</a>
                     </div>
                 </div>
             </div>
 
+            <!-- 3. Interactive Chat -->
             <div class="col-md-6 col-lg-4">
-                <div class="card h-100">
+                <div class="card h-100 border-warning">
                     <div class="card-body">
-                        <h5 class="card-title">✂️ Text Chunking</h5>
+                        <h5 class="card-title">
+                            💬 Interactive Chat
+                            <span class="badge bg-warning text-dark ms-2">In Progress</span>
+                        </h5>
+                        <p class="card-text">Create conversational AI interfaces with context awareness, session management, and conversation history.</p>
+                        <a th:href="@{/demo/chat}" class="btn btn-warning">View Demo</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Translator (NEW) -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-secondary">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            🌐 Translator
+                            <span class="badge bg-secondary ms-2">Coming Soon</span>
+                        </h5>
+                        <p class="card-text">AI-powered translation service using OpenAI's language models. Support for multiple languages with context-aware translations.</p>
+                        <button class="btn btn-secondary" disabled>Coming Soon</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. OpenAI Embeddings (DONE) -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-success">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            🔢 OpenAI Embeddings
+                            <span class="badge bg-success ms-2">✓ Done</span>
+                        </h5>
+                        <p class="card-text">Convert text into numerical vectors for semantic search, similarity analysis, and recommendation systems using OpenAI's embedding models.</p>
+                        <a th:href="@{/demo/embeddings}" class="btn btn-success">View Demo</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. Text Chunking (DONE) -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-success">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            ✂️ Text Chunking
+                            <span class="badge bg-success ms-2">✓ Done</span>
+                        </h5>
                         <p class="card-text">Master the art of breaking down large texts into meaningful chunks for processing with AI models. Essential for document analysis and RAG systems.</p>
-                        <a th:href="@{/demo/chunking}" class="btn btn-primary">View Demo</a>
+                        <a th:href="@{/demo/chunking}" class="btn btn-success">View Demo</a>
                     </div>
                 </div>
             </div>
 
+            <!-- 7. Supabase Vector Database -->
             <div class="col-md-6 col-lg-4">
-                <div class="card h-100">
+                <div class="card h-100 border-warning">
                     <div class="card-body">
-                        <h5 class="card-title">🔗 RAG (Retrieval-Augmented Generation)</h5>
+                        <h5 class="card-title">
+                            🗄️ Supabase Vector Database
+                            <span class="badge bg-warning text-dark ms-2">In Progress</span>
+                        </h5>
+                        <p class="card-text">Explore vector databases and semantic search using Supabase. Store and query embeddings for powerful AI-driven search and recommendation systems.</p>
+                        <a th:href="@{/demo/supabase}" class="btn btn-warning">View Demo</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. RAG (DONE) -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-success">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            🔗 RAG (Retrieval-Augmented Generation)
+                            <span class="badge bg-success ms-2">✓ Done</span>
+                        </h5>
                         <p class="card-text">Combine retrieval and generation for enhanced AI responses. Build systems that can answer questions based on your own documents and data.</p>
-                        <a th:href="@{/demo/rag}" class="btn btn-primary">View Demo</a>
+                        <a th:href="@{/demo/rag}" class="btn btn-success">View Demo</a>
                     </div>
                 </div>
             </div>
