@@ -40,3 +40,12 @@ This is Kotlin code for an AI engineering course - learning to code with AI APIs
 ## Testing
 - Run `mvn test` to execute all tests
 - Check for compilation errors with `mvn compile`
+
+## Docker Deployment
+- Build: `mvn clean package -DskipTests && docker build -t kotlin-app .`
+- Run: `docker run -d -p 8080:8080 --memory=500m --name kotlin-app-container kotlin-app`
+
+## CI/CD
+- Single GitHub Actions workflow: tests → JAR build → Docker build → Docker test
+- Triggers on changes to: `kotlin/Dockerfile`, `kotlin/pom.xml`, `kotlin/src/**`
+- No redundant builds, efficient caching

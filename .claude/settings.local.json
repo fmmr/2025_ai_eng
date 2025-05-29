@@ -10,7 +10,12 @@
       "Bash(rm:*)",
       "WebFetch(domain:getbootstrap.com)",
       "Bash(rg:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(docker build -t kotlin-app .)",
+      "Bash(docker run:*)",
+      "Bash(docker logs:*)",
+      "Bash(docker rm:*)",
+      "Bash(curl:*)"
     ],
     "deny": []
   }

@@ -1,0 +1,44 @@
+# Maven
+.mvn/
+mvnw
+mvnw.cmd
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Logs
+*.log
+logs/
+
+# Test outputs
+target/test-classes/
+target/surefire-reports/
+
+# Source code (not needed in final image)
+src/
+
+# Keep only the built JAR
+!target/*.jar
+
+# Environment files
+.env
+.env.*
+
+# Documentation
+README.md
+*.md
+
+# Docker files themselves
+Dockerfile*
+docker-compose*
