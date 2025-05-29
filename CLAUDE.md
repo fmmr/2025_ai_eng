@@ -44,6 +44,7 @@ This is Kotlin code for an AI engineering course - learning to code with AI APIs
 ## Docker Deployment
 - Build: `mvn clean package -DskipTests && docker build -t kotlin-app .`
 - Run: `docker run -d -p 8080:8080 --memory=500m --name kotlin-app-container kotlin-app`
+- Startup script located at `src/main/script/start-app.sh`
 
 ## CI/CD
 - Single GitHub Actions workflow: tests → JAR build → Docker build → Docker test

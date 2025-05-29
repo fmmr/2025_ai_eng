@@ -15,7 +15,8 @@
       "Bash(docker run:*)",
       "Bash(docker logs:*)",
       "Bash(docker rm:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(docker build:*)"
     ],
     "deny": []
   }
