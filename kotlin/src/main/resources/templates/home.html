@@ -8,9 +8,9 @@
 
     <div class="container my-4">
         <section class="hero-section">
-            <h1>AI Engineering Course - spring 2025</h1>
-            <p>Learning to code with AI APIs - Kotlin, OpenAI, and Supabase</p>
-            <a href="#topics" class="btn btn-primary">Explore Topics</a>
+            <h1>AI Engineering Course - Kotlin Implementation</h1>
+            <p>Kotlin implementations of <a href="https://scrimba.com/the-ai-engineer-path-c02v" target="_blank" class="text-decoration-none">Scrimba AI Engineering Path</a> assignments and examples</p>
+            <a href="#topics" class="btn btn-primary">Explore Demos</a>
         </section>
 
         <section id="topics" class="row g-4 my-4">
@@ -22,7 +22,7 @@
                             🤖 Chat Completion
                             <span class="badge bg-success ms-2">✓ Done</span>
                         </h5>
-                        <p class="card-text">Interactive form to generate AI responses using OpenAI's chat completion API. Customize user prompts, system messages, and model parameters to see how different inputs affect the generated output.</p>
+                        <p class="card-text">Core OpenAI integration from the Scrimba course. Interactive form to generate AI responses with customizable prompts, system messages, and model parameters.</p>
                         <a th:href="@{/demo/chat-completion}" class="btn btn-success">View Demo</a>
                     </div>
                 </div>
@@ -56,15 +56,15 @@
                 </div>
             </div>
 
-            <!-- 4. Translator (NEW) -->
+            <!-- 4. HuggingFace Integration -->
             <div class="col-md-6 col-lg-4">
                 <div class="card h-100 border-secondary">
                     <div class="card-body">
                         <h5 class="card-title">
-                            🌐 Translator
+                            🤗 HuggingFace
                             <span class="badge bg-secondary ms-2">Coming Soon</span>
                         </h5>
-                        <p class="card-text">AI-powered translation service using OpenAI's language models. Support for multiple languages with context-aware translations.</p>
+                        <p class="card-text">Open-source ML model hub integration from the Scrimba course. Explore, discover, and experiment with community models beyond OpenAI.</p>
                         <button class="btn btn-secondary" disabled>Coming Soon</button>
                     </div>
                 </div>
@@ -78,7 +78,7 @@
                             🔢 Embeddings
                             <span class="badge bg-success ms-2">✓ Done</span>
                         </h5>
-                        <p class="card-text">Convert any text into high-dimensional vectors using OpenAI's embedding models. View the raw numerical vectors, analyze dimensions, and see statistical summaries of the generated embeddings.</p>
+                        <p class="card-text">Embeddings implementation from the Scrimba course. Convert text into high-dimensional vectors using OpenAI's models, with detailed analysis and visualization of the generated vectors.</p>
                         <a th:href="@{/demo/embeddings}" class="btn btn-success">View Demo</a>
                     </div>
                 </div>
@@ -92,7 +92,7 @@
                             ✂️ Chunking
                             <span class="badge bg-success ms-2">✓ Done</span>
                         </h5>
-                        <p class="card-text">Interactive text chunking tool with customizable chunk size and overlap settings. Visualize how text is split, see chunk boundaries, and understand overlap between adjacent chunks with color-coded highlighting.</p>
+                        <p class="card-text">Text processing fundamentals from the course. Interactive chunking tool with customizable size and overlap settings, essential for preparing data for AI processing.</p>
                         <a th:href="@{/demo/chunking}" class="btn btn-success">View Demo</a>
                     </div>
                 </div>
@@ -106,7 +106,7 @@
                             🗄️ Vector Database
                             <span class="badge bg-success ms-2">✓ Done</span>
                         </h5>
-                        <p class="card-text">Demonstrate semantic search with embeddings and PostgreSQL pgvector extension. Convert text queries to vectors and find similar documents using cosine similarity.</p>
+                        <p class="card-text">Vector database concepts from the Scrimba course. Demonstrates semantic search with embeddings and PostgreSQL pgvector extension using Supabase.</p>
                         <a th:href="@{/demo/supabase}" class="btn btn-success">View Demo</a>
                     </div>
                 </div>
@@ -120,23 +120,78 @@
                             🔗 RAG
                             <span class="badge bg-success ms-2">✓ Done</span>
                         </h5>
-                        <p class="card-text">Retrieval-Augmented Generation system that converts your query to embeddings, searches our movie/podcast database for similar content, and generates contextual answers using OpenAI with the retrieved information.</p>
+                        <p class="card-text">Advanced RAG implementation from the Scrimba course. Complete pipeline: query→embedding→vector search→context-aware AI response using movie/podcast database.</p>
                         <a th:href="@{/demo/rag}" class="btn btn-success">View Demo</a>
                     </div>
                 </div>
             </div>
 
+            <!-- 9. React Agent -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-secondary">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            🤖 React Agent
+                            <span class="badge bg-secondary ms-2">Coming Soon</span>
+                        </h5>
+                        <p class="card-text">AI agent implementation from the Scrimba course. Uses ReAct (Reasoning + Acting) pattern to solve problems through iterative thinking and action.</p>
+                        <button class="btn btn-secondary" disabled>Coming Soon</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 10. OpenAI Functions Agent -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-secondary">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            ⚡ Functions Agent
+                            <span class="badge bg-secondary ms-2">Coming Soon</span>
+                        </h5>
+                        <p class="card-text">Advanced agent using OpenAI's function calling capabilities. Demonstrates how AI can interact with external tools and APIs to complete complex tasks.</p>
+                        <button class="btn btn-secondary" disabled>Coming Soon</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 11. AI Travel Agent -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-secondary">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            ✈️ Travel Agent
+                            <span class="badge bg-secondary ms-2">Coming Soon</span>
+                        </h5>
+                        <p class="card-text">Practical AI agent example from the course. Plan trips, book flights, find accommodations, and create itineraries using multiple APIs and AI reasoning.</p>
+                        <button class="btn btn-secondary" disabled>Coming Soon</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 12. OpenAI Assistants API -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-secondary">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            🎯 Assistants API
+                            <span class="badge bg-secondary ms-2">Coming Soon</span>
+                        </h5>
+                        <p class="card-text">OpenAI's Assistants API integration from the Scrimba course. Build persistent AI assistants with file handling, code execution, and long-term memory.</p>
+                        <button class="btn btn-secondary" disabled>Coming Soon</button>
+                    </div>
+                </div>
+            </div>
 
         </section>
 
         <section class="demo-section">
             <h2>Quick Start</h2>
-            <p>This course covers practical AI engineering with real working code examples. Each topic includes:</p>
+            <p>This Kotlin implementation covers all major concepts from the Scrimba AI Engineering course. Each demo includes:</p>
             <ul>
-                <li><strong>Live Demos</strong> - Interactive examples you can run and modify</li>
-                <li><strong>Code Examples</strong> - Well-documented Kotlin implementations</li>
-                <li><strong>Practical Applications</strong> - Real-world use cases and patterns</li>
-                <li><strong>Best Practices</strong> - Industry-standard approaches and optimizations</li>
+                <li><strong>Live Interactive Demos</strong> - Working examples you can test immediately</li>
+                <li><strong>Kotlin Implementations</strong> - Production-ready Spring Boot code</li>
+                <li><strong>Course Alignment</strong> - Direct mapping to Scrimba JavaScript examples</li>
+                <li><strong>Enterprise Patterns</strong> - JVM-based approaches suitable for production use</li>
             </ul>
             
             <div class="d-flex gap-2 flex-wrap my-3">

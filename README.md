@@ -1,24 +1,33 @@
-# AI Engineering Course - Spring 2025
+# AI Engineering Course - Kotlin Implementation
 
-Learning to code with AI APIs using modern development frameworks and tools.
+Kotlin implementations of the [Scrimba AI Engineering Path](https://scrimba.com/the-ai-engineer-path-c02v) assignments and examples. This project translates JavaScript-based AI engineering concepts into practical Kotlin Spring Boot applications.
 
-**🌐 Live Demo**: [https://ai.rodland.no/](https://ai.rodland.no/) (Kotlin Spring Boot application)
+**🌐 Live Demo**: [https://ai.rodland.no/](https://ai.rodland.no/) - Interactive demos of AI engineering patterns in Kotlin
 
 ## Projects
 
 ### 🚀 [Kotlin Spring Boot Application](kotlin/)
 
-A comprehensive web application demonstrating practical AI engineering patterns with interactive demos.
+A comprehensive Spring Boot web application that implements Scrimba AI Engineering course concepts in Kotlin. Features interactive demos and working examples of all major AI engineering patterns covered in the course.
 
 #### Live Interactive Demos
+**Completed:**
 - **🤖 Chat Completion** - OpenAI chat completion with customizable prompts and parameters
 - **🔢 Embeddings** - Text-to-vector conversion with statistical analysis and visualization  
 - **✂️ Chunking** - Interactive text splitting with overlap visualization
 - **🔗 RAG** - Full Retrieval-Augmented Generation pipeline showing query→embedding→search→response
 - **📈 Stock Data** - Real-time financial data from Polygon.io API with AI analysis
 - **🗄️ Vector Database** - Supabase vector operations and semantic search
-- **💬 Chat** - Multi-turn conversational interfaces *(in progress)*
-- **🌐 Translator** - AI-powered translation service *(coming soon)*
+
+**In Progress:**
+- **💬 Chat** - Multi-turn conversational interfaces
+
+**Coming Soon:**
+- **🤗 HuggingFace** - Open-source ML model hub integration
+- **🤖 React Agent** - ReAct (Reasoning + Acting) pattern implementation
+- **⚡ Functions Agent** - OpenAI function calling capabilities
+- **✈️ Travel Agent** - Practical AI agent for trip planning
+- **🎯 Assistants API** - OpenAI's Assistants API integration
 
 #### Technology Stack
 - **Backend**: Spring Boot 3.5.0 with Kotlin
@@ -33,7 +42,7 @@ A comprehensive web application demonstrating practical AI engineering patterns 
 
 ### 🌐 [JavaScript/Node.js Examples](js/)
 
-Frontend and serverless examples demonstrating client-side AI integration patterns.
+Original JavaScript implementations and experiments from the Scrimba AI Engineering course, including frontend examples and serverless implementations.
 
 #### Features
 - Vanilla JavaScript implementations
@@ -43,14 +52,24 @@ Frontend and serverless examples demonstrating client-side AI integration patter
 
 [→ View JavaScript Project Details](js/README.md)
 
-## Course Focus
+## About the Scrimba AI Engineering Course
 
-This course emphasizes practical, hands-on learning with real working code examples. Each project includes:
+This repository implements concepts from the **Scrimba AI Engineering Path** - a practical, JavaScript-focused course for web developers eager to use the latest AI technologies. The course covers:
 
-- **Live Demos** - Interactive examples you can run and modify
-- **Code Examples** - Well-documented implementations
-- **Practical Applications** - Real-world use cases and patterns
-- **Best Practices** - Industry-standard approaches and optimizations
+1. **OpenAI API** - Building applications that understand and generate human-like text
+2. **HuggingFace** - Open-source ML model hub for sharing and experimenting
+3. **Embeddings and Vector Databases** - Infusing apps with specialized knowledge
+4. **AI Agents** - Using AI to solve problems and complete tasks
+5. **OpenAI's Assistants API** - Seamlessly integrating AI models into applications
+
+## Why Kotlin Implementation?
+
+While the original course uses JavaScript, this project demonstrates that these AI engineering patterns work equally well in other languages. The Kotlin implementation provides:
+
+- **Type Safety** - Compile-time guarantees and better IDE support
+- **Spring Boot Integration** - Production-ready web applications with minimal configuration
+- **JVM Ecosystem** - Access to mature libraries and enterprise-grade deployment options
+- **Learning Tool** - Deeper understanding through reimplementation in a different paradigm
 
 ## API Integrations
 

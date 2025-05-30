@@ -1,24 +1,34 @@
-# AI Engineering Course - Kotlin
+# AI Engineering Course - Kotlin Implementation
 
-A comprehensive Spring Boot web application for learning AI API integration with real-world examples and interactive demos.
+Kotlin implementation of the [Scrimba AI Engineering Path](https://scrimba.com/the-ai-engineer-path-c02v) assignments and examples. This Spring Boot web application translates JavaScript-based AI engineering concepts into production-ready Kotlin code with interactive demos.
 
 **🌐 Live Demo**: [https://ai.rodland.no/](https://ai.rodland.no/) (deployed via Northflank)
 
 ## Overview
 
-This project demonstrates practical AI engineering patterns using Kotlin and Spring Boot. It includes interactive web demos for various AI services and APIs, providing hands-on experience with modern AI development workflows.
+This project implements the core concepts from the Scrimba AI Engineering course in Kotlin. Rather than following along with JavaScript examples, this provides equivalent functionality using Spring Boot, demonstrating that AI engineering patterns are language-agnostic and work excellently in the JVM ecosystem.
 
 ## Web Application
 
 ### Interactive Demos
+
+**✅ Completed:**
 - **🤖 Chat Completion** - OpenAI chat completion with customizable prompts and parameters
 - **🔢 Embeddings** - Text-to-vector conversion with statistical analysis and visualization  
 - **✂️ Chunking** - Interactive text splitting with overlap visualization
 - **🔗 RAG** - Full Retrieval-Augmented Generation pipeline showing query→embedding→search→response
 - **📈 Stock Data** - Real-time financial data from Polygon.io API with AI analysis
-- **💬 Chat** - Multi-turn conversational interfaces *(in progress)*
-- **🌐 Translator** - AI-powered translation service *(coming soon)*
 - **🗄️ Vector Database** - Supabase vector operations and semantic search
+
+**🚧 In Progress:**
+- **💬 Chat** - Multi-turn conversational interfaces
+
+**🔜 Coming Soon (Scrimba Course Modules):**
+- **🤗 HuggingFace** - Open-source ML model hub integration
+- **🤖 React Agent** - ReAct (Reasoning + Acting) pattern implementation
+- **⚡ Functions Agent** - OpenAI function calling capabilities
+- **✈️ Travel Agent** - Practical AI agent for trip planning
+- **🎯 Assistants API** - OpenAI's Assistants API integration
 
 ### Technology Stack
 - **Backend**: Spring Boot 3.5.0 with Kotlin
