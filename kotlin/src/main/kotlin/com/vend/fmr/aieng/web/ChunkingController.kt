@@ -1,9 +1,12 @@
-package com.vend.fmr.aieng.controller
+package com.vend.fmr.aieng.web
 
-import com.vend.fmr.aieng.chunker.Chunker
+import com.vend.fmr.aieng.impl.chunker.Chunker
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 @RequestMapping("/demo/chunking")

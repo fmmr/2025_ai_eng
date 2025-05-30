@@ -1,4 +1,4 @@
-package com.vend.fmr.aieng.chunker
+package com.vend.fmr.aieng.impl.chunker
 
 class Chunker(
     private val chunkSize: Int = 250,

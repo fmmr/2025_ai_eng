@@ -1,4 +1,4 @@
-package com.vend.fmr.aieng.controller
+package com.vend.fmr.aieng.web
 
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model

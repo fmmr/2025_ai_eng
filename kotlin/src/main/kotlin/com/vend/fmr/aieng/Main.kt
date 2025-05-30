@@ -2,12 +2,11 @@
 
 package com.vend.fmr.aieng
 
-import com.vend.fmr.aieng.examples.*
-import com.vend.fmr.aieng.openai.OpenAI
-import com.vend.fmr.aieng.polygon.AggregatesResponse
-import com.vend.fmr.aieng.polygon.Polygon
-import com.vend.fmr.aieng.supabase.Supabase
+import com.vend.fmr.aieng.impl.openai.OpenAI
+import com.vend.fmr.aieng.impl.polygon.Polygon
+import com.vend.fmr.aieng.impl.supabase.Supabase
 import com.vend.fmr.aieng.utils.env
+import com.vend.fmr.aieng.utils.tickers
 
 val OPEN_AI_KEY = "OPENAI_API_KEY".env()
 val SUPABASE_URL = "SUPABASE_URL".env()

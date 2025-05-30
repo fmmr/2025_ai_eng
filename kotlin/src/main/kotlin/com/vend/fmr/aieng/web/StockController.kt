@@ -1,10 +1,11 @@
-package com.vend.fmr.aieng.controller
+package com.vend.fmr.aieng.web
 
 import com.vend.fmr.aieng.OPEN_AI_KEY
 import com.vend.fmr.aieng.POLYGON_API_KEY
-import com.vend.fmr.aieng.openai.OpenAI
-import com.vend.fmr.aieng.polygon.AggregatesResponse
-import com.vend.fmr.aieng.polygon.Polygon
+import com.vend.fmr.aieng.impl.openai.OpenAI
+import com.vend.fmr.aieng.impl.polygon.AggregatesResponse
+import com.vend.fmr.aieng.impl.polygon.Polygon
+import com.vend.fmr.aieng.utils.Prompts
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -51,19 +52,9 @@ class StockController {
                 val jsonData = polygon.aggregatesToJson(aggregates)
                 
                 // Step 3: Generate AI analysis
-                val systemMessage = "You handle financial information. " +
-                    "The input will be data in JSON fetched from the polygon.io api - " +
-                    "more specifically https://api.polygon.io/v2/aggs/. " +
-                    "the format will be in json " +
-                    "It may contain data for multiple companies/tickers. " +
-                    "Your task is to create a short report based on these data to be shown to the end user. " +
-                    "The inputs are known to the user, so no need to repeat this. " +
-                    "If multiple companies are in the input focus on the main differences and what sets them apart. " +
-                    "Try to use fewer than 100 words."
-                
                 val response = openAI.createChatCompletion(
                     prompt = jsonData,
-                    systemMessage = systemMessage
+                    systemMessage = Prompts.FINANCIAL_ANALYSIS
                 )
                 
                 openAI.close()
@@ -75,6 +66,7 @@ class StockController {
                     rawData = aggregates,
                     jsonData = jsonData,
                     dataPoints = aggregates.sumOf { it.results?.size ?: 0 },
+                    systemMessage = Prompts.FINANCIAL_ANALYSIS,
                     analysisReport = response.text(),
                     usage = response.usage()
                 ))
@@ -96,6 +88,7 @@ data class StockResult(
     val rawData: List<AggregatesResponse>,
     val jsonData: String,
     val dataPoints: Int,
+    val systemMessage: String,
     val analysisReport: String,
     val usage: String
 )

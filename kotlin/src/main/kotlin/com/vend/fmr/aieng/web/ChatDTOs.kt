@@ -1,6 +1,8 @@
-package com.vend.fmr.aieng.controller
+package com.vend.fmr.aieng.web
 
 data class ChatResult(
+    val userPrompt: String,
+    val systemMessage: String,
     val response: String,
     val usage: String,
     val model: String

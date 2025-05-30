@@ -1,7 +1,7 @@
-package com.vend.fmr.aieng.controller
+package com.vend.fmr.aieng.web
 
 import com.vend.fmr.aieng.OPEN_AI_KEY
-import com.vend.fmr.aieng.openai.OpenAI
+import com.vend.fmr.aieng.impl.openai.OpenAI
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -47,6 +47,8 @@ class ChatCompletionController {
                 openAI.close()
                 
                 model.addAttribute("chatResult", ChatResult(
+                    userPrompt = userPrompt,
+                    systemMessage = systemMessage.takeIf { it.isNotBlank() } ?: "No system message",
                     response = response.text(),
                     usage = response.usage(),
                     model = response.model

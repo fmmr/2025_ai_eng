@@ -1,4 +1,4 @@
-package com.vend.fmr.aieng.openai
+package com.vend.fmr.aieng.impl.openai
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

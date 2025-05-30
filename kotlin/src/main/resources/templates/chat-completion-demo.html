@@ -20,7 +20,7 @@
                     <label for="userPrompt" class="form-label">User Prompt</label>
                     <textarea class="form-control" id="userPrompt" name="userPrompt" rows="4" 
                               placeholder="Enter your prompt here..." 
-                              th:text="${formData?.userPrompt ?: 'Explain the concept of machine learning in simple terms'}"></textarea>
+                              th:text="${formData?.userPrompt ?: T(com.vend.fmr.aieng.utils.Prompts.Defaults).CHAT_COMPLETION_USER_PROMPT}"></textarea>
                     <div class="form-text">The main question or instruction for the AI</div>
                 </div>
                 
@@ -28,7 +28,7 @@
                     <label for="systemMessage" class="form-label">System Message (Optional)</label>
                     <textarea class="form-control" id="systemMessage" name="systemMessage" rows="2" 
                               placeholder="You are a helpful assistant..."
-                              th:text="${formData?.systemMessage ?: ''}"></textarea>
+                              th:text="${formData?.systemMessage ?: T(com.vend.fmr.aieng.utils.Prompts.Defaults).CHAT_COMPLETION_SYSTEM_MESSAGE}"></textarea>
                     <div class="form-text">Sets the behavior and context for the AI assistant</div>
                 </div>
                 
@@ -64,14 +64,37 @@
             <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
             
             <div th:if="${chatResult != null}">
-                <h4>Chat Response</h4>
-                <div class="alert alert-success">
-                    <strong>Model:</strong> <span th:text="${chatResult.model}">gpt-3.5-turbo</span><br>
-                    <strong>Usage:</strong> <span th:text="${chatResult.usage}">Tokens used</span>
+                <h4>Chat Completion Results</h4>
+                
+                <!-- User Input -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5 class="mb-0">💬 User Input</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>User Prompt:</strong></p>
+                        <div class="border rounded p-3 bg-light mb-3">
+                            <span th:text="${chatResult.userPrompt}">user prompt</span>
+                        </div>
+                        <p><strong>System Message:</strong></p>
+                        <div class="border rounded p-3 bg-light">
+                            <small th:text="${chatResult.systemMessage}">system message</small>
+                        </div>
+                    </div>
                 </div>
-                <div class="card">
+                
+                <!-- AI Response -->
+                <div class="card mb-3">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">🤖 AI Response</h5>
+                    </div>
                     <div class="card-body">
                         <div style="white-space: pre-wrap; line-height: 1.6;" th:text="${chatResult.response}">AI response will appear here</div>
+                        <hr>
+                        <small class="text-muted">
+                            <strong>Model:</strong> <span th:text="${chatResult.model}">gpt-3.5-turbo</span> | 
+                            <strong>Usage:</strong> <span th:text="${chatResult.usage}">Tokens used</span>
+                        </small>
                     </div>
                 </div>
             </div>

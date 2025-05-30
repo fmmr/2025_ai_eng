@@ -1,11 +1,12 @@
-package com.vend.fmr.aieng.controller
+package com.vend.fmr.aieng.web
 
 import com.vend.fmr.aieng.OPEN_AI_KEY
 import com.vend.fmr.aieng.SUPABASE_KEY
 import com.vend.fmr.aieng.SUPABASE_URL
-import com.vend.fmr.aieng.openai.OpenAI
-import com.vend.fmr.aieng.supabase.DocumentMatch
-import com.vend.fmr.aieng.supabase.Supabase
+import com.vend.fmr.aieng.impl.openai.OpenAI
+import com.vend.fmr.aieng.impl.supabase.DocumentMatch
+import com.vend.fmr.aieng.impl.supabase.Supabase
+import com.vend.fmr.aieng.utils.Prompts
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -46,16 +47,10 @@ class RagController {
                 
                 // Step 3: Combine context and generate answer
                 val context = matches.joinToString("\n") { it.content }
-                val systemMessage = "You are an enthusiastic movie expert who loves recommending movies to people. " +
-                    "You will be given two pieces of information - some context about movies and a question. These are separated by #####. " +
-                    "Your main job is to formulate an answer to the question using the provided context. " +
-                    "If you can recommend 2 or 3 movies - this is always better than one. " +
-                    "If you are unsure and cannot find the answer in the context, say, \"Sorry, I don't know the answer.\" " +
-                    "Please do not make up the answer."
                 
                 val response = openAI.createChatCompletion(
-                    prompt = "Context: ${context}\n#####\nQuestion: ${query}",
-                    systemMessage = systemMessage
+                    prompt = Prompts.formatRagQuery(context, query),
+                    systemMessage = Prompts.MOVIE_EXPERT_RAG
                 )
                 
                 openAI.close()
@@ -68,6 +63,7 @@ class RagController {
                     matchCount = matches.size,
                     matches = matches,
                     context = context,
+                    systemMessage = Prompts.MOVIE_EXPERT_RAG,
                     finalAnswer = response.text(),
                     usage = response.usage()
                 ))
@@ -90,6 +86,7 @@ data class RagResult(
     val matchCount: Int,
     val matches: List<DocumentMatch>,
     val context: String,
+    val systemMessage: String,
     val finalAnswer: String,
     val usage: String
 )

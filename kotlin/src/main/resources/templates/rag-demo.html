@@ -19,7 +19,7 @@
                 <div class="row mb-3">
                     <div class="col-md-8">
                         <label for="query" class="form-label">Your Question</label>
-                        <textarea class="form-control" id="query" name="query" rows="3" placeholder="Ask about movies, podcasts, or any content in our database..." th:text="${formData?.query ?: 'I want to watch a movie with the actor from castaway.'}"></textarea>
+                        <textarea class="form-control" id="query" name="query" rows="3" placeholder="Ask about movies, podcasts, or any content in our database..." th:text="${formData?.query ?: T(com.vend.fmr.aieng.utils.Prompts.Defaults).RAG_QUERY}"></textarea>
                         <div class="form-text">Enter your question to search through our vector database</div>
                     </div>
                     <div class="col-md-4">
@@ -86,9 +86,14 @@
                 <!-- Final Answer -->
                 <div class="card mb-3">
                     <div class="card-header bg-success text-white">
-                        <h5 class="mb-0">🤖 Final RAG Response</h5>
+                        <h5 class="mb-0">🤖 Step 4: AI Response Generation</h5>
                     </div>
                     <div class="card-body">
+                        <p><strong>System Message:</strong></p>
+                        <div class="border rounded p-3 bg-light mb-3">
+                            <small th:text="${ragResult.systemMessage}">system message</small>
+                        </div>
+                        <p><strong>Final Answer:</strong></p>
                         <p class="mb-0" th:text="${ragResult.finalAnswer}">answer</p>
                     </div>
                 </div>

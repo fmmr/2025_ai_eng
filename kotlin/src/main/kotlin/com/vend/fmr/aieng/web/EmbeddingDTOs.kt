@@ -1,4 +1,4 @@
-package com.vend.fmr.aieng.controller
+package com.vend.fmr.aieng.web
 
 data class EmbeddingResult(
     val text: String,

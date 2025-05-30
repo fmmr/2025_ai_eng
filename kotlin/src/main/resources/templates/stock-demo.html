@@ -19,7 +19,7 @@
                 <div class="row mb-3">
                     <div class="col-md-8">
                         <label for="tickers" class="form-label">Stock Tickers</label>
-                        <input type="text" class="form-control" id="tickers" name="tickers" placeholder="AAPL,MSFT,GOOGL" th:value="${formData?.tickers ?: 'AAPL,MSFT,GOOGL'}">
+                        <input type="text" class="form-control" id="tickers" name="tickers" placeholder="AAPL,MSFT,GOOGL" th:value="${formData?.tickers ?: T(com.vend.fmr.aieng.utils.Prompts.Defaults).STOCK_TICKERS}">
                         <div class="form-text">Enter comma-separated stock symbols (e.g., AAPL,MSFT,GOOGL)</div>
                     </div>
                     <div class="col-md-4">
@@ -85,6 +85,11 @@
                         <h5 class="mb-0">🤖 Step 3: AI Financial Analysis</h5>
                     </div>
                     <div class="card-body">
+                        <p><strong>System Message:</strong></p>
+                        <div class="border rounded p-3 bg-light mb-3">
+                            <small th:text="${stockResult.systemMessage}">system message</small>
+                        </div>
+                        <p><strong>AI Analysis:</strong></p>
                         <p class="mb-0" th:text="${stockResult.analysisReport}">analysis</p>
                         <hr>
                         <small class="text-muted">Usage: <span th:text="${stockResult.usage}">usage info</span></small>

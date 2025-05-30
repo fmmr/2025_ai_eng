@@ -20,7 +20,7 @@
                     <label for="inputText" class="form-label">Text to Embed</label>
                     <textarea class="form-control" id="inputText" name="inputText" rows="4" 
                               placeholder="Enter text to convert to embeddings..." 
-                              th:text="${formData?.inputText ?: 'Machine learning is a subset of artificial intelligence that focuses on algorithms that can learn from data.'}"></textarea>
+                              th:text="${formData?.inputText ?: T(com.vend.fmr.aieng.utils.Prompts.Defaults).EMBEDDINGS_TEXT}"></textarea>
                     <div class="form-text">Text that will be converted to a numerical vector representation</div>
                 </div>
                 

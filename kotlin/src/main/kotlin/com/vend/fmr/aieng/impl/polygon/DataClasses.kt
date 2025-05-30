@@ -1,4 +1,4 @@
-package com.vend.fmr.aieng.polygon
+package com.vend.fmr.aieng.impl.polygon
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -56,7 +56,8 @@ data class AggregateBar(
     val n: Int? = null, // Number of transactions
     val vw: Double? = null // Volume weighted average price
 ) {
-    fun formattedDate(): String = 
+    @Suppress("unused")
+    fun formattedDate(): String =
         java.time.Instant.ofEpochMilli(t)
             .atZone(java.time.ZoneId.systemDefault())
             .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"))
