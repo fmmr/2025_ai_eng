@@ -18,8 +18,6 @@ A comprehensive Spring Boot web application that implements Scrimba AI Engineeri
 - **🔗 RAG** - Full Retrieval-Augmented Generation pipeline showing query→embedding→search→response
 - **📈 Stock Data** - Real-time financial data from Polygon.io API with AI analysis
 - **🗄️ Vector Database** - Supabase vector operations and semantic search
-
-**In Progress:**
 - **💬 Chat** - Multi-turn conversational interfaces
 
 **Coming Soon:**

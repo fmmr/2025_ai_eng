@@ -17,7 +17,8 @@
       "Bash(docker rm:*)",
       "Bash(curl:*)",
       "Bash(docker build:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(git add:*)"
     ],
     "deny": []
   },

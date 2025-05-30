@@ -19,9 +19,7 @@ This project implements the core concepts from the Scrimba AI Engineering course
 - **🔗 RAG** - Full Retrieval-Augmented Generation pipeline showing query→embedding→search→response
 - **📈 Stock Data** - Real-time financial data from Polygon.io API with AI analysis
 - **🗄️ Vector Database** - Supabase vector operations and semantic search
-
-**🚧 In Progress:**
-- **💬 Chat** - Multi-turn conversational interfaces
+- **💬 Chat** - Multi-turn conversational interfaces with context awareness and session management
 
 **🔜 Coming Soon (Scrimba Course Modules):**
 - **🤗 HuggingFace** - Open-source ML model hub integration
