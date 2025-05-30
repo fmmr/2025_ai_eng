@@ -2,6 +2,8 @@
 
 A comprehensive Spring Boot web application for learning AI API integration with real-world examples and interactive demos.
 
+**🌐 Live Demo**: [https://ai.rodland.no/](https://ai.rodland.no/) (deployed via Northflank)
+
 ## Overview
 
 This project demonstrates practical AI engineering patterns using Kotlin and Spring Boot. It includes interactive web demos for various AI services and APIs, providing hands-on experience with modern AI development workflows.
@@ -13,7 +15,7 @@ This project demonstrates practical AI engineering patterns using Kotlin and Spr
 - **🔢 Embeddings** - Text-to-vector conversion with statistical analysis and visualization  
 - **✂️ Chunking** - Interactive text splitting with overlap visualization
 - **🔗 RAG** - Full Retrieval-Augmented Generation pipeline showing query→embedding→search→response
-- **📈 Stock Data** - Real-time financial data from Polygon.io API *(in progress)*
+- **📈 Stock Data** - Real-time financial data from Polygon.io API with AI analysis
 - **💬 Chat** - Multi-turn conversational interfaces *(in progress)*
 - **🌐 Translator** - AI-powered translation service *(coming soon)*
 - **🗄️ Vector Database** - Supabase vector operations and semantic search *(in progress)*
@@ -62,7 +64,7 @@ SUPABASE_ANON_KEY=your_supabase_anon_key_here
 POLYGON_API_KEY=your_polygon_api_key_here
 ```
 
-**Note**: Environment variables take precedence over `.env` file values. The `.env` file is excluded from git for security.
+**Note**: .env file values take precedence over environment variables. The `.env` file is excluded from git for security.
 
 ## Development
 
