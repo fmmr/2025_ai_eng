@@ -25,7 +25,7 @@ This project implements the core concepts from the Scrimba AI Engineering course
 
 **🔜 Coming Soon (Scrimba Course Modules):**
 - **🤗 HuggingFace** - Open-source ML model hub integration
-- **🤖 React Agent** - ReAct (Reasoning + Acting) pattern implementation
+- **🧠 React Agent** - ReAct (Reasoning + Acting) pattern implementation
 - **⚡ Functions Agent** - OpenAI function calling capabilities
 - **✈️ Travel Agent** - Practical AI agent for trip planning
 - **🎯 Assistants API** - OpenAI's Assistants API integration

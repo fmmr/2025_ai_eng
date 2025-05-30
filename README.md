@@ -24,7 +24,7 @@ A comprehensive Spring Boot web application that implements Scrimba AI Engineeri
 
 **Coming Soon:**
 - **🤗 HuggingFace** - Open-source ML model hub integration
-- **🤖 React Agent** - ReAct (Reasoning + Acting) pattern implementation
+- **🧠 React Agent** - ReAct (Reasoning + Acting) pattern implementation
 - **⚡ Functions Agent** - OpenAI function calling capabilities
 - **✈️ Travel Agent** - Practical AI agent for trip planning
 - **🎯 Assistants API** - OpenAI's Assistants API integration
