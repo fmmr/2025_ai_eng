@@ -15,12 +15,6 @@ class HomeController {
     }
 
 
-    @GetMapping("/demo/supabase")
-    fun supabaseDemo(model: Model): String {
-        model.addAttribute("pageTitle", "Supabase Vector Database")
-        model.addAttribute("activeTab", "supabase")
-        return "supabase-demo"
-    }
 
     @GetMapping("/demo/polygon")
     fun polygonDemo(model: Model): String {

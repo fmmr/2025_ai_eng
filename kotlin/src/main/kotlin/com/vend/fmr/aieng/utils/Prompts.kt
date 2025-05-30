@@ -26,6 +26,7 @@ object Prompts {
         const val CHAT_COMPLETION_SYSTEM_MESSAGE = RHYMING_ASSISTANT
         const val EMBEDDINGS_TEXT = "The quick brown fox jumps over the lazy dog."
         const val CHUNKING_TEXT = "Einstein's theory of relativity revolutionized our understanding of space, time, and gravity. The special theory of relativity, published in 1905, introduced the concept that space and time are interwoven into a single continuum called spacetime. It established that the speed of light in a vacuum is constant for all observers, regardless of their motion or the motion of the light source. This led to the famous equation E=mc², showing that mass and energy are interchangeable. The general theory of relativity, completed in 1915, extended these ideas to include gravity, describing it not as a force but as the curvature of spacetime caused by mass and energy. This theory has been confirmed by numerous experiments and observations, from the bending of light around massive objects to the detection of gravitational waves."
+        const val VECTOR_SEARCH_QUERY = "action packed thriller"
     }
     
     /**

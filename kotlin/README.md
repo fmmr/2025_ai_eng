@@ -18,7 +18,7 @@ This project demonstrates practical AI engineering patterns using Kotlin and Spr
 - **📈 Stock Data** - Real-time financial data from Polygon.io API with AI analysis
 - **💬 Chat** - Multi-turn conversational interfaces *(in progress)*
 - **🌐 Translator** - AI-powered translation service *(coming soon)*
-- **🗄️ Vector Database** - Supabase vector operations and semantic search *(in progress)*
+- **🗄️ Vector Database** - Supabase vector operations and semantic search
 
 ### Technology Stack
 - **Backend**: Spring Boot 3.5.0 with Kotlin

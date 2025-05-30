@@ -7,61 +7,133 @@
 
     <div class="container my-4">
         <section class="hero-section">
-            <h1>🗄️ Supabase Vector Database</h1>
-            <p>Explore vector databases and semantic search using Supabase</p>
+            <h1>🗄️ Vector Database Search</h1>
+            <p>Demonstrate semantic search with embeddings and PostgreSQL pgvector extension</p>
             <a href="/" class="btn">← Back to Home</a>
         </section>
 
         <section class="demo-section">
             <h2>Interactive Demo</h2>
             
-            <div class="demo-controls">
-                <button class="btn demo-btn" data-demo="vector-search">Vector Search</button>
-                <button class="btn demo-btn" data-demo="store-embeddings">Store Embeddings</button>
-            </div>
+            <form action="/demo/supabase" method="post" class="mb-4">
+                <div class="mb-3">
+                    <label for="query" class="form-label">Search Query</label>
+                    <textarea class="form-control" id="query" name="query" rows="3" 
+                              placeholder="Enter your search query here..."
+                              th:text="${formData?.query ?: T(com.vend.fmr.aieng.utils.Prompts.Defaults).VECTOR_SEARCH_QUERY}"></textarea>
+                    <div class="form-text">Query will be converted to an embedding vector for semantic similarity search</div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="maxMatches" class="form-label">Maximum Results</label>
+                    <input type="number" class="form-control" id="maxMatches" name="maxMatches" 
+                           th:value="${formData?.maxMatches ?: 5}" min="1" max="20">
+                    <div class="form-text">Number of similar documents to retrieve</div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" id="vectorSearchButton">
+                    <span class="button-text">🔍 Search Vector Database</span>
+                    <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                </button>
+            </form>
             
-            <div class="demo-output" id="vector-search-output">
-                <p>Click "Vector Search" to find similar documents...</p>
-            </div>
+            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
             
-            <div class="demo-output" id="store-embeddings-output">
-                <p>Click "Store Embeddings" to save vectors to database...</p>
+            <div th:if="${vectorResult != null}">
+                <h4>Vector Search Results</h4>
+                
+                <!-- Step 1: Query Processing -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5 class="mb-0">🔢 Step 1: Query → Embedding Vector</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Original Query:</strong></p>
+                        <div class="border rounded p-3 bg-light mb-3">
+                            <span th:text="${vectorResult.originalQuery}">search query</span>
+                        </div>
+                        <p><strong>Embedding Vector:</strong></p>
+                        <div class="border rounded p-3 bg-light">
+                            <small class="text-muted">
+                                Dimensions: <span th:text="${vectorResult.embeddingDimensions}">1536</span><br>
+                                Preview: [<span th:text="${vectorResult.queryEmbeddingPreview}">vector preview</span>, ...]
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 2: Vector Search Results -->
+                <div class="card mb-3">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">🎯 Step 2: Vector Similarity Search</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-3">
+                            <strong>Search Results:</strong> 
+                            <span th:text="${vectorResult.actualMatches}">0</span> out of 
+                            <span th:text="${vectorResult.maxMatches}">5</span> requested matches found
+                        </p>
+                        
+                        <div th:if="${#lists.isEmpty(vectorResult.matches)}" class="alert alert-info">
+                            No matching documents found in the vector database.
+                        </div>
+                        
+                        <div th:if="${!#lists.isEmpty(vectorResult.matches)}">
+                            <div th:each="match, iterStat : ${vectorResult.matches}" class="card mb-2">
+                                <div class="card-body">
+                                    <h6 class="card-title">
+                                        Match #<span th:text="${iterStat.count}">1</span>
+                                        <span class="badge bg-secondary ms-2">
+                                            Similarity: <span th:text="${#numbers.formatDecimal(match.similarity, 1, 4)}">0.8532</span>
+                                        </span>
+                                    </h6>
+                                    <p class="card-text" th:text="${match.content}">Document content</p>
+                                    <small class="text-muted">
+                                        ID: <span th:text="${match.id}">doc-id</span>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
         <section class="code-section">
-            <h2>Code Example</h2>
+            <h2>Technical Overview</h2>
+            <div class="mb-4">
+                <h3>How Vector Database Search Works</h3>
+                <ol>
+                    <li><strong>Query Processing:</strong> Convert text query to embedding vector using OpenAI API</li>
+                    <li><strong>Similarity Search:</strong> Find similar document vectors in PostgreSQL using pgvector extension</li>
+                    <li><strong>Results Ranking:</strong> Return documents ordered by cosine similarity score</li>
+                </ol>
+            </div>
+            
             <div class="code-block">
-                <pre><code>// Vector Similarity Search Implementation
-suspend fun matchDocuments(
-    embedding: List&lt;Double&gt;,
-    threshold: Double = 0.8,
-    count: Int = 5
-): List&lt;Document&gt; {
-    return postgrest["documents"]
-        .rpc("match_documents") {
-            "query_embedding" to embedding
-            "match_threshold" to threshold
-            "match_count" to count
-        }
-        .decodeList&lt;Document&gt;()
+                <pre><code>// Vector Database Search Implementation
+val openAI = OpenAI(apiKey = "your-openai-api-key")
+val supabase = Supabase(url = "your-supabase-url", key = "your-key")
+
+// Step 1: Convert query to embedding vector
+val queryEmbedding = openAI.createEmbedding("action packed thriller")
+
+// Step 2: Search for similar documents using pgvector
+val matches = supabase.matchDocuments(queryEmbedding, maxMatches = 5)
+
+// Results contain similarity scores and document content
+matches.forEach { match ->
+    println("Similarity: ${match.similarity}")
+    println("Content: ${match.content}")
 }
 
-// Document Storage with Embedding
-suspend fun insertDocument(content: String, metadata: Map&lt;String, Any&gt;) {
-    val embedding = openAI.createEmbedding(content)
-    postgrest["documents"].insert(mapOf(
-        "content" to content,
-        "embedding" to embedding.data.first().embedding,
-        "metadata" to metadata
-    ))
-}</code></pre>
+openAI.close()
+supabase.close()</code></pre>
             </div>
         </section>
     </div>
 
     <div th:replace="~{fragments/footer :: common-footer}"></div>
-
     <div th:replace="~{fragments/scripts :: common-scripts}"></div>
 </body>
 </html>
