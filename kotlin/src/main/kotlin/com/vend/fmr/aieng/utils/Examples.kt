@@ -81,6 +81,66 @@ suspend fun chatGPT() {
     println(chatGPT.usage())
 }
 
+suspend fun multiMessageChat(debug: Boolean = false): String {
+    val conversationHistory = mutableListOf<com.vend.fmr.aieng.impl.openai.Message>()
+    
+    // Add system message first
+    conversationHistory.add(
+        com.vend.fmr.aieng.impl.openai.Message(
+            role = "system", 
+            content = Prompts.CHAT_ASSISTANT
+        )
+    )
+    
+    val results = mutableListOf<String>()
+    
+    Prompts.ChatConversation.messages.forEachIndexed { index, userMessage ->
+        // Add user message to conversation history
+        conversationHistory.add(
+            com.vend.fmr.aieng.impl.openai.Message(
+                role = "user", 
+                content = userMessage
+            )
+        )
+        
+        if (debug) {
+            println("\n--- Turn ${index + 1} ---")
+            println("User: $userMessage")
+        }
+        
+        // Get AI response with full conversation context
+        val response = openAI.createChatCompletionWithMessages(
+            messages = conversationHistory,
+            maxTokens = 200,
+            temperature = 0.7
+        )
+        
+        val assistantReply = response.text()
+        
+        // Add assistant response to conversation history
+        conversationHistory.add(
+            com.vend.fmr.aieng.impl.openai.Message(
+                role = "assistant", 
+                content = assistantReply
+            )
+        )
+        
+        if (debug) {
+            println("Assistant: $assistantReply")
+        }
+        
+        results.add("User: $userMessage\nAssistant: $assistantReply")
+        
+        // Keep conversation history manageable (last 10 messages + system)
+        if (conversationHistory.size > 11) {
+            // Keep system message and last 10 messages
+            conversationHistory.removeAt(1) // Remove oldest non-system message
+        }
+    }
+    
+    return results.joinToString("\n\n")
+}
+
 suspend fun queryVectorDbForMovies(query: String, matches: Int = 5, debug: Boolean = false): List<DocumentMatch> {
     val response = supabase.matchDocuments(openAI.createEmbedding(query), matches)
     if (debug) {

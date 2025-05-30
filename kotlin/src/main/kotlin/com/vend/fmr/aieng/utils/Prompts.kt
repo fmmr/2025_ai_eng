@@ -17,6 +17,11 @@ object Prompts {
      */
     const val RHYMING_ASSISTANT = """You are a helpful assistant. Please answer the user's questions in rhymes. max length 100 tokens."""
     
+    /**
+     * System message for chat conversation demo
+     */
+    const val CHAT_ASSISTANT = """You are a friendly and helpful assistant. You remember context from our conversation and can refer back to previous messages. Keep responses concise but engaging."""
+    
     // Default user prompts for demo forms
     @Suppress("unused")
     object Defaults {
@@ -27,6 +32,18 @@ object Prompts {
         const val EMBEDDINGS_TEXT = "The quick brown fox jumps over the lazy dog."
         const val CHUNKING_TEXT = "Einstein's theory of relativity revolutionized our understanding of space, time, and gravity. The special theory of relativity, published in 1905, introduced the concept that space and time are interwoven into a single continuum called spacetime. It established that the speed of light in a vacuum is constant for all observers, regardless of their motion or the motion of the light source. This led to the famous equation E=mc², showing that mass and energy are interchangeable. The general theory of relativity, completed in 1915, extended these ideas to include gravity, describing it not as a force but as the curvature of spacetime caused by mass and energy. This theory has been confirmed by numerous experiments and observations, from the bending of light around massive objects to the detection of gravitational waves."
         const val VECTOR_SEARCH_QUERY = "action packed thriller"
+    }
+    
+    /**
+     * Hardcoded chat conversation to demonstrate context retention
+     */
+    object ChatConversation {
+        val messages = listOf(
+            "Hello! My name is Alex and I'm learning about AI. Could you remember my name for later?",
+            "What are the main benefits of using AI in software development?",
+            "Can you elaborate on how AI helps with code review and quality assurance?",
+            "That's really interesting! By the way, what was my name again?"
+        )
     }
     
     /**

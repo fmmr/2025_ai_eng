@@ -6,6 +6,7 @@ import com.vend.fmr.aieng.impl.openai.OpenAI
 import com.vend.fmr.aieng.impl.polygon.Polygon
 import com.vend.fmr.aieng.impl.supabase.Supabase
 import com.vend.fmr.aieng.utils.env
+import com.vend.fmr.aieng.utils.multiMessageChat
 import com.vend.fmr.aieng.utils.tickers
 
 val OPEN_AI_KEY = "OPENAI_API_KEY".env()
@@ -24,7 +25,13 @@ val polygon = Polygon(POLYGON_API_KEY)
 suspend fun main() {
     Runtime.getRuntime().addShutdownHook(Thread { close() })
 
-tickers("APPL", "NHYDY")
+    // Multi-message chat conversation demo
+//    println("=== Multi-Message Chat Conversation Demo ===")
+//    val conversation = multiMessageChat(debug = true)
+//    println("\n=== Full Conversation Summary ===")
+//    println(conversation)
+    
+//    tickers("APPL", "NHYDY")
 //    embeddings("/movies.txt", true)
 //    clearDbAndInsertDocs(file = "/movies.txt")
 //    splitText("/movies.txt", debug = true)

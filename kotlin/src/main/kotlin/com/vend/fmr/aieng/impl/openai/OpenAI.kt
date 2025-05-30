@@ -46,6 +46,16 @@ class OpenAI(private val openaiApiKey: String) : Closeable {
             add(Message(role = "user", content = prompt))
         }
 
+        return createChatCompletionWithMessages(messages, model, maxTokens, temperature, debug)
+    }
+
+    suspend fun createChatCompletionWithMessages(
+        messages: List<Message>,
+        model: String = OPEN_AI_MODEL,
+        maxTokens: Int = 300,
+        temperature: Double = 0.7,
+        debug: Boolean = false
+    ): ChatCompletionResponse {
         val request = ChatCompletionRequest(
             model = model,
             messages = messages,
