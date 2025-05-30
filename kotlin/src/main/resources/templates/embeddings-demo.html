@@ -33,7 +33,10 @@
                     <div class="form-text">Warning: This will display a very long list of numbers</div>
                 </div>
                 
-                <button type="submit" class="btn btn-primary">Generate Embeddings</button>
+                <button type="submit" class="btn btn-primary" id="embeddingsButton">
+                    <span class="button-text">🔢 Generate Embeddings</span>
+                    <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                </button>
             </form>
             
             <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>

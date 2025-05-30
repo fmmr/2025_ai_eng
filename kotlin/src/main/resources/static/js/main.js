@@ -13,8 +13,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add smooth scrolling for anchor links
     initializeSmoothScrolling();
     
-    // Add loading states for demo buttons
+    // Add loading states for demo buttons and forms
     initializeLoadingStates();
+    initializeFormSubmissions();
 });
 
 // Demo functionality
@@ -83,6 +84,58 @@ function initializeSmoothScrolling() {
 // Loading states for buttons
 function initializeLoadingStates() {
     // This will be called by other functions when needed
+}
+
+// Initialize form submissions with loading states
+function initializeFormSubmissions() {
+    // Find all forms that submit to demo endpoints
+    const demoForms = document.querySelectorAll('form[action*="/demo/"]');
+    demoForms.forEach(form => {
+        form.addEventListener('submit', function() {
+            const submitButton = form.querySelector('button[type="submit"]');
+            if (submitButton) {
+                setFormLoadingState(submitButton, true);
+            }
+        });
+    });
+}
+
+function setFormLoadingState(button, isLoading) {
+    if (isLoading) {
+        button.disabled = true;
+        
+        // Store original content
+        const buttonText = button.querySelector('.button-text');
+        const spinner = button.querySelector('.spinner-border');
+        
+        if (buttonText && spinner) {
+            // Hide text, show spinner
+            buttonText.classList.add('d-none');
+            spinner.classList.remove('d-none');
+        } else {
+            // Fallback: change button text
+            button.dataset.originalText = button.textContent;
+            button.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Processing...';
+        }
+        
+        button.classList.add('loading');
+    } else {
+        button.disabled = false;
+        
+        const buttonText = button.querySelector('.button-text');
+        const spinner = button.querySelector('.spinner-border');
+        
+        if (buttonText && spinner) {
+            // Show text, hide spinner
+            buttonText.classList.remove('d-none');
+            spinner.classList.add('d-none');
+        } else {
+            // Fallback: restore button text
+            button.innerHTML = button.dataset.originalText || button.innerHTML;
+        }
+        
+        button.classList.remove('loading');
+    }
 }
 
 function setLoadingState(button, isLoading) {

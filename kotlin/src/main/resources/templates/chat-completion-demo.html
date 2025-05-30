@@ -55,7 +55,10 @@
                     </div>
                 </div>
                 
-                <button type="submit" class="btn btn-primary">Generate Response</button>
+                <button type="submit" class="btn btn-primary" id="chatCompletionButton">
+                    <span class="button-text">🤖 Generate Response</span>
+                    <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                </button>
             </form>
             
             <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
