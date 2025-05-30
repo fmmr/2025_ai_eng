@@ -9,16 +9,22 @@
         <div class="container-fluid" style="max-width: 1200px;">
             <a class="navbar-brand" th:href="@{/}">AI Engineering Course</a>
             
-            <div class="navbar-nav ms-auto">
-                <a th:href="@{/}" th:classappend="${activeTab == 'home' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Home">🏠</a>
-                <a th:href="@{/demo/chat-completion}" th:classappend="${activeTab == 'chat-completion' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="OpenAI Chat Completion ✓">🤖</a>
-                <a th:href="@{/demo/polygon}" th:classappend="${activeTab == 'polygon' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Polygon Stock Data">📈</a>
-                <a th:href="@{/demo/chat}" th:classappend="${activeTab == 'chat' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Interactive Chat">💬</a>
-                <span class="nav-link nav-icon text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Translator (Coming Soon)">🌐</span>
-                <a th:href="@{/demo/embeddings}" th:classappend="${activeTab == 'embeddings' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="OpenAI Embeddings ✓">🔢</a>
-                <a th:href="@{/demo/chunking}" th:classappend="${activeTab == 'chunking' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Text Chunking ✓">✂️</a>
-                <a th:href="@{/demo/supabase}" th:classappend="${activeTab == 'supabase' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Supabase Vector Database">🗄️</a>
-                <a th:href="@{/demo/rag}" th:classappend="${activeTab == 'rag' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="RAG Implementation ✓">🔗</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav ms-auto">
+                    <a th:href="@{/}" th:classappend="${activeTab == 'home' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Home">🏠</a>
+                    <a th:href="@{/demo/chat-completion}" th:classappend="${activeTab == 'chat-completion' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Chat Completion ✓">🤖</a>
+                    <a th:href="@{/demo/polygon}" th:classappend="${activeTab == 'polygon' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Stock Data">📈</a>
+                    <a th:href="@{/demo/chat}" th:classappend="${activeTab == 'chat' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Chat">💬</a>
+                    <span class="nav-link nav-icon text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Translator (Coming Soon)">🌐</span>
+                    <a th:href="@{/demo/embeddings}" th:classappend="${activeTab == 'embeddings' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Embeddings ✓">🔢</a>
+                    <a th:href="@{/demo/chunking}" th:classappend="${activeTab == 'chunking' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Chunking ✓">✂️</a>
+                    <a th:href="@{/demo/supabase}" th:classappend="${activeTab == 'supabase' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Vector Database">🗄️</a>
+                    <a th:href="@{/demo/rag}" th:classappend="${activeTab == 'rag' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="RAG ✓">🔗</a>
+                </div>
             </div>
         </div>
     </nav>
