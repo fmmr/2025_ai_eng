@@ -18,16 +18,26 @@
             </div>
             
             <div th:if="${exception}" class="mt-4">
-                <h4>Exception Details</h4>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h4 class="mb-0">Exception Details</h4>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="copyToClipboard('exception-text')" data-bs-toggle="tooltip" title="Copy exception details">
+                        📋 Copy
+                    </button>
+                </div>
                 <div class="code-block">
-                    <pre th:text="${exception}">Exception details would appear here</pre>
+                    <pre id="exception-text" th:text="${exception}">Exception details would appear here</pre>
                 </div>
             </div>
             
             <div th:if="${trace}" class="mt-4">
-                <h4>Stack Trace</h4>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h4 class="mb-0">Stack Trace</h4>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="copyToClipboard('trace-text')" data-bs-toggle="tooltip" title="Copy stack trace">
+                        📋 Copy
+                    </button>
+                </div>
                 <div class="code-block">
-                    <pre th:text="${trace}">Stack trace would appear here</pre>
+                    <pre id="trace-text" th:text="${trace}">Stack trace would appear here</pre>
                 </div>
             </div>
             
@@ -40,5 +50,40 @@
 
     <div th:replace="~{fragments/footer :: common-footer}"></div>
     <div th:replace="~{fragments/scripts :: common-scripts}"></div>
+    
+    <script>
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent;
+            
+            // Check if modern clipboard API is available
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).catch(err => {
+                    console.error('Clipboard API failed: ', err);
+                    fallbackCopy(text);
+                });
+            } else {
+                // Use fallback method
+                fallbackCopy(text);
+            }
+            
+            function fallbackCopy(text) {
+                try {
+                    const textArea = document.createElement('textarea');
+                    textArea.value = text;
+                    textArea.style.position = 'fixed';
+                    textArea.style.left = '-999999px';
+                    textArea.style.top = '-999999px';
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                } catch (err) {
+                    console.error('Fallback copy failed: ', err);
+                }
+            }
+        }
+    </script>
 </body>
 </html>

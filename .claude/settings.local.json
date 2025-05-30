@@ -16,8 +16,10 @@
       "Bash(docker logs:*)",
       "Bash(docker rm:*)",
       "Bash(curl:*)",
-      "Bash(docker build:*)"
+      "Bash(docker build:*)",
+      "Bash(grep:*)"
     ],
     "deny": []
-  }
+  },
+  "enableAllProjectMcpServers": false
 }

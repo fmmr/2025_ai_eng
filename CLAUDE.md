@@ -16,6 +16,7 @@ This is Kotlin code for an AI engineering course - learning to code with AI APIs
 - Prefer existing solutions over custom CSS/JS when possible
 - **NO HTML IN JAVASCRIPT** - Never use innerHTML or DOM creation, use templates/fragments only
 - If you add code to debug or test, remove it as soon as it's no longer needed
+- Prefer adding data to DTO from the kotlin backend than performing calculations in thymeleaf
 
 ## Project Structure
 - Maven-based Kotlin project with Spring Boot 3.5.0

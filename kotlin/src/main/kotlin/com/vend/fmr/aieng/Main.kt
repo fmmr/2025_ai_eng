@@ -25,7 +25,7 @@ val polygon = Polygon(POLYGON_API_KEY)
 suspend fun main() {
     Runtime.getRuntime().addShutdownHook(Thread { close() })
 
-//    tickers("APPL", "NHYDY")
+tickers("APPL", "NHYDY")
 //    embeddings("/movies.txt", true)
 //    clearDbAndInsertDocs(file = "/movies.txt")
 //    splitText("/movies.txt", debug = true)
