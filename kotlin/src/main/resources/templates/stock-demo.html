@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<!--suppress HtmlRequiredTitleElement -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: common-head}"></head>
+<body>
+    <div th:replace="~{fragments/navigation :: navbar(${activeTab})}"></div>
+
+    <div class="container my-4">
+        <section class="hero-section">
+            <h1>📈 Stock Data Analysis</h1>
+            <p>Fetch real-time stock data from Polygon.io and generate AI-powered financial analysis</p>
+            <a href="/" class="btn">← Back to Home</a>
+        </section>
+
+        <section class="demo-section">
+            <h2>Interactive Demo</h2>
+            
+            <form id="stock-form" class="mb-4" action="/demo/stock" method="post">
+                <div class="row mb-3">
+                    <div class="col-md-8">
+                        <label for="tickers" class="form-label">Stock Tickers</label>
+                        <input type="text" class="form-control" id="tickers" name="tickers" placeholder="AAPL,MSFT,GOOGL" th:value="${formData?.tickers ?: 'AAPL,MSFT,GOOGL'}">
+                        <div class="form-text">Enter comma-separated stock symbols (e.g., AAPL,MSFT,GOOGL)</div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="daysBack" class="form-label">Days Back</label>
+                        <input type="number" class="form-control" id="daysBack" name="daysBack" th:value="${formData?.daysBack ?: 3}" min="1" max="30">
+                        <div class="form-text">Number of days of historical data to fetch</div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" id="stockButton">
+                    <span class="button-text">📈 Analyze Stock Data</span>
+                    <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                </button>
+            </form>
+            
+            <div th:if="${stockResult != null}" id="stock-results">
+                <h4>Stock Analysis Pipeline Results</h4>
+                
+                <!-- Step 1: Data Fetching -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5 class="mb-0">📡 Step 1: Fetch Stock Data from Polygon.io</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Requested Tickers:</strong> <span th:text="${#strings.arrayJoin(stockResult.requestedTickers.toArray(), ', ')}">AAPL, MSFT</span></p>
+                        <p><strong>Time Period:</strong> Last <span th:text="${stockResult.daysBack}">3</span> days</p>
+                        <p><strong>Data Points Retrieved:</strong> <span th:text="${stockResult.dataPoints}">0</span></p>
+                        <div th:if="${stockResult.rawData != null and #lists.size(stockResult.rawData) > 0}">
+                            <div th:each="aggregate, iterStat : ${stockResult.rawData}" class="border rounded p-3 mb-2">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="mb-0"><span th:text="${aggregate.ticker}">TICKER</span></h6>
+                                    <span class="badge bg-primary" th:text="'Results: ' + ${aggregate.resultsCount}">Results: 0</span>
+                                </div>
+                                <div th:if="${aggregate.results != null and #lists.size(aggregate.results) > 0}">
+                                    <p class="text-muted small mb-1"><strong>Recent Data Points:</strong></p>
+                                    <div th:each="result, resultStat : ${aggregate.results}" th:if="${resultStat.index < 3}" class="small">
+                                        <span th:text="'Date: ' + ${result.formattedDate()}">Date</span> - 
+                                        <span th:text="'Close: $' + ${result.c}">$0.00</span>, 
+                                        <span th:text="'Volume: ' + ${result.v}">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 2: JSON Conversion -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5 class="mb-0">🔄 Step 2: Convert to JSON for AI Processing</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>JSON Data Structure:</strong></p>
+                        <div class="border rounded p-3 bg-light">
+                            <pre class="mb-0" style="max-height: 200px; overflow-y: auto;"><code th:text="${stockResult.jsonData}">JSON data</code></pre>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Final Analysis -->
+                <div class="card mb-3">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">🤖 Step 3: AI Financial Analysis</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-0" th:text="${stockResult.analysisReport}">analysis</p>
+                        <hr>
+                        <small class="text-muted">Usage: <span th:text="${stockResult.usage}">usage info</span></small>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="code-section">
+            <h2>Code Example</h2>
+            <div class="code-block">
+                <pre><code>// Stock Data Analysis Pipeline
+class StockAnalyzer(private val openAI: OpenAI, private val polygon: Polygon) {
+    
+    suspend fun analyzeStocks(tickers: Array&lt;String&gt;, daysBack: Int): StockAnalysis {
+        // Step 1: Fetch stock data from Polygon.io
+        val aggregates = polygon.getAggregates(
+            tickers = tickers,
+            timespan = "day",
+            from = LocalDate.now().minusDays(daysBack.toLong()),
+            to = LocalDate.now()
+        )
+        
+        // Step 2: Convert to JSON for AI processing
+        val jsonData = polygon.aggregatesToJson(aggregates)
+        
+        // Step 3: Generate AI analysis
+        val systemMessage = """
+            You handle financial information. The input will be JSON data 
+            from polygon.io API containing OHLCV data for multiple companies.
+            Create a short report focusing on main differences between companies.
+            Use fewer than 100 words.
+        """.trimIndent()
+        
+        val response = openAI.createChatCompletion(jsonData, systemMessage)
+        
+        return StockAnalysis(
+            tickers = tickers.toList(),
+            rawData = aggregates,
+            analysis = response.text()
+        )
+    }
+}</code></pre>
+            </div>
+        </section>
+    </div>
+
+    <div th:replace="~{fragments/footer :: common-footer}"></div>
+
+    <div th:replace="~{fragments/scripts :: common-scripts}"></div>
+</body>
+</html>

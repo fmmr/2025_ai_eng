@@ -55,7 +55,12 @@ data class AggregateBar(
     val t: Long,   // Timestamp
     val n: Int? = null, // Number of transactions
     val vw: Double? = null // Volume weighted average price
-)
+) {
+    fun formattedDate(): String = 
+        java.time.Instant.ofEpochMilli(t)
+            .atZone(java.time.ZoneId.systemDefault())
+            .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+}
 
 @Serializable
 data class AggregatesResponse(
