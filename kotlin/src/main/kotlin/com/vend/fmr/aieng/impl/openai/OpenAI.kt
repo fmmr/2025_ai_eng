@@ -21,6 +21,7 @@ class OpenAI(private val openaiApiKey: String) : Closeable {
             ignoreUnknownKeys = true
             isLenient = true
             explicitNulls = false
+            encodeDefaults = true
         }
     }
 
@@ -54,13 +55,17 @@ class OpenAI(private val openaiApiKey: String) : Closeable {
         model: String = OPEN_AI_MODEL,
         maxTokens: Int = 300,
         temperature: Double = 0.7,
-        debug: Boolean = false
+        debug: Boolean = false,
+        tools: List<Tool>? = null,
+        toolChoice: String? = null
     ): ChatCompletionResponse {
         val request = ChatCompletionRequest(
             model = model,
             messages = messages,
             maxTokens = maxTokens,
-            temperature = temperature
+            temperature = temperature,
+            tools = tools,
+            toolChoice = toolChoice
         )
         val response = client.post("https://api.openai.com/v1/chat/completions") {
             contentType(ContentType.Application.Json)
@@ -74,7 +79,6 @@ class OpenAI(private val openaiApiKey: String) : Closeable {
         val responseText = response.bodyAsText()
         if (debug) {
             println("Status: ${response.status}")
-            println("Raw API response: $responseText")
         }
 
         // Check if the response is successful
@@ -84,6 +88,26 @@ class OpenAI(private val openaiApiKey: String) : Closeable {
 
         // Parse the response
         return json.decodeFromString<ChatCompletionResponse>(responseText)
+    }
+
+    suspend fun createChatCompletionWithTools(
+        messages: List<Message>,
+        tools: List<Tool>,
+        model: String = OPEN_AI_MODEL,
+        maxTokens: Int = 300,
+        temperature: Double = 0.7,
+        toolChoice: String = "auto",
+        debug: Boolean = false
+    ): ChatCompletionResponse {
+        return createChatCompletionWithMessages(
+            messages = messages,
+            model = model,
+            maxTokens = maxTokens,
+            temperature = temperature,
+            debug = debug,
+            tools = tools,
+            toolChoice = toolChoice
+        )
     }
 
     suspend fun createEmbedding(text: String): List<Double> {

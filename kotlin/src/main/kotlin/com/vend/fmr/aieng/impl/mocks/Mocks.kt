@@ -1,14 +1,19 @@
 package com.vend.fmr.aieng.impl.mocks
 
+import com.vend.fmr.aieng.impl.openai.*
 import com.vend.fmr.aieng.polygon
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 
 /**
- * ReAct Mock functions and utilities for ReAct Agent demos
- * Provides realistic test data and centralized ReAct parsing/execution logic
+ * Mock functions and utilities for AI agent demos
+ * Provides realistic test data and centralized parsing/execution logic
+ * Used by both ReAct agents and OpenAI function calling
  */
-object ReActMock {
+object Mocks {
 
     // Data classes for function results
     data class Location(val city: String, val country: String, val latitude: Double, val longitude: Double)
@@ -75,7 +80,7 @@ object ReActMock {
                 // No valid data from API, use realistic mock data
                 getMockStockPrice(ticker)
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             // API error, fallback to realistic mock data
             getMockStockPrice(ticker)
         }
@@ -180,7 +185,7 @@ object ReActMock {
     
     /**
      * Execute a function call based on parsed action - centralized function executor
-     * This is the single point where all ReAct function calls are handled
+     * This is the single point where all function calls are handled
      */
     suspend fun executeFunction(functionName: String, params: List<String>): String {
         return try {
@@ -215,6 +220,136 @@ object ReActMock {
             }
         } catch (e: Exception) {
             "Error executing $functionName: ${e.message}"
+        }
+    }
+    
+    // OpenAI Function Calling Support
+    
+    /**
+     * Get all available tools in OpenAI function calling format
+     */
+    fun getAvailableTools(): List<Tool> {
+        return listOf(
+            Tool(
+                function = FunctionDefinition(
+                    name = "getLocation",
+                    description = "Get the current location (GPS coordinates) of the user",
+                    parameters = FunctionParameters(
+                        properties = emptyMap(),
+                        required = emptyList()
+                    )
+                )
+            ),
+            Tool(
+                function = FunctionDefinition(
+                    name = "getWeather",
+                    description = "Get current weather information for a specific location",
+                    parameters = FunctionParameters(
+                        properties = mapOf(
+                            "location" to PropertyDefinition(
+                                type = "string",
+                                description = "The city or location to get weather for (e.g., 'Oslo', 'New York')"
+                            )
+                        ),
+                        required = listOf("location")
+                    )
+                )
+            ),
+            Tool(
+                function = FunctionDefinition(
+                    name = "getStockPrice",
+                    description = "Get current stock price and information for a ticker symbol",
+                    parameters = FunctionParameters(
+                        properties = mapOf(
+                            "ticker" to PropertyDefinition(
+                                type = "string",
+                                description = "Stock ticker symbol (e.g., 'AAPL', 'MSFT', 'GOOGL')"
+                            )
+                        ),
+                        required = listOf("ticker")
+                    )
+                )
+            ),
+            Tool(
+                function = FunctionDefinition(
+                    name = "getCurrentTime",
+                    description = "Get the current date and time",
+                    parameters = FunctionParameters(
+                        properties = emptyMap(),
+                        required = emptyList()
+                    )
+                )
+            ),
+            Tool(
+                function = FunctionDefinition(
+                    name = "calculateDistance",
+                    description = "Calculate the distance between two locations",
+                    parameters = FunctionParameters(
+                        properties = mapOf(
+                            "from" to PropertyDefinition(
+                                type = "string",
+                                description = "Starting location (e.g., 'Oslo', 'London')"
+                            ),
+                            "to" to PropertyDefinition(
+                                type = "string",
+                                description = "Destination location (e.g., 'Paris', 'New York')"
+                            )
+                        ),
+                        required = listOf("from", "to")
+                    )
+                )
+            ),
+            Tool(
+                function = FunctionDefinition(
+                    name = "getNewsHeadlines",
+                    description = "Get current news headlines",
+                    parameters = FunctionParameters(
+                        properties = emptyMap(),
+                        required = emptyList()
+                    )
+                )
+            )
+        )
+    }
+    
+    /**
+     * Execute a function call from OpenAI function calling format
+     * Parses the JSON arguments and delegates to executeFunction
+     */
+    suspend fun executeFunctionCall(functionCall: FunctionCall): String {
+        val json = Json { ignoreUnknownKeys = true }
+        
+        return try {
+            // Parse JSON arguments into List<String> format
+            val params = if (functionCall.arguments.isBlank() || functionCall.arguments == "{}") {
+                emptyList()
+            } else {
+                val args = json.parseToJsonElement(functionCall.arguments).jsonObject
+                when (functionCall.name.lowercase()) {
+                    "getlocation", "getcurrenttime", "getnewsheadlines" -> {
+                        emptyList()
+                    }
+                    "getweather" -> {
+                        listOf(args["location"]?.jsonPrimitive?.content ?: "oslo")
+                    }
+                    "getstockprice" -> {
+                        listOf(args["ticker"]?.jsonPrimitive?.content ?: "AAPL")
+                    }
+                    "calculatedistance" -> {
+                        listOf(
+                            args["from"]?.jsonPrimitive?.content ?: "Oslo",
+                            args["to"]?.jsonPrimitive?.content ?: "London"
+                        )
+                    }
+                    else -> emptyList()
+                }
+            }
+            
+            // Delegate to the core executeFunction implementation
+            executeFunction(functionCall.name, params)
+            
+        } catch (e: Exception) {
+            "Error executing ${functionCall.name}: ${e.message}"
         }
     }
 }

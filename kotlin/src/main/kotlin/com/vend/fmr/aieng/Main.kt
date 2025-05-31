@@ -6,9 +6,7 @@ import com.vend.fmr.aieng.impl.openai.OpenAI
 import com.vend.fmr.aieng.impl.polygon.Polygon
 import com.vend.fmr.aieng.impl.supabase.Supabase
 import com.vend.fmr.aieng.utils.env
-import com.vend.fmr.aieng.utils.ReActAgentExamples
-import com.vend.fmr.aieng.utils.ReActAgentExamples.reactAgent
-import com.vend.fmr.aieng.utils.times
+import com.vend.fmr.aieng.utils.FunctionCallingExamples
 
 val OPEN_AI_KEY = "OPENAI_API_KEY".env()
 val SUPABASE_URL = "SUPABASE_URL".env()
@@ -28,12 +26,22 @@ suspend fun main() {
 
 //    val conversation = multiMessageChat(debug = true)
 //    println(conversation)
-
-    val result1 = reactAgent("Do you have any ideas for activities I can do at my location?", debug = true)
-    println("Final Result: $result1")
-
-    val result2 = reactAgent("Can you tell me the current stock price of Apple and Microsoft, and what time it is?", debug = true)
-    println("Final Result: $result2")
+    // ReAct Agent Examples (manual step-by-step reasoning)
+//    println("\n" + "=".repeat(60))
+//    println("REACT AGENT EXAMPLES")
+//    println("=".repeat(60))
+//
+//    val result1 = reactAgent("Do you have any ideas for activities I can do at my location?", debug = true)
+//    println("Final ReAct Result: $result1")
+//
+//    val result2 = reactAgent("Can you tell me the current stock price of Apple and Microsoft, and what time it is?", debug = true)
+//    println("Final ReAct Result: $result2")
+    
+//    val result3 = FunctionCallingExamples.functionCallingAgent("Do you have any ideas for activities I can do at my location?", debug = true)
+//    println("Final Function Call Result: $result3")
+//
+//    val result4 = FunctionCallingExamples.functionCallingAgent("Can you tell me the current stock price of Apple and Microsoft, and what time it is?", debug = true)
+//    println("Final Function Call Result: $result4")
 
 //    tickers("APPL", "NHYDY")
 //    embeddings("/movies.txt", true)

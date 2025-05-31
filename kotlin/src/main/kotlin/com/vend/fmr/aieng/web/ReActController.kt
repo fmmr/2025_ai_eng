@@ -1,6 +1,6 @@
 package com.vend.fmr.aieng.web
 
-import com.vend.fmr.aieng.impl.mocks.ReActMock
+import com.vend.fmr.aieng.impl.mocks.Mocks
 import com.vend.fmr.aieng.impl.openai.Message
 import com.vend.fmr.aieng.openAI
 import com.vend.fmr.aieng.utils.Prompts
@@ -96,12 +96,12 @@ class ReActController {
             parseThoughtAndAction(currentResponse, stepCounter, steps)
             
             // Parse and execute action
-            val action = ReActMock.parseAction(currentResponse)
+            val action = Mocks.parseAction(currentResponse)
             if (action != null) {
                 val (functionName, params) = action
                 stepCounter = steps.size + 1
 
-                val result = ReActMock.executeFunction(functionName, params)
+                val result = Mocks.executeFunction(functionName, params)
                 val observation = "Observation: $result"
 
                 steps.add(ReActStep(stepCounter++, "observation", result))

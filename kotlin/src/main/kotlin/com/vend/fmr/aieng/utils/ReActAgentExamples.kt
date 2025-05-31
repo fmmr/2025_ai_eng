@@ -2,7 +2,7 @@
 
 package com.vend.fmr.aieng.utils
 
-import com.vend.fmr.aieng.impl.mocks.ReActMock
+import com.vend.fmr.aieng.impl.mocks.Mocks
 import com.vend.fmr.aieng.openAI
 
 /**
@@ -72,14 +72,14 @@ object ReActAgentExamples {
             }
             
             // Parse and execute action
-            val action = ReActMock.parseAction(currentResponse)
+            val action = Mocks.parseAction(currentResponse)
             if (action != null) {
                 val (functionName, params) = action
                 if (debug) {
                     println("🔧 Executing: $functionName(${params.joinToString(", ")})")
                 }
                 
-                val result = ReActMock.executeFunction(functionName, params)
+                val result = Mocks.executeFunction(functionName, params)
                 val observation = "Observation: $result"
                 
                 if (debug) {

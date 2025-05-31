@@ -59,6 +59,11 @@ Important rules:
 3. Wait for the Observation before continuing
 4. Use the exact function names and parameter format shown above
 5. End with "Final Answer:" when you have enough information"""
+
+    /**
+     * System prompt for OpenAI Function Calling Agent
+     */
+    const val FUNCTION_CALLING_SYSTEM = """You are a helpful assistant with access to location, weather, stock, time, distance, and news functions. When a user asks about activities, location, weather, stocks, time, distances, or news - use the appropriate functions to gather real information first, then provide helpful suggestions based on that data. Always use functions when available rather than saying you don't have capabilities."""
     
     // Default user prompts for demo forms
     @Suppress("unused")

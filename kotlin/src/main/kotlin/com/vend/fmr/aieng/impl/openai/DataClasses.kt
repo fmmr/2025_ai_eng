@@ -7,7 +7,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Message(
     val role: String,
-    val content: String
+    val content: String? = null,
+    @SerialName("tool_calls") val toolCalls: List<ToolCall>? = null,
+    @SerialName("tool_call_id") val toolCallId: String? = null
 )
 
 @Serializable
@@ -16,7 +18,9 @@ data class ChatCompletionRequest(
     val messages: List<Message>,
     @SerialName("max_tokens") val maxTokens: Int = 100,
     val temperature: Double = 0.7,
-    val stream: Boolean = false
+    val stream: Boolean = false,
+    val tools: List<Tool>? = null,
+    @SerialName("tool_choice") val toolChoice: String? = null
 )
 
 @Serializable
@@ -36,7 +40,15 @@ data class ChatCompletionResponse(
     val usage: Usage?
 ) {
     fun text(): String {
-        return choices.joinToString(" ") { it.message.content.trim() }
+        return choices.joinToString(" ") { it.message.content?.trim() ?: "" }
+    }
+    
+    fun hasToolCalls(): Boolean {
+        return choices.any { it.message.toolCalls?.isNotEmpty() == true }
+    }
+    
+    fun getToolCalls(): List<ToolCall> {
+        return choices.flatMap { it.message.toolCalls ?: emptyList() }
     }
 
     fun usage(): String {
@@ -84,4 +96,45 @@ data class EmbeddingResponse(
     val model: String,
     @SerialName("object") val objectType: String,
     val usage: EmbeddingUsage
+)
+
+// Function calling data classes
+@Serializable
+data class Tool(
+    val type: String = "function",
+    val function: FunctionDefinition
+)
+
+@Serializable
+data class FunctionDefinition(
+    val name: String,
+    val description: String,
+    val parameters: FunctionParameters
+)
+
+@Serializable
+data class FunctionParameters(
+    val type: String = "object",
+    val properties: Map<String, PropertyDefinition>,
+    val required: List<String>? = null
+)
+
+@Serializable
+data class PropertyDefinition(
+    val type: String,
+    val description: String,
+    val enum: List<String>? = null
+)
+
+@Serializable
+data class ToolCall(
+    val id: String,
+    val type: String,
+    val function: FunctionCall
+)
+
+@Serializable
+data class FunctionCall(
+    val name: String,
+    val arguments: String
 )
