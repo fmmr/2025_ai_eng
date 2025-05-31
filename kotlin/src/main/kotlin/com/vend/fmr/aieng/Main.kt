@@ -6,8 +6,9 @@ import com.vend.fmr.aieng.impl.openai.OpenAI
 import com.vend.fmr.aieng.impl.polygon.Polygon
 import com.vend.fmr.aieng.impl.supabase.Supabase
 import com.vend.fmr.aieng.utils.env
-import com.vend.fmr.aieng.utils.multiMessageChat
-import com.vend.fmr.aieng.utils.tickers
+import com.vend.fmr.aieng.utils.ReActAgentExamples
+import com.vend.fmr.aieng.utils.ReActAgentExamples.reactAgent
+import com.vend.fmr.aieng.utils.times
 
 val OPEN_AI_KEY = "OPENAI_API_KEY".env()
 val SUPABASE_URL = "SUPABASE_URL".env()
@@ -25,12 +26,15 @@ val polygon = Polygon(POLYGON_API_KEY)
 suspend fun main() {
     Runtime.getRuntime().addShutdownHook(Thread { close() })
 
-    // Multi-message chat conversation demo
-//    println("=== Multi-Message Chat Conversation Demo ===")
 //    val conversation = multiMessageChat(debug = true)
-//    println("\n=== Full Conversation Summary ===")
 //    println(conversation)
-    
+
+//    val result1 = reactAgent("Do you have any ideas for activities I can do at my location?", debug = true)
+//    println("Final Result: $result1")
+//
+//    val result2 = reactAgent("Can you tell me the current stock price of Apple and Microsoft, and what time it is?", debug = true)
+//    println("Final Result: $result2")
+
 //    tickers("APPL", "NHYDY")
 //    embeddings("/movies.txt", true)
 //    clearDbAndInsertDocs(file = "/movies.txt")
@@ -39,7 +43,6 @@ suspend fun main() {
 //    chatGPT()
 //    enrichedMovieChat("The movie with that actor from Castaway", debug = true)
 }
-
 
 
 fun close() {

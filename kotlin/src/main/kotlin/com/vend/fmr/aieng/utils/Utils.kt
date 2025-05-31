@@ -13,3 +13,8 @@ fun String.env(): String = envContent?.get(this) ?: System.getenv(this) ?: error
 fun String.read(): String = object {}.javaClass.getResourceAsStream(this)
     ?.bufferedReader()
     ?.use { it.readText() }!!
+
+/**
+ * Helper extension for string repetition (for debug formatting)
+ */
+ operator fun String.times(count: Int): String = this.repeat(count)
