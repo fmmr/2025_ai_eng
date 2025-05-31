@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<!--suppress HtmlRequiredTitleElement -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: common-head}"></head>
+<body>
+    <div th:replace="~{fragments/navigation :: navbar(${activeTab})}"></div>
+
+    <div class="container my-4">
+        <section class="hero-section">
+            <h1>🛠️ Function Calling Agent</h1>
+            <p>OpenAI's native function calling: AI directly calls structured functions to gather information and provide answers</p>
+            <a href="/" class="btn">← Back to Home</a>
+        </section>
+
+        <section class="demo-section">
+            <h2>Interactive Demo</h2>
+            
+            <!-- Query Form -->
+            <form th:action="@{/demo/function-calling}" method="post" class="mb-4">
+                <div class="mb-3">
+                    <label for="userQuery" class="form-label">Ask the Function Calling Agent:</label>
+                    <input type="text" 
+                           id="userQuery" 
+                           name="userQuery" 
+                           class="form-control" 
+                           th:value="${defaultQuery}" 
+                           placeholder="Do you have any ideas for activities I can do at my location?"
+                           required>
+                    <div class="form-text">
+                        Try: "What's the weather like where I am?", "Tell me about Apple's stock price", or "What activities can I do today?"
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Ask Agent</button>
+            </form>
+
+            <!-- Results Section -->
+            <div th:if="${success}" class="results-section">
+                <h3>Function Calling Process:</h3>
+                <div class="alert alert-info">
+                    <strong>Query:</strong> <span th:text="${userQuery}">User query</span>
+                </div>
+                
+                <!-- Function Calling Steps -->
+                <div class="function-steps">
+                    <div th:each="step : ${steps}" 
+                         th:class="|step-item step-${step.type}|">
+                        
+                        <!-- User Query Step -->
+                        <div th:if="${step.type == 'user_query'}" class="step-content user-query">
+                            <div class="step-header">
+                                <span class="step-number" th:text="${step.stepNumber}">1</span>
+                                <span class="step-type">User Query</span>
+                            </div>
+                            <div class="step-body" th:text="${step.content}">User input</div>
+                        </div>
+                        
+                        <!-- AI Response Step -->
+                        <div th:if="${step.type == 'ai_response'}" class="step-content ai-response">
+                            <div class="step-header">
+                                <span class="step-number" th:text="${step.stepNumber}">2</span>
+                                <span class="step-type">AI Response</span>
+                            </div>
+                            <div class="step-body" th:text="${step.content}">AI thinking</div>
+                        </div>
+                        
+                        <!-- Function Call Step -->
+                        <div th:if="${step.type == 'function_call'}" class="step-content function-call">
+                            <div class="step-header">
+                                <span class="step-number" th:text="${step.stepNumber}">3</span>
+                                <span class="step-type">Function Call</span>
+                            </div>
+                            <div class="step-body">
+                                <strong th:text="${step.functionName}">functionName</strong><span th:if="${step.functionArgs != null and step.functionArgs != '' and step.functionArgs != '{}'}" class="function-args" th:text="'(' + ${step.functionArgs} + ')'">args</span><span th:if="${step.functionArgs == null or step.functionArgs == '' or step.functionArgs == '{}'}">()</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Function Result Step -->
+                        <div th:if="${step.type == 'function_result'}" class="step-content function-result">
+                            <div class="step-header">
+                                <span class="step-number" th:text="${step.stepNumber}">4</span>
+                                <span class="step-type">Function Result</span>
+                            </div>
+                            <div class="step-body" th:text="${step.content}">Function output</div>
+                        </div>
+                        
+                        <!-- Final Answer Step -->
+                        <div th:if="${step.type == 'final_answer'}" class="step-content final-answer">
+                            <div class="step-header">
+                                <span class="step-number" th:text="${step.stepNumber}">5</span>
+                                <span class="step-type">Final Answer</span>
+                            </div>
+                            <div class="step-body" th:text="${step.content}">Final response</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error Section -->
+            <div th:if="${success == false and error}" class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">Error!</h4>
+                <p th:text="${error}">Error message</p>
+            </div>
+        </section>
+
+        <!-- System Prompt Section -->
+        <section class="system-prompt-section">
+            <h2>System Prompt</h2>
+            <div class="system-prompt-container">
+                <div class="system-prompt-preview" th:text="${systemPromptTruncated}">System prompt preview...</div>
+                <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#systemPromptFull">
+                    Show Full Prompt
+                </button>
+                <div class="collapse mt-2" id="systemPromptFull">
+                    <div class="system-prompt-full" th:text="${systemPrompt}">Full system prompt...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Available Functions Section -->
+        <section class="functions-section">
+            <h2>Available Functions</h2>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="function-card">
+                        <h5>getLocation()</h5>
+                        <p>Get current GPS coordinates and location information</p>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="function-card">
+                        <h5>getWeather(location)</h5>
+                        <p>Get weather information for a specific location</p>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="function-card">
+                        <h5>getStockPrice(ticker)</h5>
+                        <p>Get current stock price and change information</p>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="function-card">
+                        <h5>getCurrentTime()</h5>
+                        <p>Get current date and time</p>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="function-card">
+                        <h5>calculateDistance(from, to)</h5>
+                        <p>Calculate distance between two locations</p>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="function-card">
+                        <h5>getNewsHeadlines()</h5>
+                        <p>Get recent news headlines</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    <div th:replace="~{fragments/scripts :: common-scripts}"></div>
+</body>
+</html>
