@@ -11,21 +11,15 @@ Kotlin implementations of the [Scrimba AI Engineering Path](https://scrimba.com/
 A comprehensive Spring Boot web application that implements Scrimba AI Engineering course concepts in Kotlin. Features interactive demos and working examples of all major AI engineering patterns covered in the course.
 
 #### Live Interactive Demos
-**Completed:**
-- **🤖 Chat Completion** - OpenAI chat completion with customizable prompts and parameters
-- **🔢 Embeddings** - Text-to-vector conversion with statistical analysis and visualization  
-- **✂️ Chunking** - Interactive text splitting with overlap visualization
-- **🔗 RAG** - Full Retrieval-Augmented Generation pipeline showing query→embedding→search→response
-- **📈 Stock Data** - Real-time financial data from Polygon.io API with AI analysis
-- **🗄️ Vector Database** - Supabase vector operations and semantic search
-- **💬 Chat** - Multi-turn conversational interfaces
+The Kotlin implementation features comprehensive interactive demos covering all major AI engineering concepts from the Scrimba course:
 
-**Coming Soon:**
-- **🤗 HuggingFace** - Open-source ML model hub integration
-- **🧠 React Agent** - ReAct (Reasoning + Acting) pattern implementation
-- **⚡ Functions Agent** - OpenAI function calling capabilities
-- **✈️ Travel Agent** - Practical AI agent for trip planning
-- **🎯 Assistants API** - OpenAI's Assistants API integration
+- **Core AI APIs** - Chat completion, embeddings, and text processing
+- **Data & Search** - Vector databases, semantic search, and RAG pipelines  
+- **Real-world Integration** - Live financial data and external API connections
+- **Advanced Agents** - Multi-turn conversations and reasoning + acting patterns
+- **Production Patterns** - Error handling, session management, and scalable architectures
+
+Each demo includes working code examples, interactive web interfaces, and detailed explanations of the underlying concepts. See the [Kotlin project README](kotlin/README.md) for the complete list of available demonstrations.
 
 #### Technology Stack
 - **Backend**: Spring Boot 3.5.0 with Kotlin

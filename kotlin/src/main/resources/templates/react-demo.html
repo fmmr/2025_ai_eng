@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<!--suppress HtmlRequiredTitleElement -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: common-head}"></head>
+<body>
+    <div th:replace="~{fragments/navigation :: navbar(${activeTab})}"></div>
+
+    <div class="container my-4">
+        <section class="hero-section">
+            <h1>🧠 ReAct Agent</h1>
+            <p>Reasoning + Acting pattern: AI thinks through problems step-by-step and takes actions to gather information</p>
+            <a href="/" class="btn">← Back to Home</a>
+        </section>
+
+        <section class="demo-section">
+            <h2>Interactive Demo</h2>
+            
+            <!-- Query Form -->
+            <form th:action="@{/demo/react}" method="post" class="mb-4">
+                <div class="mb-3">
+                    <label for="userQuery" class="form-label">Ask the ReAct Agent:</label>
+                    <input type="text" 
+                           id="userQuery" 
+                           name="userQuery" 
+                           class="form-control" 
+                           th:value="${defaultQuery}" 
+                           placeholder="Do you have any ideas for activities I can do at my location?"
+                           required>
+                    <div class="form-text">
+                        Try: "What's the weather like where I am?", "Tell me about Apple's stock price", or "What activities can I do today?"
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">🧠 Run ReAct Agent</button>
+            </form>
+
+            <!-- System Prompt Info -->
+            <div class="mb-4">
+                <button class="btn btn-outline-info btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#systemPromptCollapse">
+                    📋 View System Prompt
+                </button>
+                <div class="collapse mt-2" id="systemPromptCollapse">
+                    <div class="card card-body">
+                        <h6>ReAct Agent System Prompt:</h6>
+                        <pre class="small" th:text="${systemPrompt}"></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Display -->
+            <div th:if="${success != null and success}">
+                <h3>🎯 Query: <span th:text="${userQuery}" class="text-primary"></span></h3>
+                
+                <!-- Step-by-step process -->
+                <div class="react-steps mt-4">
+                    <div th:each="step, iterStat : ${steps}" class="react-step mb-3">
+                        <!-- Thought Step -->
+                        <div th:if="${step.type == 'thought'}" class="card border-info">
+                            <div class="card-header bg-info text-white">
+                                <strong>💭 Step [[${step.stepNumber}]]: Thought</strong>
+                            </div>
+                            <div class="card-body">
+                                <p th:text="${step.content}" class="mb-0"></p>
+                            </div>
+                        </div>
+
+                        <!-- Action Step -->
+                        <div th:if="${step.type == 'action'}" class="card border-warning">
+                            <div class="card-header bg-warning text-dark">
+                                <strong>⚡ Step [[${step.stepNumber}]]: Action</strong>
+                            </div>
+                            <div class="card-body">
+                                <code th:text="${step.content}" class="text-success"></code>
+                            </div>
+                        </div>
+
+                        <!-- Observation Step -->
+                        <div th:if="${step.type == 'observation'}" class="card border-secondary">
+                            <div class="card-header bg-secondary text-white">
+                                <strong>📋 Step [[${step.stepNumber}]]: Observation</strong>
+                            </div>
+                            <div class="card-body">
+                                <pre th:text="${step.content}" class="mb-0 small"></pre>
+                            </div>
+                        </div>
+
+                        <!-- Final Answer -->
+                        <div th:if="${step.type == 'final_answer'}" class="card border-success">
+                            <div class="card-header bg-success text-white">
+                                <strong>✅ Final Answer</strong>
+                            </div>
+                            <div class="card-body">
+                                <p th:text="${step.content}" class="mb-0 fw-bold"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error Display -->
+            <div th:if="${success != null and !success}" class="alert alert-danger">
+                <h4>❌ Error</h4>
+                <p th:text="${error}"></p>
+            </div>
+        </section>
+
+        <section class="demo-section">
+            <h2>Available Functions</h2>
+            <div class="row">
+                <div class="col-md-6 col-lg-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h6 class="card-title">📍 getLocation()</h6>
+                            <p class="card-text small">Returns current location with city, country, and coordinates</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h6 class="card-title">🌤️ getWeather(location)</h6>
+                            <p class="card-text small">Gets weather information for a specific location</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h6 class="card-title">📈 getStockPrice(ticker)</h6>
+                            <p class="card-text small">Real stock price data from Polygon API (e.g., AAPL, MSFT)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h6 class="card-title">⏰ getCurrentTime()</h6>
+                            <p class="card-text small">Returns current date and time</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h6 class="card-title">📏 calculateDistance(from, to)</h6>
+                            <p class="card-text small">Calculates distance between two locations</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h6 class="card-title">📰 getNewsHeadlines()</h6>
+                            <p class="card-text small">Returns recent news headlines</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="demo-section">
+            <h2>How ReAct Works</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">🧠 Reasoning (Re)</h5>
+                            <p class="card-text">The AI thinks through the problem step by step, planning what information it needs and how to get it.</p>
+                            <div class="small text-muted">Example: "I need to get the user's location first, then check the weather there."</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">⚡ Acting (Act)</h5>
+                            <p class="card-text">The AI takes concrete actions by calling functions to gather the information it determined it needs.</p>
+                            <div class="small text-muted">Example: Calls getLocation(), then getWeather(), then provides final answer.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div th:replace="~{fragments/footer :: common-footer}"></div>
+    <div th:replace="~{fragments/scripts :: common-scripts}"></div>
+</body>
+</html>

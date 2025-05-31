@@ -20,10 +20,10 @@ This project implements the core concepts from the Scrimba AI Engineering course
 - **📈 Stock Data** - Real-time financial data from Polygon.io API with AI analysis
 - **🗄️ Vector Database** - Supabase vector operations and semantic search
 - **💬 Chat** - Multi-turn conversational interfaces with context awareness and session management
+- **🧠 ReAct Agent** - Reasoning + Acting pattern with step-by-step problem solving and function calling
 
 **🔜 Coming Soon (Scrimba Course Modules):**
 - **🤗 HuggingFace** - Open-source ML model hub integration
-- **🧠 React Agent** - ReAct (Reasoning + Acting) pattern implementation
 - **⚡ Functions Agent** - OpenAI function calling capabilities
 - **✈️ Travel Agent** - Practical AI agent for trip planning
 - **🎯 Assistants API** - OpenAI's Assistants API integration

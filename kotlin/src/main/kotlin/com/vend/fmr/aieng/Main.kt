@@ -29,11 +29,11 @@ suspend fun main() {
 //    val conversation = multiMessageChat(debug = true)
 //    println(conversation)
 
-//    val result1 = reactAgent("Do you have any ideas for activities I can do at my location?", debug = true)
-//    println("Final Result: $result1")
-//
-//    val result2 = reactAgent("Can you tell me the current stock price of Apple and Microsoft, and what time it is?", debug = true)
-//    println("Final Result: $result2")
+    val result1 = reactAgent("Do you have any ideas for activities I can do at my location?", debug = true)
+    println("Final Result: $result1")
+
+    val result2 = reactAgent("Can you tell me the current stock price of Apple and Microsoft, and what time it is?", debug = true)
+    println("Final Result: $result2")
 
 //    tickers("APPL", "NHYDY")
 //    embeddings("/movies.txt", true)

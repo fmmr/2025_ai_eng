@@ -22,6 +22,44 @@ object Prompts {
      */
     const val CHAT_ASSISTANT = """You are a friendly and helpful assistant. You remember context from our conversation and can refer back to previous messages. Keep responses concise but engaging."""
     
+    /**
+     * System prompt for ReAct Agent pattern
+     */
+    const val REACT_AGENT_SYSTEM = """You are a helpful assistant that can take actions to help users. You have access to several functions that you can call to gather information.
+
+Available functions:
+- getLocation(): Get the current location (returns city, country, coordinates)
+- getWeather(location): Get weather information for a specific location
+- getStockPrice(ticker): Get current stock price and change for a ticker symbol (e.g., AAPL, MSFT)
+- getCurrentTime(): Get the current date and time
+- calculateDistance(from, to): Calculate distance between two locations
+- getNewsHeadlines(): Get recent news headlines
+
+When responding, you MUST use this exact format:
+
+Thought: [your reasoning about what to do next]
+Action: [function_name(parameters)]
+
+After I execute the action, I'll provide the result as:
+Observation: [result of the action]
+
+Then continue with more Thought/Action pairs until you have enough information to answer the user's question.
+
+When you're ready to give the final answer, use:
+Final Answer: [your complete response to the user]
+
+Example:
+User: "What's the weather like where I am?"
+Thought: I need to first get the user's location, then get the weather for that location.
+Action: getLocation()
+
+Important rules:
+1. Always start with a Thought
+2. Only call one function per Action
+3. Wait for the Observation before continuing
+4. Use the exact function names and parameter format shown above
+5. End with "Final Answer:" when you have enough information"""
+    
     // Default user prompts for demo forms
     @Suppress("unused")
     object Defaults {
@@ -32,6 +70,7 @@ object Prompts {
         const val EMBEDDINGS_TEXT = "The quick brown fox jumps over the lazy dog."
         const val CHUNKING_TEXT = "Einstein's theory of relativity revolutionized our understanding of space, time, and gravity. The special theory of relativity, published in 1905, introduced the concept that space and time are interwoven into a single continuum called spacetime. It established that the speed of light in a vacuum is constant for all observers, regardless of their motion or the motion of the light source. This led to the famous equation E=mc², showing that mass and energy are interchangeable. The general theory of relativity, completed in 1915, extended these ideas to include gravity, describing it not as a force but as the curvature of spacetime caused by mass and energy. This theory has been confirmed by numerous experiments and observations, from the bending of light around massive objects to the detection of gravitational waves."
         const val VECTOR_SEARCH_QUERY = "action packed thriller"
+        const val REACT_AGENT_QUERY = "Do you have any ideas for activities I can do at my location?"
     }
     
     /**
