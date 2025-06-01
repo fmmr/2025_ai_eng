@@ -51,3 +51,8 @@ This is Kotlin code for an AI engineering course - learning to code with AI APIs
 - Single GitHub Actions workflow: tests → JAR build → Docker build → Docker test
 - Triggers on changes to: `kotlin/Dockerfile`, `kotlin/.dockerignore`, `kotlin/pom.xml`, `kotlin/src/**`, `.github/workflows/kotlin-ci.yml`
 - No redundant builds, efficient caching
+
+## Future API Integrations (TODO)
+- Location API: https://ipapi.co/json/
+- Weather API: https://api.met.no/
+- Weather API: https://openweathermap.org/api
