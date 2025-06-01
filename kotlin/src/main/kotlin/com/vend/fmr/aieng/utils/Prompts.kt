@@ -31,6 +31,16 @@ object Prompts {
     const val CHAT_ASSISTANT = """You are a friendly and helpful assistant. You remember context from our conversation and can refer back to previous messages. Keep responses concise but engaging."""
     
     /**
+     * System message for general helpful assistant
+     */
+    const val HELPFUL_ASSISTANT = """You are a helpful and knowledgeable assistant. Provide clear, accurate, and useful information in response to user queries."""
+    
+    /**
+     * System message for concise helpful assistant (for prompt engineering demos)
+     */
+    const val CONCISE_ASSISTANT = """You are a helpful assistant. Keep responses concise and focused - maximum 100 words. Provide clear, practical information without unnecessary elaboration."""
+    
+    /**
      * System prompt for ReAct Agent pattern
      */
     const val REACT_AGENT_SYSTEM = """You are a helpful assistant that can take actions to help users. You have access to several functions that you can call to gather information.

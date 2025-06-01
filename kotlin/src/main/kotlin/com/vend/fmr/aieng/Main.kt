@@ -7,6 +7,7 @@ import com.vend.fmr.aieng.impl.polygon.Polygon
 import com.vend.fmr.aieng.impl.supabase.Supabase
 import com.vend.fmr.aieng.utils.env
 import com.vend.fmr.aieng.utils.FunctionCallingExamples
+import com.vend.fmr.aieng.utils.promptEngineeringDemo
 
 val OPEN_AI_KEY = "OPENAI_API_KEY".env()
 val SUPABASE_URL = "SUPABASE_URL".env()
@@ -23,6 +24,8 @@ val polygon = Polygon(POLYGON_API_KEY)
 @Suppress("RedundantSuspendModifier", "RedundantSuppression")
 suspend fun main() {
     Runtime.getRuntime().addShutdownHook(Thread { close() })
+
+//    promptEngineeringDemo(debug = true)
 
 //    val conversation = multiMessageChat(debug = true)
 //    println(conversation)

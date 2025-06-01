@@ -150,3 +150,56 @@ suspend fun queryVectorDbForMovies(query: String, matches: Int = 5, debug: Boole
     }
     return response
 }
+
+data class PromptComparison(
+    val scenario: String,
+    val vague: String,
+    val better: String,
+    val excellent: String,
+    val vagueResponse: String = "",
+    val betterResponse: String = "",
+    val excellentResponse: String = ""
+)
+
+suspend fun promptEngineeringDemo(debug: Boolean = false) {
+    val scenarios = listOf(
+        PromptComparison(
+            scenario = "Recipe Generation",
+            vague = "Make pasta",
+            better = "Give me an Italian pasta recipe",
+            excellent = "Create an authentic Italian carbonara recipe for 4 people, including: exact ingredient quantities, prep time, cooking steps, and tips for perfect texture"
+        ),
+        PromptComparison(
+            scenario = "Travel Planning", 
+            vague = "Plan a trip",
+            better = "Plan a 3-day trip to Paris",
+            excellent = "Create a detailed 3-day budget-friendly Paris itinerary for a couple in spring, focusing on art museums and local cuisine, with daily schedules, transportation, and cost estimates"
+        )
+    )
+    
+    println("=== PROMPT ENGINEERING DEMONSTRATION ===")
+    println("Showing how prompt specificity dramatically improves AI responses\n")
+    
+    scenarios.forEach { scenario ->
+        println("🎯 SCENARIO: ${scenario.scenario}")
+        println("=" .repeat(50))
+        
+        println("\n❌ VAGUE PROMPT: \"${scenario.vague}\"")
+        val vagueResponse = openAI.createChatCompletion(scenario.vague, Prompts.CONCISE_ASSISTANT)
+        println("Response: ${vagueResponse.text()}")
+        
+        println("\n⚠️ BETTER PROMPT: \"${scenario.better}\"")
+        val betterResponse = openAI.createChatCompletion(scenario.better, Prompts.CONCISE_ASSISTANT)
+        println("Response: ${betterResponse.text()}")
+        
+        println("\n✅ EXCELLENT PROMPT: \"${scenario.excellent}\"")
+        val excellentResponse = openAI.createChatCompletion(scenario.excellent, Prompts.CONCISE_ASSISTANT)
+        println("Response: ${excellentResponse.text()}")
+        
+        if (debug) {
+            println("\nTokens used - Vague: ${vagueResponse.usage?.totalTokens}, Better: ${betterResponse.usage?.totalTokens}, Excellent: ${excellentResponse.usage?.totalTokens}")
+        }
+        
+        println("\n" + "=".repeat(80) + "\n")
+    }
+}
