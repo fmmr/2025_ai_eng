@@ -120,7 +120,7 @@ suspend fun multiMessageChat(debug: Boolean = false): String {
         // Add assistant response to conversation history
         conversationHistory.add(
             com.vend.fmr.aieng.impl.openai.Message(
-                role = "assistant", 
+                role = Prompts.Roles.ASSISTANT, 
                 content = assistantReply
             )
         )

@@ -2,6 +2,14 @@ package com.vend.fmr.aieng.utils
 
 object Prompts {
     
+    // OpenAI Message Roles
+    object Roles {
+        const val SYSTEM = "system"
+        const val USER = "user"
+        const val ASSISTANT = "assistant"
+        const val TOOL = "tool"
+    }
+    
     /**
      * System message for financial analysis using Polygon.io stock data
      */

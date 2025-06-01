@@ -64,10 +64,10 @@ class ReActController {
         var stepCounter = 1
 
         // Add system message
-        messages.add(Message("system", Prompts.REACT_AGENT_SYSTEM))
+        messages.add(Message(Prompts.Roles.SYSTEM, Prompts.REACT_AGENT_SYSTEM))
         
         // Add initial user query
-        messages.add(Message("user", userQuery))
+        messages.add(Message(Prompts.Roles.USER, userQuery))
 
         for (iteration in 0 until maxIterations) {
             // Get AI response using message history
@@ -80,7 +80,7 @@ class ReActController {
             val currentResponse = aiResponse.text()
 
             // Add AI response to messages
-            messages.add(Message("assistant", currentResponse))
+            messages.add(Message(Prompts.Roles.ASSISTANT, currentResponse))
 
             // Check if AI provided final answer
             if (currentResponse.contains("Final Answer:", ignoreCase = true)) {
@@ -108,7 +108,7 @@ class ReActController {
                 steps.add(ReActStep(stepCounter++, "observation", result))
 
                 // Add observation as a user message
-                messages.add(Message("user", observation))
+                messages.add(Message(Prompts.Roles.USER, observation))
             } else {
                 // No action found, AI might be done or confused
                 break

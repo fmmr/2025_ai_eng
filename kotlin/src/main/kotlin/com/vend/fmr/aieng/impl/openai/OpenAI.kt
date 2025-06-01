@@ -2,6 +2,7 @@ package com.vend.fmr.aieng.impl.openai
 
 import com.vend.fmr.aieng.EMBEDDING_MODEL
 import com.vend.fmr.aieng.OPEN_AI_MODEL
+import com.vend.fmr.aieng.utils.Prompts
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -43,8 +44,8 @@ class OpenAI(private val openaiApiKey: String) : Closeable {
         debug: Boolean = false
     ): ChatCompletionResponse {
         val messages = buildList {
-            systemMessage?.let { add(Message(role = "system", content = systemMessage)) }
-            add(Message(role = "user", content = prompt))
+            systemMessage?.let { add(Message(role = Prompts.Roles.SYSTEM, content = systemMessage)) }
+            add(Message(role = Prompts.Roles.USER, content = prompt))
         }
 
         return createChatCompletionWithMessages(messages, model, maxTokens, temperature, debug)

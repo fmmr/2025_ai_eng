@@ -26,10 +26,10 @@ object ReActAgentExamples {
         val messages = mutableListOf<com.vend.fmr.aieng.impl.openai.Message>()
         
         // Add system message
-        messages.add(com.vend.fmr.aieng.impl.openai.Message("system", Prompts.REACT_AGENT_SYSTEM))
+        messages.add(com.vend.fmr.aieng.impl.openai.Message(Prompts.Roles.SYSTEM, Prompts.REACT_AGENT_SYSTEM))
         
         // Add initial user query
-        messages.add(com.vend.fmr.aieng.impl.openai.Message("user", userQuery))
+        messages.add(com.vend.fmr.aieng.impl.openai.Message(Prompts.Roles.USER, userQuery))
         
         if (debug) {
             println("🤖 Starting ReAct Agent for query: $userQuery")
@@ -56,7 +56,7 @@ object ReActAgentExamples {
             }
             
             // Add AI response to messages
-            messages.add(com.vend.fmr.aieng.impl.openai.Message("assistant", currentResponse))
+            messages.add(com.vend.fmr.aieng.impl.openai.Message(Prompts.Roles.ASSISTANT, currentResponse))
             
             // Check if AI provided final answer
             if (currentResponse.contains("Final Answer:", ignoreCase = true)) {
@@ -87,7 +87,7 @@ object ReActAgentExamples {
                 }
                 
                 // Add observation as a user message (simulating function result)
-                messages.add(com.vend.fmr.aieng.impl.openai.Message("user", observation))
+                messages.add(com.vend.fmr.aieng.impl.openai.Message(Prompts.Roles.USER, observation))
             } else {
                 // No action found, AI might be done or confused
                 if (debug) {

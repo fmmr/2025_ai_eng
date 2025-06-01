@@ -68,12 +68,12 @@ class FunctionCallingController {
 
         // Add system message
         messages.add(Message(
-            role = "system", 
+            role = Prompts.Roles.SYSTEM, 
             content = Prompts.FUNCTION_CALLING_SYSTEM
         ))
         
         // Add initial user query
-        messages.add(Message(role = "user", content = userQuery))
+        messages.add(Message(role = Prompts.Roles.USER, content = userQuery))
         
         // Add user query step
         steps.add(FunctionCallingStep(
@@ -133,7 +133,7 @@ class FunctionCallingController {
                     
                     // Add function result as a tool message
                     messages.add(Message(
-                        role = "tool",
+                        role = Prompts.Roles.TOOL,
                         content = result,
                         toolCallId = toolCall.id
                     ))

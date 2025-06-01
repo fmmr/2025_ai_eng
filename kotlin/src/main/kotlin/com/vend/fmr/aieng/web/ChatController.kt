@@ -72,7 +72,7 @@ class ChatController {
             val assistantReply = response.text()
             
             // Add assistant response to history
-            chatHistory.add(ChatMessage("assistant", assistantReply))
+            chatHistory.add(ChatMessage(Prompts.Roles.ASSISTANT, assistantReply))
             
             // Keep conversation manageable (last 20 messages)
             if (chatHistory.size > 20) {
@@ -80,7 +80,7 @@ class ChatController {
             }
             
         } catch (e: Exception) {
-            chatHistory.add(ChatMessage("assistant", "Sorry, I encountered an error: ${e.message}"))
+            chatHistory.add(ChatMessage(Prompts.Roles.ASSISTANT, "Sorry, I encountered an error: ${e.message}"))
         }
         
         model.addAttribute("chatHistory", chatHistory)
