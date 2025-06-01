@@ -17,4 +17,12 @@ fun String.read(): String = object {}.javaClass.getResourceAsStream(this)
 /**
  * Helper extension for string repetition (for debug formatting)
  */
- operator fun String.times(count: Int): String = this.repeat(count)
+operator fun String.times(count: Int): String = this.repeat(count)
+
+fun String.truncate(l: Int = 200): String {
+    return if (length > l) {
+        this.take(l-1) + "…"
+    } else {
+        this
+    }
+}

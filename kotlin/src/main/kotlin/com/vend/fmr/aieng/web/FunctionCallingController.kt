@@ -4,6 +4,7 @@ import com.vend.fmr.aieng.impl.mocks.Mocks
 import com.vend.fmr.aieng.impl.openai.Message
 import com.vend.fmr.aieng.openAI
 import com.vend.fmr.aieng.utils.Prompts
+import com.vend.fmr.aieng.utils.truncate
 import kotlinx.coroutines.runBlocking
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -31,7 +32,7 @@ class FunctionCallingController {
         model.addAttribute("activeTab", "function-calling")
         model.addAttribute("defaultQuery", "Do you have any ideas for activities I can do at my location?")
         model.addAttribute("systemPrompt", Prompts.FUNCTION_CALLING_SYSTEM)
-        model.addAttribute("systemPromptTruncated", truncateSystemPrompt(Prompts.FUNCTION_CALLING_SYSTEM))
+        model.addAttribute("systemPromptTruncated", Prompts.FUNCTION_CALLING_SYSTEM.truncate())
         return "function-calling-demo"
     }
 
@@ -44,7 +45,7 @@ class FunctionCallingController {
         model.addAttribute("activeTab", "function-calling")
         model.addAttribute("defaultQuery", userQuery)
         model.addAttribute("systemPrompt", Prompts.FUNCTION_CALLING_SYSTEM)
-        model.addAttribute("systemPromptTruncated", truncateSystemPrompt(Prompts.FUNCTION_CALLING_SYSTEM))
+        model.addAttribute("systemPromptTruncated", Prompts.FUNCTION_CALLING_SYSTEM.truncate())
 
         try {
             val steps = runFunctionCallingAgent(userQuery)
@@ -162,11 +163,4 @@ class FunctionCallingController {
         }
     }
 
-    private fun truncateSystemPrompt(prompt: String): String {
-        return if (prompt.length > 200) {
-            prompt.take(200) + "..."
-        } else {
-            prompt
-        }
-    }
 }

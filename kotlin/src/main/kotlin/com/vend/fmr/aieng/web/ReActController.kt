@@ -4,6 +4,7 @@ import com.vend.fmr.aieng.impl.mocks.Mocks
 import com.vend.fmr.aieng.impl.openai.Message
 import com.vend.fmr.aieng.openAI
 import com.vend.fmr.aieng.utils.Prompts
+import com.vend.fmr.aieng.utils.truncate
 import kotlinx.coroutines.runBlocking
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -29,7 +30,7 @@ class ReActController {
         model.addAttribute("activeTab", "react")
         model.addAttribute("defaultQuery", Prompts.Defaults.REACT_AGENT_QUERY)
         model.addAttribute("systemPrompt", Prompts.REACT_AGENT_SYSTEM)
-        model.addAttribute("systemPromptTruncated", truncateSystemPrompt(Prompts.REACT_AGENT_SYSTEM))
+        model.addAttribute("systemPromptTruncated", Prompts.REACT_AGENT_SYSTEM.truncate())
         return "react-demo"
     }
 
@@ -42,7 +43,7 @@ class ReActController {
         model.addAttribute("activeTab", "react")
         model.addAttribute("defaultQuery", userQuery)
         model.addAttribute("systemPrompt", Prompts.REACT_AGENT_SYSTEM)
-        model.addAttribute("systemPromptTruncated", truncateSystemPrompt(Prompts.REACT_AGENT_SYSTEM))
+        model.addAttribute("systemPromptTruncated", Prompts.REACT_AGENT_SYSTEM.truncate())
 
         try {
             val steps = runReActAgent(userQuery)
@@ -134,16 +135,6 @@ class ReActController {
         if (actionMatch != null) {
             val action = actionMatch.groupValues[1].trim()
             steps.add(ReActStep(stepNumber, "action", action))
-        }
-    }
-
-
-
-    private fun truncateSystemPrompt(prompt: String): String {
-        return if (prompt.length > 200) {
-            prompt.take(200) + "..."
-        } else {
-            prompt
         }
     }
 }
