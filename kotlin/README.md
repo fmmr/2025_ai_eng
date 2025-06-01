@@ -27,11 +27,11 @@ This project implements the core concepts from the Scrimba AI Engineering course
 - **📝 Prompt Engineering** - Master crafting effective prompts with quality comparison techniques
 - **🎛️ Chat Parameters** - Interactive playground for temperature, top-p, and other OpenAI parameters
 - **🎯 Fine-tuning** - Custom model training with OpenAI's fine-tuning API
-- **🎨 Image Generation** - DALL-E integration for AI-powered image creation
 - **🌍 PollyGlot** - Multi-language translation bot (Solo Project)
 - **🤗 HuggingFace** - Open-source ML model hub integration
 - **🍿 PopChoice** - Smart movie recommendation engine (Solo Project)
 - **✈️ Travel Agent** - Practical AI agent for trip planning (Solo Project)
+- **🎨 Image Generation** - DALL-E integration for AI-powered image creation
 - **🎯 Assistants API** - OpenAI's Assistants API integration
 - **☕ OpenAI Java Library** - Explore OpenAI's official Java/Kotlin library vs custom implementation
 - **👁️ GPT-4 with Vision** - Multi-modal AI capabilities with image analysis and insights
