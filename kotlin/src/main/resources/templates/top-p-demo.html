@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<!--suppress HtmlRequiredTitleElement -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: common-head}">
+</head>
+<body>
+    <div th:replace="~{fragments/navigation :: navbar(${activeTab})}"></div>
+
+    <div class="container my-4">
+        <h1 class="text-center mb-4">🎯 Top-P Effects Laboratory</h1>
+        <p class="lead text-center">Discover how top-p affects AI vocabulary selection</p>
+
+        <!-- Error/Success Messages -->
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error:</strong> <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Success!</strong> Responses generated successfully. See the comparison below.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Demo Overview -->
+        <div class="row justify-content-center mb-4">
+            <div class="col-md-10">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">🎛️ Top-P Parameter Demo</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>📝 Prompt:</h6>
+                                <blockquote class="blockquote small mb-3">
+                                    "<span th:text="${prompt}"></span>"
+                                </blockquote>
+                                
+                                <h6>🔧 Settings:</h6>
+                                <ul class="small mb-0">
+                                    <li><strong>Fixed:</strong> <span th:text="${fixedParam}"></span></li>
+                                    <li><strong>Variable:</strong> <span th:text="${variableParam}"></span></li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>🎯 What you'll see:</h6>
+                                <p class="small mb-3" th:text="${explanation}"></p>
+                                
+                                <form th:action="@{/demo/top-p-effects}" method="post">
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <span class="spinner-border spinner-border-sm me-2 d-none" role="status"></span>
+                                        🚀 Generate All Responses
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Display -->
+        <div th:if="${results}" class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">📊 Top-P Effects Comparison</h5>
+                    </div>
+                    <div class="card-body">
+                        
+                        <!-- Four-column comparison -->
+                        <div class="row g-3">
+                            <div th:each="params : ${parameterSets}" class="col-lg-3 col-md-6">
+                                <div class="card h-100" 
+                                     th:classappend="${params.color == '🔵' ? 'border-primary' : 
+                                                     params.color == '🟢' ? 'border-success' : 
+                                                     params.color == '🟡' ? 'border-warning' : 'border-danger'}">
+                                    <div class="card-header text-center"
+                                         th:classappend="${params.color == '🔵' ? 'bg-primary text-white' : 
+                                                         params.color == '🟢' ? 'bg-success text-white' : 
+                                                         params.color == '🟡' ? 'bg-warning text-dark' : 'bg-danger text-white'}">
+                                        <h6 class="mb-0">
+                                            <span th:text="${params.color}"></span>
+                                            <span th:text="${params.name}"></span>
+                                        </h6>
+                                        <small th:text="'Top-P: ' + ${params.topP}"></small>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="small text-muted mb-2" th:text="${params.description}"></p>
+                                        <hr>
+                                        <h6>AI Response:</h6>
+                                        <div class="response-box" th:text="${params.response}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Analysis -->
+                        <div class="mt-4">
+                            <div class="alert alert-info">
+                                <h6>🔍 Key Observations:</h6>
+                                <ul class="mb-0">
+                                    <li><strong>Low Top-P (0.1)</strong> → Limited vocabulary, uses only most probable words</li>
+                                    <li><strong>Medium Top-P (0.5-0.9)</strong> → Balanced word variety and coherence</li>
+                                    <li><strong>High Top-P (1.0)</strong> → Full vocabulary access, more diverse word choices</li>
+                                    <li>Notice how vocabulary richness and word diversity increases with top-p</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Try Again Button -->
+                        <div class="text-center mt-4">
+                            <form th:action="@{/demo/top-p-effects}" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-outline-primary me-2">
+                                    🔄 Generate New Responses
+                                </button>
+                            </form>
+                            <a href="/demo/temperature-effects" class="btn btn-outline-secondary">
+                                🌡️ Try Temperature Effects Demo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Section -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card border-info">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">🎯 Understanding Top-P (Nucleus Sampling)</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>🔒 Low Top-P (0.1-0.3)</h6>
+                                <p class="small">Only considers the most probable words (top 10-30%). Conservative vocabulary choices.</p>
+                                
+                                <h6>⚖️ Medium Top-P (0.5-0.9)</h6>
+                                <p class="small">Balanced approach considering 50-90% of likely words. Good for most applications.</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>🌐 High Top-P (0.9-1.0)</h6>
+                                <p class="small">Considers nearly all vocabulary. Maximum word diversity but maintains relevance.</p>
+                                
+                                <h6>💡 Use Cases</h6>
+                                <p class="small">Low: Formal writing, technical docs | High: Creative writing, poetry, diverse descriptions</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: common-footer}"></div>
+    <div th:replace="~{fragments/scripts :: common-scripts}"></div>
+
+    <script>
+        // Add loading spinner when form is submitted
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function() {
+                const button = this.querySelector('button[type="submit"]');
+                const spinner = button.querySelector('.spinner-border');
+                if (spinner) {
+                    button.disabled = true;
+                    spinner.classList.remove('d-none');
+                    button.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Generating Responses...';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

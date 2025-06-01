@@ -22,8 +22,9 @@
                     <a th:href="@{/demo/chat-completion}" th:classappend="${activeTab == 'chat-completion' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Chat Completion ✓">🤖</a>
                     <a th:href="@{/demo/stock}" th:classappend="${activeTab == 'stock' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Stock Data ✓">📈</a>
                     <a th:href="@{/demo/chat}" th:classappend="${activeTab == 'chat' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Chat ✓">💬</a>
-                    <span class="nav-link nav-icon text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Chat Parameters (Soon™)">🎛️</span>
-                    <span class="nav-link nav-icon text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Fine-tuning (Maybe Next Year)">🎯</span>
+                    <a th:href="@{/demo/temperature-effects}" th:classappend="${activeTab == 'temperature-effects' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Temperature Effects ✓">🌡️</a>
+                    <a th:href="@{/demo/top-p-effects}" th:classappend="${activeTab == 'top-p-effects' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Top-P Effects ✓">🎯</a>
+                    <span class="nav-link nav-icon text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Fine-tuning (Maybe Next Year)">⚙️</span>
                     <span class="nav-link nav-icon text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="PollyGlot (Someday Maybe 🌅) - Solo Project">🌍</span>
                     <span class="nav-link nav-icon text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="HuggingFace (On My TODO List)">🤗</span>
                     <a th:href="@{/demo/embeddings}" th:classappend="${activeTab == 'embeddings' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Embeddings ✓">🔢</a>

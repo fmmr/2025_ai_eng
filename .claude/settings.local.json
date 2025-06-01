@@ -20,7 +20,8 @@
       "Bash(grep:*)",
       "Bash(git add:*)",
       "WebFetch(domain:github.com)",
-      "WebFetch(domain:docs.anthropic.com)"
+      "WebFetch(domain:docs.anthropic.com)",
+      "Bash(sed:*)"
     ],
     "deny": []
   },
