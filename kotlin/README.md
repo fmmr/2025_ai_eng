@@ -14,19 +14,26 @@ This project implements the core concepts from the Scrimba AI Engineering course
 
 **✅ Completed:**
 - **🤖 Chat Completion** - OpenAI chat completion with customizable prompts and parameters
+- **📈 Stock Data** - Real-time financial data from Polygon.io API with AI analysis
+- **💬 Chat** - Multi-turn conversational interfaces with context awareness and session management
 - **🔢 Embeddings** - Text-to-vector conversion with statistical analysis and visualization  
 - **✂️ Chunking** - Interactive text splitting with overlap visualization
-- **🔗 RAG** - Full Retrieval-Augmented Generation pipeline showing query→embedding→search→response
-- **📈 Stock Data** - Real-time financial data from Polygon.io API with AI analysis
 - **🗄️ Vector Database** - Supabase vector operations and semantic search
-- **💬 Chat** - Multi-turn conversational interfaces with context awareness and session management
+- **🔗 RAG** - Full Retrieval-Augmented Generation pipeline showing query→embedding→search→response
 - **🧠 ReAct Agent** - Reasoning + Acting pattern with step-by-step problem solving and function calling
 - **🛠️ Function Calling Agent** - OpenAI's native function calling with structured tool schemas
 
-**🔜 Coming Soon (Scrimba Course Modules):**
+**🔜 Coming Soon:**
+- **📝 Prompt Engineering** - Master crafting effective prompts with quality comparison techniques
+- **🎛️ Chat Parameters** - Interactive playground for temperature, top-p, and other OpenAI parameters
+- **🎯 Fine-tuning** - Custom model training with OpenAI's fine-tuning API
+- **🎨 Image Generation** - DALL-E integration for AI-powered image creation
+- **🌍 PollyGlot** - Multi-language translation bot (Solo Project)
 - **🤗 HuggingFace** - Open-source ML model hub integration
-- **✈️ Travel Agent** - Practical AI agent for trip planning
+- **🍿 PopChoice** - Smart movie recommendation engine (Solo Project)
+- **✈️ Travel Agent** - Practical AI agent for trip planning (Solo Project)
 - **🎯 Assistants API** - OpenAI's Assistants API integration
+- **☕ OpenAI Java Library** - Explore OpenAI's official Java/Kotlin library vs custom implementation
 
 ### Technology Stack
 - **Backend**: Spring Boot 3.5.0 with Kotlin

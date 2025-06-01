@@ -17,21 +17,26 @@
                 <div class="navbar-nav ms-auto">
                     <a th:href="@{/}" th:classappend="${activeTab == 'home' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Home">🏠</a>
                     
-                    <!-- Completed Demos -->
+                    <!-- All Demos in Order -->
+                    <span class="nav-link nav-icon text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Prompt Engineering (Soon™)">📝</span>
                     <a th:href="@{/demo/chat-completion}" th:classappend="${activeTab == 'chat-completion' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Chat Completion ✓">🤖</a>
+                    <a th:href="@{/demo/stock}" th:classappend="${activeTab == 'stock' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Stock Data ✓">📈</a>
+                    <a th:href="@{/demo/chat}" th:classappend="${activeTab == 'chat' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Chat ✓">💬</a>
+                    <span class="nav-link nav-icon text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Chat Parameters (Soon™)">🎛️</span>
+                    <span class="nav-link nav-icon text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Fine-tuning (Maybe Next Year)">🎯</span>
+                    <span class="nav-link nav-icon text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Image Generation (After Coffee ☕)">🎨</span>
+                    <span class="nav-link nav-icon text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="PollyGlot (Someday Maybe 🌅) - Solo Project">🌍</span>
+                    <span class="nav-link nav-icon text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="HuggingFace (On My TODO List)">🤗</span>
                     <a th:href="@{/demo/embeddings}" th:classappend="${activeTab == 'embeddings' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Embeddings ✓">🔢</a>
                     <a th:href="@{/demo/chunking}" th:classappend="${activeTab == 'chunking' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Chunking ✓">✂️</a>
-                    <a th:href="@{/demo/rag}" th:classappend="${activeTab == 'rag' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="RAG ✓">🔗</a>
-                    <a th:href="@{/demo/stock}" th:classappend="${activeTab == 'stock' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Stock Data ✓">📈</a>
                     <a th:href="@{/demo/supabase}" th:classappend="${activeTab == 'supabase' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Vector Database ✓">🗄️</a>
-                    <a th:href="@{/demo/chat}" th:classappend="${activeTab == 'chat' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Chat ✓">💬</a>
+                    <a th:href="@{/demo/rag}" th:classappend="${activeTab == 'rag' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="RAG ✓">🔗</a>
+                    <span class="nav-link nav-icon text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="PopChoice (In My Dreams 💭) - Solo Project">🍿</span>
                     <a th:href="@{/demo/react}" th:classappend="${activeTab == 'react' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="ReAct Agent ✓">🧠</a>
                     <a th:href="@{/demo/function-calling}" th:classappend="${activeTab == 'function-calling' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Function Calling Agent ✓">🛠️</a>
-                    
-                    <!-- Still Procrastinating -->
-                    <span class="nav-link nav-icon text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="HuggingFace (On My TODO List)">🤗</span>
-                    <span class="nav-link nav-icon text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Travel Agent (Someday™)">✈️</span>
+                    <span class="nav-link nav-icon text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Travel Agent (When I Have Time ⏰) - Solo Project">✈️</span>
                     <span class="nav-link nav-icon text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Assistants API (After Coffee ☕)">🎯</span>
+                    <span class="nav-link nav-icon text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="OpenAI Java Library (Library Exploration)">☕</span>
                 </div>
             </div>
         </div>

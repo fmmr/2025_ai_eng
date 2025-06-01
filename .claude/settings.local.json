@@ -18,7 +18,8 @@
       "Bash(curl:*)",
       "Bash(docker build:*)",
       "Bash(grep:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "WebFetch(domain:github.com)"
     ],
     "deny": []
   },
