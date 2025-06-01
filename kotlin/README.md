@@ -34,6 +34,7 @@ This project implements the core concepts from the Scrimba AI Engineering course
 - **✈️ Travel Agent** - Practical AI agent for trip planning (Solo Project)
 - **🎯 Assistants API** - OpenAI's Assistants API integration
 - **☕ OpenAI Java Library** - Explore OpenAI's official Java/Kotlin library vs custom implementation
+- **👁️ GPT-4 with Vision** - Multi-modal AI capabilities with image analysis and insights
 
 ### Technology Stack
 - **Backend**: Spring Boot 3.5.0 with Kotlin
