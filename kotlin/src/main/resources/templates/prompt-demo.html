@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<!--suppress HtmlRequiredTitleElement -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: common-head}">
+</head>
+<body>
+    <div th:replace="~{fragments/navigation :: navbar(${activeTab})}"></div>
+
+    <div class="container my-4">
+        <h1 class="text-center mb-4">📝 Prompt Engineering Laboratory</h1>
+        <p class="lead text-center">Discover how prompt specificity dramatically improves AI response quality</p>
+
+        <!-- Error/Success Messages -->
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error:</strong> <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Success!</strong> Responses generated successfully. See the comparison below.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Scenario Selection -->
+        <div class="row justify-content-center mb-4">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">🎯 Choose a Scenario to Analyze</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Select a scenario below to see how different levels of prompt specificity affect AI responses:</p>
+                        
+                        <div class="row g-3">
+                            <div th:each="scenario, iterStat : ${scenarios}" class="col-md-6">
+                                <form th:action="@{/demo/prompt-engineering}" method="post" class="h-100">
+                                    <input type="hidden" name="scenarioIndex" th:value="${iterStat.index}">
+                                    <div class="card border-primary h-100">
+                                        <div class="card-body d-flex flex-column">
+                                            <h6 class="card-title" th:text="${scenario.scenario}"></h6>
+                                            <p class="card-text text-muted small mb-3">
+                                                Compare: "<span th:text="${scenario.vague}"></span>" vs detailed specifications
+                                            </p>
+                                            <button type="submit" class="btn btn-primary mt-auto">
+                                                <span class="spinner-border spinner-border-sm me-2 d-none" role="status"></span>
+                                                Test This Scenario
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Display -->
+        <div th:if="${selectedScenario != null}" class="row">
+            <div class="col-12">
+                <div th:with="scenario=${scenarios[selectedScenario]}" class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">📊 Results: <span th:text="${scenario.scenario}"></span></h5>
+                    </div>
+                    <div class="card-body">
+                        
+                        <!-- Three-column comparison -->
+                        <div class="row g-4">
+                            <!-- Vague Prompt -->
+                            <div class="col-lg-4">
+                                <div class="card border-danger h-100">
+                                    <div class="card-header bg-danger text-white">
+                                        <h6 class="mb-0">❌ Vague Prompt</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <blockquote class="blockquote small">
+                                            "<span th:text="${scenario.vague}"></span>"
+                                        </blockquote>
+                                        <hr>
+                                        <h6>AI Response:</h6>
+                                        <div class="response-box" th:text="${scenario.vagueResponse}"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Better Prompt -->
+                            <div class="col-lg-4">
+                                <div class="card border-warning h-100">
+                                    <div class="card-header bg-warning text-dark">
+                                        <h6 class="mb-0">⚠️ Better Prompt</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <blockquote class="blockquote small">
+                                            "<span th:text="${scenario.better}"></span>"
+                                        </blockquote>
+                                        <hr>
+                                        <h6>AI Response:</h6>
+                                        <div class="response-box" th:text="${scenario.betterResponse}"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Excellent Prompt -->
+                            <div class="col-lg-4">
+                                <div class="card border-success h-100">
+                                    <div class="card-header bg-success text-white">
+                                        <h6 class="mb-0">✅ Excellent Prompt</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <blockquote class="blockquote small">
+                                            "<span th:text="${scenario.excellent}"></span>"
+                                        </blockquote>
+                                        <hr>
+                                        <h6>AI Response:</h6>
+                                        <div class="response-box" th:text="${scenario.excellentResponse}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Analysis -->
+                        <div class="mt-4">
+                            <div class="alert alert-info">
+                                <h6>🔍 Key Observations:</h6>
+                                <ul class="mb-0">
+                                    <li><strong>Vague prompts</strong> produce generic, basic responses</li>
+                                    <li><strong>Better prompts</strong> add context and get more specific results</li>
+                                    <li><strong>Excellent prompts</strong> include detailed requirements and get actionable, comprehensive answers</li>
+                                    <li>Notice how response quality and usefulness improve dramatically with specificity</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Try Another Button -->
+                        <div class="text-center mt-4">
+                            <a href="/demo/prompt-engineering" class="btn btn-outline-primary">
+                                🔄 Try Another Scenario
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Section -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card border-info">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">💡 Prompt Engineering Tips</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>🎯 Be Specific</h6>
+                                <p class="small">Include exact requirements, quantities, timeframes, and constraints.</p>
+                                
+                                <h6>📋 Provide Context</h6>
+                                <p class="small">Explain the situation, audience, and purpose for better targeted responses.</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>🔢 Request Structure</h6>
+                                <p class="small">Ask for lists, steps, examples, or specific formats when needed.</p>
+                                
+                                <h6>⚡ Set Constraints</h6>
+                                <p class="small">Specify length, style, complexity level, or other boundaries.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: common-footer}"></div>
+    <div th:replace="~{fragments/scripts :: common-scripts}"></div>
+
+    <script>
+        // Add loading spinner when form is submitted
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function() {
+                const button = this.querySelector('button[type="submit"]');
+                const spinner = button.querySelector('.spinner-border');
+                button.disabled = true;
+                spinner.classList.remove('d-none');
+                button.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Generating Responses...';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -13,6 +13,7 @@ This project implements the core concepts from the Scrimba AI Engineering course
 ### Interactive Demos
 
 **✅ Completed:**
+- **📝 Prompt Engineering** - Interactive comparison showing how prompt specificity improves AI response quality
 - **🤖 Chat Completion** - OpenAI chat completion with customizable prompts and parameters
 - **📈 Stock Data** - Real-time financial data from Polygon.io API with AI analysis
 - **💬 Chat** - Multi-turn conversational interfaces with context awareness and session management
@@ -24,7 +25,6 @@ This project implements the core concepts from the Scrimba AI Engineering course
 - **🛠️ Function Calling Agent** - OpenAI's native function calling with structured tool schemas
 
 **🔜 Coming Soon:**
-- **📝 Prompt Engineering** - Master crafting effective prompts with quality comparison techniques
 - **🎛️ Chat Parameters** - Interactive playground for temperature, top-p, and other OpenAI parameters
 - **🎯 Fine-tuning** - Custom model training with OpenAI's fine-tuning API
 - **🌍 PollyGlot** - Multi-language translation bot (Solo Project)

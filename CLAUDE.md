@@ -56,3 +56,10 @@ This is Kotlin code for an AI engineering course - learning to code with AI APIs
 - Location API: https://ipapi.co/json/
 - Weather API: https://api.met.no/
 - Weather API: https://openweathermap.org/api
+
+## Demo Management Notes
+- For each demo, consistently update:
+  - home (demo-box)
+  - navbar 
+  - readme
+- Ensure order and state are reflected identically across all three components
