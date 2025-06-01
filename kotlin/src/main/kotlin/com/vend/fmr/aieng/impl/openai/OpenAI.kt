@@ -41,6 +41,7 @@ class OpenAI(private val openaiApiKey: String) : Closeable {
         model: String = OPEN_AI_MODEL,
         maxTokens: Int = 300,
         temperature: Double = 0.7,
+        topP: Double? = null,
         debug: Boolean = false
     ): ChatCompletionResponse {
         val messages = buildList {
@@ -48,7 +49,7 @@ class OpenAI(private val openaiApiKey: String) : Closeable {
             add(Message(role = Prompts.Roles.USER, content = prompt))
         }
 
-        return createChatCompletionWithMessages(messages, model, maxTokens, temperature, debug)
+        return createChatCompletionWithMessages(messages, model, maxTokens, temperature, topP, debug)
     }
 
     suspend fun createChatCompletionWithMessages(
@@ -56,6 +57,7 @@ class OpenAI(private val openaiApiKey: String) : Closeable {
         model: String = OPEN_AI_MODEL,
         maxTokens: Int = 300,
         temperature: Double = 0.7,
+        topP: Double? = null,
         debug: Boolean = false,
         tools: List<Tool>? = null,
         toolChoice: String? = null
@@ -65,6 +67,7 @@ class OpenAI(private val openaiApiKey: String) : Closeable {
             messages = messages,
             maxTokens = maxTokens,
             temperature = temperature,
+            topP = topP,
             tools = tools,
             toolChoice = toolChoice
         )

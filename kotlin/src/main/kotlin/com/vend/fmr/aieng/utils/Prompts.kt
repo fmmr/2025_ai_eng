@@ -41,6 +41,11 @@ object Prompts {
     const val CONCISE_ASSISTANT = """You are a helpful assistant. Keep responses concise and focused - maximum 100 words. Provide clear, practical information without unnecessary elaboration."""
     
     /**
+     * System message for chat parameters demo (very brief responses)
+     */
+    const val BRIEF_ASSISTANT = """You are a helpful assistant. Keep responses very brief - maximum 50 words. Be creative within the constraints of the prompt."""
+    
+    /**
      * System prompt for ReAct Agent pattern
      */
     const val REACT_AGENT_SYSTEM = """You are a helpful assistant that can take actions to help users. You have access to several functions that you can call to gather information.
@@ -94,6 +99,7 @@ Important rules:
         const val CHUNKING_TEXT = "Einstein's theory of relativity revolutionized our understanding of space, time, and gravity. The special theory of relativity, published in 1905, introduced the concept that space and time are interwoven into a single continuum called spacetime. It established that the speed of light in a vacuum is constant for all observers, regardless of their motion or the motion of the light source. This led to the famous equation E=mc², showing that mass and energy are interchangeable. The general theory of relativity, completed in 1915, extended these ideas to include gravity, describing it not as a force but as the curvature of spacetime caused by mass and energy. This theory has been confirmed by numerous experiments and observations, from the bending of light around massive objects to the detection of gravitational waves."
         const val VECTOR_SEARCH_QUERY = "action packed thriller"
         const val REACT_AGENT_QUERY = "Do you have any ideas for activities I can do at my location?"
+        const val CHAT_PARAMETERS_PROMPT = "Describe the perfect pizza"
     }
     
     /**

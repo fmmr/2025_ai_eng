@@ -203,3 +203,164 @@ suspend fun promptEngineeringDemo(debug: Boolean = false) {
         println("\n" + "=".repeat(80) + "\n")
     }
 }
+
+data class ParameterSet(
+    val name: String,
+    val description: String,
+    val temperature: Double,
+    val topP: Double,
+    val color: String,
+    val response: String = ""
+)
+
+suspend fun temperatureDemo(debug: Boolean = false) {
+    val prompt = Prompts.Defaults.CHAT_PARAMETERS_PROMPT
+    val fixedTopP = 0.9
+    
+    val temperatureSettings = listOf(
+        ParameterSet(
+            name = "Very Conservative",
+            description = "Extremely Predictable",
+            temperature = 0.1,
+            topP = fixedTopP,
+            color = "🔵"
+        ),
+        ParameterSet(
+            name = "Moderate", 
+            description = "Balanced Responses",
+            temperature = 0.5,
+            topP = fixedTopP,
+            color = "🟢"
+        ),
+        ParameterSet(
+            name = "Creative",
+            description = "More Adventurous", 
+            temperature = 1.0,
+            topP = fixedTopP,
+            color = "🟡"
+        ),
+        ParameterSet(
+            name = "Wild",
+            description = "Maximum Creativity",
+            temperature = 1.8,
+            topP = fixedTopP,
+            color = "🔴"
+        )
+    )
+    
+    println("=== 🌡️ TEMPERATURE EFFECTS DEMONSTRATION ===")
+    println("Prompt: \"$prompt\"")
+    println("Fixed: top_p = $fixedTopP")
+    println("Variable: temperature (0.1 → 1.8)")
+    println("Shows: How temperature affects creativity vs consistency\n")
+    
+    temperatureSettings.forEach { params ->
+        println("${params.color} TEMPERATURE ${params.temperature} - ${params.name.uppercase()}")
+        println("${params.description} (top_p = ${params.topP})")
+        println("=" .repeat(60))
+        
+        try {
+            val response = openAI.createChatCompletion(
+                prompt = prompt,
+                systemMessage = Prompts.BRIEF_ASSISTANT,
+                maxTokens = 100,
+                temperature = params.temperature,
+                topP = params.topP
+            )
+            
+            println("Response: ${response.text()}")
+            
+            if (debug) {
+                println("Tokens used: ${response.usage?.totalTokens}")
+            }
+            
+        } catch (e: Exception) {
+            println("Error: ${e.message}")
+        }
+        
+        println("\n" + "=".repeat(80) + "\n")
+    }
+}
+
+suspend fun topPDemo(debug: Boolean = false) {
+    val prompt = Prompts.Defaults.CHAT_PARAMETERS_PROMPT
+    val fixedTemperature = 0.7
+    
+    val topPSettings = listOf(
+        ParameterSet(
+            name = "Very Restricted",
+            description = "Only Most Likely Words",
+            temperature = fixedTemperature,
+            topP = 0.1,
+            color = "🔵"
+        ),
+        ParameterSet(
+            name = "Somewhat Restricted", 
+            description = "Limited Vocabulary",
+            temperature = fixedTemperature,
+            topP = 0.5,
+            color = "🟢"
+        ),
+        ParameterSet(
+            name = "Balanced",
+            description = "Good Word Variety", 
+            temperature = fixedTemperature,
+            topP = 0.9,
+            color = "🟡"
+        ),
+        ParameterSet(
+            name = "Unrestricted",
+            description = "Full Vocabulary Access",
+            temperature = fixedTemperature,
+            topP = 1.0,
+            color = "🔴"
+        )
+    )
+    
+    println("=== 🎯 TOP-P EFFECTS DEMONSTRATION ===")
+    println("Prompt: \"$prompt\"")
+    println("Fixed: temperature = $fixedTemperature")
+    println("Variable: top_p (0.1 → 1.0)")
+    println("Shows: How top_p affects vocabulary restriction vs exploration\n")
+    
+    topPSettings.forEach { params ->
+        println("${params.color} TOP_P ${params.topP} - ${params.name.uppercase()}")
+        println("${params.description} (temperature = ${params.temperature})")
+        println("=" .repeat(60))
+        
+        try {
+            val response = openAI.createChatCompletion(
+                prompt = prompt,
+                systemMessage = Prompts.BRIEF_ASSISTANT,
+                maxTokens = 100,
+                temperature = params.temperature,
+                topP = params.topP
+            )
+            
+            println("Response: ${response.text()}")
+            
+            if (debug) {
+                println("Tokens used: ${response.usage?.totalTokens}")
+            }
+            
+        } catch (e: Exception) {
+            println("Error: ${e.message}")
+        }
+        
+        println("\n" + "=".repeat(80) + "\n")
+    }
+}
+
+suspend fun chatParametersDemo(debug: Boolean = false) {
+    temperatureDemo(debug)
+    println("\n" + "🔄".repeat(40) + "\n")
+    topPDemo(debug)
+    
+    println("🎯 KEY LEARNINGS:")
+    println("🌡️ TEMPERATURE:")
+    println("  • Low (0.1) = Very predictable, safe, repetitive responses")
+    println("  • High (1.8) = Creative, unpredictable, sometimes chaotic responses")
+    println("🎯 TOP-P:")
+    println("  • Low (0.1) = Uses only the most probable words, conservative vocabulary")
+    println("  • High (1.0) = Considers full vocabulary range, more word variety")
+}

@@ -8,6 +8,8 @@ import com.vend.fmr.aieng.impl.supabase.Supabase
 import com.vend.fmr.aieng.utils.env
 import com.vend.fmr.aieng.utils.FunctionCallingExamples
 import com.vend.fmr.aieng.utils.promptEngineeringDemo
+import com.vend.fmr.aieng.utils.chatParametersDemo
+import com.vend.fmr.aieng.utils.temperatureDemo
 
 val OPEN_AI_KEY = "OPENAI_API_KEY".env()
 val SUPABASE_URL = "SUPABASE_URL".env()
@@ -24,6 +26,8 @@ val polygon = Polygon(POLYGON_API_KEY)
 @Suppress("RedundantSuspendModifier", "RedundantSuppression")
 suspend fun main() {
     Runtime.getRuntime().addShutdownHook(Thread { close() })
+
+//    chatParametersDemo(debug = true)
 
 //    promptEngineeringDemo(debug = true)
 

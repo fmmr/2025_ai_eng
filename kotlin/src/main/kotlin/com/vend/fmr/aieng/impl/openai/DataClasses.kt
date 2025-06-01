@@ -18,6 +18,7 @@ data class ChatCompletionRequest(
     val messages: List<Message>,
     @SerialName("max_tokens") val maxTokens: Int = 100,
     val temperature: Double = 0.7,
+    @SerialName("top_p") val topP: Double? = null,
     val stream: Boolean = false,
     val tools: List<Tool>? = null,
     @SerialName("tool_choice") val toolChoice: String? = null
