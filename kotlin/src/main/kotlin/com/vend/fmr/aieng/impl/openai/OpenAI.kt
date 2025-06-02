@@ -10,6 +10,7 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.client.plugins.timeout
 import io.ktor.client.request.*
+import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
@@ -187,6 +188,52 @@ class OpenAI(private val openaiApiKey: String) : Closeable {
         }
 
         return json.decodeFromString<ImageGenerationResponse>(responseText)
+    }
+
+    suspend fun editImage(
+        prompt: String,
+        imageFile: ByteArray,
+        maskFile: ByteArray,
+        model: String = Models.ImageGeneration.DALL_E_2, // Only DALL-E 2 supports editing
+        size: String = "1024x1024",
+        debug: Boolean = false
+    ): ImageEditResponse {
+        val response = client.submitFormWithBinaryData(
+            url = "https://api.openai.com/v1/images/edits",
+            formData = formData {
+                append("prompt", prompt)
+                append("model", model)
+                append("size", size)
+                append("response_format", "url")
+                append("image", imageFile, Headers.build {
+                    append(HttpHeaders.ContentType, "image/png")
+                    append(HttpHeaders.ContentDisposition, "filename=\"image.png\"")
+                })
+                append("mask", maskFile, Headers.build {
+                    append(HttpHeaders.ContentType, "image/png") 
+                    append(HttpHeaders.ContentDisposition, "filename=\"mask.png\"")
+                })
+            }
+        ) {
+            headers {
+                append("Authorization", "Bearer $openaiApiKey")
+            }
+            timeout {
+                requestTimeoutMillis = 300000 // 5 minutes for image editing
+            }
+        }
+
+        val responseText = response.bodyAsText()
+        if (debug) {
+            println("Image Edit Status: ${response.status}")
+            println("Response: $responseText")
+        }
+
+        if (!response.status.isSuccess()) {
+            throw Exception("Image editing API request failed with status ${response.status}: $responseText")
+        }
+
+        return json.decodeFromString<ImageEditResponse>(responseText)
     }
 
     suspend fun createVisionCompletion(

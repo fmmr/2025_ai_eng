@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<!--suppress HtmlRequiredTitleElement -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: common-head}">
+</head>
+<body>
+    <div th:replace="~{fragments/navigation :: navbar(${activeTab})}"></div>
+
+    <div class="container my-4">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="mb-4">✏️ AI Image Editing with DALL-E 2</h1>
+                <p class="lead">Edit images by describing what you want to add or change in the masked areas. DALL-E 2 will seamlessly blend your prompt into the original image.</p>
+            </div>
+        </div>
+
+        <!-- Demo Images Section -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h6 class="card-title">📸 Original Image</h6>
+                        <img src="/images/ski.png" alt="Original winter ski scene" class="img-fluid rounded" style="max-height: 200px;">
+                        <p class="card-text small mt-2">Beautiful winter cross-country ski scene</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h6 class="card-title">🎭 Edit Area</h6>
+                        <img src="/images/ski_mask.png" alt="Mask showing editable area" class="img-fluid rounded" style="max-height: 200px;">
+                        <p class="card-text small mt-2">The white area in the sky shows where your prompt will be applied</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Image Editing Form -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">🎨 Edit Parameters</h5>
+                        <form id="imageEditForm" th:action="@{/demo/image-editing}" method="post">
+                            
+                            <!-- Hidden form data for JavaScript -->
+                            <div id="formData" style="display: none;"
+                                 th:attr="data-prompt=${formData?.prompt ?: defaultPrompt},
+                                          data-size=${formData?.size ?: '1024x1024'}"></div>
+
+                            <!-- Prompt and Parameters Row -->
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-8">
+                                    <label for="prompt" class="form-label">✨ What to add in the sky area</label>
+                                    <textarea class="form-control" id="prompt" name="prompt" rows="3" 
+                                              th:text="${formData?.prompt ?: defaultPrompt}" 
+                                              placeholder="Describe what should appear in the masked sky area..." required></textarea>
+                                    <div class="form-text">Be specific about what you want to see in the white masked area</div>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="size" class="form-label">📐 Output Size</label>
+                                        <select class="form-select form-select-sm" id="size" name="size">
+                                            <option th:each="sizeOption : ${availableSizes}" 
+                                                    th:value="${sizeOption.first}" 
+                                                    th:text="${sizeOption.second}"
+                                                    th:selected="${formData?.size == sizeOption.first ?: sizeOption.first == '1024x1024'}"></option>
+                                        </select>
+                                        <div class="form-text">Larger sizes may take longer</div>
+                                    </div>
+
+                                    <!-- Model Info -->
+                                    <div class="alert alert-info small p-2 mb-3">
+                                        <strong>📝 Model:</strong> DALL-E 2 (specialized for image editing)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button with Progress -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <button type="submit" id="editBtn" class="btn btn-primary btn-lg">
+                                        <span class="spinner-border spinner-border-sm me-2 d-none" id="loadingSpinner" role="status"></span>
+                                        <span id="buttonText">✏️ Edit Image</span>
+                                    </button>
+                                    
+                                    <!-- Progress indicator (hidden by default) -->
+                                    <div id="progressContainer" class="mt-3 d-none">
+                                        <div class="progress">
+                                            <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" 
+                                                 role="progressbar" style="width: 0"></div>
+                                        </div>
+                                        <small id="progressText" class="text-muted mt-1 d-block">Starting image editing...</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="row">
+            <div class="col-12">
+                <!-- Success Result -->
+                <div th:if="${success}" class="card border-success">
+                    <div class="card-body">
+                        <h5 class="card-title text-success">🎉 Image Edited Successfully!</h5>
+                        
+                        <div class="text-center mb-3">
+                            <img th:src="${editedImageUrl}" alt="AI edited image" class="img-fluid rounded shadow" style="max-height: 500px;">
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>📝 Details:</h6>
+                                <ul class="list-unstyled">
+                                    <li><strong>Prompt:</strong> <span th:text="${usedPrompt}"></span></li>
+                                    <li><strong>Size:</strong> <span th:text="${usedSize}"></span></li>
+                                    <li><strong>Model:</strong> DALL-E 2</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>💡 Try editing again with:</h6>
+                                <ul class="small">
+                                    <li>Different sky elements (birds, aircraft, balloons)</li>
+                                    <li>Weather phenomena (northern lights, clouds)</li>
+                                    <li>Flying objects or creatures</li>
+                                    <li>Atmospheric effects</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-3">
+                            <a th:href="${editedImageUrl}" target="_blank" class="btn btn-outline-success">
+                                🔗 View Full Size
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error State -->
+                <div th:if="${error}" class="alert alert-danger">
+                    <h5 class="alert-heading">❌ Error</h5>
+                    <p th:text="${error}" class="mb-0"></p>
+                </div>
+
+                <!-- Default State -->
+                <div th:unless="${success} or ${error}" class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">🎨 Ready to Edit</h5>
+                        <p class="card-text">Fill out the form and click "Edit Image" to see AI magic happen! The white area in the sky will be replaced with your prompt.</p>
+                        
+                        <div class="mt-4">
+                            <h6>💡 Example Prompts:</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <ul class="list-unstyled small">
+                                        <li>• "A hot air balloon floating in the sky"</li>
+                                        <li>• "A flock of birds flying south for winter"</li>
+                                        <li>• "A ski jumper soaring through the air"</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <ul class="list-unstyled small">
+                                        <li>• "A small airplane with winter landing skis"</li>
+                                        <li>• "Northern lights dancing across the sky"</li>
+                                        <li>• "A paraglider with bright colorful wings"</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: common-footer}"></div>
+    <div th:replace="~{fragments/scripts :: common-scripts}"></div>
+    <script src="/js/image-editing.js"></script>
+</body>
+</html>

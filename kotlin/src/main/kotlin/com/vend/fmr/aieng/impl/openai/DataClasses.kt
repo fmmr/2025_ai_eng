@@ -223,3 +223,9 @@ data class ImageGenerationResponse(
     val created: Long,
     val data: List<ImageData>
 )
+
+@Serializable
+data class ImageEditResponse(
+    val created: Long,
+    val data: List<ImageData>
+)
