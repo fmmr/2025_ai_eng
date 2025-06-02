@@ -6,6 +6,8 @@ import com.vend.fmr.aieng.impl.openai.OpenAI
 import com.vend.fmr.aieng.impl.openai.OpenAIAssistant
 import com.vend.fmr.aieng.impl.polygon.Polygon
 import com.vend.fmr.aieng.impl.supabase.Supabase
+import com.vend.fmr.aieng.impl.weather.Weather
+import com.vend.fmr.aieng.impl.geolocation.Geolocation
 import com.vend.fmr.aieng.utils.*
 
 val OPEN_AI_KEY = "OPENAI_API_KEY".env()
@@ -20,6 +22,8 @@ val openAI = OpenAI(OPEN_AI_KEY)
 val assistant = OpenAIAssistant(OPEN_AI_KEY)
 val supabase = Supabase(SUPABASE_URL, SUPABASE_KEY)
 val polygon = Polygon(POLYGON_API_KEY)
+val weather = Weather()
+val geolocation = Geolocation()
 
 @Suppress("RedundantSuspendModifier", "RedundantSuppression")
 suspend fun main() {
@@ -46,6 +50,16 @@ suspend fun main() {
 //    chatGPT()
 //    enrichedMovieChat("The movie with that actor from Castaway", debug = true)
 
+    // === LOCATION & WEATHER API EXAMPLES ===
+    // Get location from IP and weather for that location
+//    val location = geolocation.getLocationByIp("51.175.221.12", debug = true)
+//    println(geolocation.formatLocationSummary(location))
+//    val weatherData = weather.getNowcast(location.latitude, location.longitude, debug = true)
+//    val currentWeather = weather.getCurrentWeather(weatherData)
+//    if (currentWeather != null) {
+//        println(weather.formatWeatherSummary(currentWeather))
+//    }
+
     // === ASSISTANTS API SETUP (run once, then comment out) ===
     // Step 1: Upload movie file (copy the FILE ID from output)
 //    val fileId = uploadMovieFile(debug = true)
@@ -69,4 +83,6 @@ fun close() {
     openAI.close()
     supabase.close()
     polygon.close()
+    weather.close()
+    geolocation.close()
 }
