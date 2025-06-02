@@ -1,70 +1,39 @@
 # Instructions for Claude Code
 
-ALWAYS ALWAYS call me BOSS when you address me.
+ALWAYS call me BOSS.
 
-We'll be working in the kotlin directory.
-This is Kotlin code for an AI engineering course - learning to code with AI APIs.
+Working in kotlin directory - AI engineering course using Kotlin/Spring Boot.
 
-## Key Principles
-- Keep it simple and straightforward
-- Maven-based project, primarily run from IntelliJ
-- No backward compatibility, deprecation handling, or backups - git handles history
-- Keep code simple - avoid over-complication
-- **NO USELESS COMMENTS** - Only add comments that provide real value beyond what the code clearly shows
-- Comments that just restate what the code does are forbidden
-- Use clear variable and function names instead of comments
-- **USE LIBRARIES AND FRAMEWORKS** - Don't reinvent the wheel
-- When Bootstrap is loaded, use Bootstrap components (navbar, tooltips, etc.)
-- Prefer existing solutions over custom CSS/JS when possible
-- **NO HTML IN JAVASCRIPT** - Never use innerHTML or DOM creation, use templates/fragments only
-- If you add code to debug or test, remove it as soon as it's no longer needed
-- Prefer adding data to DTO from the kotlin backend than performing calculations in thymeleaf
+## Core Principles
+- Keep it simple - no over-complication
+- Maven-based project, primarily run from IntelliJ  
+- Git handles history - no backward compatibility concerns
+- **NO USELESS COMMENTS** - Only comments that add real value beyond what code shows
+- **USE LIBRARIES AND FRAMEWORKS** - Don't reinvent
+- **NO HTML IN JAVASCRIPT** - Use templates/fragments only
+- Remove debug code when done
+- Process data in Kotlin backend, not Thymeleaf
 
-## Project Structure
-- Maven-based Kotlin project with Spring Boot 3.5.0
-- Focus on AI API integration and learning
-- Uses Bootstrap 5.3.0 for UI components
-- Thymeleaf templating with fragment system for DRY principles
-- Controller pattern: One controller per demo feature
+## Stack
+- Spring Boot 3.5.0 with Kotlin
+- Bootstrap 5.3.0 + Thymeleaf fragments
+- One controller per demo feature
+- Suspend functions for async operations
+- Server-side form processing (POST to same endpoint)
 
-## Spring Boot Conventions
-- Use suspend functions with reactive streams for async operations
-- Server-side form processing - POST to same endpoint pattern
-- Model attributes: `pageTitle`, `activeTab` for consistent templating
-- Key instantiation: OPEN_AI_KEY, SUPABASE_URL, SUPABASE_KEY patterns
-- Always close API clients after use
+## Standards
+- Model attributes: `pageTitle`, `activeTab`
+- API keys: OPEN_AI_KEY, SUPABASE_URL, SUPABASE_KEY patterns
+- Bootstrap components over custom CSS/JS
+- Data to JS via `th:attr="data-key=${value}"` → `element.dataset.key`
+- Code examples: `<pre><code class="language-kotlin">` in demos
+- Form errors: preserve with `formData` model attribute
 
-## UI/Frontend Notes
-- Bootstrap navbar: Use `navbar-brand` (left) and `navbar-nav ms-auto` (right) for proper alignment
-- Fragments: head.html, navigation.html, footer.html, scripts.html for consistent includes
-- Tooltips: Use Bootstrap's `data-bs-toggle="tooltip"` instead of custom CSS
-- Form pattern: Preserve form data with `formData` model attribute on errors
-- **Keep Thymeleaf templates clean**: No JavaScript or CSS inline - use external files in `/static/js/` and `/static/css/`
-- Pass data to external JS via data attributes: `th:attr="data-key=${value}"` and read with `element.dataset.key`
-- **Code examples**: Include essential code snippets in demos using `<pre><code class="language-kotlin">` for syntax highlighting
-
-## Testing
-- Run `mvn test` to execute all tests
-- Check for compilation errors with `mvn compile`
-
-## Docker Deployment
+## Build & Deploy
+- Test: `mvn test`
 - Build: `mvn clean package -DskipTests && docker build -t kotlin-app .`
 - Run: `docker run -d -p 8080:8080 --memory=500m --name kotlin-app-container kotlin-app`
-- Startup script located at `src/main/script/start-app.sh`
+- CI/CD: tests → JAR → Docker → test
 
-## CI/CD
-- Single GitHub Actions workflow: tests → JAR build → Docker build → Docker test
-- Triggers on changes to: `kotlin/Dockerfile`, `kotlin/.dockerignore`, `kotlin/pom.xml`, `kotlin/src/**`, `.github/workflows/kotlin-ci.yml`
-- No redundant builds, efficient caching
-
-## Future API Integrations (TODO)
-- Location API: https://ipapi.co/json/
-- Weather API: https://api.met.no/
-- Weather API: https://openweathermap.org/api
-
-## Demo Management Notes
-- For each demo, consistently update:
-  - home (demo-box)
-  - navbar 
-  - readme
-- Ensure order and state are reflected identically across all three components
+## Demo Updates
+When adding demos, update: home demo-box, navbar, README - keep order consistent.
