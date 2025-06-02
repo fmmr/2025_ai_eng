@@ -37,6 +37,9 @@ This is Kotlin code for an AI engineering course - learning to code with AI APIs
 - Fragments: head.html, navigation.html, footer.html, scripts.html for consistent includes
 - Tooltips: Use Bootstrap's `data-bs-toggle="tooltip"` instead of custom CSS
 - Form pattern: Preserve form data with `formData` model attribute on errors
+- **Keep Thymeleaf templates clean**: No JavaScript or CSS inline - use external files in `/static/js/` and `/static/css/`
+- Pass data to external JS via data attributes: `th:attr="data-key=${value}"` and read with `element.dataset.key`
+- **Code examples**: Include essential code snippets in demos using `<pre><code class="language-kotlin">` for syntax highlighting
 
 ## Testing
 - Run `mvn test` to execute all tests

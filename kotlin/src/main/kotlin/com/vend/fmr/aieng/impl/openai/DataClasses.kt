@@ -139,3 +139,28 @@ data class FunctionCall(
     val name: String,
     val arguments: String
 )
+
+// Image generation data classes
+@Serializable
+data class ImageGenerationRequest(
+    val prompt: String,
+    val model: String = "dall-e-3",
+    val n: Int = 1,
+    val size: String = "1024x1024",
+    val style: String? = null, // "vivid" or "natural" for DALL-E 3
+    val quality: String? = null, // "hd" for DALL-E 3
+    @SerialName("response_format") val responseFormat: String = "url"
+)
+
+@Serializable
+data class ImageData(
+    val url: String? = null,
+    @SerialName("b64_json") val b64Json: String? = null,
+    @SerialName("revised_prompt") val revisedPrompt: String? = null
+)
+
+@Serializable
+data class ImageGenerationResponse(
+    val created: Long,
+    val data: List<ImageData>
+)

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<!--suppress HtmlRequiredTitleElement -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: common-head}">
+</head>
+<body>
+    <div th:replace="~{fragments/navigation :: navbar(${activeTab})}"></div>
+
+    <div class="container my-4">
+        <h1 class="text-center mb-4">🎬 Film Fusion Laboratory</h1>
+        <p class="lead text-center">Merge movies and art into stunning AI-generated posters</p>
+
+        <!-- Error/Success Messages -->
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error:</strong> <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Success!</strong> Your film fusion poster has been generated!
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Ultra-Compact Demo Form -->
+        <div class="row justify-content-center mb-3">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header py-2">
+                        <h6 class="mb-0">🎨 Create Your Film Fusion Poster</h6>
+                    </div>
+                    <div class="card-body py-2">
+                        <!-- Data attributes to pass form data to JavaScript -->
+                        <div id="formData" 
+                             th:attr="data-movie=${formData?.movie ?: ''},
+                                      data-art-style=${formData?.artStyle ?: ''}, 
+                                      data-model=${formData?.model ?: 'dall-e-3'},
+                                      data-size=${formData?.size ?: '1024x1024'},
+                                      data-style=${formData?.style ?: 'vivid'},
+                                      data-quality=${formData?.quality ?: 'standard'}" 
+                             style="display: none;"></div>
+                        
+                        <form th:action="@{/demo/film-fusion}" method="post" id="filmFusionForm">
+                            <div class="row g-2">
+                                <!-- Row 1: Core Selections -->
+                                <div class="col-lg-3 col-md-6">
+                                    <label for="movie" class="form-label small mb-1">🎭 Movie</label>
+                                    <select class="form-select form-select-sm" id="movie" name="movie" required>
+                                        <option value="">Choose movie...</option>
+                                        <option th:each="movieTitle : ${movieTitles}" 
+                                                th:value="${movieTitle}" 
+                                                th:text="${movieTitle}"
+                                                th:selected="${formData?.movie == movieTitle}"></option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-lg-3 col-md-6">
+                                    <label for="artStyle" class="form-label small mb-1">🎨 Art Style</label>
+                                    <select class="form-select form-select-sm" id="artStyle" name="artStyle" required>
+                                        <option value="">Choose style...</option>
+                                        <option th:each="style : ${artStyles}" 
+                                                th:value="${style.first}" 
+                                                th:text="${style.first}"
+                                                th:selected="${formData?.artStyle == style.first}"></option>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-2 col-md-4">
+                                    <label for="model" class="form-label small mb-1">🤖 Model</label>
+                                    <select class="form-select form-select-sm" id="model" name="model" required>
+                                        <option th:each="modelOption : ${dalleModels}" 
+                                                th:value="${modelOption.first}" 
+                                                th:text="${modelOption.second}"
+                                                th:selected="${formData?.model == modelOption.first ?: modelOption.first == 'dall-e-3'}"></option>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-2 col-md-4">
+                                    <label for="size" class="form-label small mb-1">📐 Size</label>
+                                    <select class="form-select form-select-sm" id="size" name="size" required>
+                                        <option th:each="sizeOption : ${dalle3Sizes}" 
+                                                th:value="${sizeOption.first}" 
+                                                th:text="${sizeOption.second}"
+                                                th:selected="${formData?.size == sizeOption.first ?: sizeOption.first == '1024x1024'}"></option>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-2 col-md-4">
+                                    <button type="submit" class="btn btn-primary btn-sm w-100" id="generateBtn" style="margin-top: 24px;">
+                                        <span class="spinner-border spinner-border-sm me-1 d-none" id="loadingSpinner" role="status"></span>
+                                        <span id="buttonText">🚀 Generate</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Row 2: DALL-E 3 Specific Options (Hidden for DALL-E 2) -->
+                            <div class="row g-2 mt-1" id="dalle3Options">
+                                <div class="col-lg-2 col-md-3 col-6">
+                                    <label for="style" class="form-label small mb-1">🎭 Style</label>
+                                    <select class="form-select form-select-sm" id="style" name="style">
+                                        <option th:each="styleOption : ${dalle3Styles}" 
+                                                th:value="${styleOption.first}" 
+                                                th:text="${styleOption.second}"
+                                                th:selected="${formData?.style == styleOption.first ?: styleOption.first == 'vivid'}"></option>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-2 col-md-3 col-6">
+                                    <label for="quality" class="form-label small mb-1">💎 Quality</label>
+                                    <select class="form-select form-select-sm" id="quality" name="quality">
+                                        <option th:each="qualityOption : ${qualityOptions}" 
+                                                th:value="${qualityOption.first}" 
+                                                th:text="${qualityOption.second}"
+                                                th:selected="${formData?.quality == qualityOption.first ?: qualityOption.first == 'standard'}"></option>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-8 col-md-6 col-12">
+                                    <div class="form-text small mt-1" id="artStyleDescription"></div>
+                                    <div class="form-text small text-muted">⚠️ Generation takes 10-30 seconds</div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Display -->
+        <div th:if="${generatedImageUrl}" class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">🎬 Your Film Fusion Poster</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="row">
+                            <div class="col-lg-10 mx-auto">
+                                <img th:src="${generatedImageUrl}" 
+                                     class="img-fluid rounded shadow-lg mb-4" 
+                                     alt="Generated Film Fusion Poster"
+                                     style="max-height: 80vh;">
+                                
+                                <h6>🎭 <span th:text="${selectedMovie}"></span> × 🎨 <span th:text="${selectedArtStyle}"></span></h6>
+                                
+                                <!-- Prompt Information -->
+                                <div class="mt-4">
+                                    <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#promptDetails">
+                                        📝 View Prompt Details
+                                    </button>
+                                    <div class="collapse mt-3" id="promptDetails">
+                                        <div class="card card-body text-start small">
+                                            <div th:if="${originalPrompt}">
+                                                <strong>Original Prompt:</strong>
+                                                <p class="text-muted mb-2" th:text="${originalPrompt}"></p>
+                                            </div>
+                                            <div th:if="${revisedPrompt}">
+                                                <strong>DALL-E Revised Prompt:</strong>
+                                                <p class="text-muted mb-0" th:text="${revisedPrompt}"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Try Again -->
+                                <div class="mt-4">
+                                    <a href="/demo/film-fusion" class="btn btn-outline-primary me-2">
+                                        🔄 Create Another Poster
+                                    </a>
+                                    <button onclick="window.open(document.querySelector('img').src)" class="btn btn-outline-secondary">
+                                        🔗 Open Full Size
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Section -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card border-info">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">🎬 About Film Fusion</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>🎭 Movie Selection</h6>
+                                <p class="small">Choose from classic and modern films spanning different genres and eras.</p>
+                                
+                                <h6>🎨 Art Styles</h6>
+                                <p class="small">Each style brings unique visual characteristics to transform how the movie poster looks and feels.</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>🤖 DALL-E Models</h6>
+                                <p class="small"><strong>DALL-E 2:</strong> Faster, more affordable, simpler options<br>
+                                <strong>DALL-E 3:</strong> Higher quality, more detailed, additional style controls</p>
+                                
+                                <h6>⚙️ Parameters</h6>
+                                <p class="small"><strong>Size:</strong> Different aspect ratios for various poster formats<br>
+                                <strong>Style:</strong> Vivid for dramatic colors, Natural for realistic tones<br>
+                                <strong>Quality:</strong> HD option provides enhanced detail and clarity</p>
+                            </div>
+                        </div>
+                        
+                        <hr class="my-4">
+                        
+                        <!-- Code Example Section -->
+                        <h6>💻 Essential Code</h6>
+                        <p class="small mb-3">Key Kotlin code for AI image generation using OpenAI's DALL-E API:</p>
+                        <pre><code class="language-kotlin">// Generate AI image with DALL-E
+suspend fun generateImage(
+    prompt: String,
+    model: String = "dall-e-3",
+    size: String = "1024x1024",
+    style: String? = "vivid",
+    quality: String? = "hd"
+): ImageGenerationResponse {
+    val request = ImageGenerationRequest(
+        prompt = prompt,
+        model = model,
+        size = size,
+        style = style,
+        quality = quality,
+        responseFormat = "url"
+    )
+    
+    val response = client.post("https://api.openai.com/v1/images/generations") {
+        contentType(ContentType.Application.Json)
+        headers { append("Authorization", "Bearer $openaiApiKey") }
+        setBody(request)
+        timeout { requestTimeoutMillis = 300000 } // 5 minutes
+    }
+    
+    return json.decodeFromString&lt;ImageGenerationResponse&gt;(response.bodyAsText())
+}
+
+// Usage in controller
+val imageResponse = openAI.generateImage(
+    prompt = "Create a movie poster for '$movie' in the style of $artStyle",
+    model = dalleModel,
+    size = size,
+    style = style,
+    quality = quality
+)
+val imageUrl = imageResponse.data.firstOrNull()?.url</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: common-footer}"></div>
+    <div th:replace="~{fragments/scripts :: common-scripts}"></div>
+    
+    <!-- Film Fusion specific JavaScript -->
+    <script src="/js/film-fusion.js"></script>
+</body>
+</html>

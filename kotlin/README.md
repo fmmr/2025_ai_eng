@@ -25,6 +25,7 @@ This project implements the core concepts from the Scrimba AI Engineering course
 - **🔗 RAG** - Full Retrieval-Augmented Generation pipeline showing query→embedding→search→response
 - **🧠 ReAct Agent** - Reasoning + Acting pattern with step-by-step problem solving and function calling
 - **🛠️ Function Calling Agent** - OpenAI's native function calling with structured tool schemas
+- **🎬 Film Fusion** - Merge movies and art into stunning AI-generated posters with parameter tuning
 
 **🔜 Coming Soon:**
 - **⚙️ Fine-tuning** - Custom model training with OpenAI's fine-tuning API
@@ -32,7 +33,6 @@ This project implements the core concepts from the Scrimba AI Engineering course
 - **🤗 HuggingFace** - Open-source ML model hub integration
 - **🍿 PopChoice** - Smart movie recommendation engine (Solo Project)
 - **✈️ Travel Agent** - Practical AI agent for trip planning (Solo Project)
-- **🎬 Film Fusion** - Merge movies and art into stunning AI-generated posters with parameter tuning (Solo Project)
 - **✏️ Editing Images** - AI-powered image editing and manipulation capabilities
 - **👁️ GPT-4 with Vision** - Multi-modal AI capabilities with image analysis and insights
 - **🎯 Assistants API** - OpenAI's Assistants API integration

@@ -7,6 +7,7 @@ import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
+import io.ktor.client.plugins.timeout
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
@@ -160,6 +161,47 @@ class OpenAI(private val openaiApiKey: String) : Closeable {
 
         val embeddingResponse = json.decodeFromString<EmbeddingResponse>(responseText)
         return embeddingResponse.data.sortedBy { it.index }.map { it.embedding }
+    }
+
+    suspend fun generateImage(
+        prompt: String,
+        model: String = "dall-e-3",
+        size: String = "1024x1024",
+        style: String? = null,
+        quality: String? = null,
+        debug: Boolean = false
+    ): ImageGenerationResponse {
+        val request = ImageGenerationRequest(
+            prompt = prompt,
+            model = model,
+            size = size,
+            style = style,
+            quality = quality,
+            responseFormat = "url"
+        )
+
+        val response = client.post("https://api.openai.com/v1/images/generations") {
+            contentType(ContentType.Application.Json)
+            headers {
+                append("Authorization", "Bearer $openaiApiKey")
+            }
+            setBody(request)
+            timeout {
+                requestTimeoutMillis = 300000 // 5 minutes for image generation
+            }
+        }
+
+        val responseText = response.bodyAsText()
+        if (debug) {
+            println("Image Generation Status: ${response.status}")
+            println("Response: $responseText")
+        }
+
+        if (!response.status.isSuccess()) {
+            throw Exception("Image generation API request failed with status ${response.status}: $responseText")
+        }
+
+        return json.decodeFromString<ImageGenerationResponse>(responseText)
     }
 
     override fun close() {
