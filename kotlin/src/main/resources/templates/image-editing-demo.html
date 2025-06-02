@@ -177,6 +177,83 @@
                 </div>
             </div>
         </div>
+
+        <!-- Help Section -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card border-info">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">✏️ About AI Image Editing</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>🎨 Image Editing</h6>
+                                <p class="small">DALL-E 2 can seamlessly edit images by replacing masked areas with AI-generated content based on your prompt.</p>
+                                
+                                <h6>💡 Use Cases</h6>
+                                <p class="small">Background replacement, object insertion, artistic enhancement, style modification, and creative transformations.</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>🤖 Model</h6>
+                                <p class="small"><strong>DALL-E 2:</strong> Currently the only OpenAI model that supports image editing with masks</p>
+                                
+                                <h6>⚙️ Requirements</h6>
+                                <p class="small"><strong>Original Image:</strong> PNG format, square aspect ratio<br>
+                                <strong>Mask:</strong> White areas indicate where to edit, black areas remain unchanged<br>
+                                <strong>Prompt:</strong> Clear description of what to add/replace</p>
+                            </div>
+                        </div>
+                        
+                        <hr class="my-4">
+                        
+                        <h6>💻 Essential Code</h6>
+                        <p class="small mb-3">Key Kotlin code for AI image editing using OpenAI's DALL-E 2 API:</p>
+                        <pre><code class="language-kotlin">// Edit image with DALL-E 2
+suspend fun editImage(
+    prompt: String,
+    imageFile: ByteArray,
+    maskFile: ByteArray,
+    model: String = "dall-e-2",
+    size: String = "1024x1024"
+): ImageEditResponse {
+    val response = client.submitFormWithBinaryData(
+        url = "https://api.openai.com/v1/images/edits",
+        formData = formData {
+            append("prompt", prompt)
+            append("model", model)
+            append("size", size)
+            append("response_format", "url")
+            append("image", imageFile, Headers.build {
+                append(HttpHeaders.ContentType, "image/png")
+                append(HttpHeaders.ContentDisposition, "filename=\"image.png\"")
+            })
+            append("mask", maskFile, Headers.build {
+                append(HttpHeaders.ContentType, "image/png")
+                append(HttpHeaders.ContentDisposition, "filename=\"mask.png\"")
+            })
+        }
+    ) {
+        headers { append("Authorization", "Bearer $openaiApiKey") }
+        timeout { requestTimeoutMillis = 300000 }
+    }
+    
+    return json.decodeFromString&lt;ImageEditResponse&gt;(response.bodyAsText())
+}
+
+// Usage in controller
+val editResponse = openAI.editImage(
+    prompt = "A hot air balloon floating in the sky",
+    imageFile = originalImageBytes,
+    maskFile = maskImageBytes,
+    model = Models.ImageGeneration.DALL_E_2,
+    size = "1024x1024"
+)
+val editedImageUrl = editResponse.data.firstOrNull()?.url</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div th:replace="~{fragments/footer :: common-footer}"></div>
