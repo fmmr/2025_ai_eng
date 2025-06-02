@@ -10,15 +10,17 @@ private val envContent = object {}.javaClass.getResourceAsStream("/.env")
 
 fun String.env(): String = envContent?.get(this) ?: System.getenv(this) ?: error("Environment variable '$this' not found")
 
-fun String.read(): String = object {}.javaClass.getResourceAsStream(this)
-    ?.bufferedReader()
-    ?.use { it.readText() }!!
+fun String.read(): String = (if (this.startsWith("/")) this else "/$this").let { string ->
+    object {}.javaClass.getResourceAsStream(string)
+        ?.bufferedReader()
+        ?.use { reader -> reader.readText() }!!
+}
 
 operator fun String.times(count: Int): String = this.repeat(count)
 
 fun String.truncate(l: Int = 200): String {
     return if (length > l) {
-        this.take(l-1) + "…"
+        this.take(l - 1) + "…"
     } else {
         this
     }
