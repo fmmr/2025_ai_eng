@@ -129,7 +129,7 @@ class FilmFusionController {
                 size = size,
                 style = if (dalleModel == Models.ImageGeneration.DALL_E_3) style else null,
                 quality = if (dalleModel == Models.ImageGeneration.DALL_E_3) quality else null,
-                debug = true
+                debug = false
             )
 
             // Get the first image URL
