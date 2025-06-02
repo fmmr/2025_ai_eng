@@ -1,6 +1,7 @@
 package com.vend.fmr.aieng.web
 
 import com.vend.fmr.aieng.openAI
+import com.vend.fmr.aieng.utils.Models
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -46,10 +47,7 @@ class FilmFusionController {
             "Soviet propaganda poster" to "Bold red colors, strong worker imagery and socialist realism"
         )
 
-        val DALL_E_MODELS = listOf(
-            "dall-e-2" to "DALL-E 2",
-            "dall-e-3" to "DALL-E 3"
-        )
+        val DALL_E_MODELS = Models.DisplayNames.IMAGE_GENERATION_MODELS.toList()
 
         val DALL_E_2_SIZES = listOf(
             "256x256" to "256×256",
@@ -136,8 +134,8 @@ class FilmFusionController {
                 prompt = prompt,
                 model = dalleModel,
                 size = size,
-                style = if (dalleModel == "dall-e-3") style else null,
-                quality = if (dalleModel == "dall-e-3") quality else null,
+                style = if (dalleModel == Models.ImageGeneration.DALL_E_3) style else null,
+                quality = if (dalleModel == Models.ImageGeneration.DALL_E_3) quality else null,
                 debug = true
             )
 

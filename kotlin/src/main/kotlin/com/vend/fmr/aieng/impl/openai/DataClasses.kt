@@ -1,15 +1,68 @@
 package com.vend.fmr.aieng.impl.openai
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.vend.fmr.aieng.utils.Models
+import kotlinx.serialization.*
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.descriptors.buildClassSerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 
+
+// Base sealed class for message content
+@Serializable
+sealed class MessageContent
+
+@Serializable
+data class TextContent(val text: String) : MessageContent()
+
+@Serializable
+data class VisionContent(val parts: List<ContentPart>) : MessageContent()
+
+// Custom serializer for MessageContent to handle OpenAI API format
+@OptIn(ExperimentalSerializationApi::class)
+object MessageContentSerializer : KSerializer<MessageContent?> {
+    override val descriptor = buildClassSerialDescriptor("MessageContent")
+    
+    override fun serialize(encoder: Encoder, value: MessageContent?) {
+        when (value) {
+            is TextContent -> encoder.encodeString(value.text)
+            is VisionContent -> encoder.encodeSerializableValue(ListSerializer(ContentPart.serializer()), value.parts)
+            null -> encoder.encodeNull()
+        }
+    }
+    
+    override fun deserialize(decoder: Decoder): MessageContent? {
+        // For deserialization, we'll typically get string content back
+        return try {
+            val text = decoder.decodeString()
+            TextContent(text)
+        } catch (_: Exception) {
+            null
+        }
+    }
+}
 
 @Serializable
 data class Message(
     val role: String,
-    val content: String? = null,
+    @Serializable(with = MessageContentSerializer::class)
+    val content: MessageContent? = null,
     @SerialName("tool_calls") val toolCalls: List<ToolCall>? = null,
     @SerialName("tool_call_id") val toolCallId: String? = null
+)
+
+// Vision API content parts
+@Serializable
+data class ContentPart(
+    val type: String,
+    val text: String? = null,
+    @SerialName("image_url") val imageUrl: ImageUrl? = null
+)
+
+@Serializable
+data class ImageUrl(
+    val url: String,
+    val detail: String = "auto" // "low", "high", or "auto"
 )
 
 @Serializable
@@ -41,7 +94,13 @@ data class ChatCompletionResponse(
     val usage: Usage?
 ) {
     fun text(): String {
-        return choices.joinToString(" ") { it.message.content?.trim() ?: "" }
+        return choices.joinToString(" ") { 
+            when (val content = it.message.content) {
+                is TextContent -> content.text.trim()
+                is VisionContent -> content.parts.find { part -> part.text != null }?.text?.trim() ?: ""
+                null -> ""
+            }
+        }
     }
     
     fun hasToolCalls(): Boolean {
@@ -144,7 +203,7 @@ data class FunctionCall(
 @Serializable
 data class ImageGenerationRequest(
     val prompt: String,
-    val model: String = "dall-e-3",
+    val model: String = Models.Defaults.IMAGE_GENERATION,
     val n: Int = 1,
     val size: String = "1024x1024",
     val style: String? = null, // "vivid" or "natural" for DALL-E 3

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<!--suppress HtmlRequiredTitleElement -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: common-head}">
+</head>
+<body>
+    <div th:replace="~{fragments/navigation :: navbar(${activeTab})}"></div>
+
+    <div class="container my-4">
+        <h1 class="text-center mb-4">👁️ GPT-4 with Vision Laboratory</h1>
+        <p class="lead text-center">Analyze images with AI vision capabilities</p>
+
+        <!-- Error/Success Messages -->
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error:</strong> <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Success!</strong> AI vision analysis completed. See the results below.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Demo Form -->
+        <div class="row justify-content-center mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header py-2">
+                        <h6 class="mb-0">👁️ Analyze Images with AI Vision</h6>
+                    </div>
+                    <div class="card-body py-3">
+                        <!-- Data attributes for JavaScript -->
+                        <div id="formData" 
+                             th:attr="data-selected-image=${formData?.selectedImage ?: ''},
+                                      data-prompt=${formData?.prompt ?: ''},
+                                      data-model=${formData?.model ?: 'gpt-4o'},
+                                      data-detail=${formData?.detail ?: 'auto'}" 
+                             style="display: none;"></div>
+
+                        <form th:action="@{/demo/gpt4-vision}" method="post" id="visionForm">
+                            <!-- Image Gallery -->
+                            <div class="mb-4">
+                                <label class="form-label">🖼️ Select an Image to Analyze</label>
+                                <div class="row g-3">
+                                    <div th:each="image : ${demoImages}" class="col-lg-3 col-md-6">
+                                        <div class="image-selection-card" th:data-filename="${image.filename}">
+                                            <div class="card h-100 border-2" style="cursor: pointer;">
+                                                <img th:src="@{'/images/' + ${image.filename}}" 
+                                                     class="card-img-top" 
+                                                     th:alt="${image.title}"
+                                                     style="height: 180px; object-fit: cover;">
+                                                <div class="card-body p-2">
+                                                    <h6 class="card-title small mb-1" th:text="${image.title}"></h6>
+                                                    <p class="card-text small text-muted mb-0" th:text="${image.description}"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="selectedImage" name="selectedImage" required>
+                                <div class="form-text mt-2">Click an image above to select it for analysis</div>
+                            </div>
+
+                            <!-- Prompt Section -->
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-8">
+                                    <label for="prompt" class="form-label">💬 Your Question or Analysis Request</label>
+                                    <textarea class="form-control" id="prompt" name="prompt" rows="3" 
+                                              th:text="${formData?.prompt}" 
+                                              placeholder="What would you like to know about this image?" required></textarea>
+                                    <div class="form-text">Ask anything about the image - describe, analyze, identify, or extract information</div>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="model" class="form-label">🤖 Vision Model</label>
+                                        <select class="form-select form-select-sm" id="model" name="model">
+                                            <option th:each="modelOption : ${visionModels}" 
+                                                    th:value="${modelOption.first}" 
+                                                    th:text="${modelOption.second}"
+                                                    th:selected="${formData?.model == modelOption.first ?: modelOption.first == 'gpt-4o'}"></option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="detail" class="form-label">🔍 Detail Level</label>
+                                        <select class="form-select form-select-sm" id="detail" name="detail">
+                                            <option th:each="detailOption : ${detailLevels}" 
+                                                    th:value="${detailOption.first}" 
+                                                    th:text="${detailOption.second}"
+                                                    th:selected="${formData?.detail == detailOption.first ?: detailOption.first == 'auto'}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Suggested Prompts -->
+                            <div id="suggestedPrompts" style="display: none;">
+                                <div class="mb-3">
+                                    <label class="form-label small">💡 Suggested Questions for This Image</label>
+                                    <div id="promptSuggestions" class="d-flex flex-wrap gap-2">
+                                        <!-- Populated by JavaScript -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary btn-lg" id="analyzeBtn">
+                                    <span class="spinner-border spinner-border-sm me-2 d-none" id="loadingSpinner" role="status"></span>
+                                    <span id="buttonText">👁️ Analyze Image</span>
+                                </button>
+                                <div class="form-text mt-2">⚠️ Analysis may take 10-20 seconds</div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Display -->
+        <div th:if="${analysisResult}" class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">👁️ AI Vision Analysis</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="text-center">
+                                    <img th:src="${selectedImageUrl}" 
+                                         class="img-fluid rounded shadow mb-3" 
+                                         th:alt="${selectedImageData?.title}"
+                                         style="max-height: 300px;">
+                                    <h6 th:text="${selectedImageData?.title}"></h6>
+                                    <p class="small text-muted" th:text="${selectedImageData?.description}"></p>
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-8">
+                                <div class="mb-3">
+                                    <h6>💬 Your Question:</h6>
+                                    <blockquote class="blockquote small bg-light p-3 rounded">
+                                        <span th:text="${usedPrompt}"></span>
+                                    </blockquote>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <h6>🤖 AI Analysis (<span th:text="${usedModel}"></span>):</h6>
+                                    <div class="analysis-result bg-primary bg-opacity-10 p-3 rounded" 
+                                         th:text="${analysisResult}" style="white-space: pre-wrap;"></div>
+                                </div>
+
+                                <!-- Try Again -->
+                                <div class="text-center mt-4">
+                                    <a href="/demo/gpt4-vision" class="btn btn-outline-primary me-2">
+                                        🔄 Analyze Another Image
+                                    </a>
+                                    <button onclick="copyAnalysis()" class="btn btn-outline-secondary">
+                                        📋 Copy Analysis
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Section -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card border-info">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">👁️ About GPT-4 Vision</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>🖼️ Image Analysis</h6>
+                                <p class="small">AI can identify objects, read text, analyze scenes, and understand visual content in remarkable detail.</p>
+                                
+                                <h6>💡 Use Cases</h6>
+                                <p class="small">Document analysis, scene description, object identification, text extraction, visual reasoning, and creative interpretation.</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>🤖 Models</h6>
+                                <p class="small"><strong>GPT-4o:</strong> Latest multimodal model with excellent vision capabilities<br>
+                                <strong>GPT-4o Mini:</strong> Faster, cost-effective option<br>
+                                <strong>GPT-4 Vision Preview:</strong> Original vision model</p>
+                                
+                                <h6>⚙️ Detail Levels</h6>
+                                <p class="small"><strong>High:</strong> More detailed analysis, higher cost<br>
+                                <strong>Auto:</strong> Balanced approach<br>
+                                <strong>Low:</strong> Faster processing, lower cost</p>
+                            </div>
+                        </div>
+                        
+                        <hr class="my-4">
+                        
+                        <!-- Code Example Section -->
+                        <h6>💻 Essential Code</h6>
+                        <p class="small mb-3">Key Kotlin code for AI vision analysis using OpenAI's GPT-4 Vision API:</p>
+                        <pre><code class="language-kotlin">// Analyze image with GPT-4 Vision
+suspend fun createVisionCompletion(
+    prompt: String,
+    imageUrl: String,
+    model: String = "gpt-4o",
+    maxTokens: Int = 500,
+    detail: String = "auto"
+): ChatCompletionResponse {
+    val messages = listOf(
+        Message(
+            role = "user",
+            content = listOf(
+                ContentPart(type = "text", text = prompt),
+                ContentPart(type = "image_url", imageUrl = ImageUrl(url = imageUrl, detail = detail))
+            )
+        )
+    )
+    
+    return createChatCompletionWithMessages(messages, model, maxTokens)
+}
+
+// Usage in controller
+val visionResponse = openAI.createVisionCompletion(
+    prompt = "Analyze this image and describe what you see",
+    imageUrl = "https://example.com/image.jpg",
+    model = "gpt-4o",
+    detail = "auto"
+)
+val analysis = visionResponse.text()</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: common-footer}"></div>
+    <div th:replace="~{fragments/scripts :: common-scripts}"></div>
+    
+    <!-- Vision Demo specific JavaScript -->
+    <script src="/js/vision-demo.js"></script>
+    
+    <script>
+        function copyAnalysis() {
+            const analysisText = document.querySelector('.analysis-result').textContent;
+            navigator.clipboard.writeText(analysisText).then(() => {
+                alert('Analysis copied to clipboard!');
+            });
+        }
+    </script>
+</body>
+</html>

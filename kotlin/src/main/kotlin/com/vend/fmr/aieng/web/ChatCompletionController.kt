@@ -2,6 +2,7 @@ package com.vend.fmr.aieng.web
 
 import com.vend.fmr.aieng.OPEN_AI_KEY
 import com.vend.fmr.aieng.impl.openai.OpenAI
+import com.vend.fmr.aieng.utils.Models
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -24,7 +25,7 @@ class ChatCompletionController {
     suspend fun processChatCompletion(
         @RequestParam(defaultValue = "") userPrompt: String,
         @RequestParam(defaultValue = "") systemMessage: String,
-        @RequestParam(defaultValue = "gpt-4") modelName: String,
+        @RequestParam(defaultValue = Models.Defaults.CHAT_COMPLETION) modelName: String,
         @RequestParam(defaultValue = "300") maxTokens: Int,
         @RequestParam(defaultValue = "0.7") temperature: Double,
         model: Model

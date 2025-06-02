@@ -3,6 +3,8 @@
 package com.vend.fmr.aieng.utils
 
 import com.vend.fmr.aieng.impl.mocks.Mocks
+import com.vend.fmr.aieng.impl.openai.Message
+import com.vend.fmr.aieng.impl.openai.TextContent
 import com.vend.fmr.aieng.openAI
 
 /**
@@ -23,13 +25,13 @@ object ReActAgentExamples {
      * Uses proper message-based conversation with OpenAI
      */
     suspend fun reactAgent(userQuery: String, maxIterations: Int = 10, debug: Boolean = false): String {
-        val messages = mutableListOf<com.vend.fmr.aieng.impl.openai.Message>()
+        val messages = mutableListOf<Message>()
         
         // Add system message
-        messages.add(com.vend.fmr.aieng.impl.openai.Message(Prompts.Roles.SYSTEM, Prompts.REACT_AGENT_SYSTEM))
+        messages.add(Message(Prompts.Roles.SYSTEM, TextContent(Prompts.REACT_AGENT_SYSTEM)))
         
         // Add initial user query
-        messages.add(com.vend.fmr.aieng.impl.openai.Message(Prompts.Roles.USER, userQuery))
+        messages.add(Message(Prompts.Roles.USER, TextContent(userQuery)))
         
         if (debug) {
             println("🤖 Starting ReAct Agent for query: $userQuery")
@@ -43,7 +45,7 @@ object ReActAgentExamples {
             }
             
             // Get AI response using message history
-            val aiResponse = openAI.createChatCompletionWithMessages(
+            val aiResponse = openAI.createChatCompletion(
                 messages = messages,
                 temperature = 0.1,
                 maxTokens = 400
@@ -56,7 +58,7 @@ object ReActAgentExamples {
             }
             
             // Add AI response to messages
-            messages.add(com.vend.fmr.aieng.impl.openai.Message(Prompts.Roles.ASSISTANT, currentResponse))
+            messages.add(Message(Prompts.Roles.ASSISTANT, TextContent(currentResponse)))
             
             // Check if AI provided final answer
             if (currentResponse.contains("Final Answer:", ignoreCase = true)) {
@@ -87,7 +89,7 @@ object ReActAgentExamples {
                 }
                 
                 // Add observation as a user message (simulating function result)
-                messages.add(com.vend.fmr.aieng.impl.openai.Message(Prompts.Roles.USER, observation))
+                messages.add(Message(Prompts.Roles.USER, TextContent(observation)))
             } else {
                 // No action found, AI might be done or confused
                 if (debug) {

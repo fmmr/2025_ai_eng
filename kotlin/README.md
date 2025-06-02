@@ -26,6 +26,7 @@ This project implements the core concepts from the Scrimba AI Engineering course
 - **🧠 ReAct Agent** - Reasoning + Acting pattern with step-by-step problem solving and function calling
 - **🛠️ Function Calling Agent** - OpenAI's native function calling with structured tool schemas
 - **🎬 Film Fusion** - Merge movies and art into stunning AI-generated posters with parameter tuning
+- **👁️ GPT-4 with Vision** - Multi-modal AI capabilities with image analysis and insights using curated demo images
 
 **🔜 Coming Soon:**
 - **⚙️ Fine-tuning** - Custom model training with OpenAI's fine-tuning API
@@ -34,7 +35,6 @@ This project implements the core concepts from the Scrimba AI Engineering course
 - **🍿 PopChoice** - Smart movie recommendation engine (Solo Project)
 - **✈️ Travel Agent** - Practical AI agent for trip planning (Solo Project)
 - **✏️ Editing Images** - AI-powered image editing and manipulation capabilities
-- **👁️ GPT-4 with Vision** - Multi-modal AI capabilities with image analysis and insights
 - **🎯 Assistants API** - OpenAI's Assistants API integration
 - **☕ OpenAI Java Library** - Explore OpenAI's official Java/Kotlin library vs custom implementation
 

@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const formData = formDataElement ? {
         movie: formDataElement.dataset.movie || '',
         artStyle: formDataElement.dataset.artStyle || '',
-        model: formDataElement.dataset.model || 'dall-e-3',
+        model: formDataElement.dataset.model || 'dall-e-3', // Models.Defaults.IMAGE_GENERATION
         size: formDataElement.dataset.size || '1024x1024',
         style: formDataElement.dataset.style || 'vivid',
         quality: formDataElement.dataset.quality || 'standard'

@@ -2,6 +2,7 @@ package com.vend.fmr.aieng.web
 
 import com.vend.fmr.aieng.impl.mocks.Mocks
 import com.vend.fmr.aieng.impl.openai.Message
+import com.vend.fmr.aieng.impl.openai.TextContent
 import com.vend.fmr.aieng.openAI
 import com.vend.fmr.aieng.utils.Prompts
 import com.vend.fmr.aieng.utils.truncate
@@ -69,11 +70,11 @@ class FunctionCallingController {
         // Add system message
         messages.add(Message(
             role = Prompts.Roles.SYSTEM, 
-            content = Prompts.FUNCTION_CALLING_SYSTEM
+            content = TextContent(Prompts.FUNCTION_CALLING_SYSTEM)
         ))
         
         // Add initial user query
-        messages.add(Message(role = Prompts.Roles.USER, content = userQuery))
+        messages.add(Message(role = Prompts.Roles.USER, content = TextContent(userQuery)))
         
         // Add user query step
         steps.add(FunctionCallingStep(
@@ -84,7 +85,7 @@ class FunctionCallingController {
 
         for (iteration in 0 until maxIterations) {
             // Call OpenAI with function definitions
-            val response = openAI.createChatCompletionWithTools(
+            val response = openAI.createChatCompletion(
                 messages = messages,
                 tools = tools,
                 temperature = 0.1,
@@ -101,11 +102,15 @@ class FunctionCallingController {
                 val toolCalls = response.getToolCalls()
                 
                 // Add AI response step (if it has content)
-                if (!assistantMessage.content.isNullOrBlank()) {
+                val contentText = when (val content = assistantMessage.content) {
+                    is TextContent -> content.text
+                    else -> ""
+                }
+                if (contentText.isNotBlank()) {
                     steps.add(FunctionCallingStep(
                         stepNumber = stepCounter++,
                         type = "ai_response",
-                        content = assistantMessage.content
+                        content = contentText
                     ))
                 }
                 
@@ -134,7 +139,7 @@ class FunctionCallingController {
                     // Add function result as a tool message
                     messages.add(Message(
                         role = Prompts.Roles.TOOL,
-                        content = result,
+                        content = TextContent(result),
                         toolCallId = toolCall.id
                     ))
                 }

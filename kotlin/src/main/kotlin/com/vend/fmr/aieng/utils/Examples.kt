@@ -88,7 +88,7 @@ suspend fun multiMessageChat(debug: Boolean = false): String {
     conversationHistory.add(
         com.vend.fmr.aieng.impl.openai.Message(
             role = "system", 
-            content = Prompts.CHAT_ASSISTANT
+            content = com.vend.fmr.aieng.impl.openai.TextContent(Prompts.CHAT_ASSISTANT)
         )
     )
     
@@ -99,7 +99,7 @@ suspend fun multiMessageChat(debug: Boolean = false): String {
         conversationHistory.add(
             com.vend.fmr.aieng.impl.openai.Message(
                 role = "user", 
-                content = userMessage
+                content = com.vend.fmr.aieng.impl.openai.TextContent(userMessage)
             )
         )
         
@@ -109,7 +109,7 @@ suspend fun multiMessageChat(debug: Boolean = false): String {
         }
         
         // Get AI response with full conversation context
-        val response = openAI.createChatCompletionWithMessages(
+        val response = openAI.createChatCompletion(
             messages = conversationHistory,
             maxTokens = 200,
             temperature = 0.7
@@ -121,7 +121,7 @@ suspend fun multiMessageChat(debug: Boolean = false): String {
         conversationHistory.add(
             com.vend.fmr.aieng.impl.openai.Message(
                 role = Prompts.Roles.ASSISTANT, 
-                content = assistantReply
+                content = com.vend.fmr.aieng.impl.openai.TextContent(assistantReply)
             )
         )
         

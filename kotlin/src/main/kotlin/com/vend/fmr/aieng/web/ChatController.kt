@@ -1,6 +1,7 @@
 package com.vend.fmr.aieng.web
 
 import com.vend.fmr.aieng.impl.openai.Message
+import com.vend.fmr.aieng.impl.openai.TextContent
 import com.vend.fmr.aieng.openAI
 import com.vend.fmr.aieng.utils.Prompts
 import jakarta.servlet.http.HttpSession
@@ -55,15 +56,15 @@ class ChatController {
             val conversationMessages = mutableListOf<Message>()
             
             // Add system message
-            conversationMessages.add(Message("system", Prompts.CHAT_ASSISTANT))
+            conversationMessages.add(Message("system", TextContent(Prompts.CHAT_ASSISTANT)))
             
             // Add conversation history (convert to OpenAI format)
             chatHistory.forEach { 
-                conversationMessages.add(Message(it.role, it.content))
+                conversationMessages.add(Message(it.role, TextContent(it.content)))
             }
             
             // Get AI response
-            val response = openAI.createChatCompletionWithMessages(
+            val response = openAI.createChatCompletion(
                 messages = conversationMessages,
                 maxTokens = 300,
                 temperature = 0.7

@@ -3,6 +3,7 @@ package com.vend.fmr.aieng.impl.openai
 import com.vend.fmr.aieng.EMBEDDING_MODEL
 import com.vend.fmr.aieng.OPEN_AI_MODEL
 import com.vend.fmr.aieng.utils.Prompts
+import com.vend.fmr.aieng.utils.Models
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -37,47 +38,51 @@ class OpenAI(private val openaiApiKey: String) : Closeable {
     }
 
     suspend fun createChatCompletion(
-        prompt: String,
+        // Content - either simple prompt or complex messages
+        prompt: String? = null,
         systemMessage: String? = null,
+        messages: List<Message>? = null,
+        
+        // Model configuration
         model: String = OPEN_AI_MODEL,
         maxTokens: Int = 300,
         temperature: Double = 0.7,
         topP: Double? = null,
-        debug: Boolean = false
-    ): ChatCompletionResponse {
-        val messages = buildList {
-            systemMessage?.let { add(Message(role = Prompts.Roles.SYSTEM, content = systemMessage)) }
-            add(Message(role = Prompts.Roles.USER, content = prompt))
-        }
-
-        return createChatCompletionWithMessages(messages, model, maxTokens, temperature, topP, debug)
-    }
-
-    suspend fun createChatCompletionWithMessages(
-        messages: List<Message>,
-        model: String = OPEN_AI_MODEL,
-        maxTokens: Int = 300,
-        temperature: Double = 0.7,
-        topP: Double? = null,
-        debug: Boolean = false,
+        
+        // Function calling
         tools: List<Tool>? = null,
-        toolChoice: String? = null
+        toolChoice: String? = null,
+        
+        // System settings
+        debug: Boolean = false,
+        timeoutMs: Long = 120000 // 2 minutes default
     ): ChatCompletionResponse {
+        // Build messages list if not provided directly
+        val finalMessages = messages ?: buildList {
+            require(prompt != null) { "Either 'messages' or 'prompt' must be provided" }
+            systemMessage?.let { add(Message(role = Prompts.Roles.SYSTEM, content = TextContent(it))) }
+            add(Message(role = Prompts.Roles.USER, content = TextContent(prompt)))
+        }
+        
         val request = ChatCompletionRequest(
             model = model,
-            messages = messages,
+            messages = finalMessages,
             maxTokens = maxTokens,
             temperature = temperature,
             topP = topP,
             tools = tools,
             toolChoice = toolChoice
         )
+        
         val response = client.post("https://api.openai.com/v1/chat/completions") {
             contentType(ContentType.Application.Json)
             headers {
                 append("Authorization", "Bearer $openaiApiKey")
             }
             setBody(request)
+            timeout {
+                requestTimeoutMillis = timeoutMs
+            }
         }
 
         // Debug: print the raw response
@@ -93,26 +98,6 @@ class OpenAI(private val openaiApiKey: String) : Closeable {
 
         // Parse the response
         return json.decodeFromString<ChatCompletionResponse>(responseText)
-    }
-
-    suspend fun createChatCompletionWithTools(
-        messages: List<Message>,
-        tools: List<Tool>,
-        model: String = OPEN_AI_MODEL,
-        maxTokens: Int = 300,
-        temperature: Double = 0.7,
-        toolChoice: String = "auto",
-        debug: Boolean = false
-    ): ChatCompletionResponse {
-        return createChatCompletionWithMessages(
-            messages = messages,
-            model = model,
-            maxTokens = maxTokens,
-            temperature = temperature,
-            debug = debug,
-            tools = tools,
-            toolChoice = toolChoice
-        )
     }
 
     suspend fun createEmbedding(text: String): List<Double> {
@@ -165,7 +150,7 @@ class OpenAI(private val openaiApiKey: String) : Closeable {
 
     suspend fun generateImage(
         prompt: String,
-        model: String = "dall-e-3",
+        model: String = Models.Defaults.IMAGE_GENERATION,
         size: String = "1024x1024",
         style: String? = null,
         quality: String? = null,
@@ -202,6 +187,35 @@ class OpenAI(private val openaiApiKey: String) : Closeable {
         }
 
         return json.decodeFromString<ImageGenerationResponse>(responseText)
+    }
+
+    suspend fun createVisionCompletion(
+        prompt: String,
+        imageUrl: String,
+        model: String = Models.Defaults.VISION_ANALYSIS,
+        maxTokens: Int = 300,
+        detail: String = "auto", // "low", "high", or "auto"
+        debug: Boolean = false
+    ): ChatCompletionResponse {
+        val messages = listOf(
+            Message(
+                role = Prompts.Roles.USER,
+                content = VisionContent(
+                    parts = listOf(
+                        ContentPart(type = "text", text = prompt),
+                        ContentPart(type = "image_url", imageUrl = ImageUrl(url = imageUrl, detail = detail))
+                    )
+                )
+            )
+        )
+
+        return createChatCompletion(
+            messages = messages,
+            model = model,
+            maxTokens = maxTokens,
+            debug = debug,
+            timeoutMs = 120000 // 2 minutes for vision
+        )
     }
 
     override fun close() {

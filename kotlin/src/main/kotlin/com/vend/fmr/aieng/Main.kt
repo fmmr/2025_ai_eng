@@ -10,14 +10,15 @@ import com.vend.fmr.aieng.utils.FunctionCallingExamples
 import com.vend.fmr.aieng.utils.promptEngineeringDemo
 import com.vend.fmr.aieng.utils.chatParametersDemo
 import com.vend.fmr.aieng.utils.temperatureDemo
+import com.vend.fmr.aieng.utils.Models
 
 val OPEN_AI_KEY = "OPENAI_API_KEY".env()
 val SUPABASE_URL = "SUPABASE_URL".env()
 val SUPABASE_KEY = "SUPABASE_ANON_KEY".env()
 val POLYGON_API_KEY = "POLYGON_API_KEY".env()
 
-const val OPEN_AI_MODEL = "gpt-4"
-const val EMBEDDING_MODEL = "text-embedding-ada-002"
+const val OPEN_AI_MODEL = Models.Defaults.CHAT_COMPLETION
+const val EMBEDDING_MODEL = Models.Defaults.EMBEDDING
 
 val openAI = OpenAI(OPEN_AI_KEY)
 val supabase = Supabase(SUPABASE_URL, SUPABASE_KEY)

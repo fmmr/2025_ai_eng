@@ -2,6 +2,7 @@ package com.vend.fmr.aieng.web
 
 import com.vend.fmr.aieng.impl.mocks.Mocks
 import com.vend.fmr.aieng.impl.openai.Message
+import com.vend.fmr.aieng.impl.openai.TextContent
 import com.vend.fmr.aieng.openAI
 import com.vend.fmr.aieng.utils.Prompts
 import com.vend.fmr.aieng.utils.truncate
@@ -64,14 +65,14 @@ class ReActController {
         var stepCounter = 1
 
         // Add system message
-        messages.add(Message(Prompts.Roles.SYSTEM, Prompts.REACT_AGENT_SYSTEM))
+        messages.add(Message(Prompts.Roles.SYSTEM, TextContent(Prompts.REACT_AGENT_SYSTEM)))
         
         // Add initial user query
-        messages.add(Message(Prompts.Roles.USER, userQuery))
+        messages.add(Message(Prompts.Roles.USER, TextContent(userQuery)))
 
         for (iteration in 0 until maxIterations) {
             // Get AI response using message history
-            val aiResponse = openAI.createChatCompletionWithMessages(
+            val aiResponse = openAI.createChatCompletion(
                 messages = messages,
                 temperature = 0.1,
                 maxTokens = 400
@@ -80,7 +81,7 @@ class ReActController {
             val currentResponse = aiResponse.text()
 
             // Add AI response to messages
-            messages.add(Message(Prompts.Roles.ASSISTANT, currentResponse))
+            messages.add(Message(Prompts.Roles.ASSISTANT, TextContent(currentResponse)))
 
             // Check if AI provided final answer
             if (currentResponse.contains("Final Answer:", ignoreCase = true)) {
@@ -108,7 +109,7 @@ class ReActController {
                 steps.add(ReActStep(stepCounter++, "observation", result))
 
                 // Add observation as a user message
-                messages.add(Message(Prompts.Roles.USER, observation))
+                messages.add(Message(Prompts.Roles.USER, TextContent(observation)))
             } else {
                 // No action found, AI might be done or confused
                 break

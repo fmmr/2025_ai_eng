@@ -4,6 +4,7 @@ package com.vend.fmr.aieng.utils
 
 import com.vend.fmr.aieng.impl.mocks.Mocks
 import com.vend.fmr.aieng.impl.openai.Message
+import com.vend.fmr.aieng.impl.openai.TextContent
 import com.vend.fmr.aieng.openAI
 
 /**
@@ -27,11 +28,11 @@ object FunctionCallingExamples {
         // Add system message to encourage function usage
         messages.add(Message(
             role = Prompts.Roles.SYSTEM, 
-            content = Prompts.FUNCTION_CALLING_SYSTEM
+            content = TextContent(Prompts.FUNCTION_CALLING_SYSTEM)
         ))
         
         // Add initial user query
-        messages.add(Message(role = Prompts.Roles.USER, content = userQuery))
+        messages.add(Message(role = Prompts.Roles.USER, content = TextContent(userQuery)))
         
         if (debug) {
             println("🛠️ Starting Function Calling Agent for query: $userQuery")
@@ -51,7 +52,7 @@ object FunctionCallingExamples {
             }
             
             // Call OpenAI with function definitions
-            val response = openAI.createChatCompletionWithTools(
+            val response = openAI.createChatCompletion(
                 messages = messages,
                 tools = tools,
                 temperature = 0.1,
@@ -91,7 +92,7 @@ object FunctionCallingExamples {
                     // Add function result as a tool message
                     messages.add(Message(
                         role = Prompts.Roles.TOOL,
-                        content = result,
+                        content = TextContent(result),
                         toolCallId = toolCall.id
                     ))
                 }
