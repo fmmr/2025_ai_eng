@@ -236,7 +236,7 @@ suspend fun temperatureDemo(debug: Boolean = false) {
         ParameterSet(
             name = "Wild",
             description = "Maximum Creativity",
-            temperature = 1.8,
+            temperature = 1.9,
             topP = fixedTopP,
             color = "🔴"
         )
