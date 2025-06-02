@@ -35,6 +35,7 @@ This project implements the core concepts from the Scrimba AI Engineering course
 - **🎨 Image Generation** - DALL-E integration for AI-powered image creation
 - **🎛️ Tuning Image Generation** - Advanced DALL-E parameter tuning and optimization
 - **✏️ Editing Images** - AI-powered image editing and manipulation capabilities
+- **🎬 Film Fusion** - Merge movies and art into stunning AI-generated posters (Solo Project)
 - **👁️ GPT-4 with Vision** - Multi-modal AI capabilities with image analysis and insights
 - **🎯 Assistants API** - OpenAI's Assistants API integration
 - **☕ OpenAI Java Library** - Explore OpenAI's official Java/Kotlin library vs custom implementation
