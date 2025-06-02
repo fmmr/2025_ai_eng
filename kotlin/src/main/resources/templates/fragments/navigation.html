@@ -17,7 +17,6 @@
                 <div class="navbar-nav ms-auto">
                     <a th:href="@{/}" th:classappend="${activeTab == 'home' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Home">🏠</a>
                     
-                    <!-- All Demos in Order -->
                     <a th:href="@{/demo/prompt-engineering}" th:classappend="${activeTab == 'prompt-engineering' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Prompt Engineering ✓">📝</a>
                     <a th:href="@{/demo/chat-completion}" th:classappend="${activeTab == 'chat-completion' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Chat Completion ✓">🤖</a>
                     <a th:href="@{/demo/stock}" th:classappend="${activeTab == 'stock' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Stock Data ✓">📈</a>

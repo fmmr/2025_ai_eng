@@ -39,13 +39,10 @@ class RagController {
                 val openAI = OpenAI(OPEN_AI_KEY)
                 val supabase = Supabase(SUPABASE_URL, SUPABASE_KEY)
                 
-                // Step 1: Convert query to embedding
                 val queryEmbedding = openAI.createEmbedding(query)
                 
-                // Step 2: Search for similar documents in Supabase
                 val matches = supabase.matchDocuments(queryEmbedding, maxMatches)
                 
-                // Step 3: Combine context and generate answer
                 val context = matches.joinToString("\n") { it.content }
                 
                 val response = openAI.createChatCompletion(

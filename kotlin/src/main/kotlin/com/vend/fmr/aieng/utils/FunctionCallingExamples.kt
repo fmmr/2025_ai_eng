@@ -25,13 +25,11 @@ object FunctionCallingExamples {
         val messages = mutableListOf<Message>()
         val tools = Mocks.getAvailableTools()
         
-        // Add system message to encourage function usage
         messages.add(Message(
             role = Prompts.Roles.SYSTEM, 
             content = TextContent(Prompts.FUNCTION_CALLING_SYSTEM)
         ))
         
-        // Add initial user query
         messages.add(Message(role = Prompts.Roles.USER, content = TextContent(userQuery)))
         
         if (debug) {
@@ -51,7 +49,6 @@ object FunctionCallingExamples {
                 println("💬 Messages in conversation: ${messages.size}")
             }
             
-            // Call OpenAI with function definitions
             val response = openAI.createChatCompletion(
                 messages = messages,
                 tools = tools,
@@ -66,10 +63,8 @@ object FunctionCallingExamples {
                 println("Has tool calls: ${response.hasToolCalls()}")
             }
             
-            // Add assistant response to conversation
             messages.add(response.choices.first().message)
             
-            // Check if OpenAI wants to call functions
             if (response.hasToolCalls()) {
                 val toolCalls = response.getToolCalls()
                 
@@ -77,7 +72,6 @@ object FunctionCallingExamples {
                     println("🔧 Tool calls requested: ${toolCalls.size}")
                 }
                 
-                // Execute each function call
                 for (toolCall in toolCalls) {
                     if (debug) {
                         println("Executing: ${toolCall.function.name}(${toolCall.function.arguments})")
@@ -89,7 +83,6 @@ object FunctionCallingExamples {
                         println("📋 Result: $result")
                     }
                     
-                    // Add function result as a tool message
                     messages.add(Message(
                         role = Prompts.Roles.TOOL,
                         content = TextContent(result),
@@ -97,7 +90,6 @@ object FunctionCallingExamples {
                     ))
                 }
             } else {
-                // No more function calls needed, AI has final answer
                 if (debug) {
                     println("\n✅ Final Answer reached!")
                 }

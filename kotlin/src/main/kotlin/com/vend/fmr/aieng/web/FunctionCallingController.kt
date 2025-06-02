@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam
 
 data class FunctionCallingStep(
     val stepNumber: Int,
-    val type: String, // "user_query", "ai_response", "function_call", "function_result", "final_answer"
+    val type: String,
     val content: String,
     val functionName: String? = null,
     val functionArgs: String? = null,
@@ -67,16 +67,13 @@ class FunctionCallingController {
         val tools = Mocks.getAvailableTools()
         var stepCounter = 1
 
-        // Add system message
         messages.add(Message(
             role = Prompts.Roles.SYSTEM, 
             content = TextContent(Prompts.FUNCTION_CALLING_SYSTEM)
         ))
         
-        // Add initial user query
         messages.add(Message(role = Prompts.Roles.USER, content = TextContent(userQuery)))
         
-        // Add user query step
         steps.add(FunctionCallingStep(
             stepNumber = stepCounter++,
             type = "user_query",
@@ -84,7 +81,6 @@ class FunctionCallingController {
         ))
 
         for (iteration in 0 until maxIterations) {
-            // Call OpenAI with function definitions
             val response = openAI.createChatCompletion(
                 messages = messages,
                 tools = tools,
@@ -93,15 +89,12 @@ class FunctionCallingController {
                 toolChoice = "auto"
             )
 
-            // Add assistant response to conversation
             val assistantMessage = response.choices.first().message
             messages.add(assistantMessage)
 
-            // Check if OpenAI wants to call functions
             if (response.hasToolCalls()) {
                 val toolCalls = response.getToolCalls()
                 
-                // Add AI response step (if it has content)
                 val contentText = when (val content = assistantMessage.content) {
                     is TextContent -> content.text
                     else -> ""
@@ -114,9 +107,7 @@ class FunctionCallingController {
                     ))
                 }
                 
-                // Execute each function call
                 for (toolCall in toolCalls) {
-                    // Add function call step with formatted args
                     val formattedArgs = formatFunctionArgs(toolCall.function.arguments)
                     steps.add(FunctionCallingStep(
                         stepNumber = stepCounter++,
@@ -128,7 +119,6 @@ class FunctionCallingController {
                     
                     val result = Mocks.executeFunctionCall(toolCall.function)
                     
-                    // Add function result step
                     steps.add(FunctionCallingStep(
                         stepNumber = stepCounter++,
                         type = "function_result",
@@ -136,7 +126,6 @@ class FunctionCallingController {
                         functionName = toolCall.function.name
                     ))
                     
-                    // Add function result as a tool message
                     messages.add(Message(
                         role = Prompts.Roles.TOOL,
                         content = TextContent(result),
@@ -144,7 +133,6 @@ class FunctionCallingController {
                     ))
                 }
             } else {
-                // No more function calls needed, AI has final answer
                 val finalAnswer = response.text()
                 steps.add(FunctionCallingStep(
                     stepNumber = stepCounter++,
@@ -162,7 +150,6 @@ class FunctionCallingController {
         return when {
             args.isBlank() || args == "{}" -> ""
             else -> {
-                // Remove extra whitespace and newlines, make it compact
                 args.replace(Regex("\\s+"), " ").trim()
             }
         }

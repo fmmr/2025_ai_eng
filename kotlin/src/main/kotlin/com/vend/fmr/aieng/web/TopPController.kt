@@ -42,7 +42,6 @@ class TopPController {
             customPrompt.trim()
         }
         
-        // Preserve form data for re-display
         val formData = mutableMapOf<String, String>()
         formData["customPrompt"] = prompt
         model.addAttribute("formData", formData)
@@ -107,7 +106,6 @@ color = "🔴"
             model.addAttribute("explanation", "How top-p affects vocabulary restriction vs exploration")
             model.addAttribute("error", "Failed to generate responses: ${e.message}")
             
-            // Preserve form data on error
             val formData = mutableMapOf<String, String>()
             formData["customPrompt"] = customPrompt
             model.addAttribute("formData", formData)

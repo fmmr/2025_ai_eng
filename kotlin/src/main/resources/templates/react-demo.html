@@ -15,7 +15,6 @@
         <section class="demo-section">
             <h2>Interactive Demo</h2>
             
-            <!-- Query Form -->
             <form th:action="@{/demo/react}" method="post" class="mb-4">
                 <div class="mb-3">
                     <label for="userQuery" class="form-label">Ask the ReAct Agent:</label>
@@ -33,7 +32,6 @@
                 <button type="submit" class="btn btn-primary">🧠 Run ReAct Agent</button>
             </form>
 
-            <!-- System Prompt Info -->
             <div class="mb-4">
                 <button class="btn btn-outline-info btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#systemPromptCollapse">
                     📋 View System Prompt
@@ -46,14 +44,11 @@
                 </div>
             </div>
 
-            <!-- Results Display -->
             <div th:if="${success != null and success}">
                 <h3>🎯 Query: <span th:text="${userQuery}" class="text-primary"></span></h3>
                 
-                <!-- Step-by-step process -->
                 <div class="react-steps mt-4">
                     <div th:each="step, iterStat : ${steps}" class="react-step mb-3">
-                        <!-- Thought Step -->
                         <div th:if="${step.type == 'thought'}" class="card border-info">
                             <div class="card-header bg-info text-white">
                                 <strong>💭 Step [[${step.stepNumber}]]: Thought</strong>
@@ -63,7 +58,6 @@
                             </div>
                         </div>
 
-                        <!-- Action Step -->
                         <div th:if="${step.type == 'action'}" class="card border-warning">
                             <div class="card-header bg-warning text-dark">
                                 <strong>⚡ Step [[${step.stepNumber}]]: Action</strong>
@@ -73,7 +67,6 @@
                             </div>
                         </div>
 
-                        <!-- Observation Step -->
                         <div th:if="${step.type == 'observation'}" class="card border-secondary">
                             <div class="card-header bg-secondary text-white">
                                 <strong>📋 Step [[${step.stepNumber}]]: Observation</strong>
@@ -83,7 +76,6 @@
                             </div>
                         </div>
 
-                        <!-- Final Answer -->
                         <div th:if="${step.type == 'final_answer'}" class="card border-success">
                             <div class="card-header bg-success text-white">
                                 <strong>✅ Final Answer</strong>
@@ -96,7 +88,6 @@
                 </div>
             </div>
 
-            <!-- Error Display -->
             <div th:if="${success != null and !success}" class="alert alert-danger">
                 <h4>❌ Error</h4>
                 <p th:text="${error}"></p>

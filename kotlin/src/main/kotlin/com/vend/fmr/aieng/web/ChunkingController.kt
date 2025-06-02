@@ -65,7 +65,6 @@ class ChunkingController {
             val suffix = text1.substring(text1.length - i)
             val prefix = text2.substring(0, i)
             if (suffix == prefix && suffix.length > maxOverlap.length) {
-                // Skip whitespace-only overlaps
                 if (suffix.trim().isNotEmpty()) {
                     maxOverlap = suffix
                 }

@@ -84,7 +84,6 @@ suspend fun chatGPT() {
 suspend fun multiMessageChat(debug: Boolean = false): String {
     val conversationHistory = mutableListOf<com.vend.fmr.aieng.impl.openai.Message>()
     
-    // Add system message first
     conversationHistory.add(
         com.vend.fmr.aieng.impl.openai.Message(
             role = "system", 
@@ -95,7 +94,6 @@ suspend fun multiMessageChat(debug: Boolean = false): String {
     val results = mutableListOf<String>()
     
     Prompts.ChatConversation.messages.forEachIndexed { index, userMessage ->
-        // Add user message to conversation history
         conversationHistory.add(
             com.vend.fmr.aieng.impl.openai.Message(
                 role = "user", 
@@ -108,7 +106,6 @@ suspend fun multiMessageChat(debug: Boolean = false): String {
             println("User: $userMessage")
         }
         
-        // Get AI response with full conversation context
         val response = openAI.createChatCompletion(
             messages = conversationHistory,
             maxTokens = 200,
@@ -117,7 +114,6 @@ suspend fun multiMessageChat(debug: Boolean = false): String {
         
         val assistantReply = response.text()
         
-        // Add assistant response to conversation history
         conversationHistory.add(
             com.vend.fmr.aieng.impl.openai.Message(
                 role = Prompts.Roles.ASSISTANT, 
@@ -131,10 +127,8 @@ suspend fun multiMessageChat(debug: Boolean = false): String {
         
         results.add("User: $userMessage\nAssistant: $assistantReply")
         
-        // Keep conversation history manageable (last 10 messages + system)
         if (conversationHistory.size > 11) {
-            // Keep system message and last 10 messages
-            conversationHistory.removeAt(1) // Remove oldest non-system message
+            conversationHistory.removeAt(1)
         }
     }
     

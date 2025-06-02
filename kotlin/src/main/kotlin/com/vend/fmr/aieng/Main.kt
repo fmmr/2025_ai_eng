@@ -34,16 +34,6 @@ suspend fun main() {
 
 //    val conversation = multiMessageChat(debug = true)
 //    println(conversation)
-    // ReAct Agent Examples (manual step-by-step reasoning)
-//    println("\n" + "=".repeat(60))
-//    println("REACT AGENT EXAMPLES")
-//    println("=".repeat(60))
-//
-//    val result1 = reactAgent("Do you have any ideas for activities I can do at my location?", debug = true)
-//    println("Final ReAct Result: $result1")
-//
-//    val result2 = reactAgent("Can you tell me the current stock price of Apple and Microsoft, and what time it is?", debug = true)
-//    println("Final ReAct Result: $result2")
     
 //    val result3 = FunctionCallingExamples.functionCallingAgent("Do you have any ideas for activities I can do at my location?", debug = true)
 //    println("Final Function Call Result: $result3")

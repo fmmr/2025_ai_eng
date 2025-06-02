@@ -10,7 +10,9 @@ This is Kotlin code for an AI engineering course - learning to code with AI APIs
 - Maven-based project, primarily run from IntelliJ
 - No backward compatibility, deprecation handling, or backups - git handles history
 - Keep code simple - avoid over-complication
-- Minimal comments - use clear variable and function names instead
+- **NO USELESS COMMENTS** - Only add comments that provide real value beyond what the code clearly shows
+- Comments that just restate what the code does are forbidden
+- Use clear variable and function names instead of comments
 - **USE LIBRARIES AND FRAMEWORKS** - Don't reinvent the wheel
 - When Bootstrap is loaded, use Bootstrap components (navbar, tooltips, etc.)
 - Prefer existing solutions over custom CSS/JS when possible

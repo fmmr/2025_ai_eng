@@ -1,6 +1,5 @@
 // Vision Demo JavaScript
 document.addEventListener('DOMContentLoaded', function() {
-    // Image data with suggested prompts
     const imageData = {
         'magnus.png': [
             "Analyze the chess position on the board",
@@ -28,12 +27,11 @@ document.addEventListener('DOMContentLoaded', function() {
         ]
     };
 
-    // Get form data from data attributes
     const formDataElement = document.getElementById('formData');
     const formData = formDataElement ? {
         selectedImage: formDataElement.dataset.selectedImage || '',
         prompt: formDataElement.dataset.prompt || '',
-        model: formDataElement.dataset.model || 'gpt-4o', // Models.Defaults.VISION_ANALYSIS
+        model: formDataElement.dataset.model || 'gpt-4o',
         detail: formDataElement.dataset.detail || 'auto'
     } : {};
 
@@ -42,26 +40,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const promptSuggestionsDiv = document.getElementById('promptSuggestions');
     const promptTextarea = document.getElementById('prompt');
 
-    // Handle image selection
     document.querySelectorAll('.image-selection-card').forEach(card => {
         card.addEventListener('click', function() {
             const filename = this.dataset.filename;
             
-            // Remove previous selection
             document.querySelectorAll('.image-selection-card .card').forEach(c => {
                 c.classList.remove('border-primary', 'border-3');
                 c.classList.add('border-2');
             });
             
-            // Add selection to clicked card
             const cardElement = this.querySelector('.card');
             cardElement.classList.add('border-primary', 'border-3');
             cardElement.classList.remove('border-2');
             
-            // Update hidden input
             selectedImageInput.value = filename;
             
-            // Show suggested prompts
             showSuggestedPrompts(filename);
         });
     });
@@ -70,10 +63,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const prompts = imageData[filename] || [];
         
         if (prompts.length > 0) {
-            // Clear previous suggestions
             promptSuggestionsDiv.innerHTML = '';
             
-            // Add suggestion buttons
             prompts.forEach(promptText => {
                 const button = document.createElement('button');
                 button.type = 'button';
@@ -92,7 +83,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Restore form state if available
     if (formData.selectedImage) {
         const card = document.querySelector(`[data-filename="${formData.selectedImage}"]`);
         if (card) {
@@ -100,7 +90,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Form submission with loading states
     const visionForm = document.getElementById('visionForm');
     if (visionForm) {
         visionForm.addEventListener('submit', function(e) {
@@ -119,7 +108,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 spinner.classList.remove('d-none');
                 buttonText.textContent = 'Analyzing...';
                 
-                // Show additional loading messages
                 setTimeout(() => {
                     if (button.disabled) {
                         buttonText.textContent = 'Processing image...';

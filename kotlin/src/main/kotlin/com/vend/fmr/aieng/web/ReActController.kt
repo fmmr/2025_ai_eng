@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam
 
 data class ReActStep(
     val stepNumber: Int,
-    val type: String, // "thought", "action", "observation", "final_answer"
+    val type: String,
     val content: String,
     val timestamp: Long = System.currentTimeMillis()
 )
@@ -64,14 +64,10 @@ class ReActController {
         val messages = mutableListOf<Message>()
         var stepCounter = 1
 
-        // Add system message
         messages.add(Message(Prompts.Roles.SYSTEM, TextContent(Prompts.REACT_AGENT_SYSTEM)))
-        
-        // Add initial user query
         messages.add(Message(Prompts.Roles.USER, TextContent(userQuery)))
 
         for (iteration in 0 until maxIterations) {
-            // Get AI response using message history
             val aiResponse = openAI.createChatCompletion(
                 messages = messages,
                 temperature = 0.1,
@@ -80,10 +76,8 @@ class ReActController {
 
             val currentResponse = aiResponse.text()
 
-            // Add AI response to messages
             messages.add(Message(Prompts.Roles.ASSISTANT, TextContent(currentResponse)))
 
-            // Check if AI provided final answer
             if (currentResponse.contains("Final Answer:", ignoreCase = true)) {
                 val finalAnswerRegex = Regex("Final Answer:\\s*(.*)", setOf(RegexOption.IGNORE_CASE, RegexOption.DOT_MATCHES_ALL))
                 val match = finalAnswerRegex.find(currentResponse)
@@ -94,10 +88,7 @@ class ReActController {
                 }
             }
 
-            // Parse thoughts and actions from response
             parseThoughtAndAction(currentResponse, stepCounter, steps)
-            
-            // Parse and execute action
             val action = Mocks.parseAction(currentResponse)
             if (action != null) {
                 val (functionName, params) = action
@@ -108,10 +99,8 @@ class ReActController {
 
                 steps.add(ReActStep(stepCounter++, "observation", result))
 
-                // Add observation as a user message
                 messages.add(Message(Prompts.Roles.USER, TextContent(observation)))
             } else {
-                // No action found, AI might be done or confused
                 break
             }
         }
@@ -122,7 +111,6 @@ class ReActController {
     private fun parseThoughtAndAction(response: String, startingStepNumber: Int, steps: MutableList<ReActStep>) {
         var stepNumber = startingStepNumber
 
-        // Extract thought
         val thoughtRegex = Regex("Thought:\\s*(.*?)(?=Action:|$)", setOf(RegexOption.IGNORE_CASE, RegexOption.DOT_MATCHES_ALL))
         val thoughtMatch = thoughtRegex.find(response)
         if (thoughtMatch != null) {
@@ -130,7 +118,6 @@ class ReActController {
             steps.add(ReActStep(stepNumber++, "thought", thought))
         }
 
-        // Extract action
         val actionRegex = Regex("Action:\\s*(.*?)(?=Observation:|$)", setOf(RegexOption.IGNORE_CASE, RegexOption.DOT_MATCHES_ALL))
         val actionMatch = actionRegex.find(response)
         if (actionMatch != null) {

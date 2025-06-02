@@ -15,7 +15,6 @@
         <section class="demo-section">
             <h2>Chat Interface</h2>
             
-            <!-- Chat History Display -->
             <div class="chat-container mb-4" style="height: 400px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 8px; padding: 1rem; background-color: #f8f9fa;">
                 <div th:if="${#lists.isEmpty(chatHistory)}" class="text-muted text-center">
                     <i>Start a conversation by typing a message below...</i>
@@ -36,7 +35,6 @@
                 </div>
             </div>
             
-            <!-- Message Input Form -->
             <form th:action="@{/demo/chat}" method="post" class="d-flex gap-2" id="chatForm">
                 <input type="text" name="userMessage" id="messageInput" class="form-control" placeholder="Type your message..." required autocomplete="off" autofocus>
                 <button type="submit" class="btn btn-primary">Send</button>
@@ -84,42 +82,34 @@
     <div th:replace="~{fragments/scripts :: common-scripts}"></div>
     
     <script>
-        // Auto-focus and scroll functionality for chat
         document.addEventListener('DOMContentLoaded', function() {
             const messageInput = document.getElementById('messageInput');
             const chatContainer = document.querySelector('.chat-container');
             
-            // Always focus on the input field
             function focusInput() {
                 if (messageInput) {
                     messageInput.focus();
                 }
             }
             
-            // Scroll to bottom of chat
             function scrollToBottom() {
                 if (chatContainer) {
                     chatContainer.scrollTop = chatContainer.scrollHeight;
                 }
             }
             
-            // Initial focus and scroll
             focusInput();
             scrollToBottom();
             
-            // Re-focus after any click outside
             document.addEventListener('click', function(e) {
-                // Don't refocus if clicking on a link or button
                 if (!e.target.matches('a, button, .nav-link')) {
                     setTimeout(focusInput, 10);
                 }
             });
             
-            // Handle form submission
             const chatForm = document.getElementById('chatForm');
             if (chatForm) {
                 chatForm.addEventListener('submit', function() {
-                    // Clear the input after submission
                     setTimeout(function() {
                         messageInput.value = '';
                         focusInput();
@@ -128,7 +118,6 @@
                 });
             }
             
-            // Handle Enter key in input field
             messageInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();

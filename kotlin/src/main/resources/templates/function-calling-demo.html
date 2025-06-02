@@ -15,7 +15,6 @@
         <section class="demo-section">
             <h2>Interactive Demo</h2>
             
-            <!-- Query Form -->
             <form th:action="@{/demo/function-calling}" method="post" class="mb-4">
                 <div class="mb-3">
                     <label for="userQuery" class="form-label">Ask the Function Calling Agent:</label>
@@ -33,19 +32,16 @@
                 <button type="submit" class="btn btn-primary">Ask Agent</button>
             </form>
 
-            <!-- Results Section -->
             <div th:if="${success}" class="results-section">
                 <h3>Function Calling Process:</h3>
                 <div class="alert alert-info">
                     <strong>Query:</strong> <span th:text="${userQuery}">User query</span>
                 </div>
                 
-                <!-- Function Calling Steps -->
                 <div class="function-steps">
                     <div th:each="step : ${steps}" 
                          th:class="|step-item step-${step.type}|">
                         
-                        <!-- User Query Step -->
                         <div th:if="${step.type == 'user_query'}" class="step-content user-query">
                             <div class="step-header">
                                 <span class="step-number" th:text="${step.stepNumber}">1</span>
@@ -54,7 +50,6 @@
                             <div class="step-body" th:text="${step.content}">User input</div>
                         </div>
                         
-                        <!-- AI Response Step -->
                         <div th:if="${step.type == 'ai_response'}" class="step-content ai-response">
                             <div class="step-header">
                                 <span class="step-number" th:text="${step.stepNumber}">2</span>
@@ -63,7 +58,6 @@
                             <div class="step-body" th:text="${step.content}">AI thinking</div>
                         </div>
                         
-                        <!-- Function Call Step -->
                         <div th:if="${step.type == 'function_call'}" class="step-content function-call">
                             <div class="step-header">
                                 <span class="step-number" th:text="${step.stepNumber}">3</span>
@@ -74,7 +68,6 @@
                             </div>
                         </div>
                         
-                        <!-- Function Result Step -->
                         <div th:if="${step.type == 'function_result'}" class="step-content function-result">
                             <div class="step-header">
                                 <span class="step-number" th:text="${step.stepNumber}">4</span>
@@ -83,7 +76,6 @@
                             <div class="step-body" th:text="${step.content}">Function output</div>
                         </div>
                         
-                        <!-- Final Answer Step -->
                         <div th:if="${step.type == 'final_answer'}" class="step-content final-answer">
                             <div class="step-header">
                                 <span class="step-number" th:text="${step.stepNumber}">5</span>
@@ -95,14 +87,12 @@
                 </div>
             </div>
 
-            <!-- Error Section -->
             <div th:if="${success == false and error}" class="alert alert-danger" role="alert">
                 <h4 class="alert-heading">Error!</h4>
                 <p th:text="${error}">Error message</p>
             </div>
         </section>
 
-        <!-- System Prompt Section -->
         <section class="system-prompt-section">
             <h2>System Prompt</h2>
             <div class="system-prompt-container">
@@ -116,7 +106,6 @@
             </div>
         </section>
 
-        <!-- Available Functions Section -->
         <section class="functions-section">
             <h2>Available Functions</h2>
             <div class="row">
@@ -160,7 +149,7 @@
         </section>
     </div>
 
-    <div th:replace="~{fragments/footer :: footer}"></div>
+    <div th:replace="~{fragments/footer :: common-footer}"></div>
     <div th:replace="~{fragments/scripts :: common-scripts}"></div>
 </body>
 </html>

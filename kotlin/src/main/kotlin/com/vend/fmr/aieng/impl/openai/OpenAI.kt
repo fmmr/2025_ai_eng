@@ -39,26 +39,18 @@ class OpenAI(private val openaiApiKey: String) : Closeable {
     }
 
     suspend fun createChatCompletion(
-        // Content - either simple prompt or complex messages
         prompt: String? = null,
         systemMessage: String? = null,
         messages: List<Message>? = null,
-        
-        // Model configuration
         model: String = OPEN_AI_MODEL,
         maxTokens: Int = 300,
         temperature: Double = 0.7,
         topP: Double? = null,
-        
-        // Function calling
         tools: List<Tool>? = null,
         toolChoice: String? = null,
-        
-        // System settings
         debug: Boolean = false,
-        timeoutMs: Long = 120000 // 2 minutes default
+        timeoutMs: Long = 120000
     ): ChatCompletionResponse {
-        // Build messages list if not provided directly
         val finalMessages = messages ?: buildList {
             require(prompt != null) { "Either 'messages' or 'prompt' must be provided" }
             systemMessage?.let { add(Message(role = Prompts.Roles.SYSTEM, content = TextContent(it))) }
@@ -86,13 +78,11 @@ class OpenAI(private val openaiApiKey: String) : Closeable {
             }
         }
 
-        // Debug: print the raw response
         val responseText = response.bodyAsText()
         if (debug) {
             println("Status: ${response.status}")
         }
 
-        // Check if the response is successful
         if (!response.status.isSuccess()) {
             throw Exception("API request failed with status ${response.status}: $responseText")
         }
@@ -219,7 +209,7 @@ class OpenAI(private val openaiApiKey: String) : Closeable {
                 append("Authorization", "Bearer $openaiApiKey")
             }
             timeout {
-                requestTimeoutMillis = 300000 // 5 minutes for image editing
+                requestTimeoutMillis = 300000
             }
         }
 
@@ -241,7 +231,7 @@ class OpenAI(private val openaiApiKey: String) : Closeable {
         imageUrl: String,
         model: String = Models.Defaults.VISION_ANALYSIS,
         maxTokens: Int = 300,
-        detail: String = "auto", // "low", "high", or "auto"
+        detail: String = "auto",
         debug: Boolean = false
     ): ChatCompletionResponse {
         val messages = listOf(
@@ -261,7 +251,7 @@ class OpenAI(private val openaiApiKey: String) : Closeable {
             model = model,
             maxTokens = maxTokens,
             debug = debug,
-            timeoutMs = 120000 // 2 minutes for vision
+            timeoutMs = 120000
         )
     }
 

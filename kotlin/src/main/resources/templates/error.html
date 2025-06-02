@@ -56,14 +56,12 @@
             const element = document.getElementById(elementId);
             const text = element.textContent;
             
-            // Check if modern clipboard API is available
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(text).catch(err => {
                     console.error('Clipboard API failed: ', err);
                     fallbackCopy(text);
                 });
             } else {
-                // Use fallback method
                 fallbackCopy(text);
             }
             

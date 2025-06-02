@@ -8,7 +8,6 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 
-// Base sealed class for message content
 @Serializable
 sealed class MessageContent
 
@@ -18,7 +17,6 @@ data class TextContent(val text: String) : MessageContent()
 @Serializable
 data class VisionContent(val parts: List<ContentPart>) : MessageContent()
 
-// Custom serializer for MessageContent to handle OpenAI API format
 @OptIn(ExperimentalSerializationApi::class)
 object MessageContentSerializer : KSerializer<MessageContent?> {
     override val descriptor = buildClassSerialDescriptor("MessageContent")
@@ -32,7 +30,6 @@ object MessageContentSerializer : KSerializer<MessageContent?> {
     }
     
     override fun deserialize(decoder: Decoder): MessageContent? {
-        // For deserialization, we'll typically get string content back
         return try {
             val text = decoder.decodeString()
             TextContent(text)
@@ -51,7 +48,6 @@ data class Message(
     @SerialName("tool_call_id") val toolCallId: String? = null
 )
 
-// Vision API content parts
 @Serializable
 data class ContentPart(
     val type: String,
@@ -62,7 +58,7 @@ data class ContentPart(
 @Serializable
 data class ImageUrl(
     val url: String,
-    val detail: String = "auto" // "low", "high", or "auto"
+    val detail: String = "auto"
 )
 
 @Serializable
@@ -158,7 +154,6 @@ data class EmbeddingResponse(
     val usage: EmbeddingUsage
 )
 
-// Function calling data classes
 @Serializable
 data class Tool(
     val type: String = "function",
@@ -199,15 +194,14 @@ data class FunctionCall(
     val arguments: String
 )
 
-// Image generation data classes
 @Serializable
 data class ImageGenerationRequest(
     val prompt: String,
     val model: String = Models.Defaults.IMAGE_GENERATION,
     val n: Int = 1,
     val size: String = "1024x1024",
-    val style: String? = null, // "vivid" or "natural" for DALL-E 3
-    val quality: String? = null, // "hd" for DALL-E 3
+    val style: String? = null,
+    val quality: String? = null,
     @SerialName("response_format") val responseFormat: String = "url"
 )
 

@@ -20,10 +20,6 @@ object Mocks {
     data class Weather(val location: String, val temperature: Int, val condition: String, val humidity: Int)
     data class StockInfo(val ticker: String, val price: Double, val change: Double, val changePercent: Double)
     
-    /**
-     * Get mock current location (GPS coordinates)
-     * In a real implementation, this would use device GPS or IP geolocation
-     */
     fun getLocation(): Location {
         return Location(
             city = "Oslo", 
@@ -33,10 +29,6 @@ object Mocks {
         )
     }
     
-    /**
-     * Get mock weather data for a location
-     * In a real implementation, this would call a weather API like OpenWeatherMap
-     */
     fun getWeather(location: String): Weather {
         val mockWeathers = mapOf(
             "oslo" to Weather("Oslo, Norway", 5, "Cloudy", 78),
@@ -56,18 +48,13 @@ object Mocks {
         )
     }
     
-    /**
-     * Get stock price data - tries real Polygon API, falls back to realistic mock data
-     */
     suspend fun getStockPrice(ticker: String): StockInfo {
         return try {
-            // Try real Polygon API first
             val aggregatesResponse = polygon.getAggregates(ticker)
             val response = aggregatesResponse.firstOrNull()
-            val aggregate = response?.results?.lastOrNull() // Get most recent data
+            val aggregate = response?.results?.lastOrNull()
             
             if (aggregate != null && aggregate.c > 0) {
-                // Real data found
                 val change = aggregate.c - aggregate.o
                 val changePercent = (change / aggregate.o) * 100
                 StockInfo(
@@ -77,18 +64,13 @@ object Mocks {
                     changePercent = changePercent
                 )
             } else {
-                // No valid data from API, use realistic mock data
                 getMockStockPrice(ticker)
             }
         } catch (_: Exception) {
-            // API error, fallback to realistic mock data
             getMockStockPrice(ticker)
         }
     }
     
-    /**
-     * Generate realistic mock stock prices for well-known tickers
-     */
     private fun getMockStockPrice(ticker: String): StockInfo {
         val mockPrices = mapOf(
             "AAPL" to 175.50,
@@ -104,7 +86,7 @@ object Mocks {
         )
         
         val basePrice = mockPrices[ticker.uppercase()] ?: (50..400).random().toDouble()
-        val changePercent = (-50..50).random() / 10.0 // -5.0 to 5.0
+        val changePercent = (-50..50).random() / 10.0
         val change = basePrice * (changePercent / 100)
         
         return StockInfo(
@@ -115,17 +97,10 @@ object Mocks {
         )
     }
     
-    /**
-     * Get current date and time
-     */
     fun getCurrentTime(): String {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
     }
     
-    /**
-     * Calculate mock distance between two locations
-     * In a real implementation, this would use geocoding + distance calculation APIs
-     */
     fun calculateDistance(from: String, to: String): String {
         val mockDistances = mapOf(
             "oslo-london" to 1154,
@@ -145,10 +120,6 @@ object Mocks {
         return "$distance km"
     }
     
-    /**
-     * Get mock news headlines
-     * In a real implementation, this would call a news API like NewsAPI
-     */
     fun getNewsHeadlines(): List<String> {
         return listOf(
             "Tech stocks rally amid AI innovation surge",
@@ -173,7 +144,6 @@ object Mocks {
         val functionName = match.groupValues[1]
         val paramsString = match.groupValues[2].trim()
         
-        // Simple parameter parsing - split by comma and trim quotes
         val params = if (paramsString.isEmpty()) {
             emptyList()
         } else {
@@ -225,9 +195,6 @@ object Mocks {
     
     // OpenAI Function Calling Support
     
-    /**
-     * Get all available tools in OpenAI function calling format
-     */
     fun getAvailableTools(): List<Tool> {
         return listOf(
             Tool(
@@ -320,7 +287,6 @@ object Mocks {
         val json = Json { ignoreUnknownKeys = true }
         
         return try {
-            // Parse JSON arguments into List<String> format
             val params = if (functionCall.arguments.isBlank() || functionCall.arguments == "{}") {
                 emptyList()
             } else {
@@ -345,7 +311,6 @@ object Mocks {
                 }
             }
             
-            // Delegate to the core executeFunction implementation
             executeFunction(functionCall.name, params)
             
         } catch (e: Exception) {

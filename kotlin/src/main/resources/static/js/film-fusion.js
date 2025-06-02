@@ -1,6 +1,5 @@
 // Film Fusion Demo JavaScript
 document.addEventListener('DOMContentLoaded', function() {
-    // Art styles data - hardcoded since Thymeleaf inline doesn't work in external JS
     const artStyles = [
         ["Renaissance painting", "Classical Renaissance art style with rich colors and detailed composition"],
         ["Art Nouveau poster", "Flowing organic lines and decorative elements in vintage poster style"], 
@@ -34,18 +33,16 @@ document.addEventListener('DOMContentLoaded', function() {
         ['1792x1024', 'Landscape (1792×1024)']
     ];
 
-    // Get form data from data attributes (set by server)
     const formDataElement = document.getElementById('formData');
     const formData = formDataElement ? {
         movie: formDataElement.dataset.movie || '',
         artStyle: formDataElement.dataset.artStyle || '',
-        model: formDataElement.dataset.model || 'dall-e-3', // Models.Defaults.IMAGE_GENERATION
+        model: formDataElement.dataset.model || 'dall-e-3',
         size: formDataElement.dataset.size || '1024x1024',
         style: formDataElement.dataset.style || 'vivid',
         quality: formDataElement.dataset.quality || 'standard'
     } : {};
 
-    // Update art style description when selection changes
     const artStyleSelect = document.getElementById('artStyle');
     if (artStyleSelect) {
         artStyleSelect.addEventListener('change', function() {
@@ -62,7 +59,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Update size options based on model selection
     function updateSizeOptions() {
         const modelSelect = document.getElementById('model');
         const sizeSelect = document.getElementById('size');
@@ -71,9 +67,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!modelSelect || !sizeSelect || !dalle3Options) return;
         
         const selectedModel = modelSelect.value;
-        const currentSelectedSize = sizeSelect.value; // Preserve current selection if valid
+        const currentSelectedSize = sizeSelect.value;
         
-        // Clear existing options
         sizeSelect.innerHTML = '';
         
         if (selectedModel === 'dall-e-2') {
@@ -82,7 +77,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const option = document.createElement('option');
                 option.value = size[0];
                 option.textContent = size[1];
-                // Preserve selection if switching back, otherwise default to 1024x1024
                 if (currentSelectedSize === size[0] || 
                     (!currentSelectedSize && size[0] === '1024x1024') ||
                     (formData && formData.size === size[0])) {
@@ -96,7 +90,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const option = document.createElement('option');
                 option.value = size[0];
                 option.textContent = size[1];
-                // Preserve selection if switching back, otherwise default to 1024x1024
                 if (currentSelectedSize === size[0] || 
                     (!currentSelectedSize && size[0] === '1024x1024') ||
                     (formData && formData.size === size[0])) {
@@ -107,21 +100,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Initialize on page load
     updateSizeOptions();
     
-    // Trigger art style description update if there's a selected value
     if (artStyleSelect && artStyleSelect.value) {
         artStyleSelect.dispatchEvent(new Event('change'));
     }
 
-    // Update sizes when model changes
     const modelSelect = document.getElementById('model');
     if (modelSelect) {
         modelSelect.addEventListener('change', updateSizeOptions);
     }
 
-    // Form submission with loading states
     const filmFusionForm = document.getElementById('filmFusionForm');
     if (filmFusionForm) {
         filmFusionForm.addEventListener('submit', function() {
@@ -134,7 +123,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 spinner.classList.remove('d-none');
                 buttonText.textContent = 'Generating...';
                 
-                // Show additional loading messages
                 setTimeout(() => {
                     if (button.disabled) {
                         buttonText.textContent = 'Creating...';

@@ -10,7 +10,6 @@
         <h1 class="text-center mb-4">👁️ GPT-4 with Vision Laboratory</h1>
         <p class="lead text-center">Analyze images with AI vision capabilities</p>
 
-        <!-- Error/Success Messages -->
         <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
             <strong>Error:</strong> <span th:text="${error}"></span>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -21,7 +20,6 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
 
-        <!-- Demo Form -->
         <div class="row justify-content-center mb-4">
             <div class="col-12">
                 <div class="card">
@@ -29,7 +27,6 @@
                         <h6 class="mb-0">👁️ Analyze Images with AI Vision</h6>
                     </div>
                     <div class="card-body py-3">
-                        <!-- Data attributes for JavaScript -->
                         <div id="formData" 
                              th:attr="data-selected-image=${formData?.selectedImage ?: ''},
                                       data-prompt=${formData?.prompt ?: ''},
@@ -38,7 +35,6 @@
                              style="display: none;"></div>
 
                         <form th:action="@{/demo/gpt4-vision}" method="post" id="visionForm">
-                            <!-- Image Gallery -->
                             <div class="mb-4">
                                 <label class="form-label">🖼️ Select an Image to Analyze</label>
                                 <div class="row g-3">
@@ -61,7 +57,6 @@
                                 <div class="form-text mt-2">Click an image above to select it for analysis</div>
                             </div>
 
-                            <!-- Prompt Section -->
                             <div class="row g-3 mb-3">
                                 <div class="col-md-8">
                                     <label for="prompt" class="form-label">💬 Your Question or Analysis Request</label>
@@ -94,7 +89,6 @@
                                 </div>
                             </div>
 
-                            <!-- Suggested Prompts -->
                             <div id="suggestedPrompts" style="display: none;">
                                 <div class="mb-3">
                                     <label class="form-label small">💡 Suggested Questions for This Image</label>
@@ -117,7 +111,6 @@
             </div>
         </div>
 
-        <!-- Results Display -->
         <div th:if="${analysisResult}" class="row">
             <div class="col-12">
                 <div class="card">
@@ -151,7 +144,6 @@
                                          th:text="${analysisResult}" style="white-space: pre-wrap;"></div>
                                 </div>
 
-                                <!-- Try Again -->
                                 <div class="text-center mt-4">
                                     <a href="/demo/gpt4-vision" class="btn btn-outline-primary me-2">
                                         🔄 Analyze Another Image
@@ -167,7 +159,6 @@
             </div>
         </div>
 
-        <!-- Help Section -->
         <div class="row mt-5">
             <div class="col-12">
                 <div class="card border-info">
@@ -198,7 +189,6 @@
                         
                         <hr class="my-4">
                         
-                        <!-- Code Example Section -->
                         <h6>💻 Essential Code</h6>
                         <p class="small mb-3">Key Kotlin code for AI vision analysis using OpenAI's GPT-4 Vision API:</p>
                         <pre><code class="language-kotlin">// Analyze image with GPT-4 Vision
@@ -239,7 +229,6 @@ val analysis = visionResponse.text()</code></pre>
     <div th:replace="~{fragments/footer :: common-footer}"></div>
     <div th:replace="~{fragments/scripts :: common-scripts}"></div>
     
-    <!-- Vision Demo specific JavaScript -->
     <script src="/js/vision-demo.js"></script>
     
     <script>

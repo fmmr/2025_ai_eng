@@ -101,7 +101,6 @@ class FilmFusionController {
         model.addAttribute("pageTitle", "Film Fusion")
         model.addAttribute("activeTab", "film-fusion")
         
-        // Preserve form data
         val formData = mutableMapOf<String, String>()
         formData["movie"] = movie
         formData["artStyle"] = artStyle
@@ -110,8 +109,6 @@ class FilmFusionController {
         style?.let { formData["style"] = it }
         quality?.let { formData["quality"] = it }
         model.addAttribute("formData", formData)
-        
-        // Add all dropdown options back
         model.addAttribute("movieTitles", MOVIE_TITLES)
         model.addAttribute("artStyles", ART_STYLES)
         model.addAttribute("dalleModels", DALL_E_MODELS)
@@ -121,15 +118,11 @@ class FilmFusionController {
         model.addAttribute("qualityOptions", QUALITY_OPTIONS)
 
         try {
-            // Get art style description
             val artStyleDescription = ART_STYLES.find { it.first == artStyle }?.second ?: artStyle
-            
-            // Create the prompt
             val prompt = "Create a movie poster for '$movie' in the style of $artStyleDescription. " +
                     "The poster should capture the essence of the film while incorporating the distinctive visual elements of this artistic style. " +
                     "Focus on compelling composition, appropriate typography space, and visual storytelling."
 
-            // Generate the image
             val imageResponse = openAI.generateImage(
                 prompt = prompt,
                 model = dalleModel,

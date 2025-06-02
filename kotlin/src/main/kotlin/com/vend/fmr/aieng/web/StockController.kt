@@ -39,7 +39,6 @@ class StockController {
                 
                 val tickerList = tickers.split(",").map { it.trim().uppercase() }.toTypedArray()
                 
-                // Step 1: Fetch stock data from Polygon API
                 val aggregates = polygon.getAggregates(
                     tickers = tickerList,
                     multiplier = 1,
@@ -48,10 +47,8 @@ class StockController {
                     to = java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                 )
                 
-                // Step 2: Convert to JSON for AI processing
                 val jsonData = polygon.aggregatesToJson(aggregates)
                 
-                // Step 3: Generate AI analysis
                 val response = openAI.createChatCompletion(
                     prompt = jsonData,
                     systemMessage = Prompts.FINANCIAL_ANALYSIS

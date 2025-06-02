@@ -91,7 +91,6 @@ class Supabase(private val supabaseUrl: String, private val supabaseKey: String)
     }
 
     suspend fun clearDocuments() {
-        // Just delete all rows - don't try to reset sequence due to permission issues
         val deleteUrl = "$supabaseUrl/rest/v1/documents?id=gte.0"
         val response = client.delete(deleteUrl) {
             headers {

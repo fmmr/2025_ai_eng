@@ -14,7 +14,6 @@
             </div>
         </div>
 
-        <!-- Demo Images Section -->
         <div class="row mb-4">
             <div class="col-md-6">
                 <div class="card">
@@ -36,7 +35,6 @@
             </div>
         </div>
 
-        <!-- Image Editing Form -->
         <div class="row mb-4">
             <div class="col-12">
                 <div class="card">
@@ -44,12 +42,10 @@
                         <h5 class="card-title">🎨 Edit Parameters</h5>
                         <form id="imageEditForm" th:action="@{/demo/image-editing}" method="post">
                             
-                            <!-- Hidden form data for JavaScript -->
                             <div id="formData" style="display: none;"
                                  th:attr="data-prompt=${formData?.prompt ?: defaultPrompt},
                                           data-size=${formData?.size ?: '1024x1024'}"></div>
 
-                            <!-- Prompt and Parameters Row -->
                             <div class="row g-3 mb-3">
                                 <div class="col-md-8">
                                     <label for="prompt" class="form-label">✨ What to add in the sky area</label>
@@ -71,14 +67,12 @@
                                         <div class="form-text">Larger sizes may take longer</div>
                                     </div>
 
-                                    <!-- Model Info -->
                                     <div class="alert alert-info small p-2 mb-3">
                                         <strong>📝 Model:</strong> DALL-E 2 (specialized for image editing)
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Submit Button with Progress -->
                             <div class="row">
                                 <div class="col-12">
                                     <button type="submit" id="editBtn" class="btn btn-primary btn-lg">
@@ -86,7 +80,6 @@
                                         <span id="buttonText">✏️ Edit Image</span>
                                     </button>
                                     
-                                    <!-- Progress indicator (hidden by default) -->
                                     <div id="progressContainer" class="mt-3 d-none">
                                         <div class="progress">
                                             <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" 
@@ -102,10 +95,8 @@
             </div>
         </div>
 
-        <!-- Results Section -->
         <div class="row">
             <div class="col-12">
-                <!-- Success Result -->
                 <div th:if="${success}" class="card border-success">
                     <div class="card-body">
                         <h5 class="card-title text-success">🎉 Image Edited Successfully!</h5>
@@ -142,13 +133,11 @@
                     </div>
                 </div>
 
-                <!-- Error State -->
                 <div th:if="${error}" class="alert alert-danger">
                     <h5 class="alert-heading">❌ Error</h5>
                     <p th:text="${error}" class="mb-0"></p>
                 </div>
 
-                <!-- Default State -->
                 <div th:unless="${success} or ${error}" class="card">
                     <div class="card-body text-center">
                         <h5 class="card-title">🎨 Ready to Edit</h5>
@@ -178,7 +167,6 @@
             </div>
         </div>
 
-        <!-- Help Section -->
         <div class="row mt-5">
             <div class="col-12">
                 <div class="card border-info">

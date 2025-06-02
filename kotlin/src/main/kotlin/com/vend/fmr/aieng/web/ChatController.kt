@@ -28,8 +28,7 @@ class ChatController {
         model.addAttribute("pageTitle", "Interactive Chat")
         model.addAttribute("activeTab", "chat")
         
-        // Get chat history from session
-        val chatHistory = session.getAttribute("chatHistory") as? MutableList<ChatMessage> ?: mutableListOf()
+        val chatHistory = session.getAttribute("chatHistory") as? MutableList<ChatMessage> ?: mutableListOf<ChatMessage>()
         model.addAttribute("chatHistory", chatHistory)
         
         return "chat-demo"
@@ -44,26 +43,20 @@ class ChatController {
         model.addAttribute("pageTitle", "Interactive Chat")
         model.addAttribute("activeTab", "chat")
         
-        // Get or create chat history
-        val chatHistory = session.getAttribute("chatHistory") as? MutableList<ChatMessage> 
+        val chatHistory = session.getAttribute("chatHistory") as? MutableList<ChatMessage>
             ?: mutableListOf<ChatMessage>().also { session.setAttribute("chatHistory", it) }
         
-        // Add user message to history
         chatHistory.add(ChatMessage("user", userMessage))
         
         try {
-            // Build conversation for OpenAI API
             val conversationMessages = mutableListOf<Message>()
             
-            // Add system message
             conversationMessages.add(Message("system", TextContent(Prompts.CHAT_ASSISTANT)))
             
-            // Add conversation history (convert to OpenAI format)
             chatHistory.forEach { 
                 conversationMessages.add(Message(it.role, TextContent(it.content)))
             }
             
-            // Get AI response
             val response = openAI.createChatCompletion(
                 messages = conversationMessages,
                 maxTokens = 300,
@@ -72,10 +65,8 @@ class ChatController {
             
             val assistantReply = response.text()
             
-            // Add assistant response to history
             chatHistory.add(ChatMessage(Prompts.Roles.ASSISTANT, assistantReply))
             
-            // Keep conversation manageable (last 20 messages)
             if (chatHistory.size > 20) {
                 chatHistory.removeAt(0)
             }

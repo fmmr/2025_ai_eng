@@ -10,7 +10,6 @@
         <h1 class="text-center mb-4">🎬 Film Fusion Laboratory</h1>
         <p class="lead text-center">Merge movies and art into stunning AI-generated posters</p>
 
-        <!-- Error/Success Messages -->
         <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
             <strong>Error:</strong> <span th:text="${error}"></span>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -21,7 +20,6 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
 
-        <!-- Ultra-Compact Demo Form -->
         <div class="row justify-content-center mb-3">
             <div class="col-12">
                 <div class="card">
@@ -29,7 +27,6 @@
                         <h6 class="mb-0">🎨 Create Your Film Fusion Poster</h6>
                     </div>
                     <div class="card-body py-2">
-                        <!-- Data attributes to pass form data to JavaScript -->
                         <div id="formData" 
                              th:attr="data-movie=${formData?.movie ?: ''},
                                       data-art-style=${formData?.artStyle ?: ''}, 
@@ -41,7 +38,6 @@
                         
                         <form th:action="@{/demo/film-fusion}" method="post" id="filmFusionForm">
                             <div class="row g-2">
-                                <!-- Row 1: Core Selections -->
                                 <div class="col-lg-3 col-md-6">
                                     <label for="movie" class="form-label small mb-1">🎭 Movie</label>
                                     <select class="form-select form-select-sm" id="movie" name="movie" required>
@@ -92,7 +88,6 @@
                                 </div>
                             </div>
 
-                            <!-- Row 2: DALL-E 3 Specific Options (Hidden for DALL-E 2) -->
                             <div class="row g-2 mt-1" id="dalle3Options">
                                 <div class="col-lg-2 col-md-3 col-6">
                                     <label for="style" class="form-label small mb-1">🎭 Style</label>
@@ -125,7 +120,6 @@
             </div>
         </div>
 
-        <!-- Results Display -->
         <div th:if="${generatedImageUrl}" class="row">
             <div class="col-12">
                 <div class="card">
@@ -142,7 +136,6 @@
                                 
                                 <h6>🎭 <span th:text="${selectedMovie}"></span> × 🎨 <span th:text="${selectedArtStyle}"></span></h6>
                                 
-                                <!-- Prompt Information -->
                                 <div class="mt-4">
                                     <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#promptDetails">
                                         📝 View Prompt Details
@@ -161,7 +154,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Try Again -->
                                 <div class="mt-4">
                                     <a href="/demo/film-fusion" class="btn btn-outline-primary me-2">
                                         🔄 Create Another Poster
@@ -177,7 +169,6 @@
             </div>
         </div>
 
-        <!-- Help Section -->
         <div class="row mt-5">
             <div class="col-12">
                 <div class="card border-info">
@@ -207,7 +198,6 @@
                         
                         <hr class="my-4">
                         
-                        <!-- Code Example Section -->
                         <h6>💻 Essential Code</h6>
                         <p class="small mb-3">Key Kotlin code for AI image generation using OpenAI's DALL-E API:</p>
                         <pre><code class="language-kotlin">// Generate AI image with DALL-E
@@ -255,7 +245,6 @@ val imageUrl = imageResponse.data.firstOrNull()?.url</code></pre>
     <div th:replace="~{fragments/footer :: common-footer}"></div>
     <div th:replace="~{fragments/scripts :: common-scripts}"></div>
     
-    <!-- Film Fusion specific JavaScript -->
     <script src="/js/film-fusion.js"></script>
 </body>
 </html>

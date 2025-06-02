@@ -130,7 +130,7 @@ class Polygon(private val apiKey: String) : Closeable {
     suspend fun getAggregates(
         vararg tickers: String = arrayOf("MSFT", "NHYDY", "TSLA"),
         multiplier: Int = 1,
-        timespan: String = "day", // minute, hour, day, week, month, quarter, year
+        timespan: String = "day",
         from: String = LocalDate.now().minusDays(3).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
         to: String = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
         adjusted: Boolean = true,

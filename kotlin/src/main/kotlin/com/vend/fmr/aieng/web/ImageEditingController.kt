@@ -74,12 +74,11 @@ class ImageEditingController {
             val originalImageBytes = originalImageResource.inputStream.readBytes()
             val maskImageBytes = maskImageResource.inputStream.readBytes()
             
-            // Edit the image with DALL-E
             val editResponse = openAI.editImage(
                 prompt = prompt,
                 imageFile = originalImageBytes,
                 maskFile = maskImageBytes,
-                model = Models.ImageGeneration.DALL_E_2, // Only DALL-E 2 supports editing
+                model = Models.ImageGeneration.DALL_E_2,
                 size = size,
                 debug = false
             )

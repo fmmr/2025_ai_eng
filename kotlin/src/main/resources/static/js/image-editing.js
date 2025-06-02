@@ -1,13 +1,11 @@
 // Image Editing Demo JavaScript
 document.addEventListener('DOMContentLoaded', function() {
-    // Get form data from data attributes (set by server)
     const formDataElement = document.getElementById('formData');
     const formData = formDataElement ? {
         prompt: formDataElement.dataset.prompt || '',
         size: formDataElement.dataset.size || '1024x1024'
     } : {};
 
-    // Restore form state if available
     if (formData.prompt) {
         const promptTextarea = document.getElementById('prompt');
         if (promptTextarea && !promptTextarea.value) {
@@ -22,13 +20,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Form submission with loading states
     const imageEditForm = document.getElementById('imageEditForm');
     if (imageEditForm) {
         imageEditForm.addEventListener('submit', function(e) {
             const promptTextarea = document.getElementById('prompt');
             
-            // Basic validation
             if (!promptTextarea.value.trim()) {
                 e.preventDefault();
                 alert('Please enter a description of what you want to add to the image!');
@@ -44,17 +40,14 @@ document.addEventListener('DOMContentLoaded', function() {
             const progressText = document.getElementById('progressText');
             
             if (button && spinner && buttonText) {
-                // Disable button and show spinner
                 button.disabled = true;
                 spinner.classList.remove('d-none');
                 buttonText.textContent = 'Processing...';
                 
-                // Show progress container if it exists
                 if (progressContainer) {
                     progressContainer.classList.remove('d-none');
                 }
                 
-                // Progressive feedback with progress bar
                 const steps = [
                     { progress: 20, text: 'Uploading images to DALL-E 2...', delay: 1000 },
                     { progress: 40, text: 'Analyzing original image...', delay: 3000 },
@@ -73,7 +66,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     }, step.delay);
                 });
                 
-                // Final message for very long operations
                 setTimeout(() => {
                     if (button.disabled) {
                         if (progressBar) progressBar.style.width = '99%';
@@ -85,7 +77,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Add example prompt suggestions
     const promptTextarea = document.getElementById('prompt');
     if (promptTextarea) {
         const examplePrompts = [
@@ -101,23 +92,19 @@ document.addEventListener('DOMContentLoaded', function() {
             "A drone capturing aerial footage of the landscape"
         ];
 
-        // Add click handler to show example prompts
         promptTextarea.addEventListener('focus', function() {
             if (!this.value.trim() || this.value === formData.prompt) {
-                // Create a small suggestion tooltip
                 showPromptSuggestions(this, examplePrompts);
             }
         });
     }
 
     function showPromptSuggestions(textarea, suggestions) {
-        // Remove any existing suggestions
         const existingSuggestions = document.getElementById('promptSuggestions');
         if (existingSuggestions) {
             existingSuggestions.remove();
         }
 
-        // Create suggestions dropdown
         const suggestionsDiv = document.createElement('div');
         suggestionsDiv.id = 'promptSuggestions';
         suggestionsDiv.className = 'position-absolute bg-white border rounded shadow-sm p-2 mt-1';
@@ -151,11 +138,9 @@ document.addEventListener('DOMContentLoaded', function() {
             suggestionsDiv.appendChild(promptBtn);
         });
 
-        // Position relative to textarea
         textarea.parentNode.style.position = 'relative';
         textarea.parentNode.appendChild(suggestionsDiv);
 
-        // Remove suggestions when clicking outside
         setTimeout(() => {
             document.addEventListener('click', function(e) {
                 if (!suggestionsDiv.contains(e.target) && e.target !== textarea) {

@@ -16,7 +16,6 @@ class RequestLoggingFilter : Filter {
     override fun doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
         val httpRequest = request as HttpServletRequest
         
-        // Only log home and demo endpoints
         val uri = httpRequest.requestURI
         if (uri == "/" || uri.startsWith("/demo/")) {
             val method = httpRequest.method

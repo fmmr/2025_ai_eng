@@ -27,10 +27,8 @@ object ReActAgentExamples {
     suspend fun reactAgent(userQuery: String, maxIterations: Int = 10, debug: Boolean = false): String {
         val messages = mutableListOf<Message>()
         
-        // Add system message
         messages.add(Message(Prompts.Roles.SYSTEM, TextContent(Prompts.REACT_AGENT_SYSTEM)))
         
-        // Add initial user query
         messages.add(Message(Prompts.Roles.USER, TextContent(userQuery)))
         
         if (debug) {
@@ -44,7 +42,6 @@ object ReActAgentExamples {
                 println("💬 Messages in conversation: ${messages.size}")
             }
             
-            // Get AI response using message history
             val aiResponse = openAI.createChatCompletion(
                 messages = messages,
                 temperature = 0.1,
@@ -57,10 +54,8 @@ object ReActAgentExamples {
                 println("AI: $currentResponse")
             }
             
-            // Add AI response to messages
             messages.add(Message(Prompts.Roles.ASSISTANT, TextContent(currentResponse)))
             
-            // Check if AI provided final answer
             if (currentResponse.contains("Final Answer:", ignoreCase = true)) {
                 val finalAnswerRegex = Regex("Final Answer:\\s*(.*)", setOf(RegexOption.IGNORE_CASE, RegexOption.DOT_MATCHES_ALL))
                 val match = finalAnswerRegex.find(currentResponse)
@@ -73,7 +68,6 @@ object ReActAgentExamples {
                 }
             }
             
-            // Parse and execute action
             val action = Mocks.parseAction(currentResponse)
             if (action != null) {
                 val (functionName, params) = action
@@ -88,7 +82,6 @@ object ReActAgentExamples {
                     println("📋 $observation")
                 }
                 
-                // Add observation as a user message (simulating function result)
                 messages.add(Message(Prompts.Roles.USER, TextContent(observation)))
             } else {
                 // No action found, AI might be done or confused

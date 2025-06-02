@@ -38,10 +38,7 @@ class SupabaseController {
                 val openAI = OpenAI(OPEN_AI_KEY)
                 val supabase = Supabase(SUPABASE_URL, SUPABASE_KEY)
                 
-                // Step 1: Convert query to embedding vector
                 val queryEmbedding = openAI.createEmbedding(query)
-                
-                // Step 2: Search for similar documents in PostgreSQL with pgvector
                 val matches = supabase.matchDocuments(queryEmbedding, maxMatches)
                 
                 openAI.close()

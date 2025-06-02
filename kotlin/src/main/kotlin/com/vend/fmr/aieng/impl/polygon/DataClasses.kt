@@ -47,14 +47,14 @@ data class QuoteData(
 
 @Serializable
 data class AggregateBar(
-    val o: Double, // Open
-    val h: Double, // High
-    val l: Double, // Low
-    val c: Double, // Close
-    val v: Double, // Volume (using Double to handle scientific notation)
-    val t: Long,   // Timestamp
-    val n: Int? = null, // Number of transactions
-    val vw: Double? = null // Volume weighted average price
+    val o: Double,
+    val h: Double,
+    val l: Double,
+    val c: Double,
+    val v: Double,
+    val t: Long,
+    val n: Int? = null,
+    val vw: Double? = null
 ) {
     @Suppress("unused")
     fun formattedDate(): String =
