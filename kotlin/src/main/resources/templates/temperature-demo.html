@@ -32,9 +32,11 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <h6>📝 Prompt:</h6>
-                                <blockquote class="blockquote small mb-3">
-                                    "<span th:text="${prompt}"></span>"
-                                </blockquote>
+                                <div th:if="${results}">
+                                    <blockquote class="blockquote small mb-3">
+                                        "<span th:text="${prompt}"></span>"
+                                    </blockquote>
+                                </div>
                                 
                                 <h6>🔧 Settings:</h6>
                                 <ul class="small mb-0">
@@ -47,6 +49,13 @@
                                 <p class="small mb-3" th:text="${explanation}"></p>
                                 
                                 <form th:action="@{/demo/temperature-effects}" method="post">
+                                    <div class="mb-3">
+                                        <label for="customPrompt" class="form-label">Enter your prompt:</label>
+                                        <textarea class="form-control" id="customPrompt" name="customPrompt" rows="3" 
+                                                  th:text="${formData?.customPrompt}" 
+                                                  placeholder="Describe the perfect pizza">Describe the perfect pizza</textarea>
+                                        <div class="form-text">Try different prompts to see how temperature affects responses!</div>
+                                    </div>
                                     <button type="submit" class="btn btn-primary btn-lg">
                                         <span class="spinner-border spinner-border-sm me-2 d-none" role="status"></span>
                                         🚀 Generate All Responses
@@ -71,14 +80,8 @@
                         <!-- Four-column comparison -->
                         <div class="row g-3">
                             <div th:each="params : ${parameterSets}" class="col-lg-3 col-md-6">
-                                <div class="card h-100" 
-                                     th:classappend="${params.color == '🔵' ? 'border-primary' : 
-                                                     params.color == '🟢' ? 'border-success' : 
-                                                     params.color == '🟡' ? 'border-warning' : 'border-danger'}">
-                                    <div class="card-header text-center"
-                                         th:classappend="${params.color == '🔵' ? 'bg-primary text-white' : 
-                                                         params.color == '🟢' ? 'bg-success text-white' : 
-                                                         params.color == '🟡' ? 'bg-warning text-dark' : 'bg-danger text-white'}">
+                                <div class="card h-100" th:classappend="${params.color}">
+                                    <div class="card-header text-center">
                                         <h6 class="mb-0">
                                             <span th:text="${params.color}"></span>
                                             <span th:text="${params.name}"></span>

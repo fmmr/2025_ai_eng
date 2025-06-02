@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 class TopPController {
@@ -18,53 +19,33 @@ class TopPController {
         
         val fixedTemperature = 0.7
         
-        val topPSettings = listOf(
-            ParameterSet(
-                name = "Very Restricted",
-                description = "Only Most Likely Words",
-                temperature = fixedTemperature,
-                topP = 0.1,
-                color = "🔵"
-            ),
-            ParameterSet(
-                name = "Somewhat Restricted", 
-                description = "Limited Vocabulary",
-                temperature = fixedTemperature,
-                topP = 0.5,
-                color = "🟢"
-            ),
-            ParameterSet(
-                name = "Balanced",
-                description = "Good Word Variety", 
-                temperature = fixedTemperature,
-                topP = 0.9,
-                color = "🟡"
-            ),
-            ParameterSet(
-                name = "Unrestricted",
-                description = "Full Vocabulary Access",
-                temperature = fixedTemperature,
-                topP = 1.0,
-                color = "🔴"
-            )
-        )
-        
         model.addAttribute("prompt", Prompts.Defaults.CHAT_PARAMETERS_PROMPT)
         model.addAttribute("fixedParam", "temperature = $fixedTemperature")
         model.addAttribute("variableParam", "top_p (0.1 → 1.0)")
-        model.addAttribute("parameterSets", topPSettings)
         model.addAttribute("explanation", "How top-p affects vocabulary restriction vs exploration")
         
         return "top-p-demo"
     }
 
     @PostMapping("/demo/top-p-effects")
-    suspend fun runTopPComparison(model: Model): String {
+    suspend fun runTopPComparison(
+        @RequestParam("customPrompt", defaultValue = "") customPrompt: String,
+        model: Model
+    ): String {
         model.addAttribute("pageTitle", "Top-P Effects")
         model.addAttribute("activeTab", "top-p-effects")
 
         val fixedTemperature = 0.7
-        val prompt = Prompts.Defaults.CHAT_PARAMETERS_PROMPT
+        val prompt = if (customPrompt.isBlank()) {
+            Prompts.Defaults.CHAT_PARAMETERS_PROMPT
+        } else {
+            customPrompt.trim()
+        }
+        
+        // Preserve form data for re-display
+        val formData = mutableMapOf<String, String>()
+        formData["customPrompt"] = prompt
+        model.addAttribute("formData", formData)
         
         val topPSettings = mutableListOf(
             ParameterSet(
@@ -72,28 +53,28 @@ class TopPController {
                 description = "Only Most Likely Words",
                 temperature = fixedTemperature,
                 topP = 0.1,
-                color = "🔵"
+color = "🔵"
             ),
             ParameterSet(
                 name = "Somewhat Restricted", 
                 description = "Limited Vocabulary",
                 temperature = fixedTemperature,
                 topP = 0.5,
-                color = "🟢"
+color = "🟢"
             ),
             ParameterSet(
                 name = "Balanced",
                 description = "Good Word Variety", 
                 temperature = fixedTemperature,
                 topP = 0.9,
-                color = "🟡"
+color = "🟡"
             ),
             ParameterSet(
                 name = "Unrestricted",
                 description = "Full Vocabulary Access",
                 temperature = fixedTemperature,
                 topP = 1.0,
-                color = "🔴"
+color = "🔴"
             )
         )
 
@@ -125,6 +106,11 @@ class TopPController {
             model.addAttribute("parameterSets", topPSettings)
             model.addAttribute("explanation", "How top-p affects vocabulary restriction vs exploration")
             model.addAttribute("error", "Failed to generate responses: ${e.message}")
+            
+            // Preserve form data on error
+            val formData = mutableMapOf<String, String>()
+            formData["customPrompt"] = customPrompt
+            model.addAttribute("formData", formData)
         }
 
         return "top-p-demo"

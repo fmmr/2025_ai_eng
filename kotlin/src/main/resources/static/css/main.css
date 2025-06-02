@@ -12,6 +12,19 @@ body {
     background-color: #f8f9fa;
 }
 
+/* Parameter demo color classes */
+.🔵 { border-color: #0d6efd !important; }
+.🔵 .card-header { background-color: #0d6efd !important; color: white !important; }
+
+.🟢 { border-color: #198754 !important; }
+.🟢 .card-header { background-color: #198754 !important; color: white !important; }
+
+.🟡 { border-color: #ffc107 !important; }
+.🟡 .card-header { background-color: #ffc107 !important; color: #212529 !important; }
+
+.🔴 { border-color: #dc3545 !important; }
+.🔴 .card-header { background-color: #dc3545 !important; color: white !important; }
+
 /* Navigation */
 .navbar {
     background-color: #1f2937 !important;
