@@ -8,7 +8,7 @@ private val envContent = object {}.javaClass.getResourceAsStream("/.env")
     ?.associate { it.substringBefore("=") to it.substringAfter("=") }
 
 
-fun String.env(): String = envContent?.get(this) ?: System.getenv(this) ?: error("Environment variable '$this' not found")
+fun String.env(): String = envContent?.get(this) ?: System.getenv(this) ?: "UNKNOWN_ENV_VAR"
 
 fun String.read(): String = (if (this.startsWith("/")) this else "/$this").let { string ->
     object {}.javaClass.getResourceAsStream(string)

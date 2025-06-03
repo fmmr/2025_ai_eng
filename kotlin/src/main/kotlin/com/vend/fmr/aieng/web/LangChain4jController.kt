@@ -4,6 +4,7 @@ import dev.langchain4j.service.AiServices
 import dev.langchain4j.service.UserMessage
 import dev.langchain4j.service.V
 import dev.langchain4j.model.chat.ChatModel
+import dev.langchain4j.model.chat.DisabledChatModel
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.stereotype.Controller
@@ -15,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam
 @Controller
 class LangChain4jController {
 
-    @Autowired(required = false)
-    private var chatModel: ChatModel? = null
+    @Autowired
+    private lateinit var chatModel: ChatModel
 
     // AI Service interface using LangChain4j annotations
     interface AssistantService {
@@ -35,7 +36,7 @@ class LangChain4jController {
         model.addAttribute("pageTitle", "LangChain4j Demo")
         model.addAttribute("activeTab", "langchain4j")
         
-        if (chatModel == null) {
+        if (chatModel is DisabledChatModel) {
             model.addAttribute("error", "LangChain4j is not available - OPEN_AI_KEY environment variable is required")
             return "langchain4j-demo"
         }
@@ -74,7 +75,7 @@ class LangChain4jController {
         formData["maxWords"] = maxWordsInt.toString()
         model.addAttribute("formData", formData)
         
-        if (chatModel == null) {
+        if (chatModel is DisabledChatModel) {
             model.addAttribute("error", "LangChain4j is not available - OPEN_AI_KEY environment variable is required")
             return "langchain4j-demo"
         }
@@ -82,7 +83,7 @@ class LangChain4jController {
         try {
             // Create AI Service using LangChain4j
             val assistant = AiServices.builder(AssistantService::class.java)
-                .chatModel(chatModel!!)
+                .chatModel(chatModel)
                 .build()
             
             val result = when (operation) {
@@ -96,7 +97,7 @@ class LangChain4jController {
             model.addAttribute("operation", operation)
             model.addAttribute("maxWords", maxWordsInt)
             model.addAttribute("result", result)
-            model.addAttribute("modelUsed", chatModel?.javaClass?.simpleName)
+            model.addAttribute("modelUsed", chatModel.javaClass.simpleName)
             model.addAttribute("results", true)
             model.addAttribute("success", true)
             

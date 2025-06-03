@@ -1,6 +1,7 @@
 package com.vend.fmr.aieng
 
 import dev.langchain4j.model.chat.ChatModel
+import dev.langchain4j.model.chat.DisabledChatModel
 import dev.langchain4j.model.openai.OpenAiChatModel
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
@@ -10,8 +11,9 @@ import org.springframework.context.annotation.Bean
 
 @SpringBootApplication(exclude = [R2dbcAutoConfiguration::class])
 class Application{
+
     @Bean
-    fun chatModel(): ChatModel? {
+    fun chatModel(): ChatModel {
         return if (OPEN_AI_KEY.isNotBlank()) {
             OpenAiChatModel.builder()
                 .apiKey(OPEN_AI_KEY)
@@ -19,7 +21,7 @@ class Application{
                 .temperature(0.7)
                 .build()
         } else {
-            null
+            DisabledChatModel()
         }
     }
 }
