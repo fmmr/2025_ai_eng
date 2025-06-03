@@ -1,4 +1,4 @@
-package com.vend.fmr.aieng.impl.polygon
+package com.vend.fmr.aieng.apis.polygon
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

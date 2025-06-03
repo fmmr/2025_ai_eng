@@ -1,7 +1,7 @@
 package com.vend.fmr.aieng.web
 
-import com.vend.fmr.aieng.impl.openai.Message
-import com.vend.fmr.aieng.impl.openai.TextContent
+import com.vend.fmr.aieng.apis.openai.Message
+import com.vend.fmr.aieng.apis.openai.TextContent
 import com.vend.fmr.aieng.openAI
 import com.vend.fmr.aieng.utils.Prompts
 import jakarta.servlet.http.HttpSession
@@ -27,10 +27,11 @@ class ChatController {
     fun chatDemo(model: Model, session: HttpSession): String {
         model.addAttribute("pageTitle", "Interactive Chat")
         model.addAttribute("activeTab", "chat")
-        
+
+        @Suppress("UNCHECKED_CAST")
         val chatHistory = session.getAttribute("chatHistory") as? MutableList<ChatMessage> ?: mutableListOf<ChatMessage>()
         model.addAttribute("chatHistory", chatHistory)
-        
+
         return "chat-demo"
     }
 
@@ -42,39 +43,40 @@ class ChatController {
     ): String = runBlocking {
         model.addAttribute("pageTitle", "Interactive Chat")
         model.addAttribute("activeTab", "chat")
-        
+
+        @Suppress("UNCHECKED_CAST")
         val chatHistory = session.getAttribute("chatHistory") as? MutableList<ChatMessage>
             ?: mutableListOf<ChatMessage>().also { session.setAttribute("chatHistory", it) }
-        
+
         chatHistory.add(ChatMessage("user", userMessage))
-        
+
         try {
             val conversationMessages = mutableListOf<Message>()
-            
+
             conversationMessages.add(Message("system", TextContent(Prompts.CHAT_ASSISTANT)))
-            
-            chatHistory.forEach { 
+
+            chatHistory.forEach {
                 conversationMessages.add(Message(it.role, TextContent(it.content)))
             }
-            
+
             val response = openAI.createChatCompletion(
                 messages = conversationMessages,
                 maxTokens = 300,
                 temperature = 0.7
             )
-            
+
             val assistantReply = response.text()
-            
+
             chatHistory.add(ChatMessage(Prompts.Roles.ASSISTANT, assistantReply))
-            
+
             if (chatHistory.size > 20) {
                 chatHistory.removeAt(0)
             }
-            
+
         } catch (e: Exception) {
             chatHistory.add(ChatMessage(Prompts.Roles.ASSISTANT, "Sorry, I encountered an error: ${e.message}"))
         }
-        
+
         model.addAttribute("chatHistory", chatHistory)
         return@runBlocking "chat-demo"
     }

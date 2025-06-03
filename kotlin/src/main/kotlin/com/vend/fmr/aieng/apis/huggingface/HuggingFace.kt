@@ -1,4 +1,4 @@
-package com.vend.fmr.aieng.impl.huggingface
+package com.vend.fmr.aieng.apis.huggingface
 
 import com.vend.fmr.aieng.utils.Models.HuggingFace.BART_CLASSIFICATION
 import com.vend.fmr.aieng.utils.Models.HuggingFace.BART_SUMMARIZATION

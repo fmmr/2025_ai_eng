@@ -1,4 +1,4 @@
-package com.vend.fmr.aieng.impl.polygon
+package com.vend.fmr.aieng.apis.polygon
 
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*

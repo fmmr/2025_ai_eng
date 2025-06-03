@@ -1,8 +1,8 @@
 package com.vend.fmr.aieng.web
 
-import com.vend.fmr.aieng.impl.mocks.Mocks
-import com.vend.fmr.aieng.impl.openai.Message
-import com.vend.fmr.aieng.impl.openai.TextContent
+import com.vend.fmr.aieng.apis.mocks.Mocks
+import com.vend.fmr.aieng.apis.openai.Message
+import com.vend.fmr.aieng.apis.openai.TextContent
 import com.vend.fmr.aieng.openAI
 import com.vend.fmr.aieng.utils.Prompts
 import com.vend.fmr.aieng.utils.truncate

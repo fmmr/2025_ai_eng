@@ -1,4 +1,4 @@
-package com.vend.fmr.aieng.impl.weather
+package com.vend.fmr.aieng.apis.weather
 
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*

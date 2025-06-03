@@ -4,9 +4,9 @@ package com.vend.fmr.aieng.examples
 
 import com.vend.fmr.aieng.utils.*
 import com.vend.fmr.aieng.dtos.*
-import com.vend.fmr.aieng.impl.chunker.Chunker
-import com.vend.fmr.aieng.impl.supabase.Document
-import com.vend.fmr.aieng.impl.supabase.DocumentMatch
+import com.vend.fmr.aieng.apis.chunker.Chunker
+import com.vend.fmr.aieng.apis.supabase.Document
+import com.vend.fmr.aieng.apis.supabase.DocumentMatch
 import com.vend.fmr.aieng.openAI
 import com.vend.fmr.aieng.polygon
 import com.vend.fmr.aieng.supabase
@@ -84,12 +84,12 @@ suspend fun chatGPT() {
 }
 
 suspend fun multiMessageChat(debug: Boolean = false): String {
-    val conversationHistory = mutableListOf<com.vend.fmr.aieng.impl.openai.Message>()
+    val conversationHistory = mutableListOf<com.vend.fmr.aieng.apis.openai.Message>()
     
     conversationHistory.add(
-        com.vend.fmr.aieng.impl.openai.Message(
+        com.vend.fmr.aieng.apis.openai.Message(
             role = "system", 
-            content = com.vend.fmr.aieng.impl.openai.TextContent(Prompts.CHAT_ASSISTANT)
+            content = com.vend.fmr.aieng.apis.openai.TextContent(Prompts.CHAT_ASSISTANT)
         )
     )
     
@@ -97,9 +97,9 @@ suspend fun multiMessageChat(debug: Boolean = false): String {
     
     Prompts.ChatConversation.messages.forEachIndexed { index, userMessage ->
         conversationHistory.add(
-            com.vend.fmr.aieng.impl.openai.Message(
+            com.vend.fmr.aieng.apis.openai.Message(
                 role = "user", 
-                content = com.vend.fmr.aieng.impl.openai.TextContent(userMessage)
+                content = com.vend.fmr.aieng.apis.openai.TextContent(userMessage)
             )
         )
         
@@ -117,9 +117,9 @@ suspend fun multiMessageChat(debug: Boolean = false): String {
         val assistantReply = response.text()
         
         conversationHistory.add(
-            com.vend.fmr.aieng.impl.openai.Message(
+            com.vend.fmr.aieng.apis.openai.Message(
                 role = Prompts.Roles.ASSISTANT, 
-                content = com.vend.fmr.aieng.impl.openai.TextContent(assistantReply)
+                content = com.vend.fmr.aieng.apis.openai.TextContent(assistantReply)
             )
         )
         

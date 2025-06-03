@@ -1,6 +1,6 @@
-package com.vend.fmr.aieng.impl.mocks
+package com.vend.fmr.aieng.apis.mocks
 
-import com.vend.fmr.aieng.impl.openai.*
+import com.vend.fmr.aieng.apis.openai.*
 import com.vend.fmr.aieng.polygon
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

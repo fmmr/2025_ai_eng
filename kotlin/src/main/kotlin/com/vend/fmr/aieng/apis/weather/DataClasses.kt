@@ -1,4 +1,4 @@
-package com.vend.fmr.aieng.impl.weather
+package com.vend.fmr.aieng.apis.weather
 
 import kotlinx.serialization.*
 

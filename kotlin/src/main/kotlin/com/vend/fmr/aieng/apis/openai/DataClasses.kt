@@ -1,4 +1,4 @@
-package com.vend.fmr.aieng.impl.openai
+package com.vend.fmr.aieng.apis.openai
 
 import com.vend.fmr.aieng.utils.Models
 import kotlinx.serialization.*

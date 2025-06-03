@@ -3,9 +3,9 @@ package com.vend.fmr.aieng.web
 import com.vend.fmr.aieng.OPEN_AI_KEY
 import com.vend.fmr.aieng.SUPABASE_KEY
 import com.vend.fmr.aieng.SUPABASE_URL
-import com.vend.fmr.aieng.impl.openai.OpenAI
-import com.vend.fmr.aieng.impl.supabase.DocumentMatch
-import com.vend.fmr.aieng.impl.supabase.Supabase
+import com.vend.fmr.aieng.apis.openai.OpenAI
+import com.vend.fmr.aieng.apis.supabase.DocumentMatch
+import com.vend.fmr.aieng.apis.supabase.Supabase
 import com.vend.fmr.aieng.utils.Prompts
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model

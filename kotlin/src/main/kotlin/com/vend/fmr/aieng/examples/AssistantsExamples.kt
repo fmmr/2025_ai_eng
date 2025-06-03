@@ -3,7 +3,7 @@
 package com.vend.fmr.aieng.examples
 
 import com.vend.fmr.aieng.utils.*
-import com.vend.fmr.aieng.impl.openai.OpenAIAssistant
+import com.vend.fmr.aieng.apis.openai.OpenAIAssistant
 import com.vend.fmr.aieng.OPEN_AI_KEY
 import com.vend.fmr.aieng.utils.Prompts.MOVIE_ASSISTANT_PROMPT
 
@@ -66,7 +66,7 @@ suspend fun createMovieAssistant(vectorStoreId: String, debug: Boolean = false):
             name = "Movie Recommendation Expert",
             instructions = MOVIE_ASSISTANT_PROMPT,
             model = Models.Chat.GPT_4O,
-            tools = listOf(com.vend.fmr.aieng.impl.openai.AssistantTool("file_search")),
+            tools = listOf(com.vend.fmr.aieng.apis.openai.AssistantTool("file_search")),
             vectorStoreIds = listOf(vectorStoreId),
             debug = debug
         )

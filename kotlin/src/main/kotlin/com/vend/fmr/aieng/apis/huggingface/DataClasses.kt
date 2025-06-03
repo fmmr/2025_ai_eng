@@ -1,4 +1,4 @@
-package com.vend.fmr.aieng.impl.huggingface
+package com.vend.fmr.aieng.apis.huggingface
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

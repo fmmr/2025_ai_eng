@@ -1,4 +1,4 @@
-package com.vend.fmr.aieng.impl.openai
+package com.vend.fmr.aieng.apis.openai
 
 import com.vend.fmr.aieng.EMBEDDING_MODEL
 import com.vend.fmr.aieng.OPEN_AI_MODEL

@@ -1,6 +1,6 @@
 package com.vend.fmr.aieng.web
 
-import com.vend.fmr.aieng.impl.chunker.Chunker
+import com.vend.fmr.aieng.apis.chunker.Chunker
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping

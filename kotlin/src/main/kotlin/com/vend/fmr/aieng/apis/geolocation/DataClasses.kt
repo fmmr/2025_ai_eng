@@ -1,4 +1,4 @@
-package com.vend.fmr.aieng.impl.geolocation
+package com.vend.fmr.aieng.apis.geolocation
 
 import kotlinx.serialization.*
 

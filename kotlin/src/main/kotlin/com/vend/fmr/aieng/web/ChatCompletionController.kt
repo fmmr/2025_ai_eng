@@ -1,7 +1,7 @@
 package com.vend.fmr.aieng.web
 
 import com.vend.fmr.aieng.OPEN_AI_KEY
-import com.vend.fmr.aieng.impl.openai.OpenAI
+import com.vend.fmr.aieng.apis.openai.OpenAI
 import com.vend.fmr.aieng.utils.Models
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model

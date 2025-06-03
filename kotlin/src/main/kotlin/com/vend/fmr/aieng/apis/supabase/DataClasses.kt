@@ -1,4 +1,4 @@
-package com.vend.fmr.aieng.impl.supabase
+package com.vend.fmr.aieng.apis.supabase
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

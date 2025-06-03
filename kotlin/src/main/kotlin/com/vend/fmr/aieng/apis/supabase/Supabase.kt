@@ -1,4 +1,4 @@
-package com.vend.fmr.aieng.impl.supabase
+package com.vend.fmr.aieng.apis.supabase
 
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*

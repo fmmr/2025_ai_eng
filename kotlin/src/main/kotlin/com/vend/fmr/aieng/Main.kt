@@ -2,15 +2,14 @@
 
 package com.vend.fmr.aieng
 
-import com.vend.fmr.aieng.impl.openai.OpenAI
-import com.vend.fmr.aieng.impl.openai.OpenAIAssistant
-import com.vend.fmr.aieng.impl.polygon.Polygon
-import com.vend.fmr.aieng.impl.supabase.Supabase
-import com.vend.fmr.aieng.impl.weather.Weather
-import com.vend.fmr.aieng.impl.geolocation.Geolocation
-import com.vend.fmr.aieng.impl.huggingface.HuggingFace
+import com.vend.fmr.aieng.apis.openai.OpenAI
+import com.vend.fmr.aieng.apis.openai.OpenAIAssistant
+import com.vend.fmr.aieng.apis.polygon.Polygon
+import com.vend.fmr.aieng.apis.supabase.Supabase
+import com.vend.fmr.aieng.apis.weather.Weather
+import com.vend.fmr.aieng.apis.geolocation.Geolocation
+import com.vend.fmr.aieng.apis.huggingface.HuggingFace
 import com.vend.fmr.aieng.utils.*
-import com.vend.fmr.aieng.examples.*
 
 val OPEN_AI_KEY = "OPENAI_API_KEY".env()
 val SUPABASE_URL = "SUPABASE_URL".env()
