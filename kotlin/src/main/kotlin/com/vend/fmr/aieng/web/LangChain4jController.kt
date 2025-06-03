@@ -5,7 +5,7 @@ import dev.langchain4j.service.UserMessage
 import dev.langchain4j.service.V
 import dev.langchain4j.model.chat.ChatModel
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -13,11 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
-@ConditionalOnProperty(name = ["langchain4j.enabled"], havingValue = "true", matchIfMissing = true)
 class LangChain4jController {
 
-    @Autowired
-    private lateinit var chatModel: ChatModel
+    @Autowired(required = false)
+    private var chatModel: ChatModel? = null
 
     // AI Service interface using LangChain4j annotations
     interface AssistantService {
@@ -35,6 +34,11 @@ class LangChain4jController {
     fun langchain4jDemo(model: Model): String {
         model.addAttribute("pageTitle", "LangChain4j Demo")
         model.addAttribute("activeTab", "langchain4j")
+        
+        if (chatModel == null) {
+            model.addAttribute("error", "LangChain4j is not available - OPEN_AI_KEY environment variable is required")
+            return "langchain4j-demo"
+        }
         
         model.addAttribute("defaultText", "LangChain4j provides a fantastic abstraction layer for AI applications. It simplifies integration with multiple AI providers, offers type-safe interfaces, and includes powerful tools for building production-ready AI systems with minimal boilerplate code.")
         model.addAttribute("defaultMaxWords", 50)
@@ -70,10 +74,15 @@ class LangChain4jController {
         formData["maxWords"] = maxWordsInt.toString()
         model.addAttribute("formData", formData)
         
+        if (chatModel == null) {
+            model.addAttribute("error", "LangChain4j is not available - OPEN_AI_KEY environment variable is required")
+            return "langchain4j-demo"
+        }
+        
         try {
             // Create AI Service using LangChain4j
             val assistant = AiServices.builder(AssistantService::class.java)
-                .chatModel(chatModel)
+                .chatModel(chatModel!!)
                 .build()
             
             val result = when (operation) {
@@ -87,7 +96,7 @@ class LangChain4jController {
             model.addAttribute("operation", operation)
             model.addAttribute("maxWords", maxWordsInt)
             model.addAttribute("result", result)
-            model.addAttribute("modelUsed", chatModel.javaClass.simpleName)
+            model.addAttribute("modelUsed", chatModel?.javaClass?.simpleName)
             model.addAttribute("results", true)
             model.addAttribute("success", true)
             

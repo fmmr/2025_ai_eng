@@ -3,7 +3,7 @@ package com.vend.fmr.aieng
 import dev.langchain4j.model.chat.ChatModel
 import dev.langchain4j.model.openai.OpenAiChatModel
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
@@ -11,16 +11,16 @@ import org.springframework.context.annotation.Bean
 @SpringBootApplication(exclude = [R2dbcAutoConfiguration::class])
 class Application{
     @Bean
-    @ConditionalOnProperty(name = ["langchain4j.enabled"], havingValue = "true", matchIfMissing = true)
-    fun chatModel(): ChatModel {
-        if (OPEN_AI_KEY.isBlank()) {
-            throw IllegalStateException("OPEN_AI_KEY environment variable is required for LangChain4j")
+    fun chatModel(): ChatModel? {
+        return if (OPEN_AI_KEY.isNotBlank()) {
+            OpenAiChatModel.builder()
+                .apiKey(OPEN_AI_KEY)
+                .modelName("gpt-4o-mini")
+                .temperature(0.7)
+                .build()
+        } else {
+            null
         }
-        return OpenAiChatModel.builder()
-            .apiKey(OPEN_AI_KEY)
-            .modelName("gpt-4o-mini")
-            .temperature(0.7)
-            .build()
     }
 }
 
