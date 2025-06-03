@@ -9,6 +9,7 @@ import com.vend.fmr.aieng.apis.supabase.Supabase
 import com.vend.fmr.aieng.apis.weather.Weather
 import com.vend.fmr.aieng.apis.geolocation.Geolocation
 import com.vend.fmr.aieng.apis.huggingface.HuggingFace
+import com.vend.fmr.aieng.examples.huggingFaceObjectDetectionDemo
 import com.vend.fmr.aieng.utils.*
 
 val OPEN_AI_KEY = "OPENAI_API_KEY".env()
@@ -82,6 +83,7 @@ suspend fun main() {
 //    deleteAllAssistantResources(true)
 
 //    huggingFaceDemo(debug = true)
+    huggingFaceObjectDetectionDemo()
 }
 
 

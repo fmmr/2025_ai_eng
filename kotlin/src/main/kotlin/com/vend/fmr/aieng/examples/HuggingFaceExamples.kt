@@ -108,8 +108,51 @@ suspend fun huggingFaceComparisonDemo(debug: Boolean = false) {
     println("  OpenAI: Data sent to OpenAI servers")
 }
 
+suspend fun huggingFaceObjectDetectionDemo(debug: Boolean = false) {
+    println("\n=== HUGGINGFACE OBJECT DETECTION DEMO ===")
+    
+    // Use the kitchen.png image from resources
+    val imageResource = object {}.javaClass.classLoader.getResourceAsStream("static/images/kitchen.png")
+    if (imageResource == null) {
+        println("Error: kitchen.png not found in resources")
+        return
+    }
+    
+    val imageBytes = imageResource.readBytes()
+    println("Image loaded: ${imageBytes.size} bytes")
+    
+    val result = huggingface.detectObjects(
+        imageBytes = imageBytes,
+        contentType = "image/png",
+        debug = debug
+    )
+    
+    // Filter objects with confidence > 0.7
+    val highConfidenceObjects = result.filter { it.score > 0.9 }.sortedByDescending { it.score }
+    
+    println("\nDetected Objects (confidence > 70%):")
+    if (highConfidenceObjects.isEmpty()) {
+        println("  No objects detected with high confidence")
+    } else {
+        highConfidenceObjects.forEach { detection ->
+            println("  ${detection.label}: ${(detection.score * 100).toInt()}% confidence")
+            println("    Box: (${detection.box.xmin}, ${detection.box.ymin}) to (${detection.box.xmax}, ${detection.box.ymax})")
+        }
+    }
+    
+    println("\nAll detected objects:")
+    result.sortedByDescending { it.score }.forEach { detection ->
+        println("  ${detection.label}: ${(detection.score * 100).toInt()}% confidence")
+    }
+    
+    println("\nModel: facebook/detr-resnet-50 (DETR - Detection Transformer)")
+    println("Total objects found: ${result.size}")
+    println("High confidence objects (>70%): ${highConfidenceObjects.size}")
+}
+
 suspend fun huggingFaceDemo(debug: Boolean = false) {
     huggingFaceClassificationDemo(debug)
     huggingFaceSummarizationDemo(debug)
+    huggingFaceObjectDetectionDemo(debug)
     huggingFaceComparisonDemo(debug)
 }

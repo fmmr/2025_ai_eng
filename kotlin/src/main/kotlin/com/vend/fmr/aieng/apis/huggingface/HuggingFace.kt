@@ -2,6 +2,7 @@ package com.vend.fmr.aieng.apis.huggingface
 
 import com.vend.fmr.aieng.utils.Models.HuggingFace.BART_CLASSIFICATION
 import com.vend.fmr.aieng.utils.Models.HuggingFace.BART_SUMMARIZATION
+import com.vend.fmr.aieng.utils.Models.HuggingFace.DETR_OBJECT_DETECTION
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -93,6 +94,29 @@ class HuggingFace(private val token: String) : Closeable {
         }
         val responseList = json.decodeFromString<List<HuggingFaceSummarizationResponse>>(responseText)
         return responseList.first()
+    }
+
+    suspend fun detectObjects(
+        imageBytes: ByteArray,
+        contentType: String = "image/jpeg",
+        model: String = DETR_OBJECT_DETECTION,
+        debug: Boolean = false
+    ): List<HuggingFaceObjectDetectionResponse> {
+        val response = client.post("$BASE_URL/$model") {
+            contentType(ContentType.parse(contentType))
+            header("Authorization", "Bearer $token")
+            setBody(imageBytes)
+        }
+
+        val responseText = response.bodyAsText()
+        if (debug) {
+            println("HuggingFace Object Detection API Status: ${response.status}")
+            println("Model: $model")
+            println("Image size: ${imageBytes.size} bytes")
+            println("Content-Type: $contentType")
+            println("Response: $responseText")
+        }
+        return json.decodeFromString<List<HuggingFaceObjectDetectionResponse>>(responseText)
     }
 
     override fun close() {

@@ -14,7 +14,9 @@ data class HuggingFaceParameters(
     @SerialName("candidate_labels") val candidateLabels: List<String>? = null,
     @SerialName("max_length") val maxLength: Int? = null,
     @SerialName("min_length") val minLength: Int? = null,
-    @SerialName("do_sample") val doSample: Boolean? = null
+    @SerialName("do_sample") val doSample: Boolean? = null,
+    val threshold: Double? = null,
+    val percentage: Boolean? = null
 )
 
 @Serializable
@@ -27,4 +29,19 @@ data class HuggingFaceClassificationResponse(
 @Serializable
 data class HuggingFaceSummarizationResponse(
     @SerialName("summary_text") val summaryText: String
+)
+
+@Serializable
+data class HuggingFaceObjectDetectionResponse(
+    val label: String,
+    val score: Double,
+    val box: BoundingBox
+)
+
+@Serializable
+data class BoundingBox(
+    val xmin: Int,
+    val ymin: Int,
+    val xmax: Int,
+    val ymax: Int
 )

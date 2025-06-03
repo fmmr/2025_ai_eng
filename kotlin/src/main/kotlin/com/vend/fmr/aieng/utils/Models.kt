@@ -50,6 +50,7 @@ object Models {
     object HuggingFace{
         const val BART_CLASSIFICATION = "facebook/bart-large-mnli"
         const val BART_SUMMARIZATION = "facebook/bart-large-cnn"
+        const val DETR_OBJECT_DETECTION = "facebook/detr-resnet-50"
     }
 
     // Model display names for UI

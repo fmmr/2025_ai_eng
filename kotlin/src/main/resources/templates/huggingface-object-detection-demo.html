@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<!--suppress HtmlRequiredTitleElement -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: common-head}">
+</head>
+<body>
+    <div th:replace="~{fragments/navigation :: navbar(${activeTab})}"></div>
+
+    <div class="container my-4">
+        <h1 class="text-center mb-4">🤗 HuggingFace Object Detection</h1>
+        <p class="lead text-center">Detect objects in images using DETR (Detection Transformer) model</p>
+
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error:</strong> <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Success!</strong> Objects detected successfully. See the results below.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div class="row justify-content-center mb-4">
+            <div class="col-md-10">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">🔍 Object Detection Demo</h5>
+                        <small class="text-muted">Model: facebook/detr-resnet-50</small>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <form th:action="@{/demo/huggingface-object-detection}" method="post" enctype="multipart/form-data">
+                                    <div class="mb-3">
+                                        <label for="image" class="form-label">Upload an image:</label>
+                                        <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                                        <div class="form-text">Select a JPEG or PNG image file</div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="useDefault" name="useDefault" value="true" checked>
+                                            <label class="form-check-label" for="useDefault">
+                                                Use default kitchen.png image
+                                            </label>
+                                        </div>
+                                        <div class="form-text">Uncheck to use your uploaded image instead</div>
+                                    </div>
+                                    
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-primary btn-lg" id="detectBtn">
+                                            <span class="spinner-border spinner-border-sm me-2 d-none" role="status"></span>
+                                            🚀 Detect Objects
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Before Image Section (always visible) -->
+        <div th:if="${showBefore}" class="row mb-4" data-before-section>
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">🖼️ Before - Original Image</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <p class="small">Image: <strong th:text="${beforeImageName}"></strong></p>
+                        <img th:src="${beforeImageSrc}" class="img-fluid rounded" style="max-height: 400px;" alt="Original image">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${results}" class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">🎯 After - Object Detection Results</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-12 mb-4">
+                                <h6>🔍 Detected Objects with Bounding Boxes:</h6>
+                                <p class="small">Processed image: <strong th:text="${imageName ?: uploadedFileName}"></strong></p>
+                                <div class="position-relative d-inline-block">
+                                    <img id="detectionImage" 
+                                         th:src="${usingDefault ? '/images/kitchen.png' : beforeImageSrc}" 
+                                         class="img-fluid rounded" 
+                                         style="max-height: 500px;" 
+                                         alt="Processed image" 
+                                         onload="drawBoundingBoxes()">
+                                    <canvas id="boundingBoxCanvas" class="position-absolute top-0 start-0" style="pointer-events: none;"></canvas>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>📏 Processing Info:</h6>
+                                <p class="small text-muted">Size: <span th:text="${imageSize}"></span></p>
+                                <h6>🤖 Model:</h6>
+                                <p class="small text-muted" th:text="${modelUsed}"></p>
+                                <h6>🎯 Objects Found:</h6>
+                                <p class="small"><span th:text="${objectCount}"></span> objects detected (confidence > 70%)</p>
+                            </div>
+                        </div>
+                        
+                        <h6>🔎 Detected Objects:</h6>
+                        <div th:if="${objectCount > 0}" class="row g-3">
+                            <div th:each="object : ${detectedObjects}" class="col-lg-4 col-md-6">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title" th:text="${object.label}"></h5>
+                                        <div class="progress mb-2" style="height: 20px;">
+                                            <div class="progress-bar bg-success" role="progressbar" 
+                                                 th:style="'width: ' + ${object.percentage} + '%'"
+                                                 th:text="${object.percentage} + '%'"></div>
+                                        </div>
+                                        <small class="text-muted">
+                                            Confidence: <span th:text="${#numbers.formatDecimal(object.score, 1, 3)}"></span><br>
+                                            Box: (<span th:text="${object.box.xmin}"></span>, <span th:text="${object.box.ymin}"></span>) to 
+                                                 (<span th:text="${object.box.xmax}"></span>, <span th:text="${object.box.ymax}"></span>)
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div th:if="${objectCount == 0}" class="alert alert-warning">
+                            <h6>⚠️ No objects detected</h6>
+                            <p class="mb-0">No objects were detected with confidence above 70%. Try a different image with clearer objects.</p>
+                        </div>
+
+                        <div class="mt-4">
+                            <div class="alert alert-info">
+                                <h6>🔍 About the Model:</h6>
+                                <ul class="small mb-0">
+                                    <li><strong>Model:</strong> DETR (Detection Transformer) with ResNet-50 backbone</li>
+                                    <li><strong>Provider:</strong> HuggingFace Inference API (Open Source)</li>
+                                    <li><strong>Objects:</strong> Trained on COCO dataset (80+ object categories)</li>
+                                    <li><strong>Performance:</strong> State-of-the-art object detection using transformers</li>
+                                    <li><strong>Output:</strong> Bounding boxes, labels, and confidence scores</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/scripts :: common-scripts}"></div>
+    <script th:inline="javascript">
+        // Get detected objects from server
+        const detectedObjects = /*[[${detectedObjects}]]*/ [];
+        
+        // Color palette for different objects
+        const colors = [
+            '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF',
+            '#FFA500', '#800080', '#008000', '#FFC0CB', '#A0522D', '#808080'
+        ];
+        
+        function drawBoundingBoxes() {
+            const img = document.getElementById('detectionImage');
+            const canvas = document.getElementById('boundingBoxCanvas');
+            
+            if (!img || !canvas || !detectedObjects || detectedObjects.length === 0) {
+                return;
+            }
+            
+            // Wait for image to load
+            if (!img.complete) {
+                img.onload = drawBoundingBoxes;
+                return;
+            }
+            
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas size to match image
+            const rect = img.getBoundingClientRect();
+            canvas.width = img.offsetWidth;
+            canvas.height = img.offsetHeight;
+            canvas.style.width = img.offsetWidth + 'px';
+            canvas.style.height = img.offsetHeight + 'px';
+            
+            // Calculate scale factors (image might be resized by CSS)
+            const scaleX = img.offsetWidth / img.naturalWidth;
+            const scaleY = img.offsetHeight / img.naturalHeight;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw bounding boxes
+            detectedObjects.forEach((obj, index) => {
+                const box = obj.box;
+                const color = colors[index % colors.length];
+                
+                // Scale coordinates
+                const x = box.xmin * scaleX;
+                const y = box.ymin * scaleY;
+                const width = (box.xmax - box.xmin) * scaleX;
+                const height = (box.ymax - box.ymin) * scaleY;
+                
+                // Draw bounding box
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 3;
+                ctx.strokeRect(x, y, width, height);
+                
+                // Draw label background
+                const label = `${obj.label} (${obj.percentage}%)`;
+                ctx.font = '14px Arial';
+                const textWidth = ctx.measureText(label).width;
+                const textHeight = 16;
+                
+                ctx.fillStyle = color;
+                ctx.fillRect(x, y - textHeight - 4, textWidth + 8, textHeight + 4);
+                
+                // Draw label text
+                ctx.fillStyle = 'white';
+                ctx.fillText(label, x + 4, y - 6);
+            });
+        }
+        
+        // Form submission handling
+        document.querySelector('form').addEventListener('submit', function() {
+            const btn = document.getElementById('detectBtn');
+            const spinner = btn.querySelector('.spinner-border');
+            btn.disabled = true;
+            spinner.classList.remove('d-none');
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Processing...';
+        });
+        
+        // Handle checkbox behavior
+        const useDefaultCheckbox = document.getElementById('useDefault');
+        const imageInput = document.getElementById('image');
+        
+        useDefaultCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                imageInput.disabled = true;
+                imageInput.value = '';
+                // Reset to default kitchen image
+                updateBeforeImage('/images/kitchen.png', 'kitchen.png');
+            } else {
+                imageInput.disabled = false;
+            }
+        });
+        
+        // Handle image upload preview
+        imageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    updateBeforeImage(e.target.result, file.name);
+                };
+                reader.readAsDataURL(file);
+                // Uncheck default checkbox when image is uploaded
+                useDefaultCheckbox.checked = false;
+            }
+        });
+        
+        function updateBeforeImage(src, name) {
+            const beforeSection = document.querySelector('[data-before-section]');
+            if (beforeSection) {
+                const img = beforeSection.querySelector('img');
+                const nameSpan = beforeSection.querySelector('strong');
+                if (img) img.src = src;
+                if (nameSpan) nameSpan.textContent = name;
+            }
+        }
+        
+        // Initialize state
+        if (useDefaultCheckbox.checked) {
+            imageInput.disabled = true;
+        }
+        
+        // Draw bounding boxes when page loads (if objects exist)
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(drawBoundingBoxes, 100); // Small delay to ensure image is loaded
+        });
+        
+        // Redraw on window resize
+        window.addEventListener('resize', drawBoundingBoxes);
+    </script>
+</body>
+</html>
