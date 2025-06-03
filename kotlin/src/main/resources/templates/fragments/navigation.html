@@ -25,7 +25,8 @@
                     <a th:href="@{/demo/top-p-effects}" th:classappend="${activeTab == 'top-p-effects' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Top-P Effects ✓">🎯</a>
                     <span class="nav-link nav-icon text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Fine-tuning (Maybe Next Year)">⚙️</span>
                     <span class="nav-link nav-icon text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="PollyGlot (Someday Maybe 🌅) - Solo Project">🌍</span>
-                    <span class="nav-link nav-icon text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="HuggingFace (On My TODO List)">🤗</span>
+                    <a th:href="@{/demo/huggingface-classification}" th:classappend="${activeTab == 'huggingface-classification' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="HuggingFace Classification ✓">🏷️</a>
+                    <a th:href="@{/demo/huggingface-summarization}" th:classappend="${activeTab == 'huggingface-summarization' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="HuggingFace Summarization ✓">📄</a>
                     <a th:href="@{/demo/embeddings}" th:classappend="${activeTab == 'embeddings' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Embeddings ✓">🔢</a>
                     <a th:href="@{/demo/chunking}" th:classappend="${activeTab == 'chunking' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Chunking ✓">✂️</a>
                     <a th:href="@{/demo/supabase}" th:classappend="${activeTab == 'supabase' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Vector Database ✓">🗄️</a>

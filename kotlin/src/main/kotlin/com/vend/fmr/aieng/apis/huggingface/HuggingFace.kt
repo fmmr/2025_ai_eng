@@ -64,7 +64,7 @@ class HuggingFace(private val token: String) : Closeable {
         text: String,
         maxLength: Int? = 130,
         minLength: Int? = 30,
-        doSample: Boolean? = false,
+        doSample: Boolean? = true,
         model: String = BART_SUMMARIZATION,
         debug: Boolean = false
     ): HuggingFaceSummarizationResponse {

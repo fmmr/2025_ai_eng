@@ -26,22 +26,23 @@ This project implements the core concepts from the Scrimba AI Engineering course
 - **🧠 ReAct Agent** - Reasoning + Acting pattern with step-by-step problem solving and function calling
 - **🛠️ Function Calling Agent** - OpenAI's native function calling with structured tool schemas
 - **🎬 Film Fusion** - Merge movies and art into stunning AI-generated posters with parameter tuning
+- **✏️ AI Image Editing** - AI-powered image editing and manipulation capabilities with DALL-E 2
 - **👁️ GPT-4 with Vision** - Multi-modal AI capabilities with image analysis and insights using curated demo images
+- **🏷️ HuggingFace Classification** - Text classification using open-source BART model with custom categories and confidence scores
+- **📄 HuggingFace Summarization** - Text summarization using open-source BART model with configurable length parameters
 
 **🔜 Coming Soon:**
 - **⚙️ Fine-tuning** - Custom model training with OpenAI's fine-tuning API
 - **🌍 PollyGlot** - Multi-language translation bot (Solo Project)
-- **🤗 HuggingFace** - Open-source ML model hub integration
 - **🍿 PopChoice** - Smart movie recommendation engine (Solo Project)
 - **✈️ Travel Agent** - Practical AI agent for trip planning (Solo Project)
-- **✏️ Editing Images** - AI-powered image editing and manipulation capabilities
 - **🎯 Assistants API** - OpenAI's Assistants API integration
 - **☕ OpenAI Java Library** - Explore OpenAI's official Java/Kotlin library vs custom implementation
 
 ### Technology Stack
 - **Backend**: Spring Boot 3.5.0 with Kotlin
 - **Frontend**: Thymeleaf templates with Bootstrap 5.3.0
-- **AI Services**: OpenAI API (chat completion, embeddings)
+- **AI Services**: OpenAI API (chat completion, embeddings), HuggingFace Inference API (classification, summarization)
 - **Database**: Supabase (PostgreSQL with vector extensions)
 - **Financial Data**: Polygon.io API
 - **HTTP Client**: Ktor for async API calls
@@ -54,6 +55,12 @@ This project implements the core concepts from the Scrimba AI Engineering course
 - Text embeddings for semantic search
 - Model parameter customization
 - Response streaming and error handling
+
+### HuggingFace Inference API
+- Text classification with BART models
+- Text summarization with customizable parameters
+- Open-source model integration
+- Free tier access to community models
 
 ### Supabase Vector Database
 - Vector similarity search

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<!--suppress HtmlRequiredTitleElement -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: common-head}">
+</head>
+<body>
+    <div th:replace="~{fragments/navigation :: navbar(${activeTab})}"></div>
+
+    <div class="container my-4">
+        <h1 class="text-center mb-4">🤗 HuggingFace Summarization</h1>
+        <p class="lead text-center">Summarize text using open-source BART model (facebook/bart-large-cnn)</p>
+
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error:</strong> <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Success!</strong> Text summarized successfully. See the results below.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div class="row justify-content-center mb-4">
+            <div class="col-md-10">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">📝 Text Summarization Demo</h5>
+                        <small class="text-muted">Model: facebook/bart-large-cnn</small>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <form th:action="@{/demo/huggingface-summarization}" method="post">
+                                    <div class="mb-3">
+                                        <label for="text" class="form-label">Text to summarize:</label>
+                                        <textarea class="form-control" id="text" name="text" rows="6" 
+                                                  th:text="${formData?.text}" 
+                                                  th:placeholder="${defaultText}"></textarea>
+                                        <div class="form-text">Enter a longer text that you want to summarize</div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="maxLength" class="form-label">Maximum length:</label>
+                                                <input type="number" class="form-control" id="maxLength" name="maxLength" 
+                                                       th:value="${formData?.maxLength}" 
+                                                       th:placeholder="${defaultMaxLength}" min="10" max="500">
+                                                <div class="form-text">Maximum number of tokens in summary</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="minLength" class="form-label">Minimum length:</label>
+                                                <input type="number" class="form-control" id="minLength" name="minLength" 
+                                                       th:value="${formData?.minLength}" 
+                                                       th:placeholder="${defaultMinLength}" min="5" max="200">
+                                                <div class="form-text">Minimum number of tokens in summary</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-primary btn-lg" id="summarizeBtn">
+                                            <span class="spinner-border spinner-border-sm me-2 d-none" role="status"></span>
+                                            🚀 Summarize Text
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${results}" class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">📄 Summarization Results</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <h6>📝 Original Text:</h6>
+                                <div class="border p-3 rounded bg-light">
+                                    <p class="small mb-0" th:text="${inputText}"></p>
+                                </div>
+                                <p class="small text-muted mt-1" th:text="'Length: ' + ${originalLength} + ' characters'"></p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>✨ Summary:</h6>
+                                <div class="border p-3 rounded bg-primary-subtle">
+                                    <p class="mb-0" th:text="${summary}"></p>
+                                </div>
+                                <p class="small text-muted mt-1" th:text="'Length: ' + ${summaryLength} + ' characters'"></p>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-success" th:text="${compressionRatio} + '%'"></h5>
+                                        <p class="card-text small">Compression Ratio</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-primary" th:text="${maxLength}"></h5>
+                                        <p class="card-text small">Max Length Used</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-info" th:text="${minLength}"></h5>
+                                        <p class="card-text small">Min Length Used</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <h6>🔍 About the Model:</h6>
+                            <ul class="small mb-0">
+                                <li><strong>Model:</strong> <span th:text="${modelUsed}"></span></li>
+                                <li><strong>Provider:</strong> HuggingFace Inference API (Open Source)</li>
+                                <li><strong>Cost:</strong> Free tier available</li>
+                                <li><strong>Privacy:</strong> Data processed on HuggingFace infrastructure</li>
+                                <li><strong>Technique:</strong> Extractive + Abstractive summarization</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/scripts :: common-scripts}"></div>
+    <script>
+        document.querySelector('form').addEventListener('submit', function() {
+            const btn = document.getElementById('summarizeBtn');
+            const spinner = btn.querySelector('.spinner-border');
+            btn.disabled = true;
+            spinner.classList.remove('d-none');
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Processing...';
+        });
+    </script>
+</body>
+</html>

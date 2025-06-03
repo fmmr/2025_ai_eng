@@ -122,14 +122,27 @@
             </div>
 
             <div class="col-md-6 col-lg-4">
-                <div class="card h-100 border-secondary">
+                <div class="card h-100 border-success">
                     <div class="card-body">
                         <h5 class="card-title">
-                            🤗 HuggingFace
-                            <span class="badge bg-warning text-dark ms-2">On My TODO List</span>
+                            🏷️ HuggingFace Classification
+                            <span class="badge bg-success ms-2">✓ Done</span>
                         </h5>
-                        <p class="card-text">Open-source ML model hub integration from the Scrimba course. Explore, discover, and experiment with community models beyond OpenAI.</p>
-                        <button class="btn btn-warning" disabled>Still Procrastinating...</button>
+                        <p class="card-text">Text classification using open-source BART model from HuggingFace. Classify text into custom categories with confidence scores and detailed analysis.</p>
+                        <a th:href="@{/demo/huggingface-classification}" class="btn btn-success">View Demo</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-success">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            📄 HuggingFace Summarization
+                            <span class="badge bg-success ms-2">✓ Done</span>
+                        </h5>
+                        <p class="card-text">Text summarization using open-source BART model from HuggingFace. Compress long texts into concise summaries with customizable length parameters.</p>
+                        <a th:href="@{/demo/huggingface-summarization}" class="btn btn-success">View Demo</a>
                     </div>
                 </div>
             </div>
