@@ -1,11 +1,23 @@
 package com.vend.fmr.aieng
 
+import dev.langchain4j.model.chat.ChatModel
+import dev.langchain4j.model.openai.OpenAiChatModel
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration
 import org.springframework.boot.runApplication
+import org.springframework.context.annotation.Bean
 
 @SpringBootApplication(exclude = [R2dbcAutoConfiguration::class])
-class Application
+class Application{
+    @Bean
+    fun chatModel(): ChatModel {
+        return OpenAiChatModel.builder()
+            .apiKey(OPEN_AI_KEY)
+            .modelName("gpt-4o-mini")
+            .temperature(0.7)
+            .build()
+    }
+}
 
 fun main(args: Array<String>) {
     runApplication<Application>(*args)
