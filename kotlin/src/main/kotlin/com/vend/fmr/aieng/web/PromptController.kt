@@ -1,7 +1,7 @@
 package com.vend.fmr.aieng.web
 
 import com.vend.fmr.aieng.openAI
-import com.vend.fmr.aieng.utils.PromptComparison
+import com.vend.fmr.aieng.dtos.PromptComparison
 import com.vend.fmr.aieng.utils.Prompts
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model

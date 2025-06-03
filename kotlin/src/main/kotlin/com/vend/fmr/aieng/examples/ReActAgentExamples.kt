@@ -1,7 +1,8 @@
 @file:Suppress("unused")
 
-package com.vend.fmr.aieng.utils
+package com.vend.fmr.aieng.examples
 
+import com.vend.fmr.aieng.utils.*
 import com.vend.fmr.aieng.impl.mocks.Mocks
 import com.vend.fmr.aieng.impl.openai.Message
 import com.vend.fmr.aieng.impl.openai.TextContent

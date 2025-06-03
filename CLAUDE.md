@@ -21,6 +21,10 @@ Working in kotlin directory - AI engineering course using Kotlin/Spring Boot.
 - Suspend functions for async operations
 - Server-side form processing (POST to same endpoint)
 
+## Development Workflow
+1. **Command Line First** - Build one-liner from Main.kt calling `*Examples.kt` functions
+2. **Web Demo Second** - After command line works, create Spring Boot controller using same impl classes
+
 ## Standards
 - Model attributes: `pageTitle`, `activeTab`
 - API keys: OPEN_AI_KEY, SUPABASE_URL, SUPABASE_KEY patterns
@@ -28,6 +32,13 @@ Working in kotlin directory - AI engineering course using Kotlin/Spring Boot.
 - Data to JS via `th:attr="data-key=${value}"` → `element.dataset.key`
 - Code examples: `<pre><code class="language-kotlin">` in demos
 - Form errors: preserve with `formData` model attribute
+
+## API Implementation
+- impl classes accept `debug: Boolean = false` parameter (silent by default)
+- Use kotlinx.serialization data classes - **NO manually constructed JSON**
+- Create `DataClasses.kt` in each impl package with `@Serializable` annotations
+- Main.kt contains single line calling demo function
+- Demo logic in `*Examples.kt` files with all printlns and presentation
 
 ## Build & Deploy
 - Test: `mvn test`

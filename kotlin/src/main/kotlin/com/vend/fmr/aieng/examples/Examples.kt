@@ -1,7 +1,9 @@
 @file:Suppress("unused")
 
-package com.vend.fmr.aieng.utils
+package com.vend.fmr.aieng.examples
 
+import com.vend.fmr.aieng.utils.*
+import com.vend.fmr.aieng.dtos.*
 import com.vend.fmr.aieng.impl.chunker.Chunker
 import com.vend.fmr.aieng.impl.supabase.Document
 import com.vend.fmr.aieng.impl.supabase.DocumentMatch
@@ -145,16 +147,6 @@ suspend fun queryVectorDbForMovies(query: String, matches: Int = 5, debug: Boole
     return response
 }
 
-data class PromptComparison(
-    val scenario: String,
-    val vague: String,
-    val better: String,
-    val excellent: String,
-    val vagueResponse: String = "",
-    val betterResponse: String = "",
-    val excellentResponse: String = ""
-)
-
 suspend fun promptEngineeringDemo(debug: Boolean = false) {
     val scenarios = listOf(
         PromptComparison(
@@ -197,15 +189,6 @@ suspend fun promptEngineeringDemo(debug: Boolean = false) {
         println("\n" + "=".repeat(80) + "\n")
     }
 }
-
-data class ParameterSet(
-    val name: String,
-    val description: String,
-    val temperature: Double,
-    val topP: Double,
-    val color: String,
-    val response: String = ""
-)
 
 suspend fun temperatureDemo(debug: Boolean = false) {
     val prompt = Prompts.Defaults.CHAT_PARAMETERS_PROMPT

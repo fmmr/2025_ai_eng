@@ -46,7 +46,12 @@ object Models {
         const val FUNCTION_CALLING = Chat.GPT_4
         const val REACT_AGENT = Chat.GPT_4
     }
-    
+
+    object HuggingFace{
+        const val BART_CLASSIFICATION = "facebook/bart-large-mnli"
+        const val BART_SUMMARIZATION = "facebook/bart-large-cnn"
+    }
+
     // Model display names for UI
     object DisplayNames {
         val CHAT_MODELS = mapOf(
@@ -68,3 +73,4 @@ object Models {
         )
     }
 }
+

@@ -1,7 +1,8 @@
 @file:Suppress("unused")
 
-package com.vend.fmr.aieng.utils
+package com.vend.fmr.aieng.examples
 
+import com.vend.fmr.aieng.utils.*
 import com.vend.fmr.aieng.impl.openai.OpenAIAssistant
 import com.vend.fmr.aieng.OPEN_AI_KEY
 import com.vend.fmr.aieng.utils.Prompts.MOVIE_ASSISTANT_PROMPT

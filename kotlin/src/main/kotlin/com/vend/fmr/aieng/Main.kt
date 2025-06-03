@@ -8,12 +8,15 @@ import com.vend.fmr.aieng.impl.polygon.Polygon
 import com.vend.fmr.aieng.impl.supabase.Supabase
 import com.vend.fmr.aieng.impl.weather.Weather
 import com.vend.fmr.aieng.impl.geolocation.Geolocation
+import com.vend.fmr.aieng.impl.huggingface.HuggingFace
 import com.vend.fmr.aieng.utils.*
+import com.vend.fmr.aieng.examples.*
 
 val OPEN_AI_KEY = "OPENAI_API_KEY".env()
 val SUPABASE_URL = "SUPABASE_URL".env()
 val SUPABASE_KEY = "SUPABASE_ANON_KEY".env()
 val POLYGON_API_KEY = "POLYGON_API_KEY".env()
+val HF_TOKEN = "HF_TOKEN".env()
 
 const val OPEN_AI_MODEL = Models.Defaults.CHAT_COMPLETION
 const val EMBEDDING_MODEL = Models.Defaults.EMBEDDING
@@ -24,6 +27,9 @@ val supabase = Supabase(SUPABASE_URL, SUPABASE_KEY)
 val polygon = Polygon(POLYGON_API_KEY)
 val weather = Weather()
 val geolocation = Geolocation()
+val huggingface = HuggingFace(HF_TOKEN)
+
+val apis = listOf(openAI, assistant, supabase, polygon, weather, geolocation, huggingface)
 
 @Suppress("RedundantSuspendModifier", "RedundantSuppression")
 suspend fun main() {
@@ -74,15 +80,13 @@ suspend fun main() {
 //    listAllAssistantResources()
 //    deleteAllAssistantResources(true)
     // === CLEANUP (optional) ===
-//deleteAllAssistantResources(true)
+//    deleteAllAssistantResources(true)
+
+//    huggingFaceDemo(debug = true)
 }
 
 
 fun close() {
     println("Closing stuff")
-    openAI.close()
-    supabase.close()
-    polygon.close()
-    weather.close()
-    geolocation.close()
+    apis.forEach { it.close() }
 }
