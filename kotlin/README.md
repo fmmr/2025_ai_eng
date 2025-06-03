@@ -41,6 +41,7 @@ This project implements the core concepts from the Scrimba AI Engineering course
 **🚀 Additional AI Explorations:**
 - **☕ OpenAI Java Library** - Explore OpenAI's official Java/Kotlin library vs custom implementation (Maybe Someday 🤷‍♂️)
 - **🦜 LangChain4j Framework** - Interactive demo showcasing LangChain4j's declarative AI services with text analysis, summarization, and sentiment classification ✓
+- **🍃 Spring AI Framework** - Official Spring AI 1.0.0 framework demo comparing Spring's native AI integration with auto-configuration and dependency injection (Coming Up Next 🚀)
 
 ### Technology Stack
 - **Backend**: Spring Boot 3.5.0 with Kotlin
