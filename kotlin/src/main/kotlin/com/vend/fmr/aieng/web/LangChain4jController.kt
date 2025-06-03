@@ -5,6 +5,7 @@ import dev.langchain4j.service.UserMessage
 import dev.langchain4j.service.V
 import dev.langchain4j.model.chat.ChatModel
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
+@ConditionalOnProperty(name = ["langchain4j.enabled"], havingValue = "true", matchIfMissing = true)
 class LangChain4jController {
 
     @Autowired
