@@ -1,0 +1,180 @@
+package com.vend.fmr.aieng.mcp
+
+import com.vend.fmr.aieng.POLYGON_API_KEY
+import com.vend.fmr.aieng.apis.geolocation.Geolocation
+import com.vend.fmr.aieng.apis.polygon.Polygon
+import com.vend.fmr.aieng.apis.weather.Weather
+import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.json.Json
+import org.springframework.http.MediaType
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+
+@RestController
+@RequestMapping("/mcp")
+class McpApiController {
+
+    companion object {
+        private val json = Json {
+            ignoreUnknownKeys = true
+            isLenient = true
+            explicitNulls = false
+            encodeDefaults = true
+        }
+    }
+
+    private val polygon = Polygon(POLYGON_API_KEY)
+    private val weather = Weather()
+    private val geolocation = Geolocation()
+
+    /**
+     * Main MCP endpoint - handles JSON-RPC 2.0 requests
+     * MCP (Model Context Protocol) uses JSON-RPC 2.0 over HTTP
+     */
+    @PostMapping("/", 
+        consumes = [MediaType.APPLICATION_JSON_VALUE],
+        produces = [MediaType.APPLICATION_JSON_VALUE])
+    fun handleMcpRequest(@RequestBody request: String): String {
+        println("🔗 MCP Request: $request")
+        
+        return try {
+            val mcpRequest = json.decodeFromString<McpRequest>(request)
+            
+            when (mcpRequest.method) {
+                "initialize" -> handleInitialize(mcpRequest.id)
+                "tools/list" -> handleToolsList(mcpRequest.id)
+                "tools/call" -> handleToolsCall(mcpRequest, mcpRequest.id)
+                else -> createErrorResponse(mcpRequest.id, -32601, "Method not found: ${mcpRequest.method}")
+            }
+        } catch (e: Exception) {
+            println("❌ MCP Error: ${e.message}")
+            createErrorResponse(null, -32700, "Parse error: ${e.message}")
+        }
+    }
+
+    private fun handleInitialize(id: Int?): String {
+        val response = McpResponse(
+            id = id,
+            result = McpResult(
+                protocolVersion = "2024-11-05",
+                serverInfo = ServerInfo(
+                    name = "Kotlin AI Engineering MCP Server",
+                    version = "1.0.0"
+                ),
+                capabilities = Capabilities()
+            )
+        )
+        return json.encodeToString(McpResponse.serializer(), response)
+    }
+
+    private fun handleToolsList(id: Int?): String {
+        val tools = listOf(
+            Tool(
+                name = "hello_world",
+                description = "Says hello to test MCP connection",
+                inputSchema = InputSchema(
+                    properties = mapOf(
+                        "name" to PropertySchema(type = "string", description = "Name to greet")
+                    )
+                )
+            ),
+            Tool(
+                name = "get_stock_price",
+                description = "Get current stock price and info for a symbol",
+                inputSchema = InputSchema(
+                    properties = mapOf(
+                        "symbol" to PropertySchema(type = "string", description = "Stock symbol (e.g. AAPL, MSFT)")
+                    )
+                )
+            ),
+            Tool(
+                name = "get_weather",
+                description = "Get current weather for coordinates",
+                inputSchema = InputSchema(
+                    properties = mapOf(
+                        "latitude" to PropertySchema(type = "number", description = "Latitude"),
+                        "longitude" to PropertySchema(type = "number", description = "Longitude")
+                    )
+                )
+            ),
+            Tool(
+                name = "get_location_from_ip",
+                description = "Get geographic location from IP address",
+                inputSchema = InputSchema(
+                    properties = mapOf(
+                        "ip" to PropertySchema(type = "string", description = "IP address")
+                    )
+                )
+            ),
+        )
+        
+        val response = McpResponse(
+            id = id,
+            result = McpResult(tools = tools)
+        )
+        return json.encodeToString(McpResponse.serializer(), response)
+    }
+
+    private fun handleToolsCall(mcpRequest: McpRequest, id: Int?): String {
+        val toolName = mcpRequest.params?.name
+        val arguments = mcpRequest.params?.arguments
+        
+        return try {
+            when (toolName) {
+                "hello_world" -> {
+                    val name = arguments?.get("name") ?: "World"
+                    createSuccessResponse(id, "Hello, $name! 🎉 MCP is working from Kotlin Spring Boot!")
+                }
+                "get_stock_price" -> {
+                    val symbol = arguments?.get("symbol") ?: return createErrorResponse(id, -32602, "Missing symbol parameter")
+                    runBlocking {
+                        val stockInfo = polygon.getTickerDetails(symbol, debug = false)
+                        val name = stockInfo.results.name
+                        createSuccessResponse(id, "📈 $symbol: Stock details for $name")
+                    }
+                }
+                "get_weather" -> {
+                    val lat = arguments?.get("latitude")?.toDoubleOrNull() ?: return createErrorResponse(id, -32602, "Missing or invalid latitude")
+                    val lon = arguments["longitude"]?.toDoubleOrNull() ?: return createErrorResponse(id, -32602, "Missing or invalid longitude")
+                    runBlocking {
+                        val weatherData = weather.getNowcast(lat, lon, debug = false)
+                        val current = weather.getCurrentWeather(weatherData)
+                        val summary = current?.let { weather.formatWeatherSummary(it) } ?: "Weather data not available"
+                        createSuccessResponse(id, "🌤️ $summary")
+                    }
+                }
+                "get_location_from_ip" -> {
+                    val ip = arguments?.get("ip") ?: return createErrorResponse(id, -32602, "Missing ip parameter")
+                    runBlocking {
+                        val location = geolocation.getLocationByIp(ip, debug = false)
+                        val summary = geolocation.formatLocationSummary(location)
+                        createSuccessResponse(id, "📍 $summary")
+                    }
+                }
+                else -> createErrorResponse(id, -32602, "Unknown tool: $toolName")
+            }
+        } catch (e: Exception) {
+            createErrorResponse(id, -32603, "Tool execution failed: ${e.message}")
+        }
+    }
+
+    private fun createSuccessResponse(id: Int?, text: String): String {
+        val response = McpResponse(
+            id = id,
+            result = McpResult(
+                content = listOf(Content(text = text))
+            )
+        )
+        return json.encodeToString(McpResponse.serializer(), response)
+    }
+
+    private fun createErrorResponse(id: Int?, code: Int, message: String): String {
+        val response = McpResponse(
+            id = id,
+            error = McpError(code = code, message = message)
+        )
+        return json.encodeToString(McpResponse.serializer(), response)
+    }
+}

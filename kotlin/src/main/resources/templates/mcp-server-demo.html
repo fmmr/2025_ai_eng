@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{fragments/head :: common-head}"></div>
+    <title>MCP Server Demo - AI Engineering</title>
+</head>
+<body>
+    <div th:replace="~{fragments/navigation :: navbar(${activeTab})}"></div>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="mb-4">🛠️ MCP Server Demo</h1>
+                <p class="lead">Build and test a Model Context Protocol (MCP) server using raw HTTP and JSON-RPC 2.0</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>🔗 What is MCP?</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Model Context Protocol (MCP) is an open standard for connecting AI assistants to external tools and data sources.</p>
+                        <ul>
+                            <li><strong>JSON-RPC 2.0</strong> - Simple request/response protocol</li>
+                            <li><strong>Tools</strong> - Functions that AI can discover and call</li>
+                            <li><strong>Resources</strong> - Data sources AI can read from</li>
+                            <li><strong>Universal</strong> - Works with Claude Desktop, VS Code, and more</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>🧰 Available Tools</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            <div class="list-group-item">
+                                <strong>hello_world</strong>
+                                <p class="mb-1">Says hello to test MCP connection</p>
+                                <small class="text-muted">Parameters: name (string)</small>
+                            </div>
+                            <div class="list-group-item">
+                                <strong>get_stock_price</strong>
+                                <p class="mb-1">Get current stock price and info for a symbol</p>
+                                <small class="text-muted">Parameters: symbol (string) - e.g. AAPL, MSFT</small>
+                            </div>
+                            <div class="list-group-item">
+                                <strong>get_weather</strong>
+                                <p class="mb-1">Get current weather for coordinates</p>
+                                <small class="text-muted">Parameters: latitude (number), longitude (number)</small>
+                            </div>
+                            <div class="list-group-item">
+                                <strong>get_location_from_ip</strong>
+                                <p class="mb-1">Get geographic location from IP address</p>
+                                <small class="text-muted">Parameters: ip (string)</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>🧪 Test MCP Server</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Test the MCP server directly with JSON-RPC requests:</p>
+                        
+                        <h6>1. Initialize Connection</h6>
+                        <button class="btn btn-primary btn-sm mb-2" onclick="testInitialize()">Test Initialize</button>
+                        
+                        <h6>2. List Available Tools</h6>
+                        <button class="btn btn-info btn-sm mb-2" onclick="testToolsList()">List Tools</button>
+                        
+                        <h6>3. Call Tools</h6>
+                        <button class="btn btn-success btn-sm mb-2" onclick="testHelloTool()">Say Hello</button>
+                        <button class="btn btn-primary btn-sm mb-2" onclick="testStockTool()">Get AAPL Stock</button>
+                        <button class="btn btn-info btn-sm mb-2" onclick="testWeatherTool()">Get Weather (Oslo)</button>
+                        <button class="btn btn-warning btn-sm mb-2" onclick="testLocationTool()">Get Location</button>
+                        
+                        <div class="mt-3">
+                            <strong>Response:</strong>
+                            <pre id="response" class="bg-light p-2 mt-2" style="min-height: 100px; white-space: pre-wrap;"></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5>💻 Connect Claude Desktop</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Add this to your Claude Desktop MCP settings:</p>
+                        <pre class="bg-dark text-light p-3"><code>{
+  "mcpServers": {
+    "kotlin-ai-server": {
+      "command": "curl",
+      "args": [
+        "-X", "POST",
+        "-H", "Content-Type: application/json",
+        "http://localhost:8080/mcp"
+      ]
+    }
+  }
+}</code></pre>
+                        <small class="text-muted">Note: This is a simplified example. Real Claude Desktop integration requires stdio transport.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: common-footer}"></div>
+    <div th:replace="~{fragments/scripts :: common-scripts}"></div>
+    <script src="/js/mcp-demo.js"></script>
+</body>
+</html>
