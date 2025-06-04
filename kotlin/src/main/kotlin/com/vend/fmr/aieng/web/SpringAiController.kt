@@ -22,7 +22,7 @@ class SpringAiController {
         model.addAttribute("activeTab", "spring-ai")
 
         if (chatModel == null) {
-            model.addAttribute("error", "Spring AI is not available - OPEN_AI_KEY environment variable is required")
+            model.addAttribute("error", "Spring AI is not available - OPENAI_API_KEY environment variable is required")
             return "spring-ai-demo"
         }
 
@@ -64,7 +64,7 @@ class SpringAiController {
         model.addAttribute("formData", formData)
 
         if (chatModel == null) {
-            model.addAttribute("error", "Spring AI is not available - OPEN_AI_KEY environment variable is required")
+            model.addAttribute("error", "Spring AI is not available - OPENAI_API_KEY environment variable is required")
         } else {
             try {
                 val promptText = when (operation) {

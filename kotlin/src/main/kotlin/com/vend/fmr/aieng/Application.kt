@@ -3,22 +3,28 @@ package com.vend.fmr.aieng
 import dev.langchain4j.model.chat.ChatModel
 import dev.langchain4j.model.chat.DisabledChatModel
 import dev.langchain4j.model.openai.OpenAiChatModel
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
+import com.vend.fmr.aieng.utils.isValidApiKey
 
 @SpringBootApplication(exclude = [R2dbcAutoConfiguration::class])
-class Application{
+class Application {
 
+    /**
+     * Manual LangChain4j ChatModel bean creation to avoid conflicts with Spring AI auto-configuration.
+     * Both frameworks create beans named "ChatModel", causing Spring startup failures.
+     * 
+     * Alternative: Remove LangChain4j entirely and focus on Spring AI (recommended for future).
+     * Spring AI is Spring's official AI framework with better long-term support.
+     */
     @Bean("langchain4jChatModel")
     fun langchain4jChatModel(): ChatModel {
-        return if (OPEN_AI_KEY.isNotBlank()) {
+        val apiKey = System.getenv("OPENAI_API_KEY") ?: "dummy-key-for-auto-config"
+        return if (apiKey.isValidApiKey()) {
             OpenAiChatModel.builder()
-                .apiKey(OPEN_AI_KEY)
+                .apiKey(apiKey)
                 .modelName("gpt-4o-mini")
                 .temperature(0.7)
                 .build()

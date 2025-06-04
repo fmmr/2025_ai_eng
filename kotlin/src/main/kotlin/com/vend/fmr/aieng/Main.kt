@@ -2,14 +2,14 @@
 
 package com.vend.fmr.aieng
 
+import com.vend.fmr.aieng.apis.geolocation.Geolocation
+import com.vend.fmr.aieng.apis.huggingface.HuggingFace
 import com.vend.fmr.aieng.apis.openai.OpenAI
 import com.vend.fmr.aieng.apis.openai.OpenAIAssistant
 import com.vend.fmr.aieng.apis.polygon.Polygon
 import com.vend.fmr.aieng.apis.supabase.Supabase
 import com.vend.fmr.aieng.apis.weather.Weather
-import com.vend.fmr.aieng.apis.geolocation.Geolocation
-import com.vend.fmr.aieng.apis.huggingface.HuggingFace
-import com.vend.fmr.aieng.examples.huggingFaceObjectDetectionDemo
+import com.vend.fmr.aieng.examples.multiMessageChat
 import com.vend.fmr.aieng.utils.*
 
 val OPEN_AI_KEY = "OPENAI_API_KEY".env()
@@ -39,8 +39,8 @@ suspend fun main() {
 
 //    promptEngineeringDemo(debug = true)
 
-//    val conversation = multiMessageChat(debug = true)
-//    println(conversation)
+    val conversation = multiMessageChat(debug = true)
+    println(conversation)
 
 //    val result3 = FunctionCallingExamples.functionCallingAgent("Do you have any ideas for activities I can do at my location?", debug = true)
 //    println("Final Function Call Result: $result3")
@@ -83,7 +83,7 @@ suspend fun main() {
 //    deleteAllAssistantResources(true)
 
 //    huggingFaceDemo(debug = true)
-    huggingFaceObjectDetectionDemo()
+//    huggingFaceObjectDetectionDemo()
 }
 
 

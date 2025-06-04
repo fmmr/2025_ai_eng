@@ -1,14 +1,8 @@
 package com.vend.fmr.aieng.utils
 
+const val DUMMY_API_KEY = "dummy-key-for-auto-config"
 
-private val envContent = object {}.javaClass.getResourceAsStream("/.env")
-    ?.bufferedReader()
-    ?.use { it.readText() }
-    ?.split("\n")
-    ?.associate { it.substringBefore("=") to it.substringAfter("=") }
-
-
-fun String.env(): String = envContent?.get(this) ?: System.getenv(this) ?: "UNKNOWN_ENV_VAR"
+fun String.env(): String = System.getenv(this) ?: "UNKNOWN_ENV_VAR"
 
 fun String.read(): String = (if (this.startsWith("/")) this else "/$this").let { string ->
     object {}.javaClass.getResourceAsStream(string)
@@ -25,3 +19,5 @@ fun String.truncate(l: Int = 200): String {
         this
     }
 }
+
+fun String.isValidApiKey(): Boolean = this.isNotBlank() && this != DUMMY_API_KEY

@@ -7,7 +7,6 @@ import dev.langchain4j.model.chat.ChatModel
 import dev.langchain4j.model.chat.DisabledChatModel
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -39,7 +38,7 @@ class LangChain4jController {
         model.addAttribute("activeTab", "langchain4j")
         
         if (chatModel is DisabledChatModel) {
-            model.addAttribute("error", "LangChain4j is not available - OPEN_AI_KEY environment variable is required")
+            model.addAttribute("error", "LangChain4j is not available - OPENAI_API_KEY environment variable is required")
             return "langchain4j-demo"
         }
         
@@ -78,7 +77,7 @@ class LangChain4jController {
         model.addAttribute("formData", formData)
         
         if (chatModel is DisabledChatModel) {
-            model.addAttribute("error", "LangChain4j is not available - OPEN_AI_KEY environment variable is required")
+            model.addAttribute("error", "LangChain4j is not available - OPENAI_API_KEY environment variable is required")
             return "langchain4j-demo"
         }
         

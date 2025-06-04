@@ -24,7 +24,11 @@
       "Bash(sed:*)",
       "Bash(/Users/fmr/.nvm/versions/node/v23.11.0/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/rg -i \"gpt-4|gpt-3.5|text-embedding-ada|dall-e-2|dall-e-3\" --type-add 'web:*.{html,js,css}' --type-add 'config:*.{properties,yml,yaml}' -t kotlin -t java -t web -t config)",
       "WebFetch(domain:huggingface.co)",
-      "Bash(pkill:*)"
+      "Bash(pkill:*)",
+      "Bash(jar tf:*)",
+      "WebFetch(domain:docs.langchain4j.dev)",
+      "Bash(cp:*)",
+      "Bash(OPENAI_API_KEY=sk-proj-test POLYGON_API_KEY=test HF_TOKEN=test SUPABASE_URL=test SUPABASE_ANON_KEY=test mvn test -q)"
     ],
     "deny": []
   },
