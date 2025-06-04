@@ -29,6 +29,7 @@
         <spring.boot.version>3.5.0</spring.boot.version>
         <langchain4j.version>1.0.1</langchain4j.version>
         <langchain4j-beta.version>1.0.0-beta5</langchain4j-beta.version>
+        <spring-ai.version>1.0.0-M6</spring-ai.version>
         <build.timestamp>${maven.build.timestamp}</build.timestamp>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
     </properties>
@@ -190,6 +191,14 @@
             <artifactId>langchain4j-kotlin</artifactId>
             <version>${langchain4j-beta.version}</version>
         </dependency>
+        
+        <!-- Spring AI Dependencies -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-openai-spring-boot-starter</artifactId>
+            <version>${spring-ai.version}</version>
+        </dependency>
+        
         <!-- Spring Boot Test Starter with JUnit 5 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

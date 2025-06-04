@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<!--suppress HtmlRequiredTitleElement -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: common-head}">
+</head>
+<body>
+    <div th:replace="~{fragments/navigation :: navbar(${activeTab})}"></div>
+
+    <div class="container my-4">
+        <h1 class="text-center mb-4">🍃 Spring AI Demo</h1>
+        <p class="lead text-center">Compare Spring AI's native framework approach vs. custom HTTP implementations</p>
+
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error:</strong> <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Success!</strong> Spring AI operation completed successfully. See the results below.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div class="row justify-content-center mb-4">
+            <div class="col-md-10">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">🤖 Spring AI Operations</h5>
+                        <small class="text-muted">Native Spring framework integration</small>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <form th:action="@{/demo/spring-ai}" method="post">
+                                    <div class="mb-3">
+                                        <label for="text" class="form-label">Text to process:</label>
+                                        <textarea class="form-control" id="text" name="text" rows="4" 
+                                                  th:text="${formData?.text}" 
+                                                  th:placeholder="${defaultText}"></textarea>
+                                        <div class="form-text">Enter any text for AI processing</div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="operation" class="form-label">Operation:</label>
+                                        <select class="form-select" id="operation" name="operation" th:value="${formData?.operation}">
+                                            <option value="analyze" th:selected="${formData?.operation == 'analyze'}">Analyze Text</option>
+                                            <option value="summarize" th:selected="${formData?.operation == 'summarize'}">Summarize</option>
+                                            <option value="sentiment" th:selected="${formData?.operation == 'sentiment'}">Sentiment Analysis</option>
+                                        </select>
+                                        <div class="form-text">Choose the AI operation to perform</div>
+                                    </div>
+                                    
+                                    <div class="mb-3" id="maxWordsDiv" style="display: none;">
+                                        <label for="maxWords" class="form-label">Maximum words for summary:</label>
+                                        <input type="number" class="form-control" id="maxWords" name="maxWords" 
+                                               th:value="${formData?.maxWords}" 
+                                               th:placeholder="${defaultMaxWords}" min="10" max="200">
+                                        <div class="form-text">Limit the summary length</div>
+                                    </div>
+                                    
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-success btn-lg" id="processBtn">
+                                            <span class="spinner-border spinner-border-sm me-2 d-none" role="status"></span>
+                                            🚀 Process with Spring AI
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${results}" class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">📊 Spring AI Results</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <h6>📝 Input Text:</h6>
+                                <blockquote class="blockquote small">
+                                    "<span th:text="${inputText}"></span>"
+                                </blockquote>
+                                <h6>⚙️ Operation:</h6>
+                                <span class="badge bg-primary" th:text="${operation}"></span>
+                                <span th:if="${operation == 'summarize'}" class="badge bg-secondary ms-1" th:text="'Max: ' + ${maxWords} + ' words'"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>🤖 Model:</h6>
+                                <p class="small text-muted" th:text="${modelUsed}"></p>
+                                <h6>🔧 Framework:</h6>
+                                <p class="small text-muted">Spring AI 1.0.0</p>
+                            </div>
+                        </div>
+                        
+                        <h6>🎯 AI Response:</h6>
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <p class="mb-0" th:text="${result}"></p>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <div class="alert alert-info">
+                                <h6>🔍 About Spring AI:</h6>
+                                <ul class="small mb-0">
+                                    <li><strong>Framework:</strong> Spring's official AI integration framework</li>
+                                    <li><strong>Approach:</strong> Native Spring Boot auto-configuration and dependency injection</li>
+                                    <li><strong>Features:</strong> Prompt templates, chat memory, function calling, observability</li>
+                                    <li><strong>Integration:</strong> Seamless integration with Spring ecosystem (Security, Data, etc.)</li>
+                                    <li><strong>Providers:</strong> OpenAI, Azure OpenAI, Anthropic, Ollama, and more</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/scripts :: common-scripts}"></div>
+    <script>
+        document.querySelector('form').addEventListener('submit', function() {
+            const btn = document.getElementById('processBtn');
+            const spinner = btn.querySelector('.spinner-border');
+            btn.disabled = true;
+            spinner.classList.remove('d-none');
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Processing...';
+        });
+        
+        // Show/hide max words field based on operation
+        const operationSelect = document.getElementById('operation');
+        const maxWordsDiv = document.getElementById('maxWordsDiv');
+        
+        function toggleMaxWords() {
+            if (operationSelect.value === 'summarize') {
+                maxWordsDiv.style.display = 'block';
+            } else {
+                maxWordsDiv.style.display = 'none';
+            }
+        }
+        
+        operationSelect.addEventListener('change', toggleMaxWords);
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            toggleMaxWords();
+        });
+    </script>
+</body>
+</html>

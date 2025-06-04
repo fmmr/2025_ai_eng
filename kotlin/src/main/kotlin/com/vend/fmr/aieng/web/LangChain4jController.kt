@@ -6,6 +6,7 @@ import dev.langchain4j.service.V
 import dev.langchain4j.model.chat.ChatModel
 import dev.langchain4j.model.chat.DisabledChatModel
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam
 class LangChain4jController {
 
     @Autowired
+    @Qualifier("langchain4jChatModel")
     private lateinit var chatModel: ChatModel
 
     // AI Service interface using LangChain4j annotations
