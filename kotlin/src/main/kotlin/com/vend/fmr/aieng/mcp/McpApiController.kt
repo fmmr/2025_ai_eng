@@ -8,20 +8,13 @@ import com.vend.fmr.aieng.weather
 import jakarta.servlet.http.HttpServletRequest
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
-import org.slf4j.LoggerFactory
 import org.springframework.http.MediaType
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/mcp")
 @CrossOrigin(origins = ["*"])
 class McpApiController {
-
-    private val logger = LoggerFactory.getLogger(McpApiController::class.java)
 
     companion object {
         private val json = Json {
@@ -185,17 +178,13 @@ class McpApiController {
                     }
                 }
                 "get_location_from_ip" -> {
-                    val forwardedHeader = httpRequest.getHeader("X-Original-Client-IP")
                     val rawIp = arguments?.get("ip") ?: getClientIpAddress(httpRequest)
-                    logger.info("🔍 MCP_IP_DEBUG_4: McpApiController X-Original-Client-IP header = $forwardedHeader")
-                    logger.info("🔍 MCP_IP_DEBUG_5: McpApiController getClientIpAddress returned = $rawIp")
                     // Use fallback IP for local testing (IPv6 localhost won't work with geolocation API)
                     val ip = if (rawIp == "0:0:0:0:0:0:0:1" || rawIp == "127.0.0.1" || rawIp == "::1") {
                         "8.8.8.8" // Google DNS as fallback for demo purposes
                     } else {
                         rawIp
                     }
-                    logger.info("🔍 MCP_IP_DEBUG_6: McpApiController final IP for geolocation = $ip")
                     runBlocking {
                         val location = geolocation.getLocationByIp(ip, debug = false)
                         val summary = geolocation.formatLocationSummary(location)

@@ -14,12 +14,10 @@ import io.ktor.utils.io.core.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
-import org.slf4j.LoggerFactory
 import com.vend.fmr.aieng.apis.openai.Tool as OpenAITool
 
 class McpClient(private val serverUrl: String, private val originalClientIp: String? = null) : Closeable {
 
-    private val logger = LoggerFactory.getLogger(McpClient::class.java)
     private val openai = OpenAI(OPEN_AI_KEY)
     private var availableTools: List<Tool> = emptyList()
     private var convertedOpenAITools: List<OpenAITool> = emptyList()
@@ -323,16 +321,12 @@ class McpClient(private val serverUrl: String, private val originalClientIp: Str
      * Send JSON-RPC request to MCP server
      */
     private suspend fun sendRequest(request: McpRequest): McpResponse {
-        logger.info("🔍 MCP_IP_DEBUG_2: McpClient sending request with originalClientIp = $originalClientIp")
         val response = client.post(serverUrl) {
             contentType(ContentType.Application.Json)
             setBody(request)
             // Forward the original client IP if available
             if (originalClientIp != null) {
                 header("X-Original-Client-IP", originalClientIp)
-                logger.info("🔍 MCP_IP_DEBUG_3: McpClient set X-Original-Client-IP header to $originalClientIp")
-            } else {
-                logger.info("🔍 MCP_IP_DEBUG_3: McpClient originalClientIp is null, no header set")
             }
         }
 
