@@ -110,3 +110,15 @@ function testAggregates() {
         }
     });
 }
+
+function testRandomQuote() {
+    sendMcpRequest({
+        jsonrpc: "2.0",
+        id: 8,
+        method: "tools/call",
+        params: {
+            name: "get_random_quote",
+            arguments: {}
+        }
+    });
+}

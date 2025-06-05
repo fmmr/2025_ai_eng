@@ -1,9 +1,9 @@
 package com.vend.fmr.aieng.mcp
 
-import com.vend.fmr.aieng.POLYGON_API_KEY
-import com.vend.fmr.aieng.apis.geolocation.Geolocation
-import com.vend.fmr.aieng.apis.polygon.Polygon
-import com.vend.fmr.aieng.apis.weather.Weather
+import com.vend.fmr.aieng.geolocation
+import com.vend.fmr.aieng.openAI
+import com.vend.fmr.aieng.polygon
+import com.vend.fmr.aieng.weather
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import org.springframework.http.MediaType
@@ -25,9 +25,6 @@ class McpApiController {
         }
     }
 
-    private val polygon = Polygon(POLYGON_API_KEY)
-    private val weather = Weather()
-    private val geolocation = Geolocation()
 
     /**
      * Main MCP endpoint - handles JSON-RPC 2.0 requests
@@ -117,6 +114,13 @@ class McpApiController {
                     )
                 )
             ),
+            Tool(
+                name = "get_random_quote",
+                description = "Get a random inspirational quote",
+                inputSchema = InputSchema(
+                    properties = emptyMap()
+                )
+            ),
         )
         
         val response = McpResponse(
@@ -172,6 +176,18 @@ class McpApiController {
                         } else {
                             createSuccessResponse(id, "📊 $symbol: No recent data available")
                         }
+                    }
+                }
+                "get_random_quote" -> {
+                    runBlocking {
+                        val response = openAI.createChatCompletion(
+                            prompt = "Generate a random inspirational quote. Return only the quote with attribution, nothing else.",
+                            maxTokens = 100,
+                            temperature = 0.9,
+                            debug = false
+                        )
+                        val quote = response.choices.firstOrNull()?.message?.content ?: "Inspiration comes from within."
+                        createSuccessResponse(id, "✨ $quote")
                     }
                 }
                 else -> createErrorResponse(id, -32602, "Unknown tool: $toolName")
