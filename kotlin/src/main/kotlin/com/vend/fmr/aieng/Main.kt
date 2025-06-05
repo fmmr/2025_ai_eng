@@ -39,8 +39,11 @@ suspend fun main() {
 
 //    promptEngineeringDemo(debug = true)
 
-    val conversation = multiMessageChat(debug = true)
-    println(conversation)
+    // Uncomment to generate README content
+     println(ReadmeGenerator.generateDemoSection())
+    
+//    val conversation = multiMessageChat(debug = true)
+//    println(conversation)
 
 //    val result3 = FunctionCallingExamples.functionCallingAgent("Do you have any ideas for activities I can do at my location?", debug = true)
 //    println("Final Function Call Result: $result3")
