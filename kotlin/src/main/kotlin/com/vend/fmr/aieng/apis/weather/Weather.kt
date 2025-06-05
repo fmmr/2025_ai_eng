@@ -90,7 +90,7 @@ class Weather : Closeable {
         val humidity = details.relativeHumidity?.let { "${it}%" } ?: "N/A"
         val windSpeed = details.windSpeed?.let { "${it} m/s" } ?: "N/A"
         val windDirection = details.windFromDirection?.let { "${it}°" } ?: "N/A"
-        val precipitation = details.precipitationRate.let { "${it} mm/h" }
+        val precipitation = details.precipitationRate?.let { "${it} mm/h" } ?: "No radar data"
         val condition = forecast?.summary?.symbolCode ?: "unknown"
         
         return """
