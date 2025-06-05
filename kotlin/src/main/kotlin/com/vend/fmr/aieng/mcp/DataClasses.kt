@@ -99,3 +99,12 @@ data class AiAssistRequest(
     val query: String,
     val tools: List<Tool>? = null
 )
+
+// Session conversation data class
+@Serializable
+data class McpChatMessage(
+    val role: String,
+    val content: String,
+    val toolUsed: String? = null,
+    val timestamp: Long = System.currentTimeMillis()
+)

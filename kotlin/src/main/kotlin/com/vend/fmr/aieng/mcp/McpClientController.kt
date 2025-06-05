@@ -1,5 +1,6 @@
 package com.vend.fmr.aieng.mcp
 
+import jakarta.servlet.http.HttpSession
 import kotlinx.coroutines.runBlocking
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -11,48 +12,88 @@ import org.springframework.web.bind.annotation.ResponseBody
 @Controller
 class McpClientController {
 
-    // We'll create a new MCP client for each request
-    // In production, you might want to manage client lifecycle differently
-
     @GetMapping("/demo/mcp-client")
-    fun mcpClientDemo(model: Model): String {
+    fun mcpClientDemo(model: Model, session: HttpSession): String {
         model.addAttribute("pageTitle", "MCP Client Demo")
         model.addAttribute("activeTab", "mcp-client")
+        
+        // Initialize session tools cache and conversation history
+        if (session.getAttribute("mcpToolsCache") == null) {
+            session.setAttribute("mcpToolsCache", emptyList<Tool>())
+        }
+        if (session.getAttribute("mcpOpenAIToolsCache") == null) {
+            session.setAttribute("mcpOpenAIToolsCache", emptyList<com.vend.fmr.aieng.apis.openai.Tool>())
+        }
+        if (session.getAttribute("mcpConversation") == null) {
+            session.setAttribute("mcpConversation", mutableListOf<McpChatMessage>())
+        }
+        
         return "mcp-client-demo"
     }
 
     @PostMapping("/demo/mcp-client/ai-assist")
     @ResponseBody
-    fun aiAssistedToolSelection(@RequestBody request: AiAssistRequest): AiAssistResponse = runBlocking {
+    fun aiAssistedToolSelection(@RequestBody request: AiAssistRequest, session: HttpSession): AiAssistResponse = runBlocking {
+        @Suppress("UNCHECKED_CAST")
+        val mcpConversation = session.getAttribute("mcpConversation") as? MutableList<McpChatMessage> 
+            ?: mutableListOf<McpChatMessage>().also { session.setAttribute("mcpConversation", it) }
+        
+        @Suppress("UNCHECKED_CAST") 
+        var cachedTools = session.getAttribute("mcpToolsCache") as? List<Tool> ?: emptyList()
+        @Suppress("UNCHECKED_CAST")
+        var cachedOpenAITools = session.getAttribute("mcpOpenAIToolsCache") as? List<com.vend.fmr.aieng.apis.openai.Tool> ?: emptyList()
+        
+        // Add user message to conversation
+        mcpConversation.add(McpChatMessage("user", request.query))
+        
         return@runBlocking try {
-            val serverUrl = "http://localhost:8080/mcp/"  // Could be made configurable
+            val serverUrl = "http://localhost:8080/mcp/"
             val mcpClient = McpClient(serverUrl)
             
             try {
-                // Step 1: Connect to MCP server
-                val connectionResult = mcpClient.initialize()
-                if (!connectionResult.success) {
-                    return@runBlocking AiAssistResponse(
-                        status = "error",
-                        error = "Failed to connect to MCP server: ${connectionResult.error}"
-                    )
+                // Only connect and discover tools if not cached
+                if (cachedTools.isEmpty()) {
+                    println("🔄 First request - initializing MCP connection")
+                    val connectionResult = mcpClient.initialize()
+                    if (!connectionResult.success) {
+                        return@runBlocking AiAssistResponse(
+                            status = "error",
+                            error = "Failed to connect to MCP server: ${connectionResult.error}"
+                        )
+                    }
+                    
+                    val toolsResult = mcpClient.discoverTools()
+                    if (!toolsResult.success) {
+                        return@runBlocking AiAssistResponse(
+                            status = "error", 
+                            error = "Failed to discover tools: ${toolsResult.error}"
+                        )
+                    }
+                    
+                    cachedTools = toolsResult.tools
+                    session.setAttribute("mcpToolsCache", cachedTools)
+                    
+                    // Convert and cache OpenAI tools too
+                    cachedOpenAITools = mcpClient.convertMcpToolsToOpenAI(cachedTools)
+                    session.setAttribute("mcpOpenAIToolsCache", cachedOpenAITools)
+                    
+                    println("✅ Cached ${cachedTools.size} MCP tools and ${cachedOpenAITools.size} OpenAI tools for session")
+                } else {
+                    // Quick connection for subsequent requests
+                    println("⚡ Using cached tools (${cachedTools.size} MCP, ${cachedOpenAITools.size} OpenAI) - no conversion needed")
+                    mcpClient.initialize()
+                    mcpClient.setAvailableTools(cachedTools)
+                    mcpClient.setConvertedTools(cachedOpenAITools)
                 }
                 
-                // Step 2: Discover available tools
-                val toolsResult = mcpClient.discoverTools()
-                if (!toolsResult.success) {
-                    return@runBlocking AiAssistResponse(
-                        status = "error", 
-                        error = "Failed to discover tools: ${toolsResult.error}"
-                    )
-                }
-                
-                // Step 3: Let AI process the query with discovered tools
-                val aiResult = mcpClient.processWithAI(request.query)
+                // Process with conversation context
+                val aiResult = mcpClient.processWithAIAndContext(request.query, mcpConversation)
                 
                 if (aiResult.success) {
-                    if (aiResult.toolsUsed.isNotEmpty()) {
+                    val assistantMessage = if (aiResult.toolsUsed.isNotEmpty()) {
                         // AI used tools
+                        mcpConversation.add(McpChatMessage("assistant", aiResult.response ?: "", aiResult.toolsUsed.firstOrNull()))
+                        
                         AiAssistResponse(
                             status = "success",
                             response = aiResult.response,
@@ -61,12 +102,21 @@ class McpClientController {
                         )
                     } else {
                         // AI answered directly
+                        mcpConversation.add(McpChatMessage("assistant", aiResult.response ?: ""))
+                        
                         AiAssistResponse(
                             status = "no_tool_needed",
                             response = aiResult.response,
                             reasoning = aiResult.reasoning ?: "AI answered without using tools"
                         )
                     }
+                    
+                    // Keep conversation history manageable
+                    if (mcpConversation.size > 20) {
+                        mcpConversation.removeAt(0)
+                    }
+                    
+                    assistantMessage
                 } else {
                     AiAssistResponse(
                         status = "error",
@@ -84,5 +134,14 @@ class McpClientController {
                 error = "MCP client failed: ${e.message}"
             )
         }
+    }
+    
+    @PostMapping("/demo/mcp-client/reset")
+    @ResponseBody
+    fun resetSession(session: HttpSession): Map<String, String> {
+        session.removeAttribute("mcpToolsCache")
+        session.removeAttribute("mcpOpenAIToolsCache")
+        session.removeAttribute("mcpConversation")
+        return mapOf("status" to "reset", "message" to "Session cleared - next request will re-discover tools")
     }
 }

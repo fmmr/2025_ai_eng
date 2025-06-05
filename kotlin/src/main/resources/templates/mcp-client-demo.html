@@ -73,9 +73,19 @@
                             <input type="text" class="form-control" id="userQuery" placeholder="e.g., 'What's the weather in Oslo?' or 'Get me a quote'">
                         </div>
                         
-                        <button class="btn btn-success mb-2" onclick="aiAssisted()" id="aiBtn" disabled>
+                        <button class="btn btn-success mb-2" onclick="aiAssisted()" id="aiBtn">
                             🤖 Step 4: AI-Assisted
                         </button>
+                        
+                        <div class="mt-3 mb-3 border-top pt-3">
+                            <button class="btn btn-primary btn-sm me-2" onclick="newSession()">
+                                🆕 New Session
+                            </button>
+                            <button class="btn btn-outline-secondary btn-sm" onclick="resetSession()">
+                                🔄 Clear History
+                            </button>
+                            <small class="text-muted d-block mt-1">New Session starts fresh, Clear History keeps tools cached</small>
+                        </div>
                         
                         <div class="mt-3" id="toolParams" style="display: none;">
                             <h6>🔧 Tool Parameters</h6>

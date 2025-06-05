@@ -22,8 +22,23 @@ class McpClient(private val serverUrl: String) : Closeable {
     
     private val openai = OpenAI(OPEN_AI_KEY)
     private var availableTools: List<Tool> = emptyList()
+    private var convertedOpenAITools: List<OpenAITool> = emptyList()
     private var isConnected = false
     private var requestId = 1
+    
+    /**
+     * Set available tools (for cached sessions)
+     */
+    fun setAvailableTools(tools: List<Tool>) {
+        availableTools = tools
+    }
+    
+    /**
+     * Set pre-converted OpenAI tools (for cached sessions)
+     */
+    fun setConvertedTools(tools: List<OpenAITool>) {
+        convertedOpenAITools = tools
+    }
     
     companion object {
         private val json = Json {
@@ -124,6 +139,14 @@ class McpClient(private val serverUrl: String) : Closeable {
      * This is the real MCP client magic - OpenAI decides which tools to use!
      */
     suspend fun processWithAI(userQuery: String): McpAiResult {
+        return processWithAIAndContext(userQuery, emptyList())
+    }
+    
+    /**
+     * AI-powered tool selection with conversation context
+     * Maintains session state and conversation history
+     */
+    suspend fun processWithAIAndContext(userQuery: String, conversationHistory: List<McpChatMessage>): McpAiResult {
         if (availableTools.isEmpty()) {
             return McpAiResult(
                 success = false,
@@ -132,12 +155,22 @@ class McpClient(private val serverUrl: String) : Closeable {
         }
         
         return try {
-            // Convert MCP tools to OpenAI function calling format
-            val openaiTools = convertMcpToolsToOpenAI(availableTools)
+            // Use cached converted tools if available, otherwise convert
+            val openaiTools = if (convertedOpenAITools.isNotEmpty()) {
+                println("⚡ Using cached OpenAI tools (${convertedOpenAITools.size}) - no conversion")
+                convertedOpenAITools
+            } else {
+                println("🔄 Converting MCP tools to OpenAI format")
+                convertMcpToolsToOpenAI(availableTools)
+            }
             
-            // Let OpenAI decide which tools to call
+            // Build conversation context
+            val conversationMessages = mutableListOf<com.vend.fmr.aieng.apis.openai.Message>()
+            
+            // System message with tools and session awareness
             val systemMessage = """
                 You are an AI assistant with access to external tools via MCP (Model Context Protocol).
+                You can remember previous conversation context in this session.
                 
                 Available tools:
                 ${availableTools.joinToString("\n") { tool ->
@@ -152,6 +185,7 @@ class McpClient(private val serverUrl: String) : Closeable {
                 - Always provide all required parameters when calling tools
                 - For geographic locations, you can use your knowledge to provide coordinates
                 - For stock symbols, extract them from the user's query (e.g., "AAPL", "MSFT")
+                - Maintain conversation context and remember information from previous messages
                 - When no tools are needed, respond directly with your knowledge
                 
                 Example parameter extraction:
@@ -160,9 +194,20 @@ class McpClient(private val serverUrl: String) : Closeable {
                 - "What's my IP location for 8.8.8.8" → ip="8.8.8.8"
             """.trimIndent()
             
+            conversationMessages.add(com.vend.fmr.aieng.apis.openai.Message("system", com.vend.fmr.aieng.apis.openai.TextContent(systemMessage)))
+            
+            // Add conversation history (last 10 messages to keep context manageable)
+            conversationHistory.takeLast(10).forEach { msg ->
+                conversationMessages.add(
+                    com.vend.fmr.aieng.apis.openai.Message(
+                        msg.role, 
+                        com.vend.fmr.aieng.apis.openai.TextContent(msg.content)
+                    )
+                )
+            }
+            
             val aiResponse = openai.createChatCompletion(
-                systemMessage = systemMessage,
-                prompt = userQuery,
+                messages = conversationMessages,
                 tools = openaiTools,
                 toolChoice = "auto",
                 maxTokens = 300,
@@ -266,7 +311,7 @@ class McpClient(private val serverUrl: String) : Closeable {
      * Convert MCP tools to OpenAI function calling format
      * Uses the exact descriptions from MCP server - no hardcoding!
      */
-    private fun convertMcpToolsToOpenAI(mcpTools: List<Tool>): List<OpenAITool> {
+    fun convertMcpToolsToOpenAI(mcpTools: List<Tool>): List<OpenAITool> {
         return mcpTools.map { mcpTool ->
             println("🔄 Converting MCP tool: ${mcpTool.name}")
             println("📋 Description: ${mcpTool.description}")
