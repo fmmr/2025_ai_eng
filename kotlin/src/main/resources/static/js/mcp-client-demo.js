@@ -59,6 +59,17 @@ function setAiButtonState(isProcessing) {
     }
 }
 
+function clearInputAndFocus() {
+    const userQueryInput = document.getElementById('userQuery');
+    if (userQueryInput) {
+        userQueryInput.value = '';
+        // Use setTimeout to ensure focus happens after any UI updates
+        setTimeout(() => {
+            userQueryInput.focus();
+        }, 100);
+    }
+}
+
 function updateStep(step) {
     currentStep = step;
     
@@ -245,12 +256,14 @@ async function aiAssisted() {
         if (result.error) {
             log(`❌ AI Error: ${result.error}`, 'error');
             setAiButtonState(false);
+            clearInputAndFocus();
             return;
         }
         
         if (result.status === 'no_tool_needed') {
             log(`💭 AI Response: ${result.response}`, 'info');
             setAiButtonState(false);
+            clearInputAndFocus();
             return;
         }
         
@@ -267,17 +280,16 @@ async function aiAssisted() {
                 result: result.response,
                 timestamp: new Date().toLocaleTimeString()
             });
-            
-            // Clear the input for next query
-            document.getElementById('userQuery').value = '';
         }
         
-        // Reset button state on success
+        // Reset button state and clear input for next query
         setAiButtonState(false);
+        clearInputAndFocus();
         
     } catch (error) {
         log(`❌ AI assistance failed: ${error.message}`, 'error');
         setAiButtonState(false);
+        clearInputAndFocus();
     }
 }
 

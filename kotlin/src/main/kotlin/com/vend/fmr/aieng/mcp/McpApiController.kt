@@ -89,12 +89,22 @@ class McpApiController {
                 )
             ),
             Tool(
-                name = "get_weather",
-                description = "Get current weather for coordinates",
+                name = "get_weather_nowcast",
+                description = "Get high-precision nowcast weather for Nordic countries (Norway, Sweden, Denmark, Finland) - 5-minute resolution, 2-hour forecast",
                 inputSchema = InputSchema(
                     properties = mapOf(
-                        "latitude" to PropertySchema(type = "number", description = "Latitude"),
-                        "longitude" to PropertySchema(type = "number", description = "Longitude")
+                        "latitude" to PropertySchema(type = "number", description = "Latitude (Nordic region: 55°N-75°N)"),
+                        "longitude" to PropertySchema(type = "number", description = "Longitude (Nordic region: 0°E-35°E)")
+                    )
+                )
+            ),
+            Tool(
+                name = "get_weather_forecast",
+                description = "Get weather forecast for any global location - hourly resolution, multi-day forecast with pressure and cloud data",
+                inputSchema = InputSchema(
+                    properties = mapOf(
+                        "latitude" to PropertySchema(type = "number", description = "Latitude (global coverage)"),
+                        "longitude" to PropertySchema(type = "number", description = "Longitude (global coverage)")
                     )
                 )
             ),
@@ -150,14 +160,24 @@ class McpApiController {
                         createSuccessResponse(id, "🏢 $symbol: ${stockInfo.results.name}\n$description")
                     }
                 }
-                "get_weather" -> {
+                "get_weather_nowcast" -> {
                     val lat = arguments?.get("latitude")?.toDoubleOrNull() ?: return createErrorResponse(id, -32602, "Missing or invalid latitude")
                     val lon = arguments["longitude"]?.toDoubleOrNull() ?: return createErrorResponse(id, -32602, "Missing or invalid longitude")
                     runBlocking {
                         val weatherData = weather.getNowcast(lat, lon, debug = false)
                         val current = weather.getCurrentWeather(weatherData)
-                        val summary = current?.let { weather.formatWeatherSummary(it) } ?: "Weather data not available"
-                        createSuccessResponse(id, "🌤️ $summary")
+                        val summary = current?.let { weather.formatWeatherSummary(it) } ?: "Nowcast data not available"
+                        createSuccessResponse(id, "⚡ $summary")
+                    }
+                }
+                "get_weather_forecast" -> {
+                    val lat = arguments?.get("latitude")?.toDoubleOrNull() ?: return createErrorResponse(id, -32602, "Missing or invalid latitude")
+                    val lon = arguments["longitude"]?.toDoubleOrNull() ?: return createErrorResponse(id, -32602, "Missing or invalid longitude")
+                    runBlocking {
+                        val forecastData = weather.getLocationForecast(lat, lon, debug = false)
+                        val current = weather.getCurrentForecast(forecastData)
+                        val summary = current?.let { weather.formatForecastSummary(it) } ?: "Forecast data not available"
+                        createSuccessResponse(id, "🌍 $summary")
                     }
                 }
                 "get_location_from_ip" -> {

@@ -32,7 +32,9 @@
       "WebFetch(domain:localhost:8080)",
       "WebFetch(domain:ai.rodland.no)",
       "WebFetch(domain:www.anthropic.com)",
-      "Bash(git checkout:*)"
+      "WebFetch(domain:api.met.no)",
+      "Bash(git checkout:*)",
+      "WebFetch(domain:api.met.no)"
     ],
     "deny": []
   },

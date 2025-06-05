@@ -188,9 +188,14 @@ class McpClient(private val serverUrl: String) : Closeable {
                 - Maintain conversation context and remember information from previous messages
                 - When no tools are needed, respond directly with your knowledge
                 
+                Weather tool selection:
+                - Use get_weather_nowcast for Nordic countries (Norway, Sweden, Denmark, Finland) for high-precision short-term forecasts
+                - Use get_weather_forecast for all other global locations or when detailed atmospheric data is needed
+                
                 Example parameter extraction:
                 - "Tell me about AAPL" → symbol="AAPL"
-                - "Weather in Oslo" → latitude=59.9139, longitude=10.7522
+                - "Weather in Oslo" → get_weather_nowcast with latitude=59.9139, longitude=10.7522 (Nordic)
+                - "Weather in Tokyo" → get_weather_forecast with latitude=35.6762, longitude=139.6503 (Global)
                 - "What's my IP location for 8.8.8.8" → ip="8.8.8.8"
             """.trimIndent()
             

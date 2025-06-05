@@ -81,3 +81,76 @@ data class WeatherSummary(
 data class WeatherForecastDetails(
     @SerialName("precipitation_amount") val precipitationAmount: Double
 )
+
+// === LOCATIONFORECAST API DATA CLASSES ===
+// Different structure from nowcast API
+
+@Serializable
+data class LocationForecastResponse(
+    val type: String,
+    val geometry: WeatherGeometry,
+    val properties: LocationForecastProperties
+)
+
+@Serializable
+data class LocationForecastProperties(
+    val meta: LocationForecastMeta,
+    val timeseries: List<LocationForecastTimeSeries>
+)
+
+@Serializable
+data class LocationForecastMeta(
+    @SerialName("updated_at") val updatedAt: String,
+    val units: LocationForecastUnits
+)
+
+@Serializable
+data class LocationForecastUnits(
+    @SerialName("air_pressure_at_sea_level") val airPressureAtSeaLevel: String,
+    @SerialName("air_temperature") val airTemperature: String,
+    @SerialName("cloud_area_fraction") val cloudAreaFraction: String,
+    @SerialName("precipitation_amount") val precipitationAmount: String,
+    @SerialName("relative_humidity") val relativeHumidity: String,
+    @SerialName("wind_from_direction") val windFromDirection: String,
+    @SerialName("wind_speed") val windSpeed: String
+)
+
+@Serializable
+data class LocationForecastTimeSeries(
+    val time: String,
+    val data: LocationForecastData
+)
+
+@Serializable
+data class LocationForecastData(
+    val instant: LocationForecastInstant,
+    @SerialName("next_1_hours") val next1Hours: LocationForecastPeriod? = null,
+    @SerialName("next_6_hours") val next6Hours: LocationForecastPeriod? = null,
+    @SerialName("next_12_hours") val next12Hours: LocationForecastPeriod? = null
+)
+
+@Serializable
+data class LocationForecastInstant(
+    val details: LocationForecastDetails
+)
+
+@Serializable
+data class LocationForecastDetails(
+    @SerialName("air_pressure_at_sea_level") val airPressureAtSeaLevel: Double? = null,
+    @SerialName("air_temperature") val airTemperature: Double? = null,
+    @SerialName("cloud_area_fraction") val cloudAreaFraction: Double? = null,
+    @SerialName("relative_humidity") val relativeHumidity: Double? = null,
+    @SerialName("wind_from_direction") val windFromDirection: Double? = null,
+    @SerialName("wind_speed") val windSpeed: Double? = null
+)
+
+@Serializable
+data class LocationForecastPeriod(
+    val summary: WeatherSummary,
+    val details: LocationForecastPeriodDetails? = null
+)
+
+@Serializable
+data class LocationForecastPeriodDetails(
+    @SerialName("precipitation_amount") val precipitationAmount: Double? = null
+)
