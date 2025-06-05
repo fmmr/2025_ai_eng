@@ -4,6 +4,7 @@ import com.vend.fmr.aieng.utils.getClientIpAddress
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpSession
 import kotlinx.coroutines.runBlocking
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody
 
 @Controller
 class McpAssistantController {
+    
+    private val logger = LoggerFactory.getLogger(McpAssistantController::class.java)
 
     @GetMapping("/demo/mcp-assistant")
     fun mcpAssistantDemo(model: Model, session: HttpSession): String {
@@ -51,6 +54,7 @@ class McpAssistantController {
         return@runBlocking try {
             val serverUrl = "http://localhost:8080/mcp/"
             val clientIp = getClientIpAddress(httpRequest)
+            logger.info("🔍 MCP_IP_DEBUG_1: McpAssistantController extracted clientIp = $clientIp")
             val mcpClient = McpClient(serverUrl, clientIp)
             
             try {
