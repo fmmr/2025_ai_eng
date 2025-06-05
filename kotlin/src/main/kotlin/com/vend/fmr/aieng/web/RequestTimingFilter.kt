@@ -1,5 +1,6 @@
 package com.vend.fmr.aieng.web
 
+import com.vend.fmr.aieng.utils.getClientIpAddress
 import jakarta.servlet.Filter
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletRequest
@@ -27,19 +28,5 @@ class RequestLoggingFilter : Filter {
         }
         
         chain.doFilter(request, response)
-    }
-    
-    private fun getClientIpAddress(request: HttpServletRequest): String {
-        val xForwardedFor = request.getHeader("X-Forwarded-For")
-        if (!xForwardedFor.isNullOrBlank()) {
-            return xForwardedFor.split(",")[0].trim()
-        }
-        
-        val xRealIp = request.getHeader("X-Real-IP")
-        if (!xRealIp.isNullOrBlank()) {
-            return xRealIp
-        }
-        
-        return request.remoteAddr ?: "unknown"
     }
 }

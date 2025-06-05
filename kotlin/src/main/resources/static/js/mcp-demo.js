@@ -119,9 +119,7 @@ function testLocationTool() {
         method: "tools/call",
         params: {
             name: "get_location_from_ip",
-            arguments: {
-                ip: "8.8.8.8"
-            }
+            arguments: {}
         }
     });
 }

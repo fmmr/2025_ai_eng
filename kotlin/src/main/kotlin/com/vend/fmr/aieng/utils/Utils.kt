@@ -1,5 +1,7 @@
 package com.vend.fmr.aieng.utils
 
+import jakarta.servlet.http.HttpServletRequest
+
 const val DUMMY_API_KEY = "dummy-key-for-auto-config"
 
 fun String.env(): String = System.getenv(this) ?: "UNKNOWN_ENV_VAR"
@@ -21,3 +23,21 @@ fun String.truncate(l: Int = 200): String {
 }
 
 fun String.isValidApiKey(): Boolean = this.isNotBlank() && this != DUMMY_API_KEY
+
+/**
+ * Extract the real client IP address from an HTTP request
+ * Handles proxy headers (X-Forwarded-For, X-Real-IP) and falls back to remoteAddr
+ */
+fun getClientIpAddress(request: HttpServletRequest): String {
+    val xForwardedFor = request.getHeader("X-Forwarded-For")
+    if (!xForwardedFor.isNullOrBlank()) {
+        return xForwardedFor.split(",")[0].trim()
+    }
+    
+    val xRealIp = request.getHeader("X-Real-IP")
+    if (!xRealIp.isNullOrBlank()) {
+        return xRealIp
+    }
+    
+    return request.remoteAddr ?: "unknown"
+}

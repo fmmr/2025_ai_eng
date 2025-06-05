@@ -3,7 +3,9 @@ package com.vend.fmr.aieng.mcp
 import com.vend.fmr.aieng.geolocation
 import com.vend.fmr.aieng.openAI
 import com.vend.fmr.aieng.polygon
+import com.vend.fmr.aieng.utils.getClientIpAddress
 import com.vend.fmr.aieng.weather
+import jakarta.servlet.http.HttpServletRequest
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import org.springframework.http.MediaType
@@ -35,7 +37,7 @@ class McpApiController {
     @PostMapping("/", 
         consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun handleMcpRequest(@RequestBody request: String): String {
+    fun handleMcpRequest(@RequestBody request: String, httpRequest: HttpServletRequest): String {
         println("🔗 MCP Request: $request")
         
         return try {
@@ -44,7 +46,7 @@ class McpApiController {
             when (mcpRequest.method) {
                 "initialize" -> handleInitialize(mcpRequest.id)
                 "tools/list" -> handleToolsList(mcpRequest.id)
-                "tools/call" -> handleToolsCall(mcpRequest, mcpRequest.id)
+                "tools/call" -> handleToolsCall(mcpRequest, mcpRequest.id, httpRequest)
                 else -> createErrorResponse(mcpRequest.id, -32601, "Method not found: ${mcpRequest.method}")
             }
         } catch (e: Exception) {
@@ -110,10 +112,10 @@ class McpApiController {
             ),
             Tool(
                 name = "get_location_from_ip",
-                description = "Get geographic location from IP address",
+                description = "Get geographic location from IP address (defaults to client IP if not specified)",
                 inputSchema = InputSchema(
                     properties = mapOf(
-                        "ip" to PropertySchema(type = "string", description = "IP address")
+                        "ip" to PropertySchema(type = "string", description = "IP address (optional - uses client IP if not provided)")
                     )
                 )
             ),
@@ -142,7 +144,7 @@ class McpApiController {
         return json.encodeToString(McpResponse.serializer(), response)
     }
 
-    private fun handleToolsCall(mcpRequest: McpRequest, id: Int?): String {
+    private fun handleToolsCall(mcpRequest: McpRequest, id: Int?, httpRequest: HttpServletRequest): String {
         val toolName = mcpRequest.params?.name
         val arguments = mcpRequest.params?.arguments
         
@@ -181,11 +183,11 @@ class McpApiController {
                     }
                 }
                 "get_location_from_ip" -> {
-                    val ip = arguments?.get("ip") ?: return createErrorResponse(id, -32602, "Missing ip parameter")
+                    val ip = arguments?.get("ip") ?: getClientIpAddress(httpRequest)
                     runBlocking {
                         val location = geolocation.getLocationByIp(ip, debug = false)
                         val summary = geolocation.formatLocationSummary(location)
-                        createSuccessResponse(id, "📍 $summary")
+                        createSuccessResponse(id, "📍 $summary (IP: $ip)")
                     }
                 }
                 "get_stock_price" -> {
