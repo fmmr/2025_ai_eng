@@ -52,7 +52,7 @@ class Polygon(private val apiKey: String) : Closeable {
 
         val response = client.get(url) {
             parameter("apikey", apiKey)
-            ticker?.let { parameter("ticker", it) }
+            ticker?.let { parameter("ticker", it.uppercase()) }
             type?.let { parameter("type", it) }
             market?.let { parameter("market", it) }
             exchange?.let { parameter("exchange", it) }
@@ -84,7 +84,7 @@ class Polygon(private val apiKey: String) : Closeable {
         date: String? = null,
         debug: Boolean = false
     ): TickerDetailsResponse {
-        val url = "https://api.polygon.io/v3/reference/tickers/$ticker"
+        val url = "https://api.polygon.io/v3/reference/tickers/${ticker.uppercase()}"
 
         val response = client.get(url) {
             parameter("apikey", apiKey)
@@ -108,7 +108,7 @@ class Polygon(private val apiKey: String) : Closeable {
         ticker: String,
         debug: Boolean = false
     ): StockQuote {
-        val url = "https://api.polygon.io/v2/last/nbbo/$ticker"
+        val url = "https://api.polygon.io/v2/last/nbbo/${ticker.uppercase()}"
 
         val response = client.get(url) {
             parameter("apikey", apiKey)
@@ -138,7 +138,8 @@ class Polygon(private val apiKey: String) : Closeable {
         limit: Int = 120,
         debug: Boolean = false
     ): List<AggregatesResponse> {
-        return tickers.map { ticker ->
+        return tickers.map { inputTicker ->
+            val ticker = inputTicker.uppercase()
             val url = "https://api.polygon.io/v2/aggs/ticker/$ticker/range/$multiplier/$timespan/$from/$to"
 
             val response = client.get(url) {

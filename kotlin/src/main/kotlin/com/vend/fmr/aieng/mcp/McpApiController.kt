@@ -38,7 +38,6 @@ class McpApiController {
         consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE])
     fun handleMcpRequest(@RequestBody request: String, httpRequest: HttpServletRequest): String {
-        println("🔗 MCP Request: $request")
         
         return try {
             val mcpRequest = json.decodeFromString<McpRequest>(request)
@@ -183,11 +182,18 @@ class McpApiController {
                     }
                 }
                 "get_location_from_ip" -> {
-                    val ip = arguments?.get("ip") ?: getClientIpAddress(httpRequest)
+                    val rawIp = arguments?.get("ip") ?: getClientIpAddress(httpRequest)
+                    // Use fallback IP for local testing (IPv6 localhost won't work with geolocation API)
+                    val ip = if (rawIp == "0:0:0:0:0:0:0:1" || rawIp == "127.0.0.1" || rawIp == "::1") {
+                        "8.8.8.8" // Google DNS as fallback for demo purposes
+                    } else {
+                        rawIp
+                    }
                     runBlocking {
                         val location = geolocation.getLocationByIp(ip, debug = false)
                         val summary = geolocation.formatLocationSummary(location)
-                        createSuccessResponse(id, "📍 $summary (IP: $ip)")
+                        val note = if (ip == "8.8.8.8") " (Demo: Using Google DNS location for local testing)" else ""
+                        createSuccessResponse(id, "📍 $summary$note")
                     }
                 }
                 "get_stock_price" -> {

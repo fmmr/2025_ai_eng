@@ -48,6 +48,19 @@ class Geolocation : Closeable {
             throw Exception("Geolocation API request failed with status ${response.status}: $responseText")
         }
 
+        // Check if response is an error response
+        try {
+            val errorResponse = json.decodeFromString<GeolocationError>(responseText)
+            if (errorResponse.error) {
+                throw Exception("Geolocation API error: ${errorResponse.reason} - ${errorResponse.message}")
+            }
+        } catch (e: Exception) {
+            // If it's not an error response, continue with normal parsing
+            if (debug) {
+                println("Not an error response, continuing with normal parsing")
+            }
+        }
+
         return json.decodeFromString<GeolocationResponse>(responseText)
     }
 
@@ -55,12 +68,12 @@ class Geolocation : Closeable {
         return """
             Location Information:
             IP: ${location.ip}
-            City: ${location.city}, ${location.region}
-            Country: ${location.countryName} (${location.countryCode})
-            Coordinates: ${location.latitude}, ${location.longitude}
-            Timezone: ${location.timezone} (${location.utcOffset})
-            ISP: ${location.org}
-            Currency: ${location.currencyName} (${location.currency})
+            City: ${location.city ?: "Unknown"}, ${location.region ?: "Unknown"}
+            Country: ${location.countryName ?: "Unknown"} (${location.countryCode ?: "Unknown"})
+            Coordinates: ${location.latitude ?: "Unknown"}, ${location.longitude ?: "Unknown"}
+            Timezone: ${location.timezone ?: "Unknown"} (${location.utcOffset ?: "Unknown"})
+            ISP: ${location.org ?: "Unknown"}
+            Currency: ${location.currencyName ?: "Unknown"} (${location.currency ?: "Unknown"})
         """.trimIndent()
     }
 

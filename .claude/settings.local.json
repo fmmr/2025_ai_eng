@@ -34,7 +34,8 @@
       "WebFetch(domain:www.anthropic.com)",
       "WebFetch(domain:api.met.no)",
       "Bash(git checkout:*)",
-      "WebFetch(domain:api.met.no)"
+      "WebFetch(domain:api.met.no)",
+      "WebFetch(domain:ipapi.co)"
     ],
     "deny": []
   },

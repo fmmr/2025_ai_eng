@@ -41,7 +41,12 @@ This project implements the core concepts from the Scrimba AI Engineering course
 **🚀 Additional AI Explorations:**
 - **☕ OpenAI Java Library** - Explore OpenAI's official Java/Kotlin library vs custom implementation (Maybe Someday 🤷‍♂️)
 - **🦜 LangChain4j Framework** - Interactive demo showcasing LangChain4j's declarative AI services with text analysis, summarization, and sentiment classification ✓
-- **🍃 Spring AI Framework** - Official Spring AI 1.0.0 framework demo comparing Spring's native AI integration with auto-configuration and dependency injection (Coming Up Next 🚀)
+- **🍃 Spring AI Framework** - Official Spring AI 1.0.0 framework demo comparing Spring's native AI integration with auto-configuration and dependency injection ✓
+
+**🔗 Model Context Protocol (MCP):**
+- **🛠️ MCP Server** - Build custom MCP servers using Spring AI. Expose tools and resources that Claude Desktop and other MCP clients can discover and use automatically ✓
+- **🔗 MCP Protocol Demo** - Learn MCP fundamentals with educational JSON-RPC 2.0 tutorial showing tool discovery and parameter schemas step-by-step ✓
+- **🔧 MCP Assistant** - AI-powered assistant that dynamically discovers and uses external tools via MCP with OpenAI function calling and session memory ✓
 
 ### Technology Stack
 - **Backend**: Spring Boot 3.5.0 with Kotlin

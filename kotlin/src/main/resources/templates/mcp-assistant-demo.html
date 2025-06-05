@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!--suppress HtmlUnknownTag -->
+    <div th:replace="~{fragments/head :: common-head}"></div>
+    <title>MCP Assistant Demo - AI Engineering</title>
+</head>
+<body>
+    <div th:replace="~{fragments/navigation :: navbar(${activeTab})}"></div>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="mb-4">🔧 MCP Assistant Demo</h1>
+                <p class="lead">AI-powered assistant that dynamically discovers and uses external tools via Model Context Protocol</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Left Panel: Information -->
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>🧠 How MCP Assistants Work</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>This AI assistant demonstrates real-world AI tool usage patterns:</p>
+                        <ul>
+                            <li><strong>Dynamic Discovery</strong> - Automatically finds available tools</li>
+                            <li><strong>Smart Selection</strong> - AI chooses the right tool for each request</li>
+                            <li><strong>Parameter Extraction</strong> - AI extracts parameters from natural language</li>
+                            <li><strong>Session Memory</strong> - Remembers conversation context</li>
+                            <li><strong>Efficient Caching</strong> - Optimizes performance for multiple requests</li>
+                        </ul>
+                        
+                        <h6 class="mt-3">Available Capabilities:</h6>
+                        <ul>
+                            <li>🌍 Weather information (Nordic nowcast + global forecasts)</li>
+                            <li>📈 Stock market data (company info + price data)</li>
+                            <li>📍 IP geolocation (defaults to your location)</li>
+                            <li>✨ Inspirational quotes</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5>💬 Chat with MCP Assistant</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="userQuery" class="form-label">Ask me anything:</label>
+                            <input type="text" class="form-control" id="userQuery" placeholder="e.g., 'What's the weather in Tokyo?' or 'Tell me about Apple stock'">
+                            <small class="text-muted">I can help with weather, stocks, location info, and more!</small>
+                        </div>
+                        
+                        <button class="btn btn-primary mb-3" onclick="aiAssisted()" id="aiBtn">
+                            🤖 Send Message
+                        </button>
+                        
+                        <div class="border-top pt-3">
+                            <h6>💡 Try these examples:</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <button class="btn btn-outline-info btn-sm mb-2 w-100" onclick="setQuery('What\'s the weather in Stockholm?')">🌤️ Weather in Stockholm</button>
+                                    <button class="btn btn-outline-success btn-sm mb-2 w-100" onclick="setQuery('Tell me about Tesla stock')">📈 Tesla Company Info</button>
+                                </div>
+                                <div class="col-md-6">
+                                    <button class="btn btn-outline-warning btn-sm mb-2 w-100" onclick="setQuery('Where am I located?')">📍 My Location</button>
+                                    <button class="btn btn-outline-primary btn-sm mb-2 w-100" onclick="setQuery('Give me an inspirational quote')">✨ Inspirational Quote</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-3 border-top pt-3">
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-warning btn-sm" onclick="newSession()">
+                                    🆕 New Session
+                                </button>
+                                <button class="btn btn-outline-secondary btn-sm" onclick="resetSession()">
+                                    🔄 Clear History
+                                </button>
+                            </div>
+                            <small class="text-muted d-block mt-1">New Session clears everything, Clear History keeps tools cached</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Results -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5>💬 Conversation</h5>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="clearLog()">Clear</button>
+                    </div>
+                    <div class="card-body">
+                        <div id="activityLog" style="height: 500px; overflow-y: auto; font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; font-size: 12px;">
+                            <div class="text-muted">🤖 Hello! I'm your AI assistant. Ask me anything!</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: common-footer}"></div>
+    <div th:replace="~{fragments/scripts :: common-scripts}"></div>
+    <script src="/js/mcp-assistant-demo.js"></script>
+</body>
+</html>

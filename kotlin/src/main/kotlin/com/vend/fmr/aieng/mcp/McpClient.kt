@@ -1,11 +1,8 @@
 package com.vend.fmr.aieng.mcp
 
 import com.vend.fmr.aieng.OPEN_AI_KEY
-import com.vend.fmr.aieng.apis.openai.OpenAI
-import com.vend.fmr.aieng.apis.openai.FunctionDefinition
-import com.vend.fmr.aieng.apis.openai.FunctionParameters
-import com.vend.fmr.aieng.apis.openai.PropertyDefinition
-import com.vend.fmr.aieng.apis.openai.Tool as OpenAITool
+import com.vend.fmr.aieng.apis.openai.*
+import com.vend.fmr.aieng.utils.Prompts
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -17,29 +14,30 @@ import io.ktor.utils.io.core.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
+import com.vend.fmr.aieng.apis.openai.Tool as OpenAITool
 
-class McpClient(private val serverUrl: String) : Closeable {
-    
+class McpClient(private val serverUrl: String, private val originalClientIp: String? = null) : Closeable {
+
     private val openai = OpenAI(OPEN_AI_KEY)
     private var availableTools: List<Tool> = emptyList()
     private var convertedOpenAITools: List<OpenAITool> = emptyList()
     private var isConnected = false
     private var requestId = 1
-    
+
     /**
      * Set available tools (for cached sessions)
      */
     fun setAvailableTools(tools: List<Tool>) {
         availableTools = tools
     }
-    
+
     /**
      * Set pre-converted OpenAI tools (for cached sessions)
      */
     fun setConvertedTools(tools: List<OpenAITool>) {
         convertedOpenAITools = tools
     }
-    
+
     companion object {
         private val json = Json {
             ignoreUnknownKeys = true
@@ -48,13 +46,13 @@ class McpClient(private val serverUrl: String) : Closeable {
             encodeDefaults = true
         }
     }
-    
+
     private val client = HttpClient(CIO) {
         install(ContentNegotiation) {
             json(json)
         }
     }
-    
+
     /**
      * Step 1: Initialize connection with MCP server
      */
@@ -71,9 +69,9 @@ class McpClient(private val serverUrl: String) : Closeable {
                     )
                 )
             )
-            
+
             val response = sendRequest(initRequest)
-            
+
             if (response.error != null) {
                 McpConnectionResult(
                     success = false,
@@ -94,7 +92,7 @@ class McpClient(private val serverUrl: String) : Closeable {
             )
         }
     }
-    
+
     /**
      * Step 2: Discover available tools from MCP server
      */
@@ -105,15 +103,15 @@ class McpClient(private val serverUrl: String) : Closeable {
                 error = "Must connect to server first"
             )
         }
-        
+
         return try {
             val toolsRequest = McpRequest(
                 id = requestId++,
                 method = "tools/list"
             )
-            
+
             val response = sendRequest(toolsRequest)
-            
+
             if (response.error != null) {
                 McpToolsResult(
                     success = false,
@@ -133,84 +131,37 @@ class McpClient(private val serverUrl: String) : Closeable {
             )
         }
     }
-    
-    /**
-     * Step 3: AI-powered tool selection and execution
-     * This is the real MCP client magic - OpenAI decides which tools to use!
-     */
-    suspend fun processWithAI(userQuery: String): McpAiResult {
-        return processWithAIAndContext(userQuery, emptyList())
-    }
-    
+
     /**
      * AI-powered tool selection with conversation context
      * Maintains session state and conversation history
      */
-    suspend fun processWithAIAndContext(userQuery: String, conversationHistory: List<McpChatMessage>): McpAiResult {
+    suspend fun process(conversationHistory: List<McpChatMessage>): McpAiResult {
         if (availableTools.isEmpty()) {
             return McpAiResult(
                 success = false,
                 error = "No tools available. Run discoverTools() first."
             )
         }
-        
+
         return try {
             // Use cached converted tools if available, otherwise convert
-            val openaiTools = if (convertedOpenAITools.isNotEmpty()) {
-                println("⚡ Using cached OpenAI tools (${convertedOpenAITools.size}) - no conversion")
-                convertedOpenAITools
-            } else {
-                println("🔄 Converting MCP tools to OpenAI format")
+            val openaiTools = convertedOpenAITools.ifEmpty {
                 convertMcpToolsToOpenAI(availableTools)
             }
-            
-            // Build conversation context
-            val conversationMessages = mutableListOf<com.vend.fmr.aieng.apis.openai.Message>()
-            
-            // System message with tools and session awareness
-            val systemMessage = """
-                You are an AI assistant with access to external tools via MCP (Model Context Protocol).
-                You can remember previous conversation context in this session.
-                
-                Available tools:
-                ${availableTools.joinToString("\n") { tool ->
-                    val params = tool.inputSchema.properties.entries.joinToString(", ") { (name, prop) ->
-                        "$name (${prop.type}): ${prop.description}"
-                    }
-                    "- ${tool.name}: ${tool.description}" + if (params.isNotEmpty()) "\n  Parameters: $params" else ""
-                }}
-                
-                Guidelines:
-                - Use tools when users ask for specific data or actions that match the tool descriptions
-                - Always provide all required parameters when calling tools
-                - For geographic locations, you can use your knowledge to provide coordinates
-                - For stock symbols, extract them from the user's query (e.g., "AAPL", "MSFT")
-                - Maintain conversation context and remember information from previous messages
-                - When no tools are needed, respond directly with your knowledge
-                
-                Weather tool selection:
-                - Use get_weather_nowcast for Nordic countries (Norway, Sweden, Denmark, Finland) for high-precision short-term forecasts
-                - Use get_weather_forecast for all other global locations or when detailed atmospheric data is needed
-                
-                Example parameter extraction:
-                - "Tell me about AAPL" → symbol="AAPL"
-                - "Weather in Oslo" → get_weather_nowcast with latitude=59.9139, longitude=10.7522 (Nordic)
-                - "Weather in Tokyo" → get_weather_forecast with latitude=35.6762, longitude=139.6503 (Global)
-                - "What's my IP location for 8.8.8.8" → ip="8.8.8.8"
-            """.trimIndent()
-            
-            conversationMessages.add(com.vend.fmr.aieng.apis.openai.Message("system", com.vend.fmr.aieng.apis.openai.TextContent(systemMessage)))
-            
-            // Add conversation history (last 10 messages to keep context manageable)
+
+            val conversationMessages = mutableListOf<Message>()
+            val toolsDescription = formatToolsForSystemMessage(availableTools)
+            val systemMessage = Prompts.mcpAssistantSystem(toolsDescription)
+
+            conversationMessages.add(Message("system", TextContent(systemMessage)))
+
             conversationHistory.takeLast(10).forEach { msg ->
                 conversationMessages.add(
-                    com.vend.fmr.aieng.apis.openai.Message(
-                        msg.role, 
-                        com.vend.fmr.aieng.apis.openai.TextContent(msg.content)
-                    )
+                    Message(msg.role, TextContent(msg.content))
                 )
             }
-            
+
             val aiResponse = openai.createChatCompletion(
                 messages = conversationMessages,
                 tools = openaiTools,
@@ -218,49 +169,80 @@ class McpClient(private val serverUrl: String) : Closeable {
                 maxTokens = 300,
                 temperature = 0.1
             )
-            
-            val choice = aiResponse.choices.firstOrNull()
-            val toolCalls = choice?.message?.toolCalls
-            
-            println("🤖 OpenAI Response:")
-            println("📝 Message content: ${choice?.message?.content}")
-            println("🛠️ Tool calls: ${toolCalls?.size ?: 0}")
-            
-            if (toolCalls?.isNotEmpty() == true) {
-                // AI wants to use tools
-                val results = mutableListOf<String>()
-                
-                for (toolCall in toolCalls) {
-                    println("🎯 Tool call: ${toolCall.function.name}")
-                    println("📋 Arguments: '${toolCall.function.arguments}'")
-                    val toolResult = executeToolCall(toolCall.function.name, toolCall.function.arguments)
-                    results.add(toolResult)
+
+            // Implement iterative tool execution for multi-step reasoning
+            val maxIterations = 5
+            var currentIteration = 0
+            val allToolsUsed = mutableListOf<String>()
+
+            while (currentIteration < maxIterations) {
+                val currentResponse = if (currentIteration == 0) {
+                    aiResponse
+                } else {
+                    // Make new AI call with updated conversation context
+                    openai.createChatCompletion(
+                        messages = conversationMessages,
+                        tools = openaiTools,
+                        toolChoice = "auto",
+                        maxTokens = 300,
+                        temperature = 0.1
+                    )
                 }
-                
-                // Let AI format the final response with tool results
-                val finalResponse = openai.createChatCompletion(
-                    systemMessage = "You are a helpful assistant. Format the tool results into a natural response for the user.",
-                    prompt = "User asked: '$userQuery'\n\nTool results: ${results.joinToString("\n")}\n\nProvide a helpful response:",
-                    maxTokens = 200,
-                    temperature = 0.3
-                )
-                
-                McpAiResult(
-                    success = true,
-                    response = finalResponse.choices.firstOrNull()?.message?.content?.toString() ?: "Tool executed successfully",
-                    toolsUsed = toolCalls.map { it.function.name },
-                    reasoning = "AI selected and executed ${toolCalls.size} tool(s) to answer your question"
-                )
-            } else {
-                // AI answered directly without tools
-                McpAiResult(
-                    success = true,
-                    response = choice?.message?.content?.toString() ?: "I'm not sure how to help with that.",
-                    toolsUsed = emptyList(),
-                    reasoning = "AI answered directly without needing external tools"
-                )
+
+                val choice = currentResponse.choices.firstOrNull()
+                val toolCalls = choice?.message?.toolCalls
+
+                if (toolCalls?.isNotEmpty() == true) {
+                    // Add assistant message with tool calls to conversation
+                    conversationMessages.add(
+                        Message(
+                            role = "assistant",
+                            content = choice.message.content,
+                            toolCalls = toolCalls
+                        )
+                    )
+
+                    // Execute tools and add results to conversation
+                    for (toolCall in toolCalls) {
+                        val toolResult = executeToolCall(toolCall.function.name, toolCall.function.arguments)
+                        allToolsUsed.add(toolCall.function.name)
+
+                        // Add tool result to conversation
+                        conversationMessages.add(
+                            Message(
+                                role = "tool",
+                                content = TextContent(toolResult),
+                                toolCallId = toolCall.id
+                            )
+                        )
+                    }
+
+                    currentIteration++
+                } else {
+                    // AI is done with tool calls, return final response
+                    val finalContent = choice?.message?.content?.toString() ?: "I've completed the requested analysis."
+
+                    return McpAiResult(
+                        success = true,
+                        response = finalContent,
+                        toolsUsed = allToolsUsed,
+                        reasoning = if (allToolsUsed.isNotEmpty()) {
+                            "AI used multi-step reasoning with ${allToolsUsed.size} tool call(s) across ${currentIteration} iteration(s)"
+                        } else {
+                            "AI answered directly without needing external tools"
+                        }
+                    )
+                }
             }
-            
+
+            // Max iterations reached
+            McpAiResult(
+                success = true,
+                response = "I've used multiple tools to gather information. Let me know if you need more specific details.",
+                toolsUsed = allToolsUsed,
+                reasoning = "AI completed multi-step analysis using ${allToolsUsed.size} tool(s) (max iterations reached)"
+            )
+
         } catch (e: Exception) {
             McpAiResult(
                 success = false,
@@ -268,29 +250,25 @@ class McpClient(private val serverUrl: String) : Closeable {
             )
         }
     }
-    
+
     /**
      * Execute a specific tool call via MCP
      */
     private suspend fun executeToolCall(toolName: String, argumentsJson: String): String {
         return try {
-            println("🔧 Executing tool: $toolName")
-            println("📝 Raw arguments JSON: '$argumentsJson'")
-            
+
             val arguments = if (argumentsJson.isBlank() || argumentsJson == "{}" || argumentsJson == "null") {
                 emptyMap()
             } else {
                 try {
                     val argsJson = json.parseToJsonElement(argumentsJson).jsonObject
                     argsJson.mapValues { it.value.jsonPrimitive.content }
-                } catch (e: Exception) {
-                    println("❌ Failed to parse arguments JSON: ${e.message}")
+                } catch (_: Exception) {
                     emptyMap()
                 }
             }
-            
-            println("🎯 Parsed arguments: $arguments")
-            
+
+
             val toolRequest = McpRequest(
                 id = requestId++,
                 method = "tools/call",
@@ -299,9 +277,9 @@ class McpClient(private val serverUrl: String) : Closeable {
                     arguments = arguments
                 )
             )
-            
+
             val response = sendRequest(toolRequest)
-            
+
             if (response.error != null) {
                 "Error calling $toolName: ${response.error.message}"
             } else {
@@ -311,17 +289,14 @@ class McpClient(private val serverUrl: String) : Closeable {
             "Error executing $toolName: ${e.message}"
         }
     }
-    
+
     /**
      * Convert MCP tools to OpenAI function calling format
      * Uses the exact descriptions from MCP server - no hardcoding!
      */
     fun convertMcpToolsToOpenAI(mcpTools: List<Tool>): List<OpenAITool> {
         return mcpTools.map { mcpTool ->
-            println("🔄 Converting MCP tool: ${mcpTool.name}")
-            println("📋 Description: ${mcpTool.description}")
-            println("📋 Properties: ${mcpTool.inputSchema.properties}")
-            
+
             val openaiTool = OpenAITool(
                 function = FunctionDefinition(
                     name = mcpTool.name,
@@ -337,12 +312,11 @@ class McpClient(private val serverUrl: String) : Closeable {
                     )
                 )
             )
-            
-            println("✅ Converted to OpenAI format: ${openaiTool.function.name}")
+
             return@map openaiTool
         }
     }
-    
+
     /**
      * Send JSON-RPC request to MCP server
      */
@@ -350,18 +324,34 @@ class McpClient(private val serverUrl: String) : Closeable {
         val response = client.post(serverUrl) {
             contentType(ContentType.Application.Json)
             setBody(request)
+            // Forward the original client IP if available
+            if (originalClientIp != null) {
+                header("X-Original-Client-IP", originalClientIp)
+            }
         }
-        
+
         if (!response.status.isSuccess()) {
             throw Exception("HTTP ${response.status.value}: ${response.status.description}")
         }
-        
+
         val responseText = response.bodyAsText()
         return json.decodeFromString<McpResponse>(responseText)
     }
-    
+
     override fun close() {
         client.close()
+    }
+
+    /**
+     * Format available tools for system message
+     */
+    private fun formatToolsForSystemMessage(tools: List<Tool>): String {
+        return tools.joinToString("\n") { tool ->
+            val params = tool.inputSchema.properties.entries.joinToString(", ") { (name, prop) ->
+                "$name (${prop.type}): ${prop.description}"
+            }
+            "- ${tool.name}: ${tool.description}" + if (params.isNotEmpty()) "\n  Parameters: $params" else ""
+        }
     }
 }
 

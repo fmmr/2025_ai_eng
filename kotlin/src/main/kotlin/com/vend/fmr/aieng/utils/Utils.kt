@@ -26,9 +26,16 @@ fun String.isValidApiKey(): Boolean = this.isNotBlank() && this != DUMMY_API_KEY
 
 /**
  * Extract the real client IP address from an HTTP request
- * Handles proxy headers (X-Forwarded-For, X-Real-IP) and falls back to remoteAddr
+ * Handles proxy headers (X-Forwarded-For, X-Real-IP) and custom forwarding (X-Original-Client-IP)
+ * Falls back to remoteAddr
  */
 fun getClientIpAddress(request: HttpServletRequest): String {
+    // Check for forwarded original client IP (from internal MCP client calls)
+    val originalClientIp = request.getHeader("X-Original-Client-IP")
+    if (!originalClientIp.isNullOrBlank()) {
+        return originalClientIp
+    }
+    
     val xForwardedFor = request.getHeader("X-Forwarded-For")
     if (!xForwardedFor.isNullOrBlank()) {
         return xForwardedFor.split(",")[0].trim()

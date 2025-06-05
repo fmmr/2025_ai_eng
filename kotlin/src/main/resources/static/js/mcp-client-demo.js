@@ -27,67 +27,29 @@ function log(message, type = 'info') {
 
 function clearLog() {
     document.getElementById('activityLog').innerHTML = 
-        '<div class="text-muted">🎯 Try the AI Assistant directly or follow the learning steps...</div>';
+        '<div class="text-muted">🔗 Follow the 3 steps to learn MCP protocol...</div>';
 }
 
-function setupUserQueryInput() {
-    const userQueryInput = document.getElementById('userQuery');
-    if (userQueryInput) {
-        userQueryInput.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                aiAssisted();
-            }
-        });
-    }
-}
-
-function setAiButtonState(isProcessing) {
-    const aiBtn = document.getElementById('aiBtn');
-    const userQuery = document.getElementById('userQuery');
-    
-    if (isProcessing) {
-        aiBtn.innerHTML = '⏳ Processing...';
-        aiBtn.disabled = true;
-        aiBtn.className = 'btn btn-secondary mb-2';
-        userQuery.disabled = true;
-    } else {
-        aiBtn.innerHTML = '🤖 Step 4: AI-Assisted';
-        aiBtn.disabled = false;
-        aiBtn.className = 'btn btn-success mb-2';
-        userQuery.disabled = false;
-    }
-}
-
-function clearInputAndFocus() {
-    const userQueryInput = document.getElementById('userQuery');
-    if (userQueryInput) {
-        userQueryInput.value = '';
-        // Use setTimeout to ensure focus happens after any UI updates
-        setTimeout(() => {
-            userQueryInput.focus();
-        }, 100);
-    }
-}
+// Removed AI-related functions - this is educational MCP protocol demo only
 
 function updateStep(step) {
     currentStep = step;
     
-    // Remove restrictions - all buttons available
-    document.getElementById('connectBtn').disabled = false;
-    document.getElementById('discoverBtn').disabled = false;
-    document.getElementById('testBtn').disabled = false;
-    document.getElementById('aiBtn').disabled = false;
+    // Update button states based on step progression
+    const connectBtn = document.getElementById('connectBtn');
+    const discoverBtn = document.getElementById('discoverBtn');
+    const testBtn = document.getElementById('testBtn');
     
-    // Always show AI input section
-    document.getElementById('aiSection').style.display = 'block';
+    if (connectBtn) connectBtn.disabled = false;
+    if (discoverBtn) discoverBtn.disabled = step < 2;
+    if (testBtn) testBtn.disabled = step < 3;
     
     // Update learning steps visual
     const steps = document.querySelectorAll('#learningSteps li');
     steps.forEach((stepEl, index) => {
         if (index < step - 1) {
             stepEl.style.color = 'green';
-            stepEl.innerHTML = stepEl.innerHTML.replace(/^[🔌🛠️📞🤖]/, '✅');
+            stepEl.innerHTML = stepEl.innerHTML.replace(/^[🔌🛠️📞]/, '✅');
         } else if (index === step - 1) {
             stepEl.style.color = 'blue';
             stepEl.style.fontWeight = 'bold';
@@ -119,7 +81,8 @@ async function connectToServer() {
         });
         
         if (initResponse.error) {
-            throw new Error(initResponse.error.message);
+            log(`❌ Connection failed: ${initResponse.error.message}`, 'error');
+            return;
         }
         
         log(`✅ Connected! Server: ${initResponse.result.serverInfo.name}`, 'success');
@@ -152,7 +115,8 @@ async function discoverTools() {
         });
         
         if (toolsResponse.error) {
-            throw new Error(toolsResponse.error.message);
+            log(`❌ Tool discovery failed: ${toolsResponse.error.message}`, 'error');
+            return;
         }
         
         availableTools = toolsResponse.result.tools || [];
@@ -212,133 +176,20 @@ async function testTool() {
         });
         
         if (callResponse.error) {
-            throw new Error(callResponse.error.message);
+            log(`❌ Tool call failed: ${callResponse.error.message}`, 'error');
+            return;
         }
         
         const result = callResponse.result.content[0].text;
         log(`✅ Tool result: ${result}`, 'success');
-        
-        updateStep(4);
+        log('🎓 Protocol learning complete! You now understand MCP basics.', 'success');
         
     } catch (error) {
         log(`❌ Tool call failed: ${error.message}`, 'error');
     }
 }
 
-async function aiAssisted() {
-    const userQuery = document.getElementById('userQuery').value.trim();
-    if (!userQuery) {
-        log('❌ Please enter a question or request first!', 'error');
-        return;
-    }
-    
-    // Set button to processing state
-    setAiButtonState(true);
-    
-    // AI assistant can work without manual tool discovery - it handles connection internally
-    
-    log(`🤖 AI analyzing request: "${userQuery}"`, 'info');
-    
-    try {
-        const response = await fetch('/demo/mcp-client/ai-assist', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                query: userQuery,
-                tools: availableTools
-            })
-        });
-        
-        const result = await response.json();
-        
-        if (result.error) {
-            log(`❌ AI Error: ${result.error}`, 'error');
-            setAiButtonState(false);
-            clearInputAndFocus();
-            return;
-        }
-        
-        if (result.status === 'no_tool_needed') {
-            log(`💭 AI Response: ${result.response}`, 'info');
-            setAiButtonState(false);
-            clearInputAndFocus();
-            return;
-        }
-        
-        if (result.status === 'success') {
-            log(`🎯 ${result.reasoning}`, 'success');
-            log(`🛠️ Selected tool: ${result.selectedTool}`, 'info');
-            log(`✅ AI Result: ${result.response}`, 'success');
-            log(`💬 Session: Conversation context maintained (${conversationHistory.length + 1} messages)`, 'info');
-            
-            // Tool already executed by MCP client - no need to execute again
-            conversationHistory.push({
-                query: userQuery,
-                tool: result.selectedTool,
-                result: result.response,
-                timestamp: new Date().toLocaleTimeString()
-            });
-        }
-        
-        // Reset button state and clear input for next query
-        setAiButtonState(false);
-        clearInputAndFocus();
-        
-    } catch (error) {
-        log(`❌ AI assistance failed: ${error.message}`, 'error');
-        setAiButtonState(false);
-        clearInputAndFocus();
-    }
-}
-
-async function newSession() {
-    log('🆕 Starting new session...', 'warning');
-    
-    try {
-        const response = await fetch('/demo/mcp-client/reset', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        
-        const result = await response.json();
-        log(`✅ New session started - all caches cleared`, 'success');
-        
-        // Full reset including local state
-        conversationHistory = [];
-        availableTools = [];
-        serverConnected = false;
-        selectedTool = null;
-        updateStep(1);
-        
-        // Clear activity log and reset
-        clearLog();
-        
-        // Clear user input
-        document.getElementById('userQuery').value = '';
-        document.getElementById('toolParams').style.display = 'none';
-        
-    } catch (error) {
-        log(`❌ New session failed: ${error.message}`, 'error');
-    }
-}
-
-async function resetSession() {
-    log('🔄 Clearing conversation history (keeping tools cached)...', 'info');
-    
-    // Only clear conversation, keep tools cache for efficiency
-    conversationHistory = [];
-    
-    // Just clear the conversation visually
-    clearLog();
-    log('✅ Conversation history cleared. Tools remain cached for faster responses.', 'success');
-    
-    // Clear user input
-    document.getElementById('userQuery').value = '';
-}
+// AI assistant functions removed - this is educational MCP protocol demo only
 
 
 function showToolParameterForm(tool) {
@@ -367,6 +218,14 @@ function showToolParameterForm(tool) {
             input.className = 'form-control form-control-sm';
             input.id = `param-${paramName}`;
             input.placeholder = paramDef.description || `Enter ${paramName}`;
+            
+            // Add enter key handler
+            input.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    executeToolWithParams();
+                }
+            });
             
             inputGroup.appendChild(label);
             inputGroup.appendChild(input);
@@ -407,7 +266,8 @@ async function executeToolWithParams() {
         });
         
         if (callResponse.error) {
-            throw new Error(callResponse.error.message);
+            log(`❌ Custom tool execution failed: ${callResponse.error.message}`, 'error');
+            return;
         }
         
         const result = callResponse.result.content[0].text;
@@ -438,9 +298,8 @@ async function sendMcpRequest(serverUrl, request) {
 
 // Initialize the demo
 document.addEventListener('DOMContentLoaded', function() {
-    log('🚀 MCP Client Demo initialized', 'info');
-    log('💬 Session-aware conversation with FMR', 'info');
-    log('💡 Try saying "I\'m FMR" then "What\'s my name?" to test session memory', 'warning');
-    setupUserQueryInput();
+    log('🚀 MCP Protocol Demo initialized', 'info');
+    log('📚 Educational focus on JSON-RPC 2.0 fundamentals', 'info');
+    log('💡 Follow the 3 steps to understand MCP protocol basics', 'warning');
     updateStep(1);
 });

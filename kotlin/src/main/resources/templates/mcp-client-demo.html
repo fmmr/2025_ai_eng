@@ -11,8 +11,8 @@
     <div class="container mt-4">
         <div class="row">
             <div class="col-12">
-                <h1 class="mb-4">🤖 MCP Client Demo</h1>
-                <p class="lead">Learn how to build an MCP (Model Context Protocol) client that connects to external servers</p>
+                <h1 class="mb-4">🔗 MCP Protocol Demo</h1>
+                <p class="lead">Learn the Model Context Protocol (MCP) - JSON-RPC 2.0 for AI tool integration</p>
             </div>
         </div>
 
@@ -21,24 +21,27 @@
             <div class="col-md-6">
                 <div class="card mb-4">
                     <div class="card-header">
-                        <h5>🔍 What is an MCP Client?</h5>
+                        <h5>📖 Understanding MCP Protocol</h5>
                     </div>
                     <div class="card-body">
-                        <p>An MCP client connects to MCP servers to:</p>
+                        <p>Model Context Protocol (MCP) uses JSON-RPC 2.0 for tool communication:</p>
                         <ul>
-                            <li><strong>Discover Tools</strong> - Find available functions on the server</li>
-                            <li><strong>Call Tools</strong> - Execute remote functions with parameters</li>
-                            <li><strong>Handle Responses</strong> - Process results and errors</li>
-                            <li><strong>Enable AI</strong> - Let AI systems use external tools seamlessly</li>
+                            <li><strong>JSON-RPC 2.0</strong> - Standard remote procedure call protocol</li>
+                            <li><strong>Tool Discovery</strong> - Dynamic detection of available functions</li>
+                            <li><strong>Parameter Schemas</strong> - Type-safe function definitions</li>
+                            <li><strong>Error Handling</strong> - Standardized error codes and messages</li>
                         </ul>
                         
-                        <h6 class="mt-3">Learning Steps:</h6>
+                        <h6 class="mt-3">Protocol Steps:</h6>
                         <ol id="learningSteps">
-                            <li>🔌 Connect to MCP Server</li>
-                            <li>🛠️ Discover Available Tools</li>
+                            <li>🔌 Initialize Connection</li>
+                            <li>🛠️ List Available Tools</li>
                             <li>📞 Call Tools with Parameters</li>
-                            <li>🤖 AI-Driven Tool Selection</li>
                         </ol>
+                        
+                        <div class="mt-3 p-2 bg-light rounded">
+                            <small><strong>Educational Focus:</strong> This demo shows raw MCP protocol implementation - perfect for understanding how AI assistants communicate with external tools under the hood.</small>
+                        </div>
                     </div>
                 </div>
 
@@ -68,23 +71,11 @@
                             📞 Step 3: Test a Tool
                         </button>
                         
-                        <div class="mb-3" id="aiSection" style="display: none;">
-                            <label for="userQuery" class="form-label">Ask AI to use tools for you:</label>
-                            <input type="text" class="form-control" id="userQuery" placeholder="e.g., 'What's the weather in Oslo?' or 'Get me a quote'">
-                        </div>
-                        
-                        <button class="btn btn-success mb-2" onclick="aiAssisted()" id="aiBtn">
-                            🤖 Step 4: AI-Assisted
-                        </button>
-                        
                         <div class="mt-3 mb-3 border-top pt-3">
-                            <button class="btn btn-primary btn-sm me-2" onclick="newSession()">
-                                🆕 New Session
+                            <button class="btn btn-outline-secondary btn-sm" onclick="clearLog()">
+                                🔄 Clear Log
                             </button>
-                            <button class="btn btn-outline-secondary btn-sm" onclick="resetSession()">
-                                🔄 Clear History
-                            </button>
-                            <small class="text-muted d-block mt-1">New Session starts fresh, Clear History keeps tools cached</small>
+                            <small class="text-muted d-block mt-1">Educational demo of pure MCP protocol</small>
                         </div>
                         
                         <div class="mt-3" id="toolParams" style="display: none;">
@@ -102,12 +93,12 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5>📊 Client Activity</h5>
+                        <h5>📡 Protocol Activity</h5>
                         <button class="btn btn-sm btn-outline-secondary" onclick="clearLog()">Clear</button>
                     </div>
                     <div class="card-body">
                         <div id="activityLog" style="height: 500px; overflow-y: auto; font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; font-size: 12px;">
-                            <div class="text-muted">🎯 Click "Connect to Server" to begin...</div>
+                            <div class="text-muted">🔗 Follow the 3 steps to learn MCP protocol...</div>
                         </div>
                     </div>
                 </div>

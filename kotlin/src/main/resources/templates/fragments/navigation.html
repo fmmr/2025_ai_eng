@@ -15,34 +15,86 @@
             
             <div class="collapse navbar-collapse" id="navbarNav">
                 <div class="navbar-nav ms-auto">
-                    <a th:href="@{/}" th:classappend="${activeTab == 'home' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Home">🏠</a>
+                    <a th:href="@{/}" th:classappend="${activeTab == 'home' ? 'active' : ''}" class="nav-link">🏠</a>
                     
-                    <a th:href="@{/demo/prompt-engineering}" th:classappend="${activeTab == 'prompt-engineering' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Prompt Engineering ✓">📝</a>
-                    <a th:href="@{/demo/chat-completion}" th:classappend="${activeTab == 'chat-completion' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Chat Completion ✓">🤖</a>
-                    <a th:href="@{/demo/stock}" th:classappend="${activeTab == 'stock' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Stock Data ✓">📈</a>
-                    <a th:href="@{/demo/chat}" th:classappend="${activeTab == 'chat' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Chat ✓">💬</a>
-                    <a th:href="@{/demo/temperature-effects}" th:classappend="${activeTab == 'temperature-effects' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Temperature Effects ✓">🌡️</a>
-                    <a th:href="@{/demo/top-p-effects}" th:classappend="${activeTab == 'top-p-effects' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Top-P Effects ✓">🎯</a>
-                    <span class="nav-link nav-icon text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Fine-tuning (Maybe Next Year)">⚙️</span>
-                    <span class="nav-link nav-icon text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="PollyGlot (Someday Maybe 🌅) - Solo Project">🌍</span>
-                    <a th:href="@{/demo/huggingface-classification}" th:classappend="${activeTab == 'huggingface-classification' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="HuggingFace Classification ✓">🏷️</a>
-                    <a th:href="@{/demo/huggingface-summarization}" th:classappend="${activeTab == 'huggingface-summarization' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="HuggingFace Summarization ✓">📄</a>
-                    <a th:href="@{/demo/huggingface-object-detection}" th:classappend="${activeTab == 'huggingface-object-detection' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="HuggingFace Object Detection ✓">🔍</a>
-                    <a th:href="@{/demo/embeddings}" th:classappend="${activeTab == 'embeddings' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Embeddings ✓">🔢</a>
-                    <a th:href="@{/demo/chunking}" th:classappend="${activeTab == 'chunking' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Chunking ✓">✂️</a>
-                    <a th:href="@{/demo/supabase}" th:classappend="${activeTab == 'supabase' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Vector Database ✓">🗄️</a>
-                    <a th:href="@{/demo/rag}" th:classappend="${activeTab == 'rag' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="RAG ✓">🔗</a>
-                    <span class="nav-link nav-icon text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="PopChoice (In My Dreams 💭) - Solo Project">🍿</span>
-                    <a th:href="@{/demo/react}" th:classappend="${activeTab == 'react' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="ReAct Agent ✓">🧠</a>
-                    <a th:href="@{/demo/function-calling}" th:classappend="${activeTab == 'function-calling' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Function Calling Agent ✓">🛠️</a>
-                    <span class="nav-link nav-icon text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Travel Agent (When I Have Time ⏰) - Solo Project">✈️</span>
-                    <a th:href="@{/demo/film-fusion}" th:classappend="${activeTab == 'film-fusion' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Film Fusion ✓">🎬</a>
-                    <a th:href="@{/demo/image-editing}" th:classappend="${activeTab == 'image-editing' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="AI Image Editing ✓">✏️</a>
-                    <a th:href="@{/demo/gpt4-vision}" th:classappend="${activeTab == 'gpt4-vision' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="GPT-4 with Vision ✓">👁️</a>
-                    <span class="nav-link nav-icon text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Assistants API (After Coffee ☕)">🎯</span>
-                    <span class="nav-link nav-icon text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="OpenAI Java Library (Maybe Someday 🤷‍♂️)">☕</span>
-                    <a th:href="@{/demo/langchain4j}" th:classappend="${activeTab == 'langchain4j' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="LangChain4j Framework ✓">🦜</a>
-                    <a th:href="@{/demo/spring-ai}" th:classappend="${activeTab == 'spring-ai' ? 'active' : ''}" class="nav-link nav-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Spring AI Framework ✓">🍃</a>
+                    <!-- Core & Data -->
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="coreDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            🧠 Core & Data
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="coreDropdown">
+                            <li><h6 class="dropdown-header">Core AI</h6></li>
+                            <li><a th:href="@{/demo/prompt-engineering}" th:classappend="${activeTab == 'prompt-engineering' ? 'active' : ''}" class="dropdown-item">📝 Prompts ✓</a></li>
+                            <li><a th:href="@{/demo/chat-completion}" th:classappend="${activeTab == 'chat-completion' ? 'active' : ''}" class="dropdown-item">🤖 Chat ✓</a></li>
+                            <li><a th:href="@{/demo/chat}" th:classappend="${activeTab == 'chat' ? 'active' : ''}" class="dropdown-item">💬 Interactive ✓</a></li>
+                            <li><a th:href="@{/demo/temperature-effects}" th:classappend="${activeTab == 'temperature-effects' ? 'active' : ''}" class="dropdown-item">🌡️ Temperature ✓</a></li>
+                            <li><a th:href="@{/demo/top-p-effects}" th:classappend="${activeTab == 'top-p-effects' ? 'active' : ''}" class="dropdown-item">🎯 Top-P ✓</a></li>
+                            <li><a th:href="@{/demo/embeddings}" th:classappend="${activeTab == 'embeddings' ? 'active' : ''}" class="dropdown-item">🔢 Embeddings ✓</a></li>
+                            <li><a th:href="@{/demo/chunking}" th:classappend="${activeTab == 'chunking' ? 'active' : ''}" class="dropdown-item">✂️ Chunking ✓</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">Data</h6></li>
+                            <li><a th:href="@{/demo/stock}" th:classappend="${activeTab == 'stock' ? 'active' : ''}" class="dropdown-item">📈 Stock ✓</a></li>
+                            <li><a th:href="@{/demo/supabase}" th:classappend="${activeTab == 'supabase' ? 'active' : ''}" class="dropdown-item">🗄️ Vector DB ✓</a></li>
+                            <li><a th:href="@{/demo/rag}" th:classappend="${activeTab == 'rag' ? 'active' : ''}" class="dropdown-item">🔗 RAG ✓</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><span class="dropdown-item text-muted">⚙️ Fine-tuning (Next Year)</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- Models & Vision -->
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="modelsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            🤗 Models & Vision
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="modelsDropdown">
+                            <li><h6 class="dropdown-header">Open Source</h6></li>
+                            <li><a th:href="@{/demo/huggingface-classification}" th:classappend="${activeTab == 'huggingface-classification' ? 'active' : ''}" class="dropdown-item">🏷️ Classification ✓</a></li>
+                            <li><a th:href="@{/demo/huggingface-summarization}" th:classappend="${activeTab == 'huggingface-summarization' ? 'active' : ''}" class="dropdown-item">📄 Summarization ✓</a></li>
+                            <li><a th:href="@{/demo/huggingface-object-detection}" th:classappend="${activeTab == 'huggingface-object-detection' ? 'active' : ''}" class="dropdown-item">🔍 Detection ✓</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">Vision</h6></li>
+                            <li><a th:href="@{/demo/gpt4-vision}" th:classappend="${activeTab == 'gpt4-vision' ? 'active' : ''}" class="dropdown-item">👁️ GPT-4 Vision ✓</a></li>
+                            <li><a th:href="@{/demo/film-fusion}" th:classappend="${activeTab == 'film-fusion' ? 'active' : ''}" class="dropdown-item">🎬 Film Fusion ✓</a></li>
+                            <li><a th:href="@{/demo/image-editing}" th:classappend="${activeTab == 'image-editing' ? 'active' : ''}" class="dropdown-item">✏️ Image Edit ✓</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Agents & MCP -->
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="agentsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            🤖 Agents & MCP
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="agentsDropdown">
+                            <li><h6 class="dropdown-header">AI Agents</h6></li>
+                            <li><a th:href="@{/demo/react}" th:classappend="${activeTab == 'react' ? 'active' : ''}" class="dropdown-item">🧠 ReAct ✓</a></li>
+                            <li><a th:href="@{/demo/function-calling}" th:classappend="${activeTab == 'function-calling' ? 'active' : ''}" class="dropdown-item">🛠️ Function Call ✓</a></li>
+                            <li><span class="dropdown-item text-muted">🎯 Assistants API (Coffee ☕)</span></li>
+                            <li><span class="dropdown-item text-muted">✈️ Travel Agent (Time ⏰)</span></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">MCP Protocol</h6></li>
+                            <li><a th:href="@{/demo/mcp-server}" th:classappend="${activeTab == 'mcp-server' ? 'active' : ''}" class="dropdown-item">🛠️ Server ✓</a></li>
+                            <li><a th:href="@{/demo/mcp-protocol}" th:classappend="${activeTab == 'mcp-protocol' ? 'active' : ''}" class="dropdown-item">🔗 Protocol ✓</a></li>
+                            <li><a th:href="@{/demo/mcp-assistant}" th:classappend="${activeTab == 'mcp-assistant' ? 'active' : ''}" class="dropdown-item">🔧 Assistant ✓</a></li>
+                            <li><span class="dropdown-item text-muted">🌐 Registry (Ideas 🦄)</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- Frameworks & Projects -->
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="frameworksDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            🚀 Frameworks & More
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="frameworksDropdown">
+                            <li><h6 class="dropdown-header">Frameworks</h6></li>
+                            <li><a th:href="@{/demo/langchain4j}" th:classappend="${activeTab == 'langchain4j' ? 'active' : ''}" class="dropdown-item">🦜 LangChain4j ✓</a></li>
+                            <li><a th:href="@{/demo/spring-ai}" th:classappend="${activeTab == 'spring-ai' ? 'active' : ''}" class="dropdown-item">🍃 Spring AI ✓</a></li>
+                            <li><span class="dropdown-item text-muted">☕ OpenAI Java (Maybe 🤷‍♂️)</span></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">Solo Projects</h6></li>
+                            <li><span class="dropdown-item text-muted">🌍 PollyGlot (Someday 🌅)</span></li>
+                            <li><span class="dropdown-item text-muted">🍿 PopChoice (Dreams 💭)</span></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
