@@ -108,6 +108,15 @@ class McpApiController {
                     )
                 )
             ),
+            Tool(
+                name = "get_aggregates",
+                description = "Get stock price aggregates/bars for a symbol",
+                inputSchema = InputSchema(
+                    properties = mapOf(
+                        "symbol" to PropertySchema(type = "string", description = "Stock symbol (e.g. AAPL, NHYDY)")
+                    )
+                )
+            ),
         )
         
         val response = McpResponse(
@@ -131,8 +140,8 @@ class McpApiController {
                     val symbol = arguments?.get("symbol") ?: return createErrorResponse(id, -32602, "Missing symbol parameter")
                     runBlocking {
                         val stockInfo = polygon.getTickerDetails(symbol, debug = false)
-                        val name = stockInfo.results.name
-                        createSuccessResponse(id, "📈 $symbol: Stock details for $name")
+                        val description = stockInfo.results.description ?: "No description for: ${stockInfo.results.name}"
+                        createSuccessResponse(id, "📈 $symbol: Stock details for\n$description")
                     }
                 }
                 "get_weather" -> {
@@ -151,6 +160,18 @@ class McpApiController {
                         val location = geolocation.getLocationByIp(ip, debug = false)
                         val summary = geolocation.formatLocationSummary(location)
                         createSuccessResponse(id, "📍 $summary")
+                    }
+                }
+                "get_aggregates" -> {
+                    val symbol = arguments?.get("symbol") ?: return createErrorResponse(id, -32602, "Missing symbol parameter")
+                    runBlocking {
+                        val aggregates = polygon.getAggregates(symbol, debug = false)
+                        val latest = aggregates.firstOrNull()?.results?.lastOrNull()
+                        if (latest != null) {
+                            createSuccessResponse(id, "📊 $symbol ${latest.formattedDate()}: Open ${latest.openPrice}, Close ${latest.closePrice}, Volume ${latest.volume}")
+                        } else {
+                            createSuccessResponse(id, "📊 $symbol: No recent data available")
+                        }
                     }
                 }
                 else -> createErrorResponse(id, -32602, "Unknown tool: $toolName")

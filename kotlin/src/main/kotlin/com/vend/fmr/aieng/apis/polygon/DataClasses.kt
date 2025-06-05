@@ -47,18 +47,17 @@ data class QuoteData(
 
 @Serializable
 data class AggregateBar(
-    val o: Double,
-    val h: Double,
-    val l: Double,
-    val c: Double,
-    val v: Double,
-    val t: Long,
-    val n: Int? = null,
-    val vw: Double? = null
+    @SerialName("o") val openPrice: Double,
+    @SerialName("h") val highPrice: Double,
+    @SerialName("l") val lowPrice: Double,
+    @SerialName("c") val closePrice: Double,
+    @SerialName("v") val volume: Double,
+    @SerialName("t") val timestamp: Long,
+    @SerialName("n") val numberOfTransactions: Int? = null,
+    @SerialName("vw") val volumeWeightedAveragePrice: Double? = null
 ) {
-    @Suppress("unused")
     fun formattedDate(): String =
-        java.time.Instant.ofEpochMilli(t)
+        java.time.Instant.ofEpochMilli(timestamp)
             .atZone(java.time.ZoneId.systemDefault())
             .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 }

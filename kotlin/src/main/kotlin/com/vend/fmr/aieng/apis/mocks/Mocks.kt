@@ -54,12 +54,12 @@ object Mocks {
             val response = aggregatesResponse.firstOrNull()
             val aggregate = response?.results?.lastOrNull()
             
-            if (aggregate != null && aggregate.c > 0) {
-                val change = aggregate.c - aggregate.o
-                val changePercent = (change / aggregate.o) * 100
+            if (aggregate != null && aggregate.closePrice > 0) {
+                val change = aggregate.closePrice - aggregate.openPrice
+                val changePercent = (change / aggregate.openPrice) * 100
                 StockInfo(
                     ticker = ticker.uppercase(),
-                    price = aggregate.c,
+                    price = aggregate.closePrice,
                     change = change,
                     changePercent = changePercent
                 )

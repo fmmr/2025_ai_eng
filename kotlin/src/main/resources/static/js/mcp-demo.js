@@ -53,6 +53,7 @@ function testHelloTool() {
 }
 
 function testStockTool() {
+    const selectedTicker = document.getElementById('tickerSelect').value;
     sendMcpRequest({
         jsonrpc: "2.0",
         id: 4,
@@ -60,7 +61,7 @@ function testStockTool() {
         params: {
             name: "get_stock_price",
             arguments: {
-                symbol: "AAPL"
+                symbol: selectedTicker
             }
         }
     });
@@ -90,6 +91,21 @@ function testLocationTool() {
             name: "get_location_from_ip",
             arguments: {
                 ip: "8.8.8.8"
+            }
+        }
+    });
+}
+
+function testAggregates() {
+    const selectedTicker = document.getElementById('tickerSelect').value;
+    sendMcpRequest({
+        jsonrpc: "2.0",
+        id: 7,
+        method: "tools/call",
+        params: {
+            name: "get_aggregates",
+            arguments: {
+                symbol: selectedTicker
             }
         }
     });

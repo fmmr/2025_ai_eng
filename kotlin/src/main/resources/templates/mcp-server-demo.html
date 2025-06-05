@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <!--suppress HtmlUnknownTag -->
     <div th:replace="~{fragments/head :: common-head}"></div>
     <title>MCP Server Demo - AI Engineering</title>
 </head>
@@ -58,6 +59,11 @@
                                 <p class="mb-1">Get geographic location from IP address</p>
                                 <small class="text-muted">Parameters: ip (string)</small>
                             </div>
+                            <div class="list-group-item">
+                                <strong>get_aggregates</strong>
+                                <p class="mb-1">Get stock price aggregates/bars for a symbol</p>
+                                <small class="text-muted">Parameters: symbol (string) - e.g. AAPL, NHYDY</small>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -79,7 +85,23 @@
                         
                         <h6>3. Call Tools</h6>
                         <button class="btn btn-success btn-sm mb-2" onclick="testHelloTool()">Say Hello</button>
-                        <button class="btn btn-primary btn-sm mb-2" onclick="testStockTool()">Get AAPL Stock</button>
+                        
+                        <div class="mb-3">
+                            <label for="tickerSelect" class="form-label">Select Stock Symbol:</label>
+                            <select class="form-select form-select-sm" id="tickerSelect">
+                                <option value="AAPL">AAPL - Apple Inc.</option>
+                                <option value="MSFT">MSFT - Microsoft</option>
+                                <option value="GOOGL">GOOGL - Alphabet Inc.</option>
+                                <option value="TSLA">TSLA - Tesla Inc.</option>
+                                <option value="AMZN" selected>AMZN - Amazon</option>
+                                <option value="META">META - Meta Platforms</option>
+                                <option value="NVDA">NVDA - NVIDIA</option>
+                                <option value="NHYDY">NHYDY - Norsk Hydro</option>
+                            </select>
+                        </div>
+                        
+                        <button class="btn btn-primary btn-sm mb-2" onclick="testStockTool()">Get Stock Details</button>
+                        <button class="btn btn-secondary btn-sm mb-2" onclick="testAggregates()">Get Stock Aggregates</button>
                         <button class="btn btn-info btn-sm mb-2" onclick="testWeatherTool()">Get Weather (Oslo)</button>
                         <button class="btn btn-warning btn-sm mb-2" onclick="testLocationTool()">Get Location</button>
                         
