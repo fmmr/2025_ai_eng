@@ -68,9 +68,22 @@
                             📞 Step 3: Test a Tool
                         </button>
                         
+                        <div class="mb-3" id="aiSection" style="display: none;">
+                            <label for="userQuery" class="form-label">Ask AI to use tools for you:</label>
+                            <input type="text" class="form-control" id="userQuery" placeholder="e.g., 'What's the weather in Oslo?' or 'Get me a quote'">
+                        </div>
+                        
                         <button class="btn btn-success mb-2" onclick="aiAssisted()" id="aiBtn" disabled>
                             🤖 Step 4: AI-Assisted
                         </button>
+                        
+                        <div class="mt-3" id="toolParams" style="display: none;">
+                            <h6>🔧 Tool Parameters</h6>
+                            <div id="paramInputs"></div>
+                            <button class="btn btn-outline-primary btn-sm" onclick="executeToolWithParams()" id="executeBtn" disabled>
+                                Execute Tool
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

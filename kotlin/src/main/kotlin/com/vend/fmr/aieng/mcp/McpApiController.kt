@@ -80,8 +80,8 @@ class McpApiController {
                 )
             ),
             Tool(
-                name = "get_stock_price",
-                description = "Get current stock price and info for a symbol",
+                name = "get_company_info",
+                description = "Get company details and description for a stock symbol",
                 inputSchema = InputSchema(
                     properties = mapOf(
                         "symbol" to PropertySchema(type = "string", description = "Stock symbol (e.g. AAPL, MSFT)")
@@ -108,8 +108,8 @@ class McpApiController {
                 )
             ),
             Tool(
-                name = "get_aggregates",
-                description = "Get stock price aggregates/bars for a symbol",
+                name = "get_stock_price",
+                description = "Get current stock price data (open, close, volume) for a symbol",
                 inputSchema = InputSchema(
                     properties = mapOf(
                         "symbol" to PropertySchema(type = "string", description = "Stock symbol (e.g. AAPL, NHYDY)")
@@ -142,12 +142,12 @@ class McpApiController {
                     val name = arguments?.get("name") ?: "World"
                     createSuccessResponse(id, "Hello, $name! 🎉 MCP is working from Kotlin Spring Boot!")
                 }
-                "get_stock_price" -> {
+                "get_company_info" -> {
                     val symbol = arguments?.get("symbol") ?: return createErrorResponse(id, -32602, "Missing symbol parameter")
                     runBlocking {
                         val stockInfo = polygon.getTickerDetails(symbol, debug = false)
                         val description = stockInfo.results.description ?: "No description for: ${stockInfo.results.name}"
-                        createSuccessResponse(id, "📈 $symbol: Stock details for\n$description")
+                        createSuccessResponse(id, "🏢 $symbol: ${stockInfo.results.name}\n$description")
                     }
                 }
                 "get_weather" -> {
@@ -168,15 +168,15 @@ class McpApiController {
                         createSuccessResponse(id, "📍 $summary")
                     }
                 }
-                "get_aggregates" -> {
+                "get_stock_price" -> {
                     val symbol = arguments?.get("symbol") ?: return createErrorResponse(id, -32602, "Missing symbol parameter")
                     runBlocking {
                         val aggregates = polygon.getAggregates(symbol, debug = false)
                         val latest = aggregates.firstOrNull()?.results?.lastOrNull()
                         if (latest != null) {
-                            createSuccessResponse(id, "📊 $symbol ${latest.formattedDate()}: Open ${latest.openPrice}, Close ${latest.closePrice}, Volume ${latest.volume}")
+                            createSuccessResponse(id, "📈 $symbol ${latest.formattedDate()}: Open $${latest.openPrice}, Close $${latest.closePrice}, Volume ${latest.volume}")
                         } else {
-                            createSuccessResponse(id, "📊 $symbol: No recent data available")
+                            createSuccessResponse(id, "📈 $symbol: No recent price data available")
                         }
                     }
                 }

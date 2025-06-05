@@ -2,6 +2,8 @@
 let currentStep = 1;
 let availableTools = [];
 let serverConnected = false;
+let selectedTool = null;
+let conversationHistory = [];
 
 function log(message, type = 'info') {
     const activityLog = document.getElementById('activityLog');
@@ -36,6 +38,11 @@ function updateStep(step) {
     document.getElementById('discoverBtn').disabled = step < 2;
     document.getElementById('testBtn').disabled = step < 3;
     document.getElementById('aiBtn').disabled = step < 4;
+    
+    // Show AI input section when step 4 is reached
+    if (step >= 4) {
+        document.getElementById('aiSection').style.display = 'block';
+    }
     
     // Update learning steps visual
     const steps = document.querySelectorAll('#learningSteps li');
@@ -114,8 +121,20 @@ async function discoverTools() {
         log(`✅ Found ${availableTools.length} tools:`, 'success');
         
         availableTools.forEach((tool, index) => {
-            log(`  ${index + 1}. ${tool.name} - ${tool.description}`, 'info');
+            const toolLink = document.createElement('span');
+            toolLink.innerHTML = `  ${index + 1}. <a href="#" onclick="showToolParameterForm(availableTools[${index}]); return false;" class="text-decoration-none">${tool.name}</a> - ${tool.description}`;
+            toolLink.className = 'text-info d-block';
+            
+            const logEntry = document.createElement('div');
+            logEntry.className = 'mb-1 text-info';
+            logEntry.innerHTML = `<small class="text-muted">[${new Date().toLocaleTimeString()}]</small> `;
+            logEntry.appendChild(toolLink);
+            
+            document.getElementById('activityLog').appendChild(logEntry);
         });
+        
+        document.getElementById('activityLog').scrollTop = document.getElementById('activityLog').scrollHeight;
+        log('💡 Click any tool name above to test it with custom parameters!', 'warning');
         
         updateStep(3);
         
@@ -169,9 +188,141 @@ async function testTool() {
 }
 
 async function aiAssisted() {
-    log('🤖 AI-Assisted tool selection coming soon!', 'warning');
-    log('💡 This would let AI choose which tools to call based on user intent', 'info');
-    log('🎯 For now, try the working tools manually', 'info');
+    const userQuery = document.getElementById('userQuery').value.trim();
+    if (!userQuery) {
+        log('❌ Please enter a question or request first!', 'error');
+        return;
+    }
+    
+    if (availableTools.length === 0) {
+        log('❌ Must discover tools first!', 'error');
+        return;
+    }
+    
+    log(`🤖 AI analyzing request: "${userQuery}"`, 'info');
+    
+    try {
+        const response = await fetch('/demo/mcp-client/ai-assist', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                query: userQuery,
+                tools: availableTools
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.error) {
+            log(`❌ AI Error: ${result.error}`, 'error');
+            return;
+        }
+        
+        if (result.status === 'no_tool_needed') {
+            log(`💭 AI Response: ${result.response}`, 'info');
+            return;
+        }
+        
+        if (result.status === 'success') {
+            log(`🎯 ${result.reasoning}`, 'success');
+            log(`🛠️ Selected tool: ${result.selectedTool}`, 'info');
+            log(`✅ AI Result: ${result.response}`, 'success');
+            
+            // Tool already executed by MCP client - no need to execute again
+            conversationHistory.push({
+                query: userQuery,
+                tool: result.selectedTool,
+                result: result.response,
+                timestamp: new Date().toLocaleTimeString()
+            });
+            
+            // Clear the input for next query
+            document.getElementById('userQuery').value = '';
+        }
+        
+    } catch (error) {
+        log(`❌ AI assistance failed: ${error.message}`, 'error');
+    }
+}
+
+
+function showToolParameterForm(tool) {
+    selectedTool = tool;
+    const toolParamsDiv = document.getElementById('toolParams');
+    const paramInputsDiv = document.getElementById('paramInputs');
+    
+    // Clear previous inputs
+    paramInputsDiv.innerHTML = '';
+    
+    const properties = tool.inputSchema?.properties || {};
+    
+    if (Object.keys(properties).length === 0) {
+        paramInputsDiv.innerHTML = '<p class="text-muted">This tool requires no parameters.</p>';
+    } else {
+        Object.entries(properties).forEach(([paramName, paramDef]) => {
+            const inputGroup = document.createElement('div');
+            inputGroup.className = 'mb-2';
+            
+            const label = document.createElement('label');
+            label.className = 'form-label';
+            label.textContent = `${paramName} (${paramDef.type})`;
+            
+            const input = document.createElement('input');
+            input.type = paramDef.type === 'number' ? 'number' : 'text';
+            input.className = 'form-control form-control-sm';
+            input.id = `param-${paramName}`;
+            input.placeholder = paramDef.description || `Enter ${paramName}`;
+            
+            inputGroup.appendChild(label);
+            inputGroup.appendChild(input);
+            paramInputsDiv.appendChild(inputGroup);
+        });
+    }
+    
+    toolParamsDiv.style.display = 'block';
+    document.getElementById('executeBtn').disabled = false;
+}
+
+async function executeToolWithParams() {
+    if (!selectedTool) return;
+    
+    const serverUrl = document.getElementById('serverUrl').value;
+    const properties = selectedTool.inputSchema?.properties || {};
+    const arguments = {};
+    
+    // Collect parameter values
+    Object.keys(properties).forEach(paramName => {
+        const input = document.getElementById(`param-${paramName}`);
+        if (input && input.value) {
+            arguments[paramName] = input.value;
+        }
+    });
+    
+    try {
+        log(`🔧 Calling ${selectedTool.name} with custom parameters...`, 'info');
+        
+        const callResponse = await sendMcpRequest(serverUrl, {
+            jsonrpc: "2.0",
+            id: Math.floor(Math.random() * 1000) + 200, // Small random ID
+            method: "tools/call",
+            params: {
+                name: selectedTool.name,
+                arguments: arguments
+            }
+        });
+        
+        if (callResponse.error) {
+            throw new Error(callResponse.error.message);
+        }
+        
+        const result = callResponse.result.content[0].text;
+        log(`✅ Custom tool result: ${result}`, 'success');
+        
+    } catch (error) {
+        log(`❌ Custom tool execution failed: ${error.message}`, 'error');
+    }
 }
 
 async function sendMcpRequest(serverUrl, request) {
