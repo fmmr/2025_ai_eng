@@ -2,11 +2,11 @@
 
 Kotlin implementations of the [Scrimba AI Engineering Path](https://scrimba.com/the-ai-engineer-path-c02v) assignments and examples. This project translates JavaScript-based AI engineering concepts into practical Kotlin Spring Boot applications.
 
-**🌐 Live Demo**: [https://ai.rodland.no/](https://ai.rodland.no/) - Interactive demos of AI engineering patterns in Kotlin
+**Live Demo**: [https://ai.rodland.no/](https://ai.rodland.no/) - Interactive demos of AI engineering patterns in Kotlin
 
 ## Projects
 
-### 🚀 [Kotlin Spring Boot Application](kotlin/)
+### [Kotlin Spring Boot Application](kotlin/)
 
 A comprehensive Spring Boot web application that implements Scrimba AI Engineering course concepts in Kotlin. Features interactive demos and working examples of all major AI engineering patterns covered in the course.
 

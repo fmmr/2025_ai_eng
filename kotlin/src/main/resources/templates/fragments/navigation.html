@@ -5,112 +5,61 @@
     <meta charset="UTF-8">
 </head>
 <body>
-    <nav th:fragment="navbar(activeTab)" class="navbar navbar-expand-lg navbar-dark sticky-top">
-        <div class="container-fluid" style="max-width: 1200px;">
-            <a class="navbar-brand" th:href="@{/}">AI Engineering Course</a>
-            
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <div class="navbar-nav ms-auto">
-                    <a th:href="@{/}" th:classappend="${activeTab == 'home' ? 'active' : ''}" class="nav-link">🏠</a>
-                    
-                    <!-- Core & Data -->
-                    <div class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="coreDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            🧠 Core & Data
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="coreDropdown">
-                            <li><h6 class="dropdown-header">Core AI</h6></li>
-                            <li><a th:href="@{/demo/prompt-engineering}" th:classappend="${activeTab == 'prompt-engineering' ? 'active' : ''}" class="dropdown-item">📝 Prompts ✓</a></li>
-                            <li><a th:href="@{/demo/chat-completion}" th:classappend="${activeTab == 'chat-completion' ? 'active' : ''}" class="dropdown-item">🤖 Chat ✓</a></li>
-                            <li><a th:href="@{/demo/chat}" th:classappend="${activeTab == 'chat' ? 'active' : ''}" class="dropdown-item">💬 Interactive ✓</a></li>
-                            <li><a th:href="@{/demo/temperature-effects}" th:classappend="${activeTab == 'temperature-effects' ? 'active' : ''}" class="dropdown-item">🌡️ Temperature ✓</a></li>
-                            <li><a th:href="@{/demo/top-p-effects}" th:classappend="${activeTab == 'top-p-effects' ? 'active' : ''}" class="dropdown-item">🎯 Top-P ✓</a></li>
-                            <li><a th:href="@{/demo/embeddings}" th:classappend="${activeTab == 'embeddings' ? 'active' : ''}" class="dropdown-item">🔢 Embeddings ✓</a></li>
-                            <li><a th:href="@{/demo/chunking}" th:classappend="${activeTab == 'chunking' ? 'active' : ''}" class="dropdown-item">✂️ Chunking ✓</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><h6 class="dropdown-header">Data</h6></li>
-                            <li><a th:href="@{/demo/stock}" th:classappend="${activeTab == 'stock' ? 'active' : ''}" class="dropdown-item">📈 Stock ✓</a></li>
-                            <li><a th:href="@{/demo/supabase}" th:classappend="${activeTab == 'supabase' ? 'active' : ''}" class="dropdown-item">🗄️ Vector DB ✓</a></li>
-                            <li><a th:href="@{/demo/rag}" th:classappend="${activeTab == 'rag' ? 'active' : ''}" class="dropdown-item">🔗 RAG ✓</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><span class="dropdown-item text-muted">⚙️ Fine-tuning (Next Year)</span></li>
-                        </ul>
-                    </div>
+<nav th:fragment="navbar(activeTab)" class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container-fluid" style="max-width: 1200px;">
+        <a class="navbar-brand" th:href="@{/}">AI Engineering Course</a>
 
-                    <!-- Models & Vision -->
-                    <div class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="modelsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            🤗 Models & Vision
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="modelsDropdown">
-                            <li><h6 class="dropdown-header">Open Source</h6></li>
-                            <li><a th:href="@{/demo/huggingface-classification}" th:classappend="${activeTab == 'huggingface-classification' ? 'active' : ''}" class="dropdown-item">🏷️ Classification ✓</a></li>
-                            <li><a th:href="@{/demo/huggingface-summarization}" th:classappend="${activeTab == 'huggingface-summarization' ? 'active' : ''}" class="dropdown-item">📄 Summarization ✓</a></li>
-                            <li><a th:href="@{/demo/huggingface-object-detection}" th:classappend="${activeTab == 'huggingface-object-detection' ? 'active' : ''}" class="dropdown-item">🔍 Detection ✓</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><h6 class="dropdown-header">Vision</h6></li>
-                            <li><a th:href="@{/demo/gpt4-vision}" th:classappend="${activeTab == 'gpt4-vision' ? 'active' : ''}" class="dropdown-item">👁️ GPT-4 Vision ✓</a></li>
-                            <li><a th:href="@{/demo/film-fusion}" th:classappend="${activeTab == 'film-fusion' ? 'active' : ''}" class="dropdown-item">🎬 Film Fusion ✓</a></li>
-                            <li><a th:href="@{/demo/image-editing}" th:classappend="${activeTab == 'image-editing' ? 'active' : ''}" class="dropdown-item">✏️ Image Edit ✓</a></li>
-                        </ul>
-                    </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-                    <!-- Agents & MCP -->
-                    <div class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="agentsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            🤖 Agents & MCP
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="agentsDropdown">
-                            <li><h6 class="dropdown-header">AI Agents</h6></li>
-                            <li><a th:href="@{/demo/react}" th:classappend="${activeTab == 'react' ? 'active' : ''}" class="dropdown-item">🧠 ReAct ✓</a></li>
-                            <li><a th:href="@{/demo/function-calling}" th:classappend="${activeTab == 'function-calling' ? 'active' : ''}" class="dropdown-item">🛠️ Function Call ✓</a></li>
-                            <li><span class="dropdown-item text-muted">🎯 Assistants API (Coffee ☕)</span></li>
-                            <li><span class="dropdown-item text-muted">✈️ Travel Agent (Time ⏰)</span></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><h6 class="dropdown-header">MCP Protocol</h6></li>
-                            <li><a th:href="@{/demo/mcp-server}" th:classappend="${activeTab == 'mcp-server' ? 'active' : ''}" class="dropdown-item">🛠️ Server ✓</a></li>
-                            <li><a th:href="@{/demo/mcp-protocol}" th:classappend="${activeTab == 'mcp-protocol' ? 'active' : ''}" class="dropdown-item">🔗 Protocol ✓</a></li>
-                            <li><a th:href="@{/demo/mcp-assistant}" th:classappend="${activeTab == 'mcp-assistant' ? 'active' : ''}" class="dropdown-item">🔧 Assistant ✓</a></li>
-                            <li><span class="dropdown-item text-muted">🌐 Registry (Ideas 🦄)</span></li>
-                        </ul>
-                    </div>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="navbar-nav ms-auto">
+                <!-- Home Link -->
+                <a th:href="@{/}" th:classappend="${activeTab == 'home' ? 'active' : ''}" class="nav-link">
+                    <i class="bi-house"></i> Home
+                </a>
 
-                    <!-- Frameworks & Projects -->
-                    <div class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="frameworksDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            🚀 Frameworks & More
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="frameworksDropdown">
-                            <li><h6 class="dropdown-header">Frameworks</h6></li>
-                            <li><a th:href="@{/demo/langchain4j}" th:classappend="${activeTab == 'langchain4j' ? 'active' : ''}" class="dropdown-item">🦜 LangChain4j ✓</a></li>
-                            <li><a th:href="@{/demo/spring-ai}" th:classappend="${activeTab == 'spring-ai' ? 'active' : ''}" class="dropdown-item">🍃 Spring AI ✓</a></li>
-                            <li><span class="dropdown-item text-muted">☕ OpenAI Java (Maybe 🤷‍♂️)</span></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><h6 class="dropdown-header">Solo Projects</h6></li>
-                            <li><span class="dropdown-item text-muted">🌍 PollyGlot (Someday 🌅)</span></li>
-                            <li><span class="dropdown-item text-muted">🍿 PopChoice (Dreams 💭)</span></li>
-                        </ul>
-                    </div>
+                <!-- Dynamic NavbarGroups -->
+                <div th:each="navbarGroup : ${navbarGroups}" class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" th:id="${navbarGroup.dropdownId}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i th:class="${navbarGroup.icon}"></i> <span th:text="${navbarGroup.displayName}">Group</span>
+                    </a>
+                    <ul class="dropdown-menu" th:attr="aria-labelledby=${navbarGroup.dropdownId}">
+                        <li th:each="demo : ${navbarGroup.demos}">
+                            <a th:if="${demo.route != null}" th:href="@{${demo.route}}"
+                               th:classappend="${activeTab == demo.id ? 'active' : ''}"
+                               class="dropdown-item">
+                                <i th:class="${demo.icon}"></i> <span th:text="${demo.title}">Demo</span>
+                                <i class="bi-check-circle text-success ms-auto"></i>
+                            </a>
+                            <span th:if="${demo.route == null}" class="dropdown-item text-muted disabled">
+                                <i th:class="${demo.icon}"></i> <span th:text="${demo.title}">Demo</span>
+                                <small class="ms-auto opacity-75" th:text="'(' + ${demo.status.displayText} + ')'">Status</small>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
 
-                    <!-- External Links -->
-                    <div class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="linksDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            🔗 Links
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="linksDropdown">
-                            <li><a href="https://github.com/fmmr/2025_ai_eng/tree/main/kotlin" class="dropdown-item" target="_blank">📁 Source Code</a></li>
-                            <li><a href="https://github.com/fmmr/2025_ai_eng/actions" class="dropdown-item" target="_blank">⚙️ GitHub Actions</a></li>
-                            <li><a href="https://hub.docker.com/repository/docker/fmmr/aieng" class="dropdown-item" target="_blank">🐳 Docker Hub</a></li>
-                            <li><a href="https://app.northflank.com/t/fmrs-team/project/aieng/services/aieng" class="dropdown-item" target="_blank">☁️ Northflank</a></li>
-                        </ul>
-                    </div>
+                <!-- External Links -->
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="linksDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi-link-45deg"></i> Links
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="linksDropdown">
+                        <li><a href="https://github.com/fmmr/2025_ai_eng/tree/main/kotlin" class="dropdown-item" target="_blank">
+                            <i class="bi-github"></i> Source Code</a></li>
+                        <li><a href="https://github.com/fmmr/2025_ai_eng/actions" class="dropdown-item" target="_blank">
+                            <i class="bi-gear-wide-connected"></i> GitHub Actions</a></li>
+                        <li><a href="https://hub.docker.com/repository/docker/fmmr/aieng" class="dropdown-item" target="_blank">
+                            <i class="bi-box"></i> Docker Hub</a></li>
+                        <li><a href="https://app.northflank.com/t/fmrs-team/project/aieng/services/aieng" class="dropdown-item" target="_blank">
+                            <i class="bi-cloud"></i> Northflank</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
-    </nav>
+    </div>
+</nav>
 </body>
 </html>
