@@ -12,7 +12,7 @@ class HomeController(private val buildInfo: BuildInfo) {
     fun home(model: Model): String {
         model.addAttribute("pageTitle", "Home")
         model.addAttribute("activeTab", "home")
-        model.addAttribute("buildTimestamp", buildInfo.buildTimestamp)
+        model.addAttribute("buildInfo", buildInfo)
         return "home"
     }
 
