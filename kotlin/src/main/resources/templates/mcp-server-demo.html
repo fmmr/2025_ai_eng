@@ -45,24 +45,29 @@
                                 <small class="text-muted">Parameters: name (string)</small>
                             </div>
                             <div class="list-group-item">
-                                <strong>get_stock_price</strong>
-                                <p class="mb-1">Get current stock price and info for a symbol</p>
+                                <strong>get_company_info</strong>
+                                <p class="mb-1">Get company details and description for a stock symbol</p>
                                 <small class="text-muted">Parameters: symbol (string) - e.g. AAPL, MSFT</small>
                             </div>
                             <div class="list-group-item">
-                                <strong>get_weather</strong>
-                                <p class="mb-1">Get current weather for coordinates</p>
-                                <small class="text-muted">Parameters: latitude (number), longitude (number)</small>
+                                <strong>get_stock_price</strong>
+                                <p class="mb-1">Get current stock price data (open, close, volume) for a symbol</p>
+                                <small class="text-muted">Parameters: symbol (string) - e.g. AAPL, NHYDY</small>
+                            </div>
+                            <div class="list-group-item">
+                                <strong>get_weather_nowcast</strong>
+                                <p class="mb-1">Get high-precision nowcast weather for Nordic countries - 5-minute resolution, 2-hour forecast</p>
+                                <small class="text-muted">Parameters: latitude (55°N-75°N), longitude (0°E-35°E)</small>
+                            </div>
+                            <div class="list-group-item">
+                                <strong>get_weather_forecast</strong>
+                                <p class="mb-1">Get weather forecast for any global location - hourly resolution, multi-day forecast</p>
+                                <small class="text-muted">Parameters: latitude (global), longitude (global)</small>
                             </div>
                             <div class="list-group-item">
                                 <strong>get_location_from_ip</strong>
                                 <p class="mb-1">Get geographic location from IP address</p>
                                 <small class="text-muted">Parameters: ip (string)</small>
-                            </div>
-                            <div class="list-group-item">
-                                <strong>get_aggregates</strong>
-                                <p class="mb-1">Get stock price aggregates/bars for a symbol</p>
-                                <small class="text-muted">Parameters: symbol (string) - e.g. AAPL, NHYDY</small>
                             </div>
                             <div class="list-group-item">
                                 <strong>get_random_quote</strong>
@@ -105,10 +110,11 @@
                             </select>
                         </div>
                         
-                        <button class="btn btn-primary btn-sm mb-2" onclick="testStockTool()">Get Stock Details</button>
-                        <button class="btn btn-secondary btn-sm mb-2" onclick="testAggregates()">Get Stock Aggregates</button>
-                        <button class="btn btn-info btn-sm mb-2" onclick="testWeatherTool()">Get Weather (Oslo)</button>
-                        <button class="btn btn-warning btn-sm mb-2" onclick="testLocationTool()">Get Location</button>
+                        <button class="btn btn-primary btn-sm mb-2" onclick="testCompanyInfo()">Get Company Info</button>
+                        <button class="btn btn-secondary btn-sm mb-2" onclick="testStockPrice()">Get Stock Price</button>
+                        <button class="btn btn-info btn-sm mb-2" onclick="testWeatherNowcast()">Weather Nowcast (Oslo)</button>
+                        <button class="btn btn-info btn-sm mb-2" onclick="testWeatherForecast()">Weather Forecast (Tokyo)</button>
+                        <button class="btn btn-warning btn-sm mb-2" onclick="testLocationTool()">Get IP Location</button>
                         <button class="btn btn-success btn-sm mb-2" onclick="testRandomQuote()">Get Random Quote</button>
                         
                         <div class="mt-3">

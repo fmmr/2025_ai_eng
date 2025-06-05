@@ -52,11 +52,26 @@ function testHelloTool() {
     });
 }
 
-function testStockTool() {
+function testCompanyInfo() {
     const selectedTicker = document.getElementById('tickerSelect').value;
     sendMcpRequest({
         jsonrpc: "2.0",
         id: 4,
+        method: "tools/call",
+        params: {
+            name: "get_company_info",
+            arguments: {
+                symbol: selectedTicker
+            }
+        }
+    });
+}
+
+function testStockPrice() {
+    const selectedTicker = document.getElementById('tickerSelect').value;
+    sendMcpRequest({
+        jsonrpc: "2.0",
+        id: 5,
         method: "tools/call",
         params: {
             name: "get_stock_price",
@@ -67,13 +82,13 @@ function testStockTool() {
     });
 }
 
-function testWeatherTool() {
+function testWeatherNowcast() {
     sendMcpRequest({
         jsonrpc: "2.0",
-        id: 5,
+        id: 6,
         method: "tools/call",
         params: {
-            name: "get_weather",
+            name: "get_weather_nowcast",
             arguments: {
                 latitude: "59.9139",
                 longitude: "10.7522"
@@ -82,10 +97,25 @@ function testWeatherTool() {
     });
 }
 
+function testWeatherForecast() {
+    sendMcpRequest({
+        jsonrpc: "2.0",
+        id: 7,
+        method: "tools/call",
+        params: {
+            name: "get_weather_forecast",
+            arguments: {
+                latitude: "35.6762",
+                longitude: "139.6503"
+            }
+        }
+    });
+}
+
 function testLocationTool() {
     sendMcpRequest({
         jsonrpc: "2.0",
-        id: 6,
+        id: 8,
         method: "tools/call",
         params: {
             name: "get_location_from_ip",
@@ -96,25 +126,10 @@ function testLocationTool() {
     });
 }
 
-function testAggregates() {
-    const selectedTicker = document.getElementById('tickerSelect').value;
-    sendMcpRequest({
-        jsonrpc: "2.0",
-        id: 7,
-        method: "tools/call",
-        params: {
-            name: "get_aggregates",
-            arguments: {
-                symbol: selectedTicker
-            }
-        }
-    });
-}
-
 function testRandomQuote() {
     sendMcpRequest({
         jsonrpc: "2.0",
-        id: 8,
+        id: 9,
         method: "tools/call",
         params: {
             name: "get_random_quote",
