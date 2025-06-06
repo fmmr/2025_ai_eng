@@ -26,7 +26,6 @@ This project implements the core concepts from the Scrimba AI Engineering course
 - ⚙️ Fine-Tune Factory - Custom model training (Maybe Next Year)
 - **[🔢 Vector Space](https://ai.rodland.no/demo/embeddings)** - Text to vector conversion
 - **[✂️ Text Slicer](https://ai.rodland.no/demo/chunking)** - Text segmentation tool
-- **[🌍 PolyGlot](https://polyglot-vbh0.onrender.com/)** - Contextual translation bot (Solo Project)
 
 #### 🗄️ Data
 
