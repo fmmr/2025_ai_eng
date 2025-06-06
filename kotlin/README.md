@@ -15,54 +15,54 @@ This project implements the core concepts from the Scrimba AI Engineering course
 <!-- DEMO_LIST_START -->
 #### 🧠 Core AI
 
-- **📝 Prompt Lab** - Crafting effective prompts
-- **🤖 Chat Basics** - Core OpenAI integration
-- **💬 Chat Studio** - Conversational AI interface
-- **🌡️ Temperature Play** - AI creativity vs consistency
-- **🎯 Top-P Magic** - Vocabulary selection control
-- **⚙️ Fine-Tune Factory** - Custom model training (Maybe Next Year)
-- **🔢 Vector Space** - Text to vector conversion
-- **✂️ Text Slicer** - Text segmentation tool
-- **🌍 PollyGlot** - Contextual translation bot (Solo Project - Someday)
+- **[📝 Prompt Lab](https://ai.rodland.no/demo/prompt-engineering)** - Crafting effective prompts
+- **[🤖 Chat Basics](https://ai.rodland.no/demo/chat-completion)** - Core OpenAI integration
+- **[💬 Chat Studio](https://ai.rodland.no/demo/chat)** - Conversational AI interface
+- **[🌡️ Temperature Play](https://ai.rodland.no/demo/temperature-effects)** - AI creativity vs consistency
+- **[🎯 Top-P Magic](https://ai.rodland.no/demo/top-p-effects)** - Vocabulary selection control
+- ⚙️ Fine-Tune Factory - Custom model training (Maybe Next Year)
+- **[🔢 Vector Space](https://ai.rodland.no/demo/embeddings)** - Text to vector conversion
+- **[✂️ Text Slicer](https://ai.rodland.no/demo/chunking)** - Text segmentation tool
+- 🌍 PollyGlot - Contextual translation bot (Solo Project - Someday)
 
 #### 🗄️ Data
 
-- **📈 Stock Oracle** - AI-powered financial analysis
-- **🗄️ Vector Vault** - Semantic search with embeddings
-- **🔗 RAG Engine** - Retrieval-Augmented Generation
-- **🍿 PopChoice** - AI movie recommendations (Solo Project - Dreams)
+- **[📈 Stock Oracle](https://ai.rodland.no/demo/stock)** - AI-powered financial analysis
+- **[🗄️ Vector Vault](https://ai.rodland.no/demo/supabase)** - Semantic search with embeddings
+- **[🔗 RAG Engine](https://ai.rodland.no/demo/rag)** - Retrieval-Augmented Generation
+- 🍿 PopChoice - AI movie recommendations (Solo Project - Dreams)
 
 #### 🚀 Open Source
 
-- **🏷️ Text Classifier** - Open-source text classification
-- **📄 Text Squisher** - Open-source text summarization
-- **🔍 Object Spotter** - Visual object recognition
+- **[🏷️ Text Classifier](https://ai.rodland.no/demo/huggingface-classification)** - Open-source text classification
+- **[📄 Text Squisher](https://ai.rodland.no/demo/huggingface-summarization)** - Open-source text summarization
+- **[🔍 Object Spotter](https://ai.rodland.no/demo/huggingface-object-detection)** - Visual object recognition
 
 #### 👁️ Vision & Image
 
-- **🎬 Poster Lab** - AI-generated movie posters
-- **✏️ Image Remix** - Mask-based image editing
-- **👁️ Vision Quest** - Multi-modal image analysis
+- **[🎬 Poster Lab](https://ai.rodland.no/demo/film-fusion)** - AI-generated movie posters
+- **[✏️ Image Remix](https://ai.rodland.no/demo/image-editing)** - Mask-based image editing
+- **[👁️ Vision Quest](https://ai.rodland.no/demo/gpt4-vision)** - Multi-modal image analysis
 
 #### 🎯 AI Agents
 
-- **🧠 ReAct Playground** - Reasoning + Acting pattern
-- **🛠️ Tool Master** - Native OpenAI tool integration
-- **✈️ Trip Wizard** - AI-powered trip planning (Solo Project - When I Have Time)
-- **🎯 AI Sidekick** - Persistent AI assistants (After Coffee)
+- **[🧠 ReAct Playground](https://ai.rodland.no/demo/react)** - Reasoning + Acting pattern
+- **[🛠️ Tool Master](https://ai.rodland.no/demo/function-calling)** - Native OpenAI tool integration
+- ✈️ Trip Wizard - AI-powered trip planning (Solo Project - When I Have Time)
+- 🎯 AI Sidekick - Persistent AI assistants (After Coffee)
 
 #### 🔗 MCP Protocol
 
-- **🛠️ MCP Toolbox** - Custom AI tool server (Personal Exploration)
-- **🔗 MCP Decoded** - Protocol fundamentals (Hackday)
-- **🔧 MCP Wizard** - Dynamic tool discovery (Hackday)
-- **🌍 MCP Catalog** - Server discovery service (Personal Exploration - Wild Ideas)
+- **[🛠️ MCP Toolbox](https://ai.rodland.no/demo/mcp-server)** - Custom AI tool server (Personal Exploration)
+- **[🔗 MCP Decoded](https://ai.rodland.no/demo/mcp-protocol)** - Protocol fundamentals (Hackday)
+- **[🔧 MCP Wizard](https://ai.rodland.no/demo/mcp-assistant)** - Dynamic tool discovery (Hackday)
+- 🌍 MCP Catalog - Server discovery service (Personal Exploration - Wild Ideas)
 
 #### 🏗️ Frameworks
 
-- **🦜 LangChain Lab** - Declarative AI services (Personal Exploration)
-- **🍃 Spring AI** - Native Spring integration (Personal Exploration)
-- **☕ OpenAI Toolkit** - Official Java/Kotlin SDK (Personal Exploration - Procrastinating)
+- **[🦜 LangChain Lab](https://ai.rodland.no/demo/langchain4j)** - Declarative AI services (Personal Exploration)
+- **[🍃 Spring AI](https://ai.rodland.no/demo/spring-ai)** - Native Spring integration (Personal Exploration)
+- ☕ OpenAI Toolkit - Official Java/Kotlin SDK (Personal Exploration - Procrastinating)
 
 
 <!-- DEMO_LIST_END -->
