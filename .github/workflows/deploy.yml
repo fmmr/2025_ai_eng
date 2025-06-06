@@ -7,14 +7,14 @@ on:
       - 'kotlin/.dockerignore'
       - 'kotlin/pom.xml'
       - 'kotlin/src/**'
-      - 'deploy.yml'
+      - '.github/workflows/deploy.yml'
   pull_request:
     paths:
       - 'kotlin/Dockerfile'
       - 'kotlin/.dockerignore'
       - 'kotlin/pom.xml'
       - 'kotlin/src/**'
-      - 'deploy.yml'
+      - '.github/workflows/deploy.yml'
 
 jobs:
   build-and-test:
