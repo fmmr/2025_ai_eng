@@ -1,4 +1,5 @@
-# Plyglot
+# Polyglot
+[![Deploy Polyglot](https://github.com/fmmr/2025_ai_eng/actions/workflows/deploy-polyglot.yml/badge.svg)](https://github.com/fmmr/2025_ai_eng/actions/workflows/deploy-polyglot.yml)
 
 A multilingual chat application for mobile terminals that translates messages into your preferred language, with support for multiple AI models and language options.
 
