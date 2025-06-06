@@ -1,4 +1,4 @@
-name: Kotlin CI/CD
+name: Deploy FTW!
 
 on:
   push:
@@ -7,14 +7,14 @@ on:
       - 'kotlin/.dockerignore'
       - 'kotlin/pom.xml'
       - 'kotlin/src/**'
-      - '.github/workflows/kotlin-ci.yml'
+      - 'deploy.yml'
   pull_request:
     paths:
       - 'kotlin/Dockerfile'
       - 'kotlin/.dockerignore'
       - 'kotlin/pom.xml'
       - 'kotlin/src/**'
-      - '.github/workflows/kotlin-ci.yml'
+      - 'deploy.yml'
 
 jobs:
   build-and-test:
