@@ -277,6 +277,10 @@
                 <version>8.0.2</version>
                 <executions>
                     <execution>
+                        <id>default</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
                         <id>get-the-git-infos</id>
                         <goals>
                             <goal>revision</goal>
