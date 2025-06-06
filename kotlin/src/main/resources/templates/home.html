@@ -12,7 +12,8 @@
         <p>Kotlin implementations of <a href="https://scrimba.com/the-ai-engineer-path-c02v" target="_blank" class="text-decoration-none text-white">Scrimba AI Engineering Path</a> assignments and
             examples</p>
         <p class="build-info">
-            <span th:text="'Built: ' + ${buildInfo.buildTimestamp} + ' - Git: '">Built: Unknown</span><a th:href="'https://github.com/fmmr/2025_ai_eng/commit/' + ${buildInfo.gitCommit}" th:text="${buildInfo.gitCommit}" class="text-decoration-none text-white" target="_blank">commit</a><br>
+            <span th:text="'Built: ' + ${buildInfo.buildTimestamp} + ' - Git: '">Built: Unknown</span>
+            <a th:href="'https://github.com/fmmr/2025_ai_eng/commit/' + ${buildInfo.gitCommit}" th:text="${buildInfo.gitCommit}" class="text-decoration-none text-white" target="_blank">commit</a>
         </p>
     </section>
 
@@ -32,7 +33,7 @@
                                 <i th:class="${demo.contentType.icon} + ' text-muted ms-1'" data-bs-toggle="tooltip" th:data-bs-title="${demo.contentType.tooltip}"></i>
                             </h5>
                             <small th:if="${demo.soloProject}" class="text-muted">Solo Project</small>
-                            <p class="card-text" th:text="${demo.longDescription}">Description</p>
+                            <p class="card-text" th:utext="${demo.longDescription}">Description</p>
                             <a th:if="${demo.route != null}" th:href="@{${demo.route}}" class="btn btn-success">View Demo</a>
                             <button th:if="${demo.route == null}" class="btn" th:class="'btn ' + ${demo.status.buttonClass}" disabled th:text="${demo.status.displayText}">Status</button>
                         </div>

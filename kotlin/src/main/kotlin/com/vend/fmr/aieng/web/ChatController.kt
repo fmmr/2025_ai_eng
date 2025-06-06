@@ -3,6 +3,7 @@ package com.vend.fmr.aieng.web
 import com.vend.fmr.aieng.apis.openai.Message
 import com.vend.fmr.aieng.apis.openai.TextContent
 import com.vend.fmr.aieng.openAI
+import com.vend.fmr.aieng.utils.Demo
 import com.vend.fmr.aieng.utils.Prompts
 import jakarta.servlet.http.HttpSession
 import kotlinx.coroutines.runBlocking
@@ -21,7 +22,7 @@ data class ChatMessage(
 
 @Controller
 @RequestMapping("/demo/chat")
-class ChatController {
+class ChatController : BaseController(Demo.CHAT_INTERACTIVE) {
 
     @GetMapping
     fun chatDemo(model: Model, session: HttpSession): String {

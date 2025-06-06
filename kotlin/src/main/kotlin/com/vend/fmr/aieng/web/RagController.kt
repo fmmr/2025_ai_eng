@@ -6,6 +6,7 @@ import com.vend.fmr.aieng.SUPABASE_URL
 import com.vend.fmr.aieng.apis.openai.OpenAI
 import com.vend.fmr.aieng.apis.supabase.DocumentMatch
 import com.vend.fmr.aieng.apis.supabase.Supabase
+import com.vend.fmr.aieng.utils.Demo
 import com.vend.fmr.aieng.utils.Prompts
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 @RequestMapping("/demo/rag")
-class RagController {
+class RagController : BaseController(Demo.RAG) {
 
     @GetMapping
     fun ragDemo(model: Model): String {

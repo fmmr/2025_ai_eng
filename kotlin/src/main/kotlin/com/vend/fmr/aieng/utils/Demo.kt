@@ -155,8 +155,8 @@ enum class Demo(
     RAG(
         id = "rag",
         title = "RAG",
-        shortDescription = "Advanced RAG implementation from the Scrimba course",
-        longDescription = "Advanced RAG implementation from the Scrimba course. Complete pipeline: query→embedding→vector search→context-aware AI response using movie/podcast database.",
+        shortDescription = "Retrieval-Augmented Generation",
+        longDescription = "Advanced RAG implementation from the Scrimba course.<br>Complete pipeline: query→embedding→vector search→context-aware AI response using movie/podcast database.",
         icon = "bi-link-45deg",
         emoji = "🔗",
         status = DemoStatus.COMPLETED,
