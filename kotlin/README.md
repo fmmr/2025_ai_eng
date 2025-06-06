@@ -13,116 +13,20 @@ This project implements the core concepts from the Scrimba AI Engineering course
 ### Interactive Demos
 
 <!-- DEMO_LIST_START -->
-[INFO] Scanning for projects...
-[INFO] 
-[INFO] -------------------------< com.vend.fmr:aieng >-------------------------
-[INFO] Building aieng 1.0-SNAPSHOT
-[INFO]   from pom.xml
-[INFO] --------------------------------[ jar ]---------------------------------
-[INFO] 
-[INFO] --- git-commit-id:8.0.2:revision (get-the-git-infos) @ aieng ---
-[INFO] dotGitDirectory '/home/runner/work/2025_ai_eng/2025_ai_eng/.git'
-[INFO] Using environment variable based branch name. GITHUB_REF = refs/heads/main (branch = main)
-[INFO] Collected git.branch with value main
-[INFO] Collected git.commit.id.abbrev with value 1bc845d
-[INFO] Collected git.commit.time with value 2025-06-06T09:56:06Z
-[INFO] including property 'git.commit.id.abbrev' in results
-[INFO] including property 'git.branch' in results
-[INFO] including property 'git.commit.time' in results
-[INFO] 
-[INFO] --- git-commit-id:8.0.2:revision (default) @ aieng ---
-[INFO] dotGitDirectory '/home/runner/work/2025_ai_eng/2025_ai_eng/.git'
-[INFO] Using environment variable based branch name. GITHUB_REF = refs/heads/main (branch = main)
-[INFO] Collected git.branch with value main
-[INFO] Collected git.commit.id.abbrev with value 1bc845d
-[INFO] Collected git.commit.time with value 2025-06-06T09:56:06Z
-[INFO] including property 'git.commit.id.abbrev' in results
-[INFO] including property 'git.branch' in results
-[INFO] including property 'git.commit.time' in results
-[INFO] 
-[INFO] --- resources:3.3.1:resources (default-resources) @ aieng ---
-[INFO] Copying 52 resources from src/main/resources to target/classes
-[INFO] 
-[INFO] --- compiler:3.14.0:compile (default-compile) @ aieng ---
-[INFO] Nothing to compile - all classes are up to date.
-[INFO] 
-[INFO] --- kotlin:2.1.21:compile (compile) @ aieng ---
-[INFO] Applied plugin: 'kotlinx-serialization'
-[INFO] Applied plugin: 'spring'
-[INFO] 
-[INFO] --- exec:3.1.0:java (default-cli) @ aieng ---
-Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-utils/3.4.2/plexus-utils-3.4.2.pom
-Progress (1): 1.4/8.2 kBProgress (1): 2.8/8.2 kBProgress (1): 4.1/8.2 kBProgress (1): 5.5/8.2 kBProgress (1): 6.9/8.2 kBProgress (1): 8.2 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-utils/3.4.2/plexus-utils-3.4.2.pom (8.2 kB at 27 kB/s)
-Downloading from central: https://repo.maven.apache.org/maven2/org/apache/commons/commons-exec/1.3/commons-exec-1.3.pom
-Progress (1): 1.4/11 kBProgress (1): 2.8/11 kBProgress (1): 4.1/11 kBProgress (1): 5.5/11 kBProgress (1): 6.9/11 kBProgress (1): 8.3/11 kBProgress (1): 9.7/11 kBProgress (1): 11 kB                       Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/commons/commons-exec/1.3/commons-exec-1.3.pom (11 kB at 916 kB/s)
-Downloading from central: https://repo.maven.apache.org/maven2/org/apache/commons/commons-parent/35/commons-parent-35.pom
-Progress (1): 16/58 kBProgress (1): 33/58 kBProgress (1): 49/58 kBProgress (1): 58 kB                      Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/commons/commons-parent/35/commons-parent-35.pom (58 kB at 1.5 MB/s)
-Downloading from central: https://repo.maven.apache.org/maven2/org/apache/apache/15/apache-15.pom
-Progress (1): 15 kB                   Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/apache/15/apache-15.pom (15 kB at 2.5 MB/s)
-Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-utils/3.4.2/plexus-utils-3.4.2.jar
-Progress (1): 16/267 kBProgress (1): 33/267 kBProgress (1): 49/267 kBProgress (1): 66/267 kBProgress (1): 82/267 kBProgress (1): 98/267 kBProgress (1): 115/267 kBProgress (1): 131/267 kBProgress (1): 147/267 kBProgress (1): 164/267 kBProgress (1): 180/267 kBProgress (1): 197/267 kBProgress (1): 213/267 kBProgress (1): 229/267 kBProgress (1): 246/267 kBProgress (1): 256/267 kBProgress (1): 267 kB                        Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-utils/3.4.2/plexus-utils-3.4.2.jar (267 kB at 6.7 MB/s)
-Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-component-annotations/2.1.1/plexus-component-annotations-2.1.1.jar
-Downloading from central: https://repo.maven.apache.org/maven2/org/apache/commons/commons-exec/1.3/commons-exec-1.3.jar
-Progress (1): 4.1 kB                    Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-component-annotations/2.1.1/plexus-component-annotations-2.1.1.jar (4.1 kB at 684 kB/s)
-Progress (1): 1.4/54 kBProgress (1): 2.8/54 kBProgress (1): 4.1/54 kBProgress (1): 5.5/54 kBProgress (1): 6.9/54 kBProgress (1): 8.3/54 kBProgress (1): 9.7/54 kBProgress (1): 11/54 kB Progress (1): 12/54 kBProgress (1): 14/54 kBProgress (1): 15/54 kBProgress (1): 17/54 kBProgress (1): 18/54 kBProgress (1): 19/54 kBProgress (1): 21/54 kBProgress (1): 22/54 kBProgress (1): 23/54 kBProgress (1): 25/54 kBProgress (1): 26/54 kBProgress (1): 28/54 kBProgress (1): 29/54 kBProgress (1): 30/54 kBProgress (1): 32/54 kBProgress (1): 33/54 kBProgress (1): 34/54 kBProgress (1): 36/54 kBProgress (1): 37/54 kBProgress (1): 39/54 kBProgress (1): 40/54 kBProgress (1): 41/54 kBProgress (1): 43/54 kBProgress (1): 44/54 kBProgress (1): 46/54 kBProgress (1): 47/54 kBProgress (1): 48/54 kBProgress (1): 50/54 kBProgress (1): 51/54 kBProgress (1): 52/54 kBProgress (1): 54/54 kBProgress (1): 54 kB                      Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/commons/commons-exec/1.3/commons-exec-1.3.jar (54 kB at 2.3 MB/s)
 ## 🧠 Core AI
-
-- **📝 Prompt Lab** - Crafting effective prompts
-- **🤖 Chat Basics** - Core OpenAI integration
-- **💬 Chat Studio** - Conversational AI interface
-- **🌡️ Temperature Play** - AI creativity vs consistency
-- **🎯 Top-P Magic** - Vocabulary selection control
-- **⚙️ Fine-Tune Factory** - Custom model training (Maybe Next Year)
-- **🔢 Vector Space** - Text to vector conversion
-- **✂️ Text Slicer** - Text segmentation tool
-- **🌍 PollyGlot** - Contextual translation bot (Solo Project - Someday)
 
 ## 🗄️ Data
 
-- **📈 Stock Oracle** - AI-powered financial analysis
-- **🗄️ Vector Vault** - Semantic search with embeddings
-- **🔗 RAG Engine** - Retrieval-Augmented Generation
-- **🍿 PopChoice** - AI movie recommendations (Solo Project - Dreams)
-
 ## 🚀 Open Source
-
-- **🏷️ Text Classifier** - Open-source text classification
-- **📄 Text Squisher** - Open-source text summarization
-- **🔍 Object Spotter** - Visual object recognition
 
 ## 👁️ Vision & Image
 
-- **🎬 Poster Lab** - AI-generated movie posters
-- **✏️ Image Remix** - Mask-based image editing
-- **👁️ Vision Quest** - Multi-modal image analysis
-
 ## 🎯 AI Agents
-
-- **🧠 ReAct Playground** - Reasoning + Acting pattern
-- **🛠️ Tool Master** - Native OpenAI tool integration
-- **✈️ Trip Wizard** - AI-powered trip planning (Solo Project - When I Have Time)
-- **🎯 AI Sidekick** - Persistent AI assistants (After Coffee)
 
 ## 🔗 MCP Protocol
 
-- **🛠️ MCP Toolbox** - Custom AI tool server (Personal Exploration)
-- **🔗 MCP Decoded** - Protocol fundamentals (Hackday)
-- **🔧 MCP Wizard** - Dynamic tool discovery (Hackday)
-- **🌍 MCP Catalog** - Server discovery service (Personal Exploration - Wild Ideas)
-
 ## 🏗️ Frameworks
 
-- **🦜 LangChain Lab** - Declarative AI services (Personal Exploration)
-- **🍃 Spring AI** - Native Spring integration (Personal Exploration)
-- **☕ OpenAI Toolkit** - Official Java/Kotlin SDK (Personal Exploration - Procrastinating)
-
-
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD SUCCESS
-[INFO] ------------------------------------------------------------------------
-[INFO] Total time:  22.132 s
-[INFO] Finished at: 2025-06-06T09:56:48Z
-[INFO] ------------------------------------------------------------------------
 <!-- DEMO_LIST_END -->
 
 ### Technology Stack
