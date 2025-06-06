@@ -8,8 +8,8 @@ Kotlin implementation of the [Scrimba AI Engineering Path](https://scrimba.com/t
 
 This project implements the core concepts from the Scrimba AI Engineering course in Kotlin. Rather than following along with JavaScript examples, this provides equivalent functionality using Spring Boot, demonstrating that AI engineering patterns are language-agnostic and work excellently in the JVM ecosystem.
 
-[![Kotlin CI/CD](https://github.com/fmmr/2025_ai_eng/actions/workflows/kotlin-ci.yml/badge.svg)](https://github.com/fmmr/2025_ai_eng/actions/workflows/kotlin-ci.yml)
-[![Automagic Readme](https://github.com/fmmr/2025_ai_eng/actions/workflows/automagic-readme.yml/badge.svg)](https://github.com/fmmr/2025_ai_eng/actions/workflows/automagic-readme.yml)
+[![Deploy FTW!](https://github.com/fmmr/2025_ai_eng/actions/workflows/deploy.yml/badge.svg)](https://github.com/fmmr/2025_ai_eng/actions/workflows/deploy.yml)
+[![Automagic Readme](https://github.com/fmmr/2025_ai_eng/actions/workflows/readme-magic.yml/badge.svg)](https://github.com/fmmr/2025_ai_eng/actions/workflows/readme-magic.yml)
 
 ## Web Application
 
