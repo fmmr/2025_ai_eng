@@ -34,7 +34,7 @@ Each demo includes working code examples, interactive web interfaces, and detail
 
 ### 🌐 [JavaScript/Node.js Examples](js/)
 
-Original JavaScript implementations and experiments from the Scrimba AI Engineering course, including frontend examples and serverless implementations.
+Original JavaScript implementations and experiments from the Scrimba AI Engineering course, including frontend examples and serverless implementations.  Deployed on Cloudflare Workers and Pages and live here: [https://aieng.rodland.no/].
 
 #### Features
 - Vanilla JavaScript implementations
