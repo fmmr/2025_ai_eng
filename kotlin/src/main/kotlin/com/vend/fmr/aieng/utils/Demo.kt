@@ -47,7 +47,7 @@ enum class Demo(
         id = "chat",
         title = "Chat Studio",
         shortDescription = "Conversational AI interface",
-        longDescription = "Full conversation experience with context awareness, session management, and persistent history. Build ChatGPT-like interactions with memory.",
+        longDescription = "Full conversation experience with context awareness, session management, and persistent history.   Build ChatGPT-like interactions with memory.",
         icon = "bi-chat-left-text",
         emoji = "💬",
         status = DemoStatus.COMPLETED,
