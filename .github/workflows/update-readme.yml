@@ -37,14 +37,8 @@ jobs:
     - name: Generate demo list
       working-directory: ./kotlin
       run: |
-        # Use the working command but try to minimize output  
-        mvn -q compile exec:java -Dexec.mainClass="com.vend.fmr.aieng.utils.ReadmeGeneratorKt" -Dexec.classpathScope="compile" > demo_list_raw.md 2>&1
-        # Extract only the actual demo content (lines between actual demo sections)
-        sed -n '/^## /,/^$/p' demo_list_raw.md > demo_list.md
-        # If that didn't work, fall back to extracting everything after the last [INFO] line
-        if [ ! -s demo_list.md ]; then
-          sed -n '/\[INFO\] BUILD SUCCESS/,$ {/\[INFO\]/d; p}' demo_list_raw.md | sed '/^$/N;/^\n$/d' > demo_list.md
-        fi
+        # Use the working command with minimal flags
+        mvn -q compile exec:java -Dexec.mainClass="com.vend.fmr.aieng.utils.ReadmeGeneratorKt" -Dexec.classpathScope="compile" > demo_list.md 2>&1
 
     - name: Display generated demo list
       working-directory: ./kotlin
