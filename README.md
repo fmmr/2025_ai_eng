@@ -88,8 +88,12 @@ Implementing concepts from the **Scrimba AI Engineering Path** - a practical cou
 
 **Why multiple languages?** Demonstrates that AI engineering patterns work across different technology stacks - from JavaScript/Node.js to Kotlin/JVM.
 
-## 🔗 Links
+## 🔗 Operations & Links
 
+<!-- OPERATIONS_START -->
+<!-- OPERATIONS_END -->
+
+**Quick Links:**
 - 🚀 **Main App**: [https://ai.rodland.no/](https://ai.rodland.no/)
-- 💻 **Source Code**: [GitHub Repository](https://github.com/fmmr/2025_ai_eng)
-- 🔄 **CI/CD**: [GitHub Actions](https://github.com/fmmr/2025_ai_eng/actions)
+- 🌍 **PolyGlot**: [https://polyglot-vbh0.onrender.com/](https://polyglot-vbh0.onrender.com/)
+- 📉 **DodgyDave**: [https://aieng.rodland.no/](https://aieng.rodland.no/)

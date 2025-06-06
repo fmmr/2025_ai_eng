@@ -52,6 +52,17 @@ object ReadmeGenerator {
         return sb.toString()
     }
     
+    fun generateOperationsLinks(): String {
+        val sb = StringBuilder()
+        
+        OperationsLink.entries.forEach { link ->
+            val lockIcon = if (link.requiresLogin) " 🔒" else ""
+            sb.appendLine("- **[${link.title}](${link.url})**$lockIcon - ${link.description}")
+        }
+        
+        return sb.toString()
+    }
+    
     private fun getProjectTypeText(demo: Demo, statusText: String? = null): String {
         return when {
             demo.soloProject -> " (Solo Project${statusText?.let { " - $it" } ?: ""})"
@@ -66,6 +77,7 @@ object ReadmeGenerator {
 fun main(args: Array<String>) {
     when (args.getOrNull(0)) {
         "external" -> println(ReadmeGenerator.generateExternalDemos())
+        "operations" -> println(ReadmeGenerator.generateOperationsLinks())
         else -> println(ReadmeGenerator.generateInternalDemos()) // default - internal demos
     }
 }

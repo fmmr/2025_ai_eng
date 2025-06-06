@@ -7,6 +7,7 @@ on:
       - 'kotlin/src/main/kotlin/com/vend/fmr/aieng/utils/Demo.kt'
       - 'kotlin/src/main/kotlin/com/vend/fmr/aieng/utils/DemoCategory.kt'
       - 'kotlin/src/main/kotlin/com/vend/fmr/aieng/utils/DemoStatus.kt'
+      - 'kotlin/src/main/kotlin/com/vend/fmr/aieng/utils/OperationsLink.kt'
       - 'kotlin/src/main/kotlin/com/vend/fmr/aieng/utils/ReadmeGenerator.kt'
       - 'README.md'
       - 'kotlin/README.md'
@@ -60,6 +61,14 @@ jobs:
           cat js_demos.md
           exit 1
         }
+        
+        # Generate operations links list
+        echo "🔨 Generating operations links..."
+        mvn -q exec:java -Dexec.mainClass="com.vend.fmr.aieng.utils.ReadmeGeneratorKt" -Dexec.args="operations" -Dexec.classpathScope="compile" > operations.md 2>&1 || {
+          echo "❌ Operations links generation failed"
+          cat operations.md
+          exit 1
+        }
 
     - name: 👀 Peek at the internal masterpiece
       working-directory: ./kotlin
@@ -78,6 +87,15 @@ jobs:
         cat js_demos.md
         echo "================================"
         echo "📊 External demos line count: $(wc -l < js_demos.md)"
+
+    - name: 👀 Peek at the cool links
+      working-directory: ./kotlin
+      run: |
+        echo "📋 Generated Operations Links:"
+        echo "================================"
+        cat operations.md
+        echo "================================"
+        echo "📊 Operations links line count: $(wc -l < operations.md)"
 
     - name: ✨ Sprinkle README magic
       working-directory: ./kotlin
@@ -105,9 +123,9 @@ jobs:
         # Replace the Kotlin README
         mv README_new.md README.md
         
-        # Update Parent README with internal and external demo sections
+        # Update Parent README with internal demos, external demos, and operations links
         awk '
-        BEGIN { in_internal_section = 0; in_external_section = 0 }
+        BEGIN { in_internal_section = 0; in_external_section = 0; in_operations_section = 0 }
         /<!-- KOTLIN_DEMOS_START -->/ { 
           print $0
           while ((getline line < "kotlin_demos.md") > 0) {
@@ -136,14 +154,28 @@ jobs:
           in_external_section = 0
           next
         }
-        !in_internal_section && !in_external_section { print $0 }
+        /<!-- OPERATIONS_START -->/ { 
+          print $0
+          while ((getline line < "operations.md") > 0) {
+            print line
+          }
+          close("operations.md")
+          in_operations_section = 1
+          next
+        }
+        /<!-- OPERATIONS_END -->/ { 
+          print $0
+          in_operations_section = 0
+          next
+        }
+        !in_internal_section && !in_external_section && !in_operations_section { print $0 }
         ' ../README.md > ../README_new.md
         
         # Replace the parent README
         mv ../README_new.md ../README.md
         
         # Clean up
-        rm kotlin_demos.md js_demos.md
+        rm kotlin_demos.md js_demos.md operations.md
 
     - name: 🔍 Detective work for changes
       id: verify-changed-files
