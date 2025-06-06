@@ -12,8 +12,11 @@ This project implements the core concepts from the Scrimba AI Engineering course
 
 ### Interactive Demos
 
+<!-- DEMO_LIST_START -->
 ## 🧠 Core AI
 
+- **📝 Prompt Lab** - Crafting effective prompts
+- **🤖 Chat Basics** - Core OpenAI integration
 - **💬 Chat Studio** - Conversational AI interface
 - **🌡️ Temperature Play** - AI creativity vs consistency
 - **🎯 Top-P Magic** - Vocabulary selection control
@@ -29,7 +32,7 @@ This project implements the core concepts from the Scrimba AI Engineering course
 - **🔗 RAG Engine** - Retrieval-Augmented Generation
 - **🍿 PopChoice** - AI movie recommendations (Solo Project - Dreams)
 
-## 🔹 Open Source
+## 🚀 Open Source
 
 - **🏷️ Text Classifier** - Open-source text classification
 - **📄 Text Squisher** - Open-source text summarization
@@ -55,11 +58,12 @@ This project implements the core concepts from the Scrimba AI Engineering course
 - **🔧 MCP Wizard** - Dynamic tool discovery (Hackday)
 - **🌍 MCP Catalog** - Server discovery service (Personal Exploration - Wild Ideas)
 
-## 🔹 Frameworks
+## 🏗️ Frameworks
 
 - **🦜 LangChain Lab** - Declarative AI services (Personal Exploration)
 - **🍃 Spring AI** - Native Spring integration (Personal Exploration)
 - **☕ OpenAI Toolkit** - Official Java/Kotlin SDK (Personal Exploration - Procrastinating)
+<!-- DEMO_LIST_END -->
 
 ### Technology Stack
 - **Backend**: Spring Boot 3.5.0 with Kotlin

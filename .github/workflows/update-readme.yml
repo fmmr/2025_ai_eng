@@ -1,0 +1,99 @@
+name: Update README Demo List
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'kotlin/src/main/kotlin/com/vend/fmr/aieng/utils/Demo.kt'
+      - 'kotlin/src/main/kotlin/com/vend/fmr/aieng/utils/DemoCategory.kt'
+      - 'kotlin/src/main/kotlin/com/vend/fmr/aieng/utils/DemoStatus.kt'
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+
+    - name: Cache Maven dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+
+    - name: Generate demo list
+      working-directory: ./kotlin
+      run: |
+        mvn compile exec:java -Dexec.mainClass="com.vend.fmr.aieng.utils.ReadmeGeneratorKt" -Dexec.classpathScope="compile" > demo_list.md
+
+    - name: Update README.md
+      working-directory: ./kotlin
+      run: |
+        # Read the generated demo list
+        DEMO_CONTENT=$(cat demo_list.md)
+        
+        # Create a temporary file with the updated README
+        awk '
+        BEGIN { in_demo_section = 0 }
+        /<!-- DEMO_LIST_START -->/ { 
+          print $0
+          while ((getline line < "demo_list.md") > 0) {
+            print line
+          }
+          close("demo_list.md")
+          in_demo_section = 1
+          next
+        }
+        /<!-- DEMO_LIST_END -->/ { 
+          print $0
+          in_demo_section = 0
+          next
+        }
+        !in_demo_section { print $0 }
+        ' README.md > README_new.md
+        
+        # Replace the original README
+        mv README_new.md README.md
+        
+        # Clean up
+        rm demo_list.md
+
+    - name: Check for changes
+      id: verify-changed-files
+      working-directory: ./kotlin
+      run: |
+        if [ -n "$(git status --porcelain)" ]; then
+          echo "changed=true" >> $GITHUB_OUTPUT
+        else
+          echo "changed=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Commit changes
+      if: steps.verify-changed-files.outputs.changed == 'true'
+      working-directory: ./kotlin
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add README.md
+        git commit -m "🤖 Auto-update README demo list
+
+        Updated demo list based on latest changes to Demo.kt
+        
+        Co-Authored-By: ReadmeGenerator <noreply@github.com>"
+
+    - name: Push changes
+      if: steps.verify-changed-files.outputs.changed == 'true'
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: main
