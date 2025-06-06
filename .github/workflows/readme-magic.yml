@@ -53,15 +53,15 @@ jobs:
           exit 1
         }
         
-        # Generate external demos list  
+        # Generate external demos list (no compile needed)
         echo "🔨 Generating external demos..."
-        mvn -q compile exec:java -Dexec.mainClass="com.vend.fmr.aieng.utils.ReadmeGeneratorKt" -Dexec.args="external" -Dexec.classpathScope="compile" > js_demos.md 2>&1 || {
+        mvn -q exec:java -Dexec.mainClass="com.vend.fmr.aieng.utils.ReadmeGeneratorKt" -Dexec.args="external" -Dexec.classpathScope="compile" > js_demos.md 2>&1 || {
           echo "❌ External demos generation failed"
           cat js_demos.md
           exit 1
         }
 
-    - name: 👀 Peek at the masterpiece
+    - name: 👀 Peek at the internal masterpiece
       working-directory: ./kotlin
       run: |
         echo "📋 Generated Internal Demo List:"
@@ -69,7 +69,10 @@ jobs:
         cat kotlin_demos.md
         echo "================================"
         echo "📊 Internal demos line count: $(wc -l < kotlin_demos.md)"
-        echo ""
+
+    - name: 👀 Peek at the external masterpiece
+      working-directory: ./kotlin
+      run: |
         echo "📋 Generated External Demo List:"
         echo "================================"
         cat js_demos.md
