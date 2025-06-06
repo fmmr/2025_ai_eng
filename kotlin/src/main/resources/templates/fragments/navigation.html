@@ -49,14 +49,12 @@
                         <i class="bi-link-45deg"></i> Links
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="linksDropdown">
-                        <li><a href="https://github.com/fmmr/2025_ai_eng/tree/main/kotlin" class="dropdown-item" target="_blank">
-                            <i class="bi-github"></i> Source Code</a></li>
-                        <li><a href="https://github.com/fmmr/2025_ai_eng/actions" class="dropdown-item" target="_blank">
-                            <i class="bi-gear-wide-connected"></i> GitHub Actions</a></li>
-                        <li><a href="https://hub.docker.com/repository/docker/fmmr/aieng" class="dropdown-item" target="_blank">
-                            <i class="bi-box"></i> Docker Hub</a></li>
-                        <li><a href="https://app.northflank.com/t/fmrs-team/project/aieng/services/aieng" class="dropdown-item" target="_blank">
-                            <i class="bi-cloud"></i> Northflank</a></li>
+                        <li th:each="link : ${operationsLinks}">
+                            <a th:href="${link.url}" class="dropdown-item" target="_blank" th:title="${link.description}">
+                                <i th:class="${link.icon}"></i> <span th:text="${link.title}">Link</span>
+                                <i th:if="${link.requiresLogin}" class="bi-lock ms-1 text-muted small"></i>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>

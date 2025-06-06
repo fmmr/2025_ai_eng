@@ -2,6 +2,7 @@ package com.vend.fmr.aieng.web
 
 import com.vend.fmr.aieng.utils.Demo
 import com.vend.fmr.aieng.utils.NavbarGroup
+import com.vend.fmr.aieng.utils.OperationsLink
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ModelAttribute
@@ -20,5 +21,6 @@ class GlobalControllerAdvice {
             )
         }
         model.addAttribute("navbarGroups", navbarData)
+        model.addAttribute("operationsLinks", OperationsLink.entries)
     }
 }
