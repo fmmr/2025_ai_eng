@@ -37,7 +37,17 @@ jobs:
     - name: Generate demo list
       working-directory: ./kotlin
       run: |
-        mvn compile exec:java -Dexec.mainClass="com.vend.fmr.aieng.utils.ReadmeGeneratorKt" -Dexec.classpathScope="compile" > demo_list.md
+        # Run ReadmeGenerator with maximum Maven quietness
+        mvn -q --batch-mode exec:java -Dexec.mainClass="com.vend.fmr.aieng.utils.ReadmeGeneratorKt" -Dexec.classpathScope="compile" -Dexec.args="" > demo_list.md
+
+    - name: Display generated demo list
+      working-directory: ./kotlin
+      run: |
+        echo "📋 Generated Demo List Content:"
+        echo "================================"
+        cat demo_list.md
+        echo "================================"
+        echo "📊 Line count: $(wc -l < demo_list.md)"
 
     - name: Update README.md
       working-directory: ./kotlin
