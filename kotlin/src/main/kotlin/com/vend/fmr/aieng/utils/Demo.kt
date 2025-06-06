@@ -21,9 +21,9 @@ enum class Demo(
     // Core AI Demos
     PROMPT_ENGINEERING(
         id = "prompt-engineering",
-        title = "Prompt Engineering",
-        shortDescription = "Master the art of crafting effective prompts",
-        longDescription = "Master the art of crafting effective prompts. Compare different prompting techniques to see how small changes dramatically impact AI response quality and accuracy.",
+        title = "Prompt Lab",
+        shortDescription = "Crafting effective prompts",
+        longDescription = "Compare different prompting techniques to see how small changes dramatically impact AI response quality and accuracy. Essential foundation for all AI interactions.",
         icon = "bi-pencil-square",
         emoji = "📝",
         status = DemoStatus.COMPLETED,
@@ -33,9 +33,9 @@ enum class Demo(
 
     CHAT_COMPLETION(
         id = "chat-completion",
-        title = "Chat Completion",
-        shortDescription = "Core OpenAI integration from the Scrimba course",
-        longDescription = "Core OpenAI integration from the Scrimba course. Interactive form to generate AI responses with customizable prompts, system messages, and model parameters.",
+        title = "Chat Basics",
+        shortDescription = "Core OpenAI integration",
+        longDescription = "Interactive form to generate AI responses with customizable prompts, system messages, and model parameters.<br>Foundation demo from the Scrimba course.",
         icon = "bi-chat-dots",
         emoji = "🤖",
         status = DemoStatus.COMPLETED,
@@ -45,9 +45,9 @@ enum class Demo(
 
     CHAT_INTERACTIVE(
         id = "chat",
-        title = "Interactive Chat",
-        shortDescription = "Create conversational AI interfaces",
-        longDescription = "Create conversational AI interfaces with context awareness, session management, and conversation history.",
+        title = "Chat Studio",
+        shortDescription = "Conversational AI interface",
+        longDescription = "Full conversation experience with context awareness, session management, and persistent history.<br>Build ChatGPT-like interactions with memory.",
         icon = "bi-chat-left-text",
         emoji = "💬",
         status = DemoStatus.COMPLETED,
@@ -57,9 +57,9 @@ enum class Demo(
 
     TEMPERATURE_EFFECTS(
         id = "temperature-effects",
-        title = "Temperature Effects",
-        shortDescription = "Interactive temperature parameter demo",
-        longDescription = "Interactive temperature parameter demo. See how temperature affects AI creativity vs consistency with the same prompt and real-time comparisons.",
+        title = "Temperature Play",
+        shortDescription = "AI creativity vs consistency",
+        longDescription = "Discover how temperature affects AI output randomness. Compare creative vs consistent responses with the same prompt using different temperature values.",
         icon = "bi-thermometer-half",
         emoji = "🌡️",
         status = DemoStatus.COMPLETED,
@@ -69,9 +69,9 @@ enum class Demo(
 
     TOP_P_EFFECTS(
         id = "top-p-effects",
-        title = "Top-P Effects",
-        shortDescription = "Interactive top-p parameter demo",
-        longDescription = "Interactive top-p parameter demo. Discover how top-p affects AI vocabulary selection and word diversity with live response comparisons.",
+        title = "Top-P Magic",
+        shortDescription = "Vocabulary selection control",
+        longDescription = "Explore how top-p affects AI vocabulary selection and word diversity.<br>See how nucleus sampling shapes response quality and variety in real-time.",
         icon = "bi-bullseye",
         emoji = "🎯",
         status = DemoStatus.COMPLETED,
@@ -81,9 +81,9 @@ enum class Demo(
 
     FINE_TUNING(
         id = "fine-tuning",
-        title = "Fine-tuning",
-        shortDescription = "Custom model training with OpenAI's fine-tuning API",
-        longDescription = "Custom model training with OpenAI's fine-tuning API. Train specialized models on your data for specific tasks and improved performance.",
+        title = "Fine-Tune Factory",
+        shortDescription = "Custom model training",
+        longDescription = "Train specialized models on your data using OpenAI's fine-tuning API.<br>Create domain-specific AI models for improved task performance.",
         icon = "bi-arrow-up-circle",
         emoji = "⚙️",
         status = DemoStatus.NEXT_YEAR,
@@ -93,9 +93,9 @@ enum class Demo(
 
     EMBEDDINGS(
         id = "embeddings",
-        title = "Embeddings",
-        shortDescription = "Convert text into high-dimensional vectors",
-        longDescription = "Embeddings implementation from the Scrimba course. Convert text into high-dimensional vectors using OpenAI's models, with detailed analysis and visualization of the generated vectors.",
+        title = "Vector Space",
+        shortDescription = "Text to vector conversion",
+        longDescription = "Convert text into high-dimensional vectors using OpenAI's models.<br>Essential foundation for semantic search with detailed analysis and visualization.",
         icon = "bi-diagram-3",
         emoji = "🔢",
         status = DemoStatus.COMPLETED,
@@ -105,9 +105,9 @@ enum class Demo(
 
     CHUNKING(
         id = "chunking",
-        title = "Chunking",
-        shortDescription = "Text processing fundamentals from the course",
-        longDescription = "Text processing fundamentals from the course. Interactive chunking tool with customizable size and overlap settings, essential for preparing data for AI processing.",
+        title = "Text Slicer",
+        shortDescription = "Text segmentation tool",
+        longDescription = "Interactive chunking tool with customizable size and overlap settings.<br>Essential for preparing large texts for AI processing and RAG systems.",
         icon = "bi-scissors",
         emoji = "✂️",
         status = DemoStatus.COMPLETED,
@@ -118,8 +118,8 @@ enum class Demo(
     POLLYGLOT(
         id = "pollyglot",
         title = "PollyGlot",
-        shortDescription = "Multi-language translation bot",
-        longDescription = "Multi-language translation bot with conversation context. Translate between dozens of languages while maintaining conversation flow and cultural nuances.",
+        shortDescription = "Contextual translation bot",
+        longDescription = "Translate between dozens of languages while maintaining conversation flow and cultural nuances.<br>Smart translation that understands context and intent.",
         icon = "bi-translate",
         emoji = "🌍",
         status = DemoStatus.SOMEDAY,
@@ -130,9 +130,9 @@ enum class Demo(
     // Data Demos
     STOCK_DATA(
         id = "stock",
-        title = "Stock Data",
-        shortDescription = "Fetch real-time stock data from Polygon.io API",
-        longDescription = "Fetch real-time stock data from Polygon.io API and generate AI-powered financial analysis. See the complete pipeline from data fetching through intelligent market insights.",
+        title = "Stock Oracle",
+        shortDescription = "AI-powered financial analysis",
+        longDescription = "Fetch real-time stock data from Polygon.io and generate intelligent market analysis.<br>Complete pipeline from data retrieval to AI-driven insights.",
         icon = "bi-graph-up",
         emoji = "📈",
         status = DemoStatus.COMPLETED,
@@ -142,9 +142,9 @@ enum class Demo(
 
     VECTOR_DATABASE(
         id = "supabase",
-        title = "Vector Database",
-        shortDescription = "Vector database concepts from the Scrimba course",
-        longDescription = "Vector database concepts from the Scrimba course. Demonstrates semantic search with embeddings and PostgreSQL pgvector extension using Supabase.",
+        title = "Vector Vault",
+        shortDescription = "Semantic search with embeddings",
+        longDescription = "Explore semantic search using embeddings and PostgreSQL pgvector extension.<br>Foundation for RAG systems using Supabase as the vector store.",
         icon = "bi-database",
         emoji = "🗄️",
         status = DemoStatus.COMPLETED,
@@ -154,7 +154,7 @@ enum class Demo(
 
     RAG(
         id = "rag",
-        title = "RAG",
+        title = "RAG Engine",
         shortDescription = "Retrieval-Augmented Generation",
         longDescription = "Advanced RAG implementation from the Scrimba course.<br>Complete pipeline: query→embedding→vector search→context-aware AI response using movie/podcast database.",
         icon = "bi-link-45deg",
@@ -167,8 +167,8 @@ enum class Demo(
     POPCHOICE(
         id = "popchoice",
         title = "PopChoice",
-        shortDescription = "Smart movie recommendation engine",
-        longDescription = "Smart movie recommendation engine with AI-powered suggestions. Analyze preferences, mood, and viewing history to find the perfect film for any occasion.",
+        shortDescription = "AI movie recommendations",
+        longDescription = "Analyze preferences, mood, and viewing history to find the perfect film for any occasion.<br>Intelligent recommendations powered by preference learning.",
         icon = "bi-film",
         emoji = "🍿",
         status = DemoStatus.DREAMS,
@@ -179,9 +179,9 @@ enum class Demo(
     // Open Source Models
     HUGGINGFACE_CLASSIFICATION(
         id = "huggingface-classification",
-        title = "HuggingFace Classification",
-        shortDescription = "Text classification using open-source BART model",
-        longDescription = "Text classification using open-source BART model from HuggingFace. Classify text into custom categories with confidence scores and detailed analysis.",
+        title = "Text Classifier",
+        shortDescription = "Open-source text classification",
+        longDescription = "Classify text into custom categories using HuggingFace BART model.<br>Explore zero-shot classification with confidence scores and detailed analysis.",
         icon = "bi-tags",
         emoji = "🏷️",
         status = DemoStatus.COMPLETED,
@@ -191,9 +191,9 @@ enum class Demo(
 
     HUGGINGFACE_SUMMARIZATION(
         id = "huggingface-summarization",
-        title = "HuggingFace Summarization",
-        shortDescription = "Text summarization using open-source BART model",
-        longDescription = "Text summarization using open-source BART model from HuggingFace. Compress long texts into concise summaries with customizable length parameters.",
+        title = "Text Squisher",
+        shortDescription = "Open-source text summarization",
+        longDescription = "Compress long texts into concise summaries using HuggingFace BART model.<br>Customizable length parameters for perfect summary control.",
         icon = "bi-file-text",
         emoji = "📄",
         status = DemoStatus.COMPLETED,
@@ -203,9 +203,9 @@ enum class Demo(
 
     OBJECT_DETECTION(
         id = "huggingface-object-detection",
-        title = "Object Detection",
-        shortDescription = "Object detection in images using DETR model",
-        longDescription = "Object detection in images using DETR (Detection Transformer) model from HuggingFace. Detect and locate objects with bounding boxes and confidence scores.",
+        title = "Object Spotter",
+        shortDescription = "Visual object recognition",
+        longDescription = "Detect and locate objects in images using DETR (Detection Transformer) model.<br>HuggingFace-powered vision with bounding boxes and confidence scores.",
         icon = "bi-search",
         emoji = "🔍",
         status = DemoStatus.COMPLETED,
@@ -216,9 +216,9 @@ enum class Demo(
     // Vision & Image
     FILM_FUSION(
         id = "film-fusion",
-        title = "Film Fusion",
-        shortDescription = "Merge movies and art into stunning AI-generated posters",
-        longDescription = "Merge movies and art into stunning AI-generated posters. Combine cinematic imagery with artistic styles and fine-tune with different image generation parameters, models, and quality settings for perfect results.",
+        title = "Poster Lab",
+        shortDescription = "AI-generated movie posters",
+        longDescription = "Combine cinematic imagery with artistic styles using advanced image generation.<br>Fine-tune parameters, models, and quality settings for stunning poster results.",
         icon = "bi-film",
         emoji = "🎬",
         status = DemoStatus.COMPLETED,
@@ -228,9 +228,9 @@ enum class Demo(
 
     IMAGE_EDITING(
         id = "image-editing",
-        title = "AI Image Editing",
-        shortDescription = "AI-powered image editing with DALL-E 2",
-        longDescription = "AI-powered image editing with DALL-E 2. Edit existing images by describing what you want to add or change in specific areas using mask-based editing.",
+        title = "Image Remix",
+        shortDescription = "Mask-based image editing",
+        longDescription = "Edit existing images with DALL-E 2 by describing what you want to change.<br>Precise mask-based editing for specific areas and seamless modifications.",
         icon = "bi-brush",
         emoji = "✏️",
         status = DemoStatus.COMPLETED,
@@ -240,9 +240,9 @@ enum class Demo(
 
     GPT4_VISION(
         id = "gpt4-vision",
-        title = "GPT-4 with Vision",
-        shortDescription = "Multi-modal AI capabilities with image analysis",
-        longDescription = "Multi-modal AI capabilities with image analysis. Analyze images with GPT-4 Vision using our curated gallery of demo images and suggested prompts.",
+        title = "Vision Quest",
+        shortDescription = "Multi-modal image analysis",
+        longDescription = "Analyze images with GPT-4 Vision using our curated gallery of demo images.<br>Explore AI's visual understanding with suggested prompts and detailed insights.",
         icon = "bi-eye",
         emoji = "👁️",
         status = DemoStatus.COMPLETED,
@@ -253,9 +253,9 @@ enum class Demo(
     // AI Agents
     REACT_AGENT(
         id = "react",
-        title = "ReAct Agent",
-        shortDescription = "AI agent implementation from the Scrimba course",
-        longDescription = "AI agent implementation from the Scrimba course. Uses ReAct (Reasoning + Acting) pattern to solve problems through iterative thinking and action.",
+        title = "ReAct Playground",
+        shortDescription = "Reasoning + Acting pattern",
+        longDescription = "AI agent that solves problems through iterative thinking and action.<br>Watch step-by-step reasoning as the agent plans, acts, and learns from results.",
         icon = "bi-cpu",
         emoji = "🧠",
         status = DemoStatus.COMPLETED,
@@ -265,9 +265,9 @@ enum class Demo(
 
     FUNCTION_CALLING(
         id = "function-calling",
-        title = "Function Calling Agent",
-        shortDescription = "OpenAI's native function calling agent",
-        longDescription = "OpenAI's native function calling agent. Uses structured function schemas to let AI directly call external tools, compare with ReAct's manual approach.",
+        title = "Tool Master",
+        shortDescription = "Native OpenAI tool integration",
+        longDescription = "AI directly calls external tools using structured function schemas.<br>Compare OpenAI's native approach with ReAct's manual reasoning patterns.",
         icon = "bi-gear",
         emoji = "🛠️",
         status = DemoStatus.COMPLETED,
@@ -276,9 +276,9 @@ enum class Demo(
     ),
     TRAVEL_AGENT(
         id = "travel-agent",
-        title = "Travel Agent",
-        shortDescription = "Practical AI agent for trip planning",
-        longDescription = "Practical AI agent for trip planning. Book flights, find accommodations, create itineraries using multiple APIs and AI reasoning for seamless travel experiences.",
+        title = "Trip Wizard",
+        shortDescription = "AI-powered trip planning",
+        longDescription = "Book flights, find accommodations, and create itineraries using multiple APIs.<br>AI reasoning for seamless travel experiences and smart recommendations.",
         icon = "bi-airplane",
         emoji = "✈️",
         status = DemoStatus.TIME,
@@ -288,9 +288,9 @@ enum class Demo(
     ),
     ASSISTANTS_API(
         id = "assistants-api",
-        title = "Assistants API",
-        shortDescription = "OpenAI's Assistants API integration",
-        longDescription = "OpenAI's Assistants API integration from the Scrimba course. Build persistent AI assistants with file handling, code execution, and long-term memory.",
+        title = "AI Sidekick",
+        shortDescription = "Persistent AI assistants",
+        longDescription = "Build persistent AI assistants with file handling, code execution, and long-term memory.<br>Advanced capabilities beyond simple chat interactions.",
         icon = "bi-robot",
         emoji = "🎯",
         status = DemoStatus.COFFEE,
@@ -300,9 +300,9 @@ enum class Demo(
     // MCP Protocol (Additional Explorations)
     MCP_SERVER(
         id = "mcp-server",
-        title = "MCP Server",
-        shortDescription = "Build a custom MCP server using Spring AI",
-        longDescription = "Build a custom MCP server using Spring AI. Expose tools and resources that Claude Desktop and other MCP clients can discover and use automatically. Perfect for creating your own AI tool ecosystem.",
+        title = "MCP Toolbox",
+        shortDescription = "Custom AI tool server",
+        longDescription = "Expose tools and resources that Claude Desktop can discover and use automatically.<br>Create your own AI tool ecosystem using Spring AI and MCP protocol.",
         icon = "bi-server",
         emoji = "🛠️",
         status = DemoStatus.COMPLETED,
@@ -313,9 +313,9 @@ enum class Demo(
 
     MCP_PROTOCOL_DEMO(
         id = "mcp-protocol",
-        title = "MCP Protocol Demo",
-        shortDescription = "Learn the Model Context Protocol fundamentals",
-        longDescription = "Learn the Model Context Protocol (MCP) fundamentals. Educational demo showing JSON-RPC 2.0 calls, tool discovery, and parameter schemas step-by-step.",
+        title = "MCP Decoded",
+        shortDescription = "Protocol fundamentals",
+        longDescription = "Educational demo showing JSON-RPC 2.0 calls, tool discovery, and parameter schemas.<br>Learn Model Context Protocol mechanics step-by-step.",
         icon = "bi-diagram-2",
         emoji = "🔗",
         status = DemoStatus.COMPLETED,
@@ -327,9 +327,9 @@ enum class Demo(
 
     MCP_ASSISTANT(
         id = "mcp-assistant",
-        title = "MCP Assistant",
-        shortDescription = "AI-powered assistant that dynamically discovers tools",
-        longDescription = "AI-powered assistant that dynamically discovers and uses external tools via MCP. Chat interface with OpenAI function calling and session memory. See real-world AI tool integration in action.",
+        title = "MCP Wizard",
+        shortDescription = "Dynamic tool discovery",
+        longDescription = "AI assistant that dynamically discovers and uses external tools via MCP.<br>Chat interface with OpenAI function calling and persistent session memory.",
         icon = "bi-wrench",
         emoji = "🔧",
         status = DemoStatus.COMPLETED,
@@ -342,9 +342,9 @@ enum class Demo(
     // Frameworks (Additional Explorations)
     LANGCHAIN4J(
         id = "langchain4j",
-        title = "LangChain4j Framework",
-        shortDescription = "Interactive demo showcasing LangChain4j's declarative AI services",
-        longDescription = "Interactive demo showcasing LangChain4j's declarative AI services. Test text analysis, summarization, and sentiment classification using annotated interfaces vs. our custom implementations.",
+        title = "LangChain Lab",
+        shortDescription = "Declarative AI services",
+        longDescription = "Test text analysis, summarization, and sentiment classification using annotated interfaces.<br>Compare LangChain4j's approach with our custom implementations.",
         icon = "bi-link",
         emoji = "🦜",
         status = DemoStatus.COMPLETED,
@@ -355,9 +355,9 @@ enum class Demo(
 
     SPRING_AI(
         id = "spring-ai",
-        title = "Spring AI Framework",
-        shortDescription = "Official Spring AI 1.0.0 framework demo",
-        longDescription = "Official Spring AI 1.0.0 framework demo. Compare Spring's native AI integration with auto-configuration, dependency injection, and Spring-native patterns vs. LangChain4j and custom implementations.",
+        title = "Spring AI",
+        shortDescription = "Native Spring integration",
+        longDescription = "Spring's AI integration with auto-configuration, dependency injection, and native patterns.<br>Compare against LangChain4j and custom implementations.",
         icon = "bi-leaf",
         emoji = "🍃",
         status = DemoStatus.COMPLETED,
@@ -370,9 +370,9 @@ enum class Demo(
     // Additional Explorations (Future)
     MCP_REGISTRY(
         id = "mcp-registry",
-        title = "MCP Registry",
-        shortDescription = "Custom MCP server registry and discovery service",
-        longDescription = "Custom MCP server registry and discovery service. Browse, connect, and manage multiple MCP servers with a unified interface.",
+        title = "MCP Catalog",
+        shortDescription = "Server discovery service",
+        longDescription = "Browse, connect, and manage multiple MCP servers with a unified interface.<br>Central registry for discovering and organizing AI tool ecosystems.",
         icon = "bi-globe",
         emoji = "\uD83C\uDF0D",
         status = DemoStatus.WILD_IDEAS,
@@ -382,9 +382,9 @@ enum class Demo(
 
     OPENAI_JAVA(
         id = "openai-java",
-        title = "OpenAI Java Library",
-        shortDescription = "Explore OpenAI's official Java/Kotlin library",
-        longDescription = "Explore OpenAI's official Java/Kotlin library with type-safe builders, streaming support, and structured outputs. Compare with our custom HTTP implementation.",
+        title = "OpenAI Toolkit",
+        shortDescription = "Official Java/Kotlin SDK",
+        longDescription = "Type-safe builders, streaming support, and structured outputs using OpenAI's official library.<br>Compare with our custom HTTP implementation approach.",
         icon = "bi-cup-hot",
         emoji = "☕",
         status = DemoStatus.PROCRASTINATING,

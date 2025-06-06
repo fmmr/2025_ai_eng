@@ -7,8 +7,7 @@
     <div th:replace="~{fragments/navigation :: navbar(${activeTab})}"></div>
 
     <div class="container my-4">
-        <h1 class="text-center mb-4">🤗 HuggingFace Summarization</h1>
-        <p class="lead text-center">Summarize text using open-source BART model (facebook/bart-large-cnn)</p>
+        <div th:replace="~{fragments/hero-section :: demo-hero(${demo})}"></div>
 
         <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
             <strong>Error:</strong> <span th:text="${error}"></span>

@@ -1,5 +1,6 @@
 package com.vend.fmr.aieng.web
 
+import com.vend.fmr.aieng.utils.Demo
 import dev.langchain4j.service.AiServices
 import dev.langchain4j.service.UserMessage
 import dev.langchain4j.service.V
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
-class LangChain4jController {
+class LangChain4jController : BaseController(Demo.LANGCHAIN4J) {
 
     @Autowired
     @Qualifier("langchain4jChatModel")

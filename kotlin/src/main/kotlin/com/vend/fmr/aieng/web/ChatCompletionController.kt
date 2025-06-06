@@ -2,6 +2,7 @@ package com.vend.fmr.aieng.web
 
 import com.vend.fmr.aieng.OPEN_AI_KEY
 import com.vend.fmr.aieng.apis.openai.OpenAI
+import com.vend.fmr.aieng.utils.Demo
 import com.vend.fmr.aieng.utils.Models
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 @RequestMapping("/demo/chat-completion")
-class ChatCompletionController {
+class ChatCompletionController : BaseController(Demo.CHAT_COMPLETION) {
 
     @GetMapping
     fun chatCompletionDemo(model: Model): String {

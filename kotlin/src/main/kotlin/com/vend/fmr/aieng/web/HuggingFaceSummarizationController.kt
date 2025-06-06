@@ -1,6 +1,7 @@
 package com.vend.fmr.aieng.web
 
 import com.vend.fmr.aieng.huggingface
+import com.vend.fmr.aieng.utils.Demo
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
-class HuggingFaceSummarizationController {
+class HuggingFaceSummarizationController : BaseController(Demo.HUGGINGFACE_SUMMARIZATION) {
 
     @GetMapping("/demo/huggingface-summarization")
     fun summarizationDemo(model: Model): String {

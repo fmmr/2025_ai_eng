@@ -2,6 +2,7 @@ package com.vend.fmr.aieng.web
 
 import com.vend.fmr.aieng.OPEN_AI_KEY
 import com.vend.fmr.aieng.apis.openai.OpenAI
+import com.vend.fmr.aieng.utils.Demo
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 @RequestMapping("/demo/embeddings")
-class EmbeddingsController {
+class EmbeddingsController : BaseController(Demo.EMBEDDINGS) {
 
     @GetMapping
     fun embeddingsDemo(model: Model): String {

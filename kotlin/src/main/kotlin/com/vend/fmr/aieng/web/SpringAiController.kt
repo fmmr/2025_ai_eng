@@ -1,5 +1,6 @@
 package com.vend.fmr.aieng.web
 
+import com.vend.fmr.aieng.utils.Demo
 import org.springframework.ai.chat.messages.UserMessage
 import org.springframework.ai.chat.model.ChatModel
 import org.springframework.ai.chat.prompt.Prompt
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
-class SpringAiController {
+class SpringAiController : BaseController(Demo.SPRING_AI) {
 
     @Autowired(required = false)
     private val chatModel: ChatModel? = null

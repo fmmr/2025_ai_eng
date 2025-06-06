@@ -14,54 +14,52 @@ This project implements the core concepts from the Scrimba AI Engineering course
 
 ## 🧠 Core AI
 
-- **📝 Prompt Engineering** - Master the art of crafting effective prompts
-- **🤖 Chat Completion** - Core OpenAI integration from the Scrimba course
-- **💬 Interactive Chat** - Create conversational AI interfaces
-- **🌡️ Temperature Effects** - Interactive temperature parameter demo
-- **🎯 Top-P Effects** - Interactive top-p parameter demo
-- **⚙️ Fine-tuning** - Custom model training with OpenAI's fine-tuning API (Maybe Next Year)
-- **🔢 Embeddings** - Convert text into high-dimensional vectors
-- **✂️ Chunking** - Text processing fundamentals from the course
-- **🌍 PollyGlot** - Multi-language translation bot (Solo Project - Someday)
+- **💬 Chat Studio** - Conversational AI interface
+- **🌡️ Temperature Play** - AI creativity vs consistency
+- **🎯 Top-P Magic** - Vocabulary selection control
+- **⚙️ Fine-Tune Factory** - Custom model training (Maybe Next Year)
+- **🔢 Vector Space** - Text to vector conversion
+- **✂️ Text Slicer** - Text segmentation tool
+- **🌍 PollyGlot** - Contextual translation bot (Solo Project - Someday)
 
 ## 🗄️ Data
 
-- **📈 Stock Data** - Fetch real-time stock data from Polygon.io API
-- **🗄️ Vector Database** - Vector database concepts from the Scrimba course
-- **🔗 RAG** - Advanced RAG implementation from the Scrimba course
-- **🍿 PopChoice** - Smart movie recommendation engine (Solo Project - Dreams)
+- **📈 Stock Oracle** - AI-powered financial analysis
+- **🗄️ Vector Vault** - Semantic search with embeddings
+- **🔗 RAG Engine** - Retrieval-Augmented Generation
+- **🍿 PopChoice** - AI movie recommendations (Solo Project - Dreams)
 
 ## 🔹 Open Source
 
-- **🏷️ HuggingFace Classification** - Text classification using open-source BART model
-- **📄 HuggingFace Summarization** - Text summarization using open-source BART model
-- **🔍 Object Detection** - Object detection in images using DETR model
+- **🏷️ Text Classifier** - Open-source text classification
+- **📄 Text Squisher** - Open-source text summarization
+- **🔍 Object Spotter** - Visual object recognition
 
 ## 👁️ Vision & Image
 
-- **🎬 Film Fusion** - Merge movies and art into stunning AI-generated posters
-- **✏️ AI Image Editing** - AI-powered image editing with DALL-E 2
-- **👁️ GPT-4 with Vision** - Multi-modal AI capabilities with image analysis
+- **🎬 Poster Lab** - AI-generated movie posters
+- **✏️ Image Remix** - Mask-based image editing
+- **👁️ Vision Quest** - Multi-modal image analysis
 
 ## 🎯 AI Agents
 
-- **🧠 ReAct Agent** - AI agent implementation from the Scrimba course
-- **🛠️ Function Calling Agent** - OpenAI's native function calling agent
-- **✈️ Travel Agent** - Practical AI agent for trip planning (Solo Project - When I Have Time)
-- **🎯 Assistants API** - OpenAI's Assistants API integration (After Coffee)
+- **🧠 ReAct Playground** - Reasoning + Acting pattern
+- **🛠️ Tool Master** - Native OpenAI tool integration
+- **✈️ Trip Wizard** - AI-powered trip planning (Solo Project - When I Have Time)
+- **🎯 AI Sidekick** - Persistent AI assistants (After Coffee)
 
 ## 🔗 MCP Protocol
 
-- **🛠️ MCP Server** - Build a custom MCP server using Spring AI (Personal Exploration)
-- **🔗 MCP Protocol Demo** - Learn the Model Context Protocol fundamentals (Hackday)
-- **🔧 MCP Assistant** - AI-powered assistant that dynamically discovers tools (Hackday)
-- **🌍 MCP Registry** - Custom MCP server registry and discovery service (Personal Exploration - Wild Ideas)
+- **🛠️ MCP Toolbox** - Custom AI tool server (Personal Exploration)
+- **🔗 MCP Decoded** - Protocol fundamentals (Hackday)
+- **🔧 MCP Wizard** - Dynamic tool discovery (Hackday)
+- **🌍 MCP Catalog** - Server discovery service (Personal Exploration - Wild Ideas)
 
 ## 🔹 Frameworks
 
-- **🦜 LangChain4j Framework** - Interactive demo showcasing LangChain4j's declarative AI services (Personal Exploration)
-- **🍃 Spring AI Framework** - Official Spring AI 1.0.0 framework demo (Personal Exploration)
-- **☕ OpenAI Java Library** - Explore OpenAI's official Java/Kotlin library (Personal Exploration - Procrastinating)
+- **🦜 LangChain Lab** - Declarative AI services (Personal Exploration)
+- **🍃 Spring AI** - Native Spring integration (Personal Exploration)
+- **☕ OpenAI Toolkit** - Official Java/Kotlin SDK (Personal Exploration - Procrastinating)
 
 ### Technology Stack
 - **Backend**: Spring Boot 3.5.0 with Kotlin

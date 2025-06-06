@@ -1,6 +1,7 @@
 package com.vend.fmr.aieng.web
 
 import com.vend.fmr.aieng.apis.chunker.Chunker
+import com.vend.fmr.aieng.utils.Demo
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 @RequestMapping("/demo/chunking")
-class ChunkingController {
+class ChunkingController : BaseController(Demo.CHUNKING) {
 
     @GetMapping
     fun chunkingDemo(model: Model): String {

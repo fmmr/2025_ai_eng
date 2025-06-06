@@ -27,7 +27,7 @@
                     <div class="card h-100" th:classappend="${demo.route != null ? 'border-success' : 'border-secondary'}">
                         <div class="card-body">
                             <h5 class="card-title">
-                                <i th:class="${demo.icon}"></i> <span th:text="${demo.title}">Demo</span>
+                                <i th:class="${demo.icon}"></i> <span th:text="${demo.title}" data-bs-toggle="tooltip" th:data-bs-title="${demo.shortDescription}">Demo</span>
                                 <span th:if="${demo.route != null}" class="badge bg-success ms-2">✓ Done</span>
                                 <span th:if="${demo.route == null}" class="badge ms-2" th:class="'badge ms-2 ' + ${demo.status.badgeClass}" th:text="${demo.status.displayText}">Status</span>
                                 <i th:class="${demo.contentType.icon} + ' text-muted ms-1'" data-bs-toggle="tooltip" th:data-bs-title="${demo.contentType.tooltip}"></i>

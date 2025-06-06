@@ -1,6 +1,7 @@
 package com.vend.fmr.aieng.web
 
 import com.vend.fmr.aieng.openAI
+import com.vend.fmr.aieng.utils.Demo
 import com.vend.fmr.aieng.utils.Models
 import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Controller
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
-class ImageEditingController {
+class ImageEditingController : BaseController(Demo.IMAGE_EDITING) {
 
     companion object {
         val AVAILABLE_SIZES = listOf(

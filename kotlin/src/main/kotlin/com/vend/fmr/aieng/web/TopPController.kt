@@ -2,6 +2,7 @@ package com.vend.fmr.aieng.web
 
 import com.vend.fmr.aieng.openAI
 import com.vend.fmr.aieng.dtos.ParameterSet
+import com.vend.fmr.aieng.utils.Demo
 import com.vend.fmr.aieng.utils.Prompts
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
-class TopPController {
+class TopPController : BaseController(Demo.TOP_P_EFFECTS) {
 
     @GetMapping("/demo/top-p-effects")
     fun topPDemo(model: Model): String {

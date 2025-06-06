@@ -9,12 +9,7 @@
     <div th:replace="~{fragments/navigation :: navbar(${activeTab})}"></div>
 
     <div class="container mt-4">
-        <div class="row">
-            <div class="col-12">
-                <h1 class="mb-4">🛠️ MCP Server Demo</h1>
-                <p class="lead">Build and test a Model Context Protocol (MCP) server using raw HTTP and JSON-RPC 2.0</p>
-            </div>
-        </div>
+        <div th:replace="~{fragments/hero-section :: demo-hero(${demo})}"></div>
 
         <div class="row">
             <div class="col-md-6">

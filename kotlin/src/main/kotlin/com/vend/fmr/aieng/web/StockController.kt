@@ -5,6 +5,7 @@ import com.vend.fmr.aieng.POLYGON_API_KEY
 import com.vend.fmr.aieng.apis.openai.OpenAI
 import com.vend.fmr.aieng.apis.polygon.AggregatesResponse
 import com.vend.fmr.aieng.apis.polygon.Polygon
+import com.vend.fmr.aieng.utils.Demo
 import com.vend.fmr.aieng.utils.Prompts
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 @RequestMapping("/demo/stock")
-class StockController {
+class StockController : BaseController(Demo.STOCK_DATA) {
 
     @GetMapping
     fun stockDemo(model: Model): String {

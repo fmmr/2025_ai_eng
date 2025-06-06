@@ -6,11 +6,7 @@
     <div th:replace="~{fragments/navigation :: navbar(${activeTab})}"></div>
 
     <div class="container my-4">
-        <section class="hero-section">
-            <h1>📈 Stock Data Analysis</h1>
-            <p>Fetch real-time stock data from Polygon.io and generate AI-powered financial analysis</p>
-            <a href="/" class="btn">← Back to Home</a>
-        </section>
+        <div th:replace="~{fragments/hero-section :: demo-hero(${demo})}"></div>
 
         <section class="demo-section">
             <h2>Interactive Demo</h2>
@@ -56,8 +52,8 @@
                                     <p class="text-muted small mb-1"><strong>Recent Data Points:</strong></p>
                                     <div th:each="result, resultStat : ${aggregate.results}" th:if="${resultStat.index < 3}" class="small">
                                         <span th:text="'Date: ' + ${result.formattedDate()}">Date</span> - 
-                                        <span th:text="'Close: $' + ${result.c}">$0.00</span>, 
-                                        <span th:text="'Volume: ' + ${result.v}">0</span>
+                                        <span th:text="'Close: $' + ${result.closePrice}">$0.00</span>, 
+                                        <span th:text="'Volume: ' + ${result.volume}">0</span>
                                     </div>
                                 </div>
                             </div>

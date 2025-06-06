@@ -27,17 +27,4 @@ class HomeController(private val buildInfo: BuildInfo) {
         model.addAttribute("demoCategories", categoryData)
         return "home"
     }
-
-
-
-    @GetMapping("/demo/polygon")
-    fun polygonDemo(model: Model): String {
-        model.addAttribute("pageTitle", "Polygon Stock Data")
-        model.addAttribute("activeTab", "polygon")
-        return "polygon-demo"
-    }
-
-
-
-
 }

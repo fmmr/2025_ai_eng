@@ -6,6 +6,7 @@ import com.vend.fmr.aieng.SUPABASE_URL
 import com.vend.fmr.aieng.apis.openai.OpenAI
 import com.vend.fmr.aieng.apis.supabase.DocumentMatch
 import com.vend.fmr.aieng.apis.supabase.Supabase
+import com.vend.fmr.aieng.utils.Demo
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 @RequestMapping("/demo/supabase")
-class SupabaseController {
+class SupabaseController : BaseController(Demo.VECTOR_DATABASE) {
 
     @GetMapping
     fun supabaseDemo(model: Model): String {

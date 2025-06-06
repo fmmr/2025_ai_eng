@@ -6,11 +6,7 @@
     <div th:replace="~{fragments/navigation :: navbar(${activeTab})}"></div>
 
     <div class="container my-4">
-        <section class="hero-section">
-            <h1>✂️ Text Chunking</h1>
-            <p>Master the art of breaking down large texts into meaningful chunks for AI processing</p>
-            <a href="/" class="btn">← Back to Home</a>
-        </section>
+        <div th:replace="~{fragments/hero-section :: demo-hero(${demo})}"></div>
 
         <section class="demo-section">
             <h2>Interactive Demo</h2>

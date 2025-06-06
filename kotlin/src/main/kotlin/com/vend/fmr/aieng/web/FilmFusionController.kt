@@ -1,6 +1,7 @@
 package com.vend.fmr.aieng.web
 
 import com.vend.fmr.aieng.openAI
+import com.vend.fmr.aieng.utils.Demo
 import com.vend.fmr.aieng.utils.Models
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
-class FilmFusionController {
+class FilmFusionController : BaseController(Demo.FILM_FUSION) {
 
     companion object {
         val MOVIE_TITLES = listOf(

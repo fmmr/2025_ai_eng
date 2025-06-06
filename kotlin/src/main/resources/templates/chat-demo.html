@@ -6,11 +6,7 @@
     <div th:replace="~{fragments/navigation :: navbar(${activeTab})}"></div>
 
     <div class="container my-4">
-        <section class="hero-section">
-            <h1>💬 Interactive Chat</h1>
-            <p>Create conversational AI interfaces that maintain context and provide intelligent responses</p>
-            <a href="/" class="btn">← Back to Home</a>
-        </section>
+        <div th:replace="~{fragments/hero-section :: demo-hero(${demo})}"></div>
 
         <section class="demo-section">
             <h2>Chat Interface</h2>
@@ -36,6 +32,7 @@
             </div>
             
             <form th:action="@{/demo/chat}" method="post" class="d-flex gap-2" id="chatForm">
+                <!--suppress HtmlFormInputWithoutLabel -->
                 <input type="text" name="userMessage" id="messageInput" class="form-control" placeholder="Type your message..." required autocomplete="off" autofocus>
                 <button type="submit" class="btn btn-primary">Send</button>
             </form>

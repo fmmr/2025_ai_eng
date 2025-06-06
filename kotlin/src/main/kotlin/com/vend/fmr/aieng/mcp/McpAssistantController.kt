@@ -1,6 +1,8 @@
 package com.vend.fmr.aieng.mcp
 
+import com.vend.fmr.aieng.utils.Demo
 import com.vend.fmr.aieng.utils.getClientIpAddress
+import com.vend.fmr.aieng.web.BaseController
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpSession
 import kotlinx.coroutines.runBlocking
@@ -12,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 
 @Controller
-class McpAssistantController {
+class McpAssistantController : BaseController(Demo.MCP_ASSISTANT) {
 
     @GetMapping("/demo/mcp-assistant")
     fun mcpAssistantDemo(model: Model, session: HttpSession): String {

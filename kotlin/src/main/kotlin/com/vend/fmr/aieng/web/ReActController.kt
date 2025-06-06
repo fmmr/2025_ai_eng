@@ -1,6 +1,7 @@
 package com.vend.fmr.aieng.web
 
 import com.vend.fmr.aieng.apis.mocks.Mocks
+import com.vend.fmr.aieng.utils.Demo
 import com.vend.fmr.aieng.apis.openai.Message
 import com.vend.fmr.aieng.apis.openai.TextContent
 import com.vend.fmr.aieng.openAI
@@ -23,7 +24,7 @@ data class ReActStep(
 
 @Controller
 @RequestMapping("/demo/react")
-class ReActController {
+class ReActController : BaseController(Demo.REACT_AGENT) {
 
     @GetMapping
     fun reactDemo(model: Model): String {
