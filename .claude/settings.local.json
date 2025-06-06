@@ -35,7 +35,8 @@
       "WebFetch(domain:api.met.no)",
       "Bash(git checkout:*)",
       "WebFetch(domain:api.met.no)",
-      "WebFetch(domain:ipapi.co)"
+      "WebFetch(domain:ipapi.co)",
+      "WebFetch(domain:icons.getbootstrap.com)"
     ],
     "deny": []
   },

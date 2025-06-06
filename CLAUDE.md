@@ -13,6 +13,7 @@ Working in kotlin directory - AI engineering course using Kotlin/Spring Boot.
 - **NO HTML IN JAVASCRIPT** - Use templates/fragments only
 - Remove debug code when done
 - Process data in Kotlin backend, not Thymeleaf
+- don't guess.  find out the answer by inspecting and looking at documentation.  If you don't know, say so.
 
 ## Stack
 - Spring Boot 3.5.0 with Kotlin

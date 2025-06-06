@@ -12,7 +12,7 @@
         <p>Kotlin implementations of <a href="https://scrimba.com/the-ai-engineer-path-c02v" target="_blank" class="text-decoration-none text-white">Scrimba AI Engineering Path</a> assignments and
             examples</p>
         <p class="build-info">
-            <span th:text="'Built: ' + ${buildInfo.buildTimestamp} + 'Git: ' + ${buildInfo.gitCommit}">Built: Unknown</span><br>
+            <span th:text="'Built: ' + ${buildInfo.buildTimestamp} + ' - Git: '">Built: Unknown</span><a th:href="'https://github.com/fmmr/2025_ai_eng/commit/' + ${buildInfo.gitCommit}" th:text="${buildInfo.gitCommit}" class="text-decoration-none text-white" target="_blank">commit</a><br>
         </p>
     </section>
 
