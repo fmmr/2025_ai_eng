@@ -40,7 +40,7 @@ suspend fun main() {
 //    promptEngineeringDemo(debug = true)
 
     // Uncomment to generate README content
-     println(ReadmeGenerator.generateDemoSection())
+    // println(ReadmeGenerator.generateInternalDemos())
     
 //    val conversation = multiMessageChat(debug = true)
 //    println(conversation)
