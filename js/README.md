@@ -8,7 +8,7 @@ npm start
 Head over to https://vitejs.dev/ to learn more about configuring vite
 
 ## Deployment
-The app is deployed on Cloudflare Pages. You can find the repository here: [https://aieng.rodland.no/]
+The app is deployed on Cloudflare Pages. You can find the live app [here](https://aieng.rodland.no/).
 
 ## About Scrimba
 
