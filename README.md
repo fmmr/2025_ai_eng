@@ -16,6 +16,8 @@ Comprehensive Spring Boot web application with interactive demos covering all ma
 ### Kotlin Demos
 
 <!-- KOTLIN_DEMOS_START -->
+
+
 <!-- KOTLIN_DEMOS_END -->
 
 [→ View Kotlin Project Details](kotlin/README.md)

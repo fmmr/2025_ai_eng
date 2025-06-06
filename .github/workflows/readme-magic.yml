@@ -8,6 +8,8 @@ on:
       - 'kotlin/src/main/kotlin/com/vend/fmr/aieng/utils/DemoCategory.kt'
       - 'kotlin/src/main/kotlin/com/vend/fmr/aieng/utils/DemoStatus.kt'
       - 'kotlin/src/main/kotlin/com/vend/fmr/aieng/utils/ReadmeGenerator.kt'
+      - 'README.md'
+      - 'kotlin/README.md'
       - '.github/workflows/readme-magic.yml'
 
 permissions:
