@@ -125,7 +125,8 @@ enum class Demo(
         status = DemoStatus.COMPLETED,
         category = DemoCategory.CORE_AI,
         route = "https://polyglot-vbh0.onrender.com/",
-        soloProject = true
+        soloProject = true,
+        contentType = EXTERNAL_JS
     ),
 
     // Data Demos
@@ -151,7 +152,8 @@ enum class Demo(
         status = DemoStatus.COMPLETED,
         category = DemoCategory.DATA,
         route = "https://aieng.rodland.no/",
-        soloProject = true
+        soloProject = true,
+        contentType = EXTERNAL_JS
     ),
 
     VECTOR_DATABASE(
