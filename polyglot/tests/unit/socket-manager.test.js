@@ -114,7 +114,8 @@ describe('Socket Manager', () => {
       'en',
       'normal',
       'translate',
-      []
+      [],
+      undefined
     );
     
     // Check that socket.emit was called with the correct response

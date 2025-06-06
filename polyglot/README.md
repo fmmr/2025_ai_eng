@@ -2,6 +2,9 @@
 
 A multilingual chat application for mobile terminals that translates messages into your preferred language, with support for multiple AI models and language options.
 
+## Deployment
+Deployed to using [Render](https://polyglot-vbh0.onrender.com/)
+
 ## About This Project
 
 This app was created as an experiment to gain experience with frontend development using Claude as a pair-programming assistant. The author is primarily a backend software engineer with expertise in Kotlin and search software, making this a learning journey into web application development.
