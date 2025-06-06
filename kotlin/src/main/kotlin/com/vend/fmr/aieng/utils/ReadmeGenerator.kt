@@ -17,7 +17,17 @@ object ReadmeGenerator {
                     val emoji = demo.emoji
                     val statusText = if (demo.status == DemoStatus.COMPLETED) null else demo.status.displayText
                     val projectType = getProjectTypeText(demo, statusText)
-                    sb.appendLine("- **$emoji ${demo.title}** - ${demo.shortDescription}$projectType")
+                    
+                    // Format based on completion status
+                    val titleFormat = if (demo.route != null) {
+                        // Completed demo - bold with link
+                        "**[$emoji ${demo.title}](https://ai.rodland.no${demo.route})**"
+                    } else {
+                        // Future demo - plain text, no bold
+                        "$emoji ${demo.title}"
+                    }
+                    
+                    sb.appendLine("- $titleFormat - ${demo.shortDescription}$projectType")
                 }
                 sb.appendLine()
             }
