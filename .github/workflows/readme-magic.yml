@@ -36,36 +36,42 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
 
-    - name: 🎯 Cook up fresh demo list
+    - name: 🎯 Cook up fresh demo lists
       working-directory: ./kotlin
       run: |
-        # Use the working command with minimal flags
-        mvn -q compile exec:java -Dexec.mainClass="com.vend.fmr.aieng.utils.ReadmeGeneratorKt" -Dexec.classpathScope="compile" > demo_list.md 2>&1
+        # Generate internal demos list - default behavior
+        mvn -q compile exec:java -Dexec.mainClass="com.vend.fmr.aieng.utils.ReadmeGeneratorKt" -Dexec.classpathScope="compile" > kotlin_demos.md 2>&1
+        
+        # Generate external demos list  
+        mvn -q compile exec:java -Dexec.mainClass="com.vend.fmr.aieng.utils.ReadmeGeneratorKt" -Dexec.args="external" -Dexec.classpathScope="compile" > js_demos.md 2>&1
 
     - name: 👀 Peek at the masterpiece
       working-directory: ./kotlin
       run: |
-        echo "📋 Generated Demo List Content:"
+        echo "📋 Generated Internal Demo List:"
         echo "================================"
-        cat demo_list.md
+        cat kotlin_demos.md
         echo "================================"
-        echo "📊 Line count: $(wc -l < demo_list.md)"
+        echo "📊 Internal demos line count: $(wc -l < kotlin_demos.md)"
+        echo ""
+        echo "📋 Generated External Demo List:"
+        echo "================================"
+        cat js_demos.md
+        echo "================================"
+        echo "📊 External demos line count: $(wc -l < js_demos.md)"
 
     - name: ✨ Sprinkle README magic
       working-directory: ./kotlin
       run: |
-        # Read the generated demo list
-        DEMO_CONTENT=$(cat demo_list.md)
-        
-        # Create a temporary file with the updated README
+        # Update Kotlin README with internal demos
         awk '
         BEGIN { in_demo_section = 0 }
         /<!-- DEMO_LIST_START -->/ { 
           print $0
-          while ((getline line < "demo_list.md") > 0) {
+          while ((getline line < "kotlin_demos.md") > 0) {
             print line
           }
-          close("demo_list.md")
+          close("kotlin_demos.md")
           in_demo_section = 1
           next
         }
@@ -77,15 +83,51 @@ jobs:
         !in_demo_section { print $0 }
         ' README.md > README_new.md
         
-        # Replace the original README
+        # Replace the Kotlin README
         mv README_new.md README.md
         
+        # Update Parent README with internal and external demo sections
+        awk '
+        BEGIN { in_internal_section = 0; in_external_section = 0 }
+        /<!-- KOTLIN_DEMOS_START -->/ { 
+          print $0
+          while ((getline line < "kotlin_demos.md") > 0) {
+            print line
+          }
+          close("kotlin_demos.md")
+          in_internal_section = 1
+          next
+        }
+        /<!-- KOTLIN_DEMOS_END -->/ { 
+          print $0
+          in_internal_section = 0
+          next
+        }
+        /<!-- JS_DEMOS_START -->/ { 
+          print $0
+          while ((getline line < "js_demos.md") > 0) {
+            print line
+          }
+          close("js_demos.md")
+          in_external_section = 1
+          next
+        }
+        /<!-- JS_DEMOS_END -->/ { 
+          print $0
+          in_external_section = 0
+          next
+        }
+        !in_internal_section && !in_external_section { print $0 }
+        ' ../README.md > ../README_new.md
+        
+        # Replace the parent README
+        mv ../README_new.md ../README.md
+        
         # Clean up
-        rm demo_list.md
+        rm kotlin_demos.md js_demos.md
 
     - name: 🔍 Detective work for changes
       id: verify-changed-files
-      working-directory: ./kotlin
       run: |
         if [ -n "$(git status --porcelain)" ]; then
           echo "changed=true" >> $GITHUB_OUTPUT
@@ -95,14 +137,13 @@ jobs:
 
     - name: 📝 Sign the guestbook
       if: steps.verify-changed-files.outputs.changed == 'true'
-      working-directory: ./kotlin
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add README.md
-        git commit -m "🤖 Auto-update README demo list
+        git add README.md kotlin/README.md
+        git commit -m "🤖 Auto-update README demo lists
 
-        Updated demo list based on latest changes to Demo.kt
+        Updated demo lists based on latest changes to Demo.kt
         
         Co-Authored-By: ReadmeGenerator <noreply@github.com>"
 

@@ -2,12 +2,12 @@ package com.vend.fmr.aieng.utils
 
 object ReadmeGenerator {
     
-    fun generateDemoSection(): String {
+    fun generateInternalDemos(): String {
         val sb = StringBuilder()
         
         // Group demos by category, same as home page
         DemoCategory.entries.forEach { category ->
-            val demos = Demo.getByCategory(category)
+            val demos = Demo.getByCategory(category).filter { !it.external() }
             if (demos.isNotEmpty()) {
                 val categoryEmoji = category.emoji
                 sb.appendLine("#### $categoryEmoji ${category.displayName}")
@@ -20,13 +20,8 @@ object ReadmeGenerator {
                     
                     // Format based on completion status
                     val titleFormat = if (demo.route != null) {
-                        // Completed demo - bold with link
-                        val linkUrl = if (demo.route.startsWith("http")) {
-                            demo.route
-                        } else {
-                            "https://ai.rodland.no${demo.route}"
-                        }
-                        "**[$emoji ${demo.title}]($linkUrl)**"
+                        // Completed demo - bold with link to ai.rodland.no
+                        "**[$emoji ${demo.title}](https://ai.rodland.no${demo.route})**"
                     } else {
                         // Future demo - plain text, no bold
                         "$emoji ${demo.title}"
@@ -36,6 +31,22 @@ object ReadmeGenerator {
                 }
                 sb.appendLine()
             }
+        }
+        
+        return sb.toString()
+    }
+    
+    fun generateExternalDemos(): String {
+        val sb = StringBuilder()
+        
+        // Get only external demos
+        val externalDemos = Demo.entries.filter { it.external() }
+        
+        externalDemos.forEach { demo ->
+            val emoji = demo.emoji
+            val projectType = getProjectTypeText(demo)
+            val titleFormat = "**[$emoji ${demo.title}](${demo.route})**"
+            sb.appendLine("- $titleFormat - ${demo.shortDescription}$projectType")
         }
         
         return sb.toString()
@@ -52,6 +63,9 @@ object ReadmeGenerator {
     }
 }
 
-fun main() {
-    println(ReadmeGenerator.generateDemoSection())
+fun main(args: Array<String>) {
+    when (args.getOrNull(0)) {
+        "external" -> println(ReadmeGenerator.generateExternalDemos())
+        else -> println(ReadmeGenerator.generateInternalDemos()) // default - internal demos
+    }
 }

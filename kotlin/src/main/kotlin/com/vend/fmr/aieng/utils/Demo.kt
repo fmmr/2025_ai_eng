@@ -141,6 +141,19 @@ enum class Demo(
         route = "/demo/stock"
     ),
 
+    DODGY_DAVE(
+        id = "dodgy-dave",
+        title = "DodgyDave",
+        shortDescription = "A stock tips chatbot",
+        longDescription = "Give the app a couple of tickers and it'll tell you what to do - buy or sell!<br>Vite/JavaScript app with Socket.io real-time chat.",
+        icon = "bi-graph-down",
+        emoji = "📉",
+        status = DemoStatus.COMPLETED,
+        category = DemoCategory.DATA,
+        route = "https://aieng.rodland.no/",
+        soloProject = true
+    ),
+
     VECTOR_DATABASE(
         id = "supabase",
         title = "Vector Vault",
@@ -392,6 +405,8 @@ enum class Demo(
         category = DemoCategory.FRAMEWORKS,
         courseContent = false
     );
+
+    fun external(): Boolean = route?.startsWith("http") ?: false
 
     companion object {
         fun getByCategory(category: DemoCategory): List<Demo> {
