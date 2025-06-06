@@ -1,4 +1,4 @@
-name: Deploy Polyglot App
+name: Deploy Polyglot
 
 on:
   push:
@@ -33,6 +33,9 @@ jobs:
       run: npm install
     
     - name: Run tests
+      env:
+        OPENAIKEY: fake-key-for-testing
+        OPENAI_API_KEY: fake-key-for-testing
       run: npm test
     
     - name: Trigger deploy to Render
