@@ -27,7 +27,9 @@
                     </a>
                     <ul class="dropdown-menu" th:attr="aria-labelledby=${navbarGroup.dropdownId}">
                         <li th:each="demo : ${navbarGroup.demos}">
-                            <a th:if="${demo.route != null}" th:href="@{${demo.route}}"
+                            <a th:if="${demo.route != null}" 
+                               th:href="${demo.route.startsWith('http') ? demo.route : '@{' + demo.route + '}'}"
+                               th:target="${demo.route.startsWith('http') ? '_blank' : '_self'}"
                                th:classappend="${activeTab == demo.id ? 'active' : ''}"
                                class="dropdown-item">
                                 <i th:class="${demo.icon}"></i> <span th:text="${demo.title}">Demo</span>

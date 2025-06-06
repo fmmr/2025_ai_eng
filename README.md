@@ -1,4 +1,7 @@
 # AI Engineering Course - Kotlin Implementation
+[![Deploy FTW!](https://github.com/fmmr/2025_ai_eng/actions/workflows/deploy.yml/badge.svg)](https://github.com/fmmr/2025_ai_eng/actions/workflows/deploy.yml)
+[![Deploy Polyglot](https://github.com/fmmr/2025_ai_eng/actions/workflows/deploy-polyglot.yml/badge.svg)](https://github.com/fmmr/2025_ai_eng/actions/workflows/deploy-polyglot.yml)
+[![Automagic Readme](https://github.com/fmmr/2025_ai_eng/actions/workflows/readme-magic.yml/badge.svg)](https://github.com/fmmr/2025_ai_eng/actions/workflows/readme-magic.yml)
 
 Kotlin implementations of the [Scrimba AI Engineering Path](https://scrimba.com/the-ai-engineer-path-c02v) assignments and examples. This project translates JavaScript-based AI engineering concepts into practical Kotlin Spring Boot applications.
 

@@ -21,7 +21,12 @@ object ReadmeGenerator {
                     // Format based on completion status
                     val titleFormat = if (demo.route != null) {
                         // Completed demo - bold with link
-                        "**[$emoji ${demo.title}](https://ai.rodland.no${demo.route})**"
+                        val linkUrl = if (demo.route.startsWith("http")) {
+                            demo.route
+                        } else {
+                            "https://ai.rodland.no${demo.route}"
+                        }
+                        "**[$emoji ${demo.title}]($linkUrl)**"
                     } else {
                         // Future demo - plain text, no bold
                         "$emoji ${demo.title}"

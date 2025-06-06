@@ -18,31 +18,31 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout repository
+    - name: 🛒 Fetch the goods
       uses: actions/checkout@v4
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Set up JDK 21
+    - name: ☕ Brew some Java magic
       uses: actions/setup-java@v4
       with:
         java-version: '21'
         distribution: 'temurin'
 
-    - name: Cache Maven dependencies
+    - name: 🗃️ Stash Maven treasures
       uses: actions/cache@v4
       with:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
 
-    - name: Generate demo list
+    - name: 🎯 Cook up fresh demo list
       working-directory: ./kotlin
       run: |
         # Use the working command with minimal flags
         mvn -q compile exec:java -Dexec.mainClass="com.vend.fmr.aieng.utils.ReadmeGeneratorKt" -Dexec.classpathScope="compile" > demo_list.md 2>&1
 
-    - name: Display generated demo list
+    - name: 👀 Peek at the masterpiece
       working-directory: ./kotlin
       run: |
         echo "📋 Generated Demo List Content:"
@@ -51,7 +51,7 @@ jobs:
         echo "================================"
         echo "📊 Line count: $(wc -l < demo_list.md)"
 
-    - name: Update README.md
+    - name: ✨ Sprinkle README magic
       working-directory: ./kotlin
       run: |
         # Read the generated demo list
@@ -83,7 +83,7 @@ jobs:
         # Clean up
         rm demo_list.md
 
-    - name: Check for changes
+    - name: 🔍 Detective work for changes
       id: verify-changed-files
       working-directory: ./kotlin
       run: |
@@ -93,7 +93,7 @@ jobs:
           echo "changed=false" >> $GITHUB_OUTPUT
         fi
 
-    - name: Commit changes
+    - name: 📝 Sign the guestbook
       if: steps.verify-changed-files.outputs.changed == 'true'
       working-directory: ./kotlin
       run: |
@@ -106,7 +106,7 @@ jobs:
         
         Co-Authored-By: ReadmeGenerator <noreply@github.com>"
 
-    - name: Push changes
+    - name: 🚀 Launch into orbit
       if: steps.verify-changed-files.outputs.changed == 'true'
       run: |
         git push origin main

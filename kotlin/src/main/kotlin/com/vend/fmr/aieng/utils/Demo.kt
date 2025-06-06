@@ -115,15 +115,16 @@ enum class Demo(
         route = "/demo/chunking"
     ),
 
-    POLLYGLOT(
-        id = "pollyglot",
-        title = "PollyGlot",
+    POLY_GLOT(
+        id = "poly-glot",
+        title = "PolyGlot",
         shortDescription = "Contextual translation bot",
-        longDescription = "Translate between dozens of languages while maintaining conversation flow and cultural nuances.<br>Smart translation that understands context and intent.",
+        longDescription = "Translate between dozens of languages while maintaining conversation flow and cultural nuances.<br>Node.js/JavaScript app with Socket.io real-time chat.",
         icon = "bi-translate",
         emoji = "🌍",
-        status = DemoStatus.SOMEDAY,
+        status = DemoStatus.COMPLETED,
         category = DemoCategory.CORE_AI,
+        route = "https://polyglot-vbh0.onrender.com/",
         soloProject = true
     ),
 

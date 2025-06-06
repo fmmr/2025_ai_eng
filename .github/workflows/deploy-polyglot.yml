@@ -20,23 +20,24 @@ jobs:
         working-directory: ./polyglot
     
     steps:
-    - uses: actions/checkout@v4
+    - name: 🛒 Grab the code
+      uses: actions/checkout@v4
     
-    - name: Set up Node.js
+    - name: 🟢 Node.js time machine
       uses: actions/setup-node@v4
       with:
         node-version: '18'
         cache: 'npm'
         cache-dependency-path: './polyglot/package-lock.json'
     
-    - name: Install dependencies
+    - name: 📦 Download the internet
       run: npm install
     
-    - name: Run tests
+    - name: 🧪 Lab experiments
       env:
         OPENAIKEY: fake-key-for-testing
         OPENAI_API_KEY: fake-key-for-testing
       run: npm test
     
-    - name: Trigger deploy to Render
+    - name: 🎬 Showtime! Deploy!
       run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_POLYGLOT }}
