@@ -7,6 +7,7 @@ on:
       - 'kotlin/src/main/kotlin/com/vend/fmr/aieng/utils/Demo.kt'
       - 'kotlin/src/main/kotlin/com/vend/fmr/aieng/utils/DemoCategory.kt'
       - 'kotlin/src/main/kotlin/com/vend/fmr/aieng/utils/DemoStatus.kt'
+      - 'kotlin/src/main/kotlin/com/vend/fmr/aieng/utils/ReadmeGenerator.kt'
 
 permissions:
   contents: write

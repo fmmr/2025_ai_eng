@@ -10,7 +10,7 @@ object ReadmeGenerator {
             val demos = Demo.getByCategory(category)
             if (demos.isNotEmpty()) {
                 val categoryEmoji = category.emoji
-                sb.appendLine("## $categoryEmoji ${category.displayName}")
+                sb.appendLine("#### $categoryEmoji ${category.displayName}")
                 sb.appendLine()
                 
                 demos.forEach { demo ->
