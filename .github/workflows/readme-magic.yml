@@ -39,11 +39,25 @@ jobs:
     - name: 🎯 Cook up fresh demo lists
       working-directory: ./kotlin
       run: |
+        echo "🔍 Current directory: $(pwd)"
+        echo "📁 Files in directory: $(ls -la)"
+        echo "☕ Java version: $(java -version 2>&1 | head -1)"
+        
         # Generate internal demos list - default behavior
-        mvn -q compile exec:java -Dexec.mainClass="com.vend.fmr.aieng.utils.ReadmeGeneratorKt" -Dexec.classpathScope="compile" > kotlin_demos.md 2>&1
+        echo "🔨 Compiling and generating internal demos..."
+        mvn -q compile exec:java -Dexec.mainClass="com.vend.fmr.aieng.utils.ReadmeGeneratorKt" -Dexec.classpathScope="compile" > kotlin_demos.md 2>&1 || {
+          echo "❌ Internal demos generation failed"
+          cat kotlin_demos.md
+          exit 1
+        }
         
         # Generate external demos list  
-        mvn -q compile exec:java -Dexec.mainClass="com.vend.fmr.aieng.utils.ReadmeGeneratorKt" -Dexec.args="external" -Dexec.classpathScope="compile" > js_demos.md 2>&1
+        echo "🔨 Generating external demos..."
+        mvn -q compile exec:java -Dexec.mainClass="com.vend.fmr.aieng.utils.ReadmeGeneratorKt" -Dexec.args="external" -Dexec.classpathScope="compile" > js_demos.md 2>&1 || {
+          echo "❌ External demos generation failed"
+          cat js_demos.md
+          exit 1
+        }
 
     - name: 👀 Peek at the masterpiece
       working-directory: ./kotlin

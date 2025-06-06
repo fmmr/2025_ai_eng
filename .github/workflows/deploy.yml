@@ -8,6 +8,7 @@ on:
       - 'kotlin/pom.xml'
       - 'kotlin/src/**'
       - '.github/workflows/deploy.yml'
+      - '!kotlin/src/main/kotlin/com/vend/fmr/aieng/utils/ReadmeGenerator.kt'
   pull_request:
     paths:
       - 'kotlin/Dockerfile'
@@ -15,6 +16,7 @@ on:
       - 'kotlin/pom.xml'
       - 'kotlin/src/**'
       - '.github/workflows/deploy.yml'
+      - '!kotlin/src/main/kotlin/com/vend/fmr/aieng/utils/ReadmeGenerator.kt'
 
 jobs:
   build-and-test:
