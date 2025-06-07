@@ -9,31 +9,39 @@ enum class OperationsLink(
     val description: String,
     val requiresLogin: Boolean = false
 ) {
-    
+
     GITHUB_SOURCE(
         id = "github-source",
-        title = "Source Code",
+        title = "GitHub Project",
+        url = "https://github.com/fmmr/2025_ai_eng/",
+        icon = "bi-github",
+        description = "View project on GitHub"
+    ),
+
+    GITHUB_KOTLIN(
+        id = "github-source",
+        title = "GitHub Kotlin",
         url = "https://github.com/fmmr/2025_ai_eng/tree/main/kotlin",
         icon = "bi-github",
-        description = "View project source code"
+        description = "View kotlin code on GitHub"
     ),
-    
+
     GITHUB_ACTIONS(
-        id = "github-actions", 
+        id = "github-actions",
         title = "GitHub Actions",
         url = "https://github.com/fmmr/2025_ai_eng/actions",
         icon = "bi-gear-wide-connected",
         description = "CI/CD pipeline status"
     ),
-    
+
     DOCKER_HUB(
         id = "docker-hub",
-        title = "Docker Hub", 
+        title = "Docker Hub",
         url = "https://hub.docker.com/repository/docker/fmmr/aieng",
         icon = "bi-box",
         description = "Container registry"
     ),
-    
+
     NORTHFLANK(
         id = "northflank",
         title = "Northflank",
@@ -42,16 +50,16 @@ enum class OperationsLink(
         description = "Production deployment",
         requiresLogin = true
     ),
-    
+
     CLOUDFLARE_DODGY_DAVE(
         id = "cloudflare-dodgy-dave",
         title = "Cloudflare (dodgy dave)",
-        url = "https://dash.cloudflare.com/da5ff37dc3a56b099d74be433465c853/pages/view/2025-ai-eng", 
+        url = "https://dash.cloudflare.com/da5ff37dc3a56b099d74be433465c853/pages/view/2025-ai-eng",
         icon = "bi-lightning-charge",
         description = "Edge deployment dashboard",
         requiresLogin = true
     ),
-    
+
     RENDER_KOTLIN(
         id = "render-kotlin",
         title = "Render (kotlin)",
@@ -60,9 +68,9 @@ enum class OperationsLink(
         description = "Backup deployment dashboard",
         requiresLogin = true
     ),
-    
+
     RENDER_POLYGLOT(
-        id = "render-polyglot", 
+        id = "render-polyglot",
         title = "Render (polyglot)",
         url = "https://dashboard.render.com/web/srv-d11dtore5dus738lm9mg",
         icon = "bi-chat-dots",
