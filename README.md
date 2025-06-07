@@ -91,7 +91,8 @@ Implementing concepts from the **Scrimba AI Engineering Path** - a practical cou
 ## 🔗 Operations & Links
 
 <!-- OPERATIONS_START -->
-- **[Source Code](https://github.com/fmmr/2025_ai_eng/tree/main/kotlin)** - View project source code
+- **[GitHub Project](https://github.com/fmmr/2025_ai_eng/)** - View project on GitHub
+- **[GitHub Kotlin](https://github.com/fmmr/2025_ai_eng/tree/main/kotlin)** - View kotlin code on GitHub
 - **[GitHub Actions](https://github.com/fmmr/2025_ai_eng/actions)** - CI/CD pipeline status
 - **[Docker Hub](https://hub.docker.com/repository/docker/fmmr/aieng)** - Container registry
 - **[Northflank](https://app.northflank.com/t/fmrs-team/project/aieng/services/aieng)** 🔒 - Production deployment
