@@ -15,7 +15,7 @@ class GlobalControllerAdvice {
         val navbarData = NavbarGroup.entries.map { group ->
             NavbarData(
                 displayName = group.displayName,
-                icon = group.icon,
+                iconHtml = group.iconHtml,
                 dropdownId = group.dropdownId,
                 demos = Demo.getByNavbarGroup(group)
             )

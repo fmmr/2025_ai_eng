@@ -46,6 +46,18 @@ body {
     background-color: #374151 !important;
 }
 
+/* Make Simple Icons match Bootstrap icon color in dark navbar (only top-level links, not dropdowns) */
+.navbar-dark > .container-fluid .nav-link > span img[src^="/images/"] {
+    filter: brightness(0) invert(1) opacity(0.6);
+}
+
+/* Make Simple Icons white and properly sized in hero section */
+.hero-section img[src^="/images/"] {
+    filter: brightness(0) invert(1);
+    width: 1em;
+    height: 1em;
+}
+
 
 /* Page sections */
 .hero-section {

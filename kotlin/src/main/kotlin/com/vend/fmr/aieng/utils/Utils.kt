@@ -48,3 +48,10 @@ fun getClientIpAddress(request: HttpServletRequest): String {
     
     return request.remoteAddr ?: "unknown"
 }
+
+fun iconHtml(icon: String, alt: String = ""): String = 
+    if (icon.startsWith("/images/")) {
+        """<img src="$icon" alt="$alt" width="16" height="16" class="me-1">"""
+    } else {
+        """<i class="$icon"></i>"""
+    }

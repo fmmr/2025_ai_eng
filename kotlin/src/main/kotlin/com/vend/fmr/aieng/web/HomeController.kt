@@ -19,7 +19,7 @@ class HomeController(private val buildInfo: BuildInfo) {
         val categoryData = DemoCategory.entries.map { category ->
             CategoryData(
                 displayName = category.displayName,
-                icon = category.icon,
+                iconHtml = category.iconHtml,
                 demos = Demo.getByCategory(category)
             )
         }.filterNot { it.demos.isEmpty() }

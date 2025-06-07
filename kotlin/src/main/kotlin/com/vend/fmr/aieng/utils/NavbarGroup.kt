@@ -1,8 +1,10 @@
 package com.vend.fmr.aieng.utils
 
-enum class NavbarGroup(val displayName: String, val icon: String, val dropdownId: String) {
+enum class NavbarGroup(val displayName: String, icon: String, val dropdownId: String) {
     CORE_DATA("Core & Data", "bi-cpu-fill", "coreDropdown"),
-    MODELS_VISION("Models & Vision", "bi-eye-fill", "modelsDropdown"),
+    MODELS_VISION("Models & Vision", "/images/huggingface.svg", "modelsDropdown"),
     AGENTS_ADVANCED("Agents & Advanced", "bi-robot", "agentsDropdown"),
-    FRAMEWORKS("Frameworks", "bi-stack", "frameworksDropdown");
+    FRAMEWORKS("Frameworks", "/images/spring.svg", "frameworksDropdown");
+
+    val iconHtml: String = iconHtml(icon, displayName)
 }

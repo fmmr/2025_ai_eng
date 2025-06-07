@@ -41,7 +41,12 @@
       "Bash(/Users/fmr/.nvm/versions/node/v23.11.0/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/rg \"class.*Controller.*: BaseController\" --line-number)",
       "Bash(/Users/fmr/.nvm/versions/node/v23.11.0/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/rg \"import com.vend.fmr.aieng.utils.Demo\" src/main/kotlin/com/vend/fmr/aieng/web/)",
       "Bash(/Users/fmr/.nvm/versions/node/v23.11.0/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/rg \"class.*Controller.*: BaseController\\(Demo\\.(FUNCTION_CALLING|REACT_AGENT|GPT4_VISION|FILM_FUSION|IMAGE_EDITING|SPRING_AI|LANGCHAIN4J)\\)\" --line-number)",
-      "Bash(npm test)"
+      "Bash(npm test)",
+      "WebFetch(domain:simpleicons.org)",
+      "WebFetch(domain:simpleicons.org)",
+      "WebFetch(domain:simpleicons.org)",
+      "WebFetch(domain:simpleicons.org)",
+      "WebFetch(domain:simpleicons.org)"
     ],
     "deny": []
   },

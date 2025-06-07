@@ -36,7 +36,7 @@ enum class Demo(
         title = "Chat Basics",
         shortDescription = "Core OpenAI integration",
         longDescription = "Interactive form to generate AI responses with customizable prompts, system messages, and model parameters.<br>Foundation demo from the Scrimba course.",
-        icon = "bi-chat-dots",
+        icon = "/images/openai.svg",
         emoji = "🤖",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.CORE_AI,
@@ -96,7 +96,7 @@ enum class Demo(
         title = "Vector Space",
         shortDescription = "Text to vector conversion",
         longDescription = "Convert text into high-dimensional vectors using OpenAI's models.<br>Essential foundation for semantic search with detailed analysis and visualization.",
-        icon = "bi-diagram-3",
+        icon = "/images/openai.svg",
         emoji = "🔢",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.CORE_AI,
@@ -198,7 +198,7 @@ enum class Demo(
         title = "Text Classifier",
         shortDescription = "Open-source text classification",
         longDescription = "Classify text into custom categories using HuggingFace BART model.<br>Explore zero-shot classification with confidence scores and detailed analysis.",
-        icon = "bi-tags",
+        icon = "/images/huggingface.svg",
         emoji = "🏷️",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.OPEN_SOURCE,
@@ -210,7 +210,7 @@ enum class Demo(
         title = "Text Squisher",
         shortDescription = "Open-source text summarization",
         longDescription = "Compress long texts into concise summaries using HuggingFace BART model.<br>Customizable length parameters for perfect summary control.",
-        icon = "bi-file-text",
+        icon = "/images/huggingface.svg",
         emoji = "📄",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.OPEN_SOURCE,
@@ -222,7 +222,7 @@ enum class Demo(
         title = "Object Spotter",
         shortDescription = "Visual object recognition",
         longDescription = "Detect and locate objects in images using DETR (Detection Transformer) model.<br>HuggingFace-powered vision with bounding boxes and confidence scores.",
-        icon = "bi-search",
+        icon = "/images/huggingface.svg",
         emoji = "🔍",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.OPEN_SOURCE,
@@ -361,7 +361,7 @@ enum class Demo(
         title = "LangChain Lab",
         shortDescription = "Declarative AI services",
         longDescription = "Test text analysis, summarization, and sentiment classification using annotated interfaces.<br>Compare LangChain4j's approach with our custom implementations.",
-        icon = "bi-link",
+        icon = "/images/langchain.svg",
         emoji = "🦜",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.FRAMEWORKS,
@@ -374,7 +374,7 @@ enum class Demo(
         title = "Spring AI",
         shortDescription = "Native Spring integration",
         longDescription = "Spring's AI integration with auto-configuration, dependency injection, and native patterns.<br>Compare against LangChain4j and custom implementations.",
-        icon = "bi-leaf",
+        icon = "/images/spring.svg",
         emoji = "🍃",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.FRAMEWORKS,
@@ -409,6 +409,8 @@ enum class Demo(
     );
 
     fun external(): Boolean = route?.startsWith("http") ?: false
+
+    val iconHtml: String = iconHtml(icon, title)
 
     companion object {
         fun getByCategory(category: DemoCategory): List<Demo> {

@@ -4,6 +4,6 @@ import com.vend.fmr.aieng.utils.Demo
 
 data class CategoryData(
     val displayName: String,
-    val icon: String,
+    val iconHtml: String,
     val demos: List<Demo>
 )

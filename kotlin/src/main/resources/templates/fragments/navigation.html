@@ -23,7 +23,7 @@
                 <!-- Dynamic NavbarGroups -->
                 <div th:each="navbarGroup : ${navbarGroups}" class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" th:id="${navbarGroup.dropdownId}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i th:class="${navbarGroup.icon}"></i> <span th:text="${navbarGroup.displayName}">Group</span>
+                        <span th:utext="${navbarGroup.iconHtml}"></span> <span th:text="${navbarGroup.displayName}">Group</span>
                     </a>
                     <ul class="dropdown-menu" th:attr="aria-labelledby=${navbarGroup.dropdownId}">
                         <li th:each="demo : ${navbarGroup.demos}">
@@ -32,11 +32,11 @@
                                th:target="${demo.route.startsWith('http') ? '_blank' : '_self'}"
                                th:classappend="${activeTab == demo.id ? 'active' : ''}"
                                class="dropdown-item">
-                                <i th:class="${demo.icon}"></i> <span th:text="${demo.title}">Demo</span>
+                                <span th:utext="${demo.iconHtml}"></span> <span th:text="${demo.title}">Demo</span>
                                 <i class="bi-check-circle text-success ms-auto"></i>
                             </a>
                             <span th:if="${demo.route == null}" class="dropdown-item text-muted disabled">
-                                <i th:class="${demo.icon}"></i> <span th:text="${demo.title}">Demo</span>
+                                <span th:utext="${demo.iconHtml}"></span> <span th:text="${demo.title}">Demo</span>
                                 <small class="ms-auto opacity-75" th:text="'(' + ${demo.status.displayText} + ')'">Status</small>
                             </span>
                         </li>
@@ -51,7 +51,7 @@
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="linksDropdown">
                         <li th:each="link : ${operationsLinks}">
                             <a th:href="${link.url}" class="dropdown-item" target="_blank" th:title="${link.description}">
-                                <i th:class="${link.icon}"></i> <span th:text="${link.title}">Link</span>
+                                <span th:utext="${link.iconHtml}"></span> <span th:text="${link.title}">Link</span>
                                 <i th:if="${link.requiresLogin}" class="bi-lock ms-1 text-muted small"></i>
                             </a>
                         </li>

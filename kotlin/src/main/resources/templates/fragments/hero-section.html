@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
     <section th:fragment="demo-hero(demo)" class="hero-section">
-        <h1><i th:class="${demo.icon}"></i> <span th:text="${demo.title}">Demo Title</span></h1>
+        <h1><span th:utext="${demo.iconHtml}"></span> <span th:text="${demo.title}">Demo Title</span></h1>
         <p class="text-start fs-5 mb-3" th:text="${demo.shortDescription}">Short description</p>
         <p class="text-start" th:utext="${demo.longDescription}">Demo description</p>
         <a href="/" class="btn">← Back to Home</a>

@@ -14,7 +14,7 @@ enum class OperationsLink(
         id = "github-source",
         title = "GitHub Project",
         url = "https://github.com/fmmr/2025_ai_eng/",
-        icon = "bi-github",
+        icon = "/images/github.svg",
         description = "View project on GitHub"
     ),
 
@@ -22,7 +22,7 @@ enum class OperationsLink(
         id = "github-source",
         title = "GitHub Kotlin",
         url = "https://github.com/fmmr/2025_ai_eng/tree/main/kotlin",
-        icon = "bi-github",
+        icon = "/images/kotlin.svg",
         description = "View kotlin code on GitHub"
     ),
 
@@ -30,7 +30,7 @@ enum class OperationsLink(
         id = "github-actions",
         title = "GitHub Actions",
         url = "https://github.com/fmmr/2025_ai_eng/actions",
-        icon = "bi-gear-wide-connected",
+        icon = "/images/github.svg",
         description = "CI/CD pipeline status"
     ),
 
@@ -38,7 +38,7 @@ enum class OperationsLink(
         id = "docker-hub",
         title = "Docker Hub",
         url = "https://hub.docker.com/repository/docker/fmmr/aieng",
-        icon = "bi-box",
+        icon = "/images/docker.svg",
         description = "Container registry"
     ),
 
@@ -55,7 +55,7 @@ enum class OperationsLink(
         id = "cloudflare-dodgy-dave",
         title = "Cloudflare (dodgy dave)",
         url = "https://dash.cloudflare.com/da5ff37dc3a56b099d74be433465c853/pages/view/2025-ai-eng",
-        icon = "bi-lightning-charge",
+        icon = "/images/cloudflare.svg",
         description = "Edge deployment dashboard",
         requiresLogin = true
     ),
@@ -64,7 +64,7 @@ enum class OperationsLink(
         id = "render-kotlin",
         title = "Render (kotlin)",
         url = "https://dashboard.render.com/web/srv-d0sal4emcj7s73advd5g",
-        icon = "bi-server",
+        icon = "/images/render.svg",
         description = "Backup deployment dashboard",
         requiresLogin = true
     ),
@@ -73,8 +73,10 @@ enum class OperationsLink(
         id = "render-polyglot",
         title = "Render (polyglot)",
         url = "https://dashboard.render.com/web/srv-d11dtore5dus738lm9mg",
-        icon = "bi-chat-dots",
+        icon = "/images/render.svg",
         description = "Node.js app deployment dashboard",
         requiresLogin = true
-    )
+    );
+
+    val iconHtml: String = iconHtml(icon, title)
 }
