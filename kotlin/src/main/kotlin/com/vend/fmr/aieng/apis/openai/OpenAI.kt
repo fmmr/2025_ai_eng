@@ -1,14 +1,10 @@
 package com.vend.fmr.aieng.apis.openai
 
-import com.vend.fmr.aieng.EMBEDDING_MODEL
-import com.vend.fmr.aieng.OPEN_AI_MODEL
-import com.vend.fmr.aieng.utils.Prompts
 import com.vend.fmr.aieng.utils.Models
+import com.vend.fmr.aieng.utils.Prompts
+import com.vend.fmr.aieng.utils.env
 import io.ktor.client.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.plugins.logging.*
-import io.ktor.client.plugins.timeout
+import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
@@ -16,25 +12,33 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.utils.io.core.*
 import kotlinx.serialization.json.Json
+import org.springframework.stereotype.Service
 
 
 @Suppress("unused")
-class OpenAI(private val openaiApiKey: String) : Closeable {
+@Service
+class OpenAI(val client: HttpClient, val json: Json) : Closeable {
+    private val openaiApiKey = "OPENAI_API_KEY".env()
+
+    // Spring constructor for OpenAI.kt
     companion object {
-        private val json = Json {
+        private fun createLegacyJson() = Json {
             ignoreUnknownKeys = true
             isLenient = true
             explicitNulls = false
             encodeDefaults = true
         }
-    }
 
-    private val client = HttpClient(CIO) {
-        install(ContentNegotiation) {
-            json(json)
-        }
-        install(Logging){
-            level = LogLevel.NONE
+        private fun createLegacyClient(): HttpClient {
+            val json = createLegacyJson()
+            return HttpClient(io.ktor.client.engine.cio.CIO) {
+                install(io.ktor.client.plugins.contentnegotiation.ContentNegotiation) {
+                    json(json)
+                }
+                install(io.ktor.client.plugins.logging.Logging) {
+                    level = io.ktor.client.plugins.logging.LogLevel.NONE
+                }
+            }
         }
     }
 
@@ -42,7 +46,7 @@ class OpenAI(private val openaiApiKey: String) : Closeable {
         prompt: String? = null,
         systemMessage: String? = null,
         messages: List<Message>? = null,
-        model: String = OPEN_AI_MODEL,
+        model: String = Models.Defaults.CHAT_COMPLETION,
         maxTokens: Int = 300,
         temperature: Double = 0.7,
         topP: Double? = null,
@@ -56,7 +60,7 @@ class OpenAI(private val openaiApiKey: String) : Closeable {
             systemMessage?.let { add(Message(role = Prompts.Roles.SYSTEM, content = TextContent(it))) }
             add(Message(role = Prompts.Roles.USER, content = TextContent(prompt)))
         }
-        
+
         val request = ChatCompletionRequest(
             model = model,
             messages = finalMessages,
@@ -66,7 +70,7 @@ class OpenAI(private val openaiApiKey: String) : Closeable {
             tools = tools,
             toolChoice = toolChoice
         )
-        
+
         val response = client.post("https://api.openai.com/v1/chat/completions") {
             contentType(ContentType.Application.Json)
             headers {
@@ -94,7 +98,7 @@ class OpenAI(private val openaiApiKey: String) : Closeable {
     suspend fun createEmbedding(text: String): List<Double> {
         val request = EmbeddingRequest(
             input = text,
-            model = EMBEDDING_MODEL
+            model = Models.Defaults.EMBEDDING
         )
 
         val response = client.post("https://api.openai.com/v1/embeddings") {
@@ -118,7 +122,7 @@ class OpenAI(private val openaiApiKey: String) : Closeable {
     suspend fun createEmbeddings(texts: List<String>): List<List<Double>> {
         val request = BatchEmbeddingRequest(
             input = texts,
-            model = EMBEDDING_MODEL
+            model = Models.Defaults.EMBEDDING
         )
 
         val response = client.post("https://api.openai.com/v1/embeddings") {
@@ -200,7 +204,7 @@ class OpenAI(private val openaiApiKey: String) : Closeable {
                     append(HttpHeaders.ContentDisposition, "filename=\"image.png\"")
                 })
                 append("mask", maskFile, Headers.build {
-                    append(HttpHeaders.ContentType, "image/png") 
+                    append(HttpHeaders.ContentType, "image/png")
                     append(HttpHeaders.ContentDisposition, "filename=\"mask.png\"")
                 })
             }

@@ -1,6 +1,12 @@
 package com.vend.fmr.aieng.utils
 
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.logging.*
+import io.ktor.serialization.kotlinx.json.*
 import jakarta.servlet.http.HttpServletRequest
+import kotlinx.serialization.json.Json
 
 const val DUMMY_API_KEY = "dummy-key-for-auto-config"
 
@@ -55,3 +61,27 @@ fun iconHtml(icon: String, alt: String = ""): String =
     } else {
         """<i class="$icon"></i>"""
     }
+
+/**
+ * Creates a standardized Json configuration for serialization/deserialization
+ * Used by both Main.kt and Spring Application.kt to ensure consistency
+ */
+fun createJson(): Json = Json {
+    ignoreUnknownKeys = true
+    isLenient = true
+    explicitNulls = false
+    encodeDefaults = true
+}
+
+/**
+ * Creates a standardized HttpClient with Json content negotiation and logging disabled
+ * Used by both Main.kt and Spring Application.kt to ensure consistency
+ */
+fun createHttpClient(json: Json): HttpClient = HttpClient(CIO) {
+    install(ContentNegotiation) {
+        json(json)
+    }
+    install(Logging) {
+        level = LogLevel.NONE
+    }
+}

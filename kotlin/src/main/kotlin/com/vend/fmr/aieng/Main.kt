@@ -1,7 +1,6 @@
-@file:Suppress("UnusedImport")
-
 package com.vend.fmr.aieng
 
+import com.vend.fmr.aieng.apis.chunker.Chunker
 import com.vend.fmr.aieng.apis.geolocation.Geolocation
 import com.vend.fmr.aieng.apis.huggingface.HuggingFace
 import com.vend.fmr.aieng.apis.openai.OpenAI
@@ -9,55 +8,47 @@ import com.vend.fmr.aieng.apis.openai.OpenAIAssistant
 import com.vend.fmr.aieng.apis.polygon.Polygon
 import com.vend.fmr.aieng.apis.supabase.Supabase
 import com.vend.fmr.aieng.apis.weather.Weather
-import com.vend.fmr.aieng.examples.multiMessageChat
-import com.vend.fmr.aieng.utils.*
+import com.vend.fmr.aieng.utils.createHttpClient
+import com.vend.fmr.aieng.utils.createJson
+import java.io.Closeable
 
-val OPEN_AI_KEY = "OPENAI_API_KEY".env()
-val SUPABASE_URL = "SUPABASE_URL".env()
-val SUPABASE_KEY = "SUPABASE_ANON_KEY".env()
-val POLYGON_API_KEY = "POLYGON_API_KEY".env()
-val HF_TOKEN = "HF_TOKEN".env()
-
-const val OPEN_AI_MODEL = Models.Defaults.CHAT_COMPLETION
-const val EMBEDDING_MODEL = Models.Defaults.EMBEDDING
-
-val openAI = OpenAI(OPEN_AI_KEY)
-val assistant = OpenAIAssistant(OPEN_AI_KEY)
-val supabase = Supabase(SUPABASE_URL, SUPABASE_KEY)
-val polygon = Polygon(POLYGON_API_KEY)
-val weather = Weather()
-val geolocation = Geolocation()
-val huggingface = HuggingFace(HF_TOKEN)
-
-val apis = listOf(openAI, assistant, supabase, polygon, weather, geolocation, huggingface)
-
-@Suppress("RedundantSuspendModifier", "RedundantSuppression")
+@Suppress("RedundantSuspendModifier", "RedundantSuppression", "UnusedVariable", "unused")
 suspend fun main() {
-    Runtime.getRuntime().addShutdownHook(Thread { close() })
+    val json = createJson()
+    val httpClient = createHttpClient(json)
+    val openAI = OpenAI(httpClient, json)
+    val assistant = OpenAIAssistant(httpClient, json)
+    val supabase = Supabase(httpClient, json)
+    val polygon = Polygon(httpClient, json)
+    val weather = Weather(httpClient, json)
+    val geolocation = Geolocation(httpClient, json)
+    val chunker = Chunker()
+    val huggingface = HuggingFace(httpClient, json)
+    Runtime.getRuntime().addShutdownHook(Thread { close(listOf(openAI, assistant, supabase, polygon, weather, geolocation, huggingface)) })
 
-//    chatParametersDemo(debug = true)
+//    chatParametersDemo(openAI, debug = true)
 
-//    promptEngineeringDemo(debug = true)
+//    promptEngineeringDemo(openAI, debug = true)
 
     // Uncomment to generate README content
     // println(ReadmeGenerator.generateInternalDemos())
-    
-//    val conversation = multiMessageChat(debug = true)
+
+//    val conversation = multiMessageChat(openAI, debug = true)
 //    println(conversation)
 
-//    val result3 = FunctionCallingExamples.functionCallingAgent("Do you have any ideas for activities I can do at my location?", debug = true)
+//    val result3 = FunctionCallingExamples.functionCallingAgent(openAI, "Do you have any ideas for activities I can do at my location?", debug = true)
 //    println("Final Function Call Result: $result3")
 //
-//    val result4 = FunctionCallingExamples.functionCallingAgent("Can you tell me the current stock price of Apple and Microsoft, and what time it is?", debug = true)
+//    val result4 = FunctionCallingExamples.functionCallingAgent(openAI, "Can you tell me the current stock price of Apple and Microsoft, and what time it is?", debug = true)
 //    println("Final Function Call Result: $result4")
 
-//    tickers("APPL", "NHYDY")
-//    embeddings("/movies.txt", true)
-//    clearDbAndInsertDocs(file = "/movies.txt")
-//    splitText("/movies.txt", debug = true)
-//    queryVectorDbForMovies("action packed thriller")
-//    chatGPT()
-//    enrichedMovieChat("The movie with that actor from Castaway", debug = true)
+//    tickers(openAI, polygon, "APPL", "NHYDY")
+//    embeddings(openAI, chunker, "/movies.txt", debug = true)
+//    clearDbAndInsertDocs(openAI, supabase, chunker, "/movies.txt")
+//    splitText(chunker, "/movies.txt", debug = true)
+//    queryVectorDbForMovies(openAI, supabase, "action packed thriller")
+//    chatGPT(openAI)
+//    enrichedMovieChat(openAI, supabase, "The movie with that actor from Castaway", debug = true)
 
     // === LOCATION & WEATHER API EXAMPLES ===
     // Get location from IP and weather for that location
@@ -71,26 +62,26 @@ suspend fun main() {
 
     // === ASSISTANTS API SETUP (run once, then comment out) ===
     // Step 1: Upload movie file (copy the FILE ID from output)
-//    val fileId = uploadMovieFile(debug = true)
+//    val fileId = uploadMovieFile(assistant, debug = true)
 //    // Step 2: Create vector store using the FILE ID from step 1 (copy the VECTOR STORE ID from output)
-//    val vectorDbId = createMovieVectorStore(fileId, debug = true)
+//    val vectorDbId = createMovieVectorStore(assistant, fileId, debug = true)
 //    // Step 3: Create assistant using the VECTOR STORE ID from step 2 (copy the ASSISTANT ID from output)
-//    val assistantId = createMovieAssistant(vectorDbId, debug = true)
+//    val assistantId = createMovieAssistant(assistant, vectorDbId, debug = true)
 
     // === ASSISTANTS API USAGE (reuse with persisted IDs) ===
     // Step 4: Chat using the ASSISTANT ID from step 3
-//    movieRecommendationChat("asst_tuqM1BDGX5jyRmi9szATXuck", "Any french films on the menu?", debug = false)
-//    listAllAssistantResources()
-//    deleteAllAssistantResources(true)
+//    movieRecommendationChat(assistant, "asst_tuqM1BDGX5jyRmi9szATXuck", "Any french films on the menu?", debug = false)
+//    listAllAssistantResources(assistant)
+//    deleteAllAssistantResources(assistant, true)
     // === CLEANUP (optional) ===
-//    deleteAllAssistantResources(true)
+//    deleteAllAssistantResources(assistant, true)
 
-//    huggingFaceDemo(debug = true)
-//    huggingFaceObjectDetectionDemo()
+//    huggingFaceDemo(huggingface, openAI, debug = true)
+//    huggingFaceObjectDetectionDemo(huggingface)
 }
 
 
-fun close() {
+fun close(apis: List<Closeable>) {
     println("Closing stuff")
     apis.forEach { it.close() }
 }

@@ -6,7 +6,7 @@ import com.vend.fmr.aieng.utils.*
 import com.vend.fmr.aieng.apis.mocks.Mocks
 import com.vend.fmr.aieng.apis.openai.Message
 import com.vend.fmr.aieng.apis.openai.TextContent
-import com.vend.fmr.aieng.openAI
+import com.vend.fmr.aieng.apis.openai.OpenAI
 
 /**
  * ReAct Agent Examples - Reasoning + Acting pattern implementation
@@ -25,7 +25,7 @@ object ReActAgentExamples {
      * Main ReAct agent function - implements the Thought/Action/Observation loop
      * Uses proper message-based conversation with OpenAI
      */
-    suspend fun reactAgent(userQuery: String, maxIterations: Int = 10, debug: Boolean = false): String {
+    suspend fun reactAgent(openAI: OpenAI, userQuery: String, maxIterations: Int = 10, debug: Boolean = false): String {
         val messages = mutableListOf<Message>()
         
         messages.add(Message(Prompts.Roles.SYSTEM, TextContent(Prompts.REACT_AGENT_SYSTEM)))

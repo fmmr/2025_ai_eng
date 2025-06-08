@@ -1,6 +1,6 @@
 package com.vend.fmr.aieng.mcp
 
-import com.vend.fmr.aieng.OPEN_AI_KEY
+import com.vend.fmr.aieng.apis.openai.OpenAI
 import com.vend.fmr.aieng.apis.openai.*
 import com.vend.fmr.aieng.utils.Prompts
 import io.ktor.client.*
@@ -16,9 +16,7 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import com.vend.fmr.aieng.apis.openai.Tool as OpenAITool
 
-class McpClient(private val serverUrl: String, private val originalClientIp: String? = null) : Closeable {
-
-    private val openai = OpenAI(OPEN_AI_KEY)
+class McpClient(private val serverUrl: String, private val openAI: OpenAI, private val originalClientIp: String? = null) : Closeable {
     private var availableTools: List<Tool> = emptyList()
     private var convertedOpenAITools: List<OpenAITool> = emptyList()
     private var isConnected = false
@@ -162,7 +160,7 @@ class McpClient(private val serverUrl: String, private val originalClientIp: Str
                 )
             }
 
-            val aiResponse = openai.createChatCompletion(
+            val aiResponse = openAI.createChatCompletion(
                 messages = conversationMessages,
                 tools = openaiTools,
                 toolChoice = "auto",
@@ -180,7 +178,7 @@ class McpClient(private val serverUrl: String, private val originalClientIp: Str
                     aiResponse
                 } else {
                     // Make new AI call with updated conversation context
-                    openai.createChatCompletion(
+                    openAI.createChatCompletion(
                         messages = conversationMessages,
                         tools = openaiTools,
                         toolChoice = "auto",

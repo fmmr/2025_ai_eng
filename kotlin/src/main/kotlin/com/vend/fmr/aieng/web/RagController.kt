@@ -1,8 +1,5 @@
 package com.vend.fmr.aieng.web
 
-import com.vend.fmr.aieng.OPEN_AI_KEY
-import com.vend.fmr.aieng.SUPABASE_KEY
-import com.vend.fmr.aieng.SUPABASE_URL
 import com.vend.fmr.aieng.apis.openai.OpenAI
 import com.vend.fmr.aieng.apis.supabase.DocumentMatch
 import com.vend.fmr.aieng.apis.supabase.Supabase
@@ -17,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 @RequestMapping("/demo/rag")
-class RagController : BaseController(Demo.RAG) {
+class RagController(
+    private val openAI: OpenAI,
+    private val supabase: Supabase
+) : BaseController(Demo.RAG) {
 
     @GetMapping
     fun ragDemo(model: Model): String {
@@ -37,9 +37,6 @@ class RagController : BaseController(Demo.RAG) {
         
         if (query.isNotBlank()) {
             try {
-                val openAI = OpenAI(OPEN_AI_KEY)
-                val supabase = Supabase(SUPABASE_URL, SUPABASE_KEY)
-                
                 val queryEmbedding = openAI.createEmbedding(query)
                 
                 val matches = supabase.matchDocuments(queryEmbedding, maxMatches)
@@ -50,9 +47,6 @@ class RagController : BaseController(Demo.RAG) {
                     prompt = Prompts.formatRagQuery(context, query),
                     systemMessage = Prompts.MOVIE_EXPERT_RAG
                 )
-                
-                openAI.close()
-                supabase.close()
                 
                 model.addAttribute("ragResult", RagResult(
                     originalQuery = query,

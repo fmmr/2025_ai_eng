@@ -1,6 +1,5 @@
 package com.vend.fmr.aieng.web
 
-import com.vend.fmr.aieng.OPEN_AI_KEY
 import com.vend.fmr.aieng.apis.openai.OpenAI
 import com.vend.fmr.aieng.utils.Demo
 import com.vend.fmr.aieng.utils.Models
@@ -13,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 @RequestMapping("/demo/chat-completion")
-class ChatCompletionController : BaseController(Demo.CHAT_COMPLETION) {
+class ChatCompletionController(
+    private val openAI: OpenAI
+) : BaseController(Demo.CHAT_COMPLETION) {
 
     @GetMapping
     fun chatCompletionDemo(model: Model): String {
@@ -36,9 +37,6 @@ class ChatCompletionController : BaseController(Demo.CHAT_COMPLETION) {
         
         if (userPrompt.isNotBlank()) {
             try {
-                val apiKey = OPEN_AI_KEY
-
-                val openAI = OpenAI(apiKey)
                 val response = openAI.createChatCompletion(
                     prompt = userPrompt,
                     systemMessage = systemMessage.takeIf { it.isNotBlank() },
@@ -46,7 +44,6 @@ class ChatCompletionController : BaseController(Demo.CHAT_COMPLETION) {
                     maxTokens = maxTokens,
                     temperature = temperature
                 )
-                openAI.close()
                 
                 model.addAttribute("chatResult", ChatResult(
                     userPrompt = userPrompt,

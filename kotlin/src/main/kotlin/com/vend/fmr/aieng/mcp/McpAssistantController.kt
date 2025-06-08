@@ -1,5 +1,6 @@
 package com.vend.fmr.aieng.mcp
 
+import com.vend.fmr.aieng.apis.openai.OpenAI
 import com.vend.fmr.aieng.utils.Demo
 import com.vend.fmr.aieng.utils.getClientIpAddress
 import com.vend.fmr.aieng.web.BaseController
@@ -14,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 
 @Controller
-class McpAssistantController : BaseController(Demo.MCP_ASSISTANT) {
+class McpAssistantController(
+    private val openAI: OpenAI
+) : BaseController(Demo.MCP_ASSISTANT) {
 
     @GetMapping("/demo/mcp-assistant")
     fun mcpAssistantDemo(model: Model, session: HttpSession): String {
@@ -53,7 +56,7 @@ class McpAssistantController : BaseController(Demo.MCP_ASSISTANT) {
         return@runBlocking try {
             val serverUrl = "http://localhost:8080/mcp/"
             val clientIp = getClientIpAddress(httpRequest)
-            val mcpClient = McpClient(serverUrl, clientIp)
+            val mcpClient = McpClient(serverUrl, openAI, clientIp)
             
             try {
                 // Only connect and discover tools if not cached

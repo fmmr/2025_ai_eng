@@ -1,6 +1,6 @@
 package com.vend.fmr.aieng.web
 
-import com.vend.fmr.aieng.huggingface
+import com.vend.fmr.aieng.apis.huggingface.HuggingFace
 import com.vend.fmr.aieng.utils.Demo
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
-class HuggingFaceClassificationController : BaseController(Demo.HUGGINGFACE_CLASSIFICATION) {
+class HuggingFaceClassificationController(
+    private val huggingface: HuggingFace
+) : BaseController(Demo.HUGGINGFACE_CLASSIFICATION) {
 
     @GetMapping("/demo/huggingface-classification")
     fun classificationDemo(model: Model): String {

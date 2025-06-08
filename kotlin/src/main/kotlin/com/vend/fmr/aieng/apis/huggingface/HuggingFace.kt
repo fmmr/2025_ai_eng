@@ -3,34 +3,21 @@ package com.vend.fmr.aieng.apis.huggingface
 import com.vend.fmr.aieng.utils.Models.HuggingFace.BART_CLASSIFICATION
 import com.vend.fmr.aieng.utils.Models.HuggingFace.BART_SUMMARIZATION
 import com.vend.fmr.aieng.utils.Models.HuggingFace.DETR_OBJECT_DETECTION
+import com.vend.fmr.aieng.utils.env
 import io.ktor.client.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
 import io.ktor.utils.io.core.*
 import kotlinx.serialization.json.Json
+import org.springframework.stereotype.Service
 
-class HuggingFace(private val token: String) : Closeable {
+@Service
+class HuggingFace(val client: HttpClient, val json: Json) : Closeable {
+    private val token = "HF_TOKEN".env()
     
     companion object {
         private const val BASE_URL = "https://router.huggingface.co/hf-inference/models"
-        
-        object Models {
-        }
-
-        private val json = Json {
-            ignoreUnknownKeys = true
-            isLenient = true
-        }
-    }
-
-    private val client = HttpClient(CIO) {
-        install(ContentNegotiation) {
-            json(json)
-        }
     }
 
     suspend fun classify(

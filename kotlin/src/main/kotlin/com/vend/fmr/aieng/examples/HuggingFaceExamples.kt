@@ -2,9 +2,10 @@
 
 package com.vend.fmr.aieng.examples
 
-import com.vend.fmr.aieng.huggingface
+import com.vend.fmr.aieng.apis.huggingface.HuggingFace
+import com.vend.fmr.aieng.apis.openai.OpenAI
 
-suspend fun huggingFaceClassificationDemo(debug: Boolean = false) {
+suspend fun huggingFaceClassificationDemo(huggingface: HuggingFace, debug: Boolean = false) {
     println("=== HUGGINGFACE CLASSIFICATION DEMO ===")
     
     val texts = listOf(
@@ -28,7 +29,7 @@ suspend fun huggingFaceClassificationDemo(debug: Boolean = false) {
     }
 }
 
-suspend fun huggingFaceSummarizationDemo(debug: Boolean = false) {
+suspend fun huggingFaceSummarizationDemo(huggingface: HuggingFace, debug: Boolean = false) {
     println("\n=== HUGGINGFACE SUMMARIZATION DEMO ===")
     
     val longText = """
@@ -68,7 +69,7 @@ suspend fun huggingFaceSummarizationDemo(debug: Boolean = false) {
     println("  Long: ${((longText.length - longSummary.summaryText.length).toDouble() / longText.length * 100).toInt()}% reduction")
 }
 
-suspend fun huggingFaceComparisonDemo(debug: Boolean = false) {
+suspend fun huggingFaceComparisonDemo(huggingface: HuggingFace, openAI: OpenAI, debug: Boolean = false) {
     println("\n=== HUGGINGFACE vs OPENAI COMPARISON ===")
     
     val testText = "This product exceeded my expectations! Great quality and fast delivery."
@@ -89,7 +90,7 @@ suspend fun huggingFaceComparisonDemo(debug: Boolean = false) {
     // OpenAI Classification
     println("\n🤖 OPENAI (Commercial):")
     try {
-        val openAiResponse = com.vend.fmr.aieng.openAI.createChatCompletion(
+        val openAiResponse = openAI.createChatCompletion(
             prompt = "Classify this text as positive, negative, or neutral: \"$testText\"",
             systemMessage = "You are a sentiment classifier. Respond with only: positive, negative, or neutral.",
             maxTokens = 10
@@ -108,7 +109,7 @@ suspend fun huggingFaceComparisonDemo(debug: Boolean = false) {
     println("  OpenAI: Data sent to OpenAI servers")
 }
 
-suspend fun huggingFaceObjectDetectionDemo(debug: Boolean = false) {
+suspend fun huggingFaceObjectDetectionDemo(huggingface: HuggingFace, debug: Boolean = false) {
     println("\n=== HUGGINGFACE OBJECT DETECTION DEMO ===")
     
     // Use the kitchen.png image from resources
@@ -150,9 +151,9 @@ suspend fun huggingFaceObjectDetectionDemo(debug: Boolean = false) {
     println("High confidence objects (>70%): ${highConfidenceObjects.size}")
 }
 
-suspend fun huggingFaceDemo(debug: Boolean = false) {
-    huggingFaceClassificationDemo(debug)
-    huggingFaceSummarizationDemo(debug)
-    huggingFaceObjectDetectionDemo(debug)
-    huggingFaceComparisonDemo(debug)
+suspend fun huggingFaceDemo(huggingface: HuggingFace, openAI: OpenAI, debug: Boolean = false) {
+    huggingFaceClassificationDemo(huggingface, debug)
+    huggingFaceSummarizationDemo(huggingface, debug)
+    huggingFaceObjectDetectionDemo(huggingface, debug)
+    huggingFaceComparisonDemo(huggingface, openAI, debug)
 }

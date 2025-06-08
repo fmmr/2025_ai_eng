@@ -1,10 +1,10 @@
 package com.vend.fmr.aieng.mcp
 
-import com.vend.fmr.aieng.geolocation
-import com.vend.fmr.aieng.openAI
-import com.vend.fmr.aieng.polygon
+import com.vend.fmr.aieng.apis.geolocation.Geolocation
+import com.vend.fmr.aieng.apis.openai.OpenAI
+import com.vend.fmr.aieng.apis.polygon.Polygon
 import com.vend.fmr.aieng.utils.getClientIpAddress
-import com.vend.fmr.aieng.weather
+import com.vend.fmr.aieng.apis.weather.Weather
 import jakarta.servlet.http.HttpServletRequest
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
@@ -14,7 +14,12 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/mcp")
 @CrossOrigin(origins = ["*"])
-class McpApiController {
+class McpApiController(
+    private val geolocation: Geolocation,
+    private val openAI: OpenAI,
+    private val polygon: Polygon,
+    private val weather: Weather
+) {
 
     companion object {
         private val json = Json {

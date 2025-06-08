@@ -1,7 +1,5 @@
 package com.vend.fmr.aieng.web
 
-import com.vend.fmr.aieng.OPEN_AI_KEY
-import com.vend.fmr.aieng.POLYGON_API_KEY
 import com.vend.fmr.aieng.apis.openai.OpenAI
 import com.vend.fmr.aieng.apis.polygon.AggregatesResponse
 import com.vend.fmr.aieng.apis.polygon.Polygon
@@ -16,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 @RequestMapping("/demo/stock")
-class StockController : BaseController(Demo.STOCK_DATA) {
+class StockController(
+    private val openAI: OpenAI,
+    private val polygon: Polygon
+) : BaseController(Demo.STOCK_DATA) {
 
     @GetMapping
     fun stockDemo(model: Model): String {
@@ -35,8 +36,6 @@ class StockController : BaseController(Demo.STOCK_DATA) {
         model.addAttribute("activeTab", "stock")
         if (tickers.isNotBlank()) {
             try {
-                val openAI = OpenAI(OPEN_AI_KEY)
-                val polygon = Polygon(POLYGON_API_KEY)
                 
                 val tickerList = tickers.split(",").map { it.trim().uppercase() }.toTypedArray()
                 
@@ -55,8 +54,6 @@ class StockController : BaseController(Demo.STOCK_DATA) {
                     systemMessage = Prompts.FINANCIAL_ANALYSIS
                 )
                 
-                openAI.close()
-                polygon.close()
                 
                 model.addAttribute("stockResult", StockResult(
                     requestedTickers = tickerList.toList(),

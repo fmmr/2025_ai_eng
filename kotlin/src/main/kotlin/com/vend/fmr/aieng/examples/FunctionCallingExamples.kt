@@ -6,7 +6,7 @@ import com.vend.fmr.aieng.utils.*
 import com.vend.fmr.aieng.apis.mocks.Mocks
 import com.vend.fmr.aieng.apis.openai.Message
 import com.vend.fmr.aieng.apis.openai.TextContent
-import com.vend.fmr.aieng.openAI
+import com.vend.fmr.aieng.apis.openai.OpenAI
 
 /**
  * OpenAI Function Calling Examples
@@ -22,7 +22,7 @@ object FunctionCallingExamples {
     /**
      * Main function calling agent - uses OpenAI's native function calling API
      */
-    suspend fun functionCallingAgent(userQuery: String, debug: Boolean = false): String {
+    suspend fun functionCallingAgent(openAI: OpenAI, userQuery: String, debug: Boolean = false): String {
         val messages = mutableListOf<Message>()
         val tools = Mocks.getAvailableTools()
         

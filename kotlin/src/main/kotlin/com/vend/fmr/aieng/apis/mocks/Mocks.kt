@@ -1,7 +1,6 @@
 package com.vend.fmr.aieng.apis.mocks
 
 import com.vend.fmr.aieng.apis.openai.*
-import com.vend.fmr.aieng.polygon
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlinx.serialization.json.Json
@@ -48,27 +47,8 @@ object Mocks {
         )
     }
     
-    suspend fun getStockPrice(ticker: String): StockInfo {
-        return try {
-            val aggregatesResponse = polygon.getAggregates(ticker)
-            val response = aggregatesResponse.firstOrNull()
-            val aggregate = response?.results?.lastOrNull()
-            
-            if (aggregate != null && aggregate.closePrice > 0) {
-                val change = aggregate.closePrice - aggregate.openPrice
-                val changePercent = (change / aggregate.openPrice) * 100
-                StockInfo(
-                    ticker = ticker.uppercase(),
-                    price = aggregate.closePrice,
-                    change = change,
-                    changePercent = changePercent
-                )
-            } else {
-                getMockStockPrice(ticker)
-            }
-        } catch (_: Exception) {
-            getMockStockPrice(ticker)
-        }
+    fun getStockPrice(ticker: String): StockInfo {
+        return getMockStockPrice(ticker)
     }
     
     private fun getMockStockPrice(ticker: String): StockInfo {
@@ -157,7 +137,7 @@ object Mocks {
      * Execute a function call based on parsed action - centralized function executor
      * This is the single point where all function calls are handled
      */
-    suspend fun executeFunction(functionName: String, params: List<String>): String {
+    fun executeFunction(functionName: String, params: List<String>): String {
         return try {
             when (functionName.lowercase()) {
                 "getlocation" -> {
@@ -283,7 +263,7 @@ object Mocks {
      * Execute a function call from OpenAI function calling format
      * Parses the JSON arguments and delegates to executeFunction
      */
-    suspend fun executeFunctionCall(functionCall: FunctionCall): String {
+    fun executeFunctionCall(functionCall: FunctionCall): String {
         val json = Json { ignoreUnknownKeys = true }
         
         return try {

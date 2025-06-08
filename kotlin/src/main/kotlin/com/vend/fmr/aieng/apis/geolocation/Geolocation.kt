@@ -1,36 +1,20 @@
 package com.vend.fmr.aieng.apis.geolocation
 
 import io.ktor.client.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
 import io.ktor.utils.io.core.*
 import kotlinx.serialization.json.Json
+import org.springframework.stereotype.Service
 
 @Suppress("unused")
-class Geolocation : Closeable {
+@Service
+class Geolocation(val client: HttpClient, val json: Json) : Closeable {
     
     companion object {
         private const val BASE_URL = "https://ipapi.co"
         private const val USER_AGENT = "AI-Engineering-Course/1.0 (contact@rodland.no)"
-        
-        private val json = Json {
-            ignoreUnknownKeys = true
-            isLenient = true
-        }
-    }
-
-    private val client = HttpClient(CIO) {
-        install(ContentNegotiation) {
-            json(json)
-        }
-        install(Logging) {
-            level = LogLevel.NONE
-        }
     }
 
     suspend fun getLocationByIp(ipAddress: String, debug: Boolean = false): GeolocationResponse {

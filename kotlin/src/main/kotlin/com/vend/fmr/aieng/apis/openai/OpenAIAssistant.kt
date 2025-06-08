@@ -1,36 +1,19 @@
 package com.vend.fmr.aieng.apis.openai
 
 import com.vend.fmr.aieng.utils.Models
+import com.vend.fmr.aieng.utils.env
 import io.ktor.client.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
 import io.ktor.utils.io.core.*
 import kotlinx.serialization.json.Json
+import org.springframework.stereotype.Service
 
-class OpenAIAssistant(private val openaiApiKey: String) : Closeable {
-    companion object {
-        private val json = Json {
-            ignoreUnknownKeys = true
-            isLenient = true
-            explicitNulls = false
-            encodeDefaults = true
-        }
-    }
-
-    private val client = HttpClient(CIO) {
-        install(ContentNegotiation) {
-            json(json)
-        }
-        install(Logging){
-            level = LogLevel.NONE
-        }
-    }
+@Service
+class OpenAIAssistant(val client: HttpClient, val json: Json) : Closeable {
+    private val openaiApiKey = "OPENAI_API_KEY".env()
 
     suspend fun uploadFile(
         fileBytes: ByteArray,

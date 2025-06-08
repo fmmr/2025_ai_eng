@@ -1,32 +1,18 @@
 package com.vend.fmr.aieng.apis.supabase
 
+import com.vend.fmr.aieng.utils.env
 import io.ktor.client.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
 import io.ktor.utils.io.core.*
 import kotlinx.serialization.json.Json
+import org.springframework.stereotype.Service
 
-class Supabase(private val supabaseUrl: String, private val supabaseKey: String) : Closeable {
-
-    private val json = Json {
-        ignoreUnknownKeys = true
-        isLenient = true
-    }
-
-    private val client = HttpClient(CIO) {
-        install(ContentNegotiation) {
-            json(json)
-        }
-
-        install(Logging) {
-            level = LogLevel.NONE
-        }
-    }
+@Service
+class Supabase(val client: HttpClient, val json: Json) : Closeable {
+    private val supabaseUrl = "SUPABASE_URL".env()
+    private val supabaseKey = "SUPABASE_ANON_KEY".env()
 
     suspend fun matchDocuments(queryEmbedding: List<Double>, matches: Int = 5): List<DocumentMatch> {
         val embeddingStr = "[${queryEmbedding.joinToString(",")}]"

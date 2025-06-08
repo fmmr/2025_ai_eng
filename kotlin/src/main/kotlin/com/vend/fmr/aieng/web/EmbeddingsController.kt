@@ -1,6 +1,5 @@
 package com.vend.fmr.aieng.web
 
-import com.vend.fmr.aieng.OPEN_AI_KEY
 import com.vend.fmr.aieng.apis.openai.OpenAI
 import com.vend.fmr.aieng.utils.Demo
 import org.springframework.stereotype.Controller
@@ -12,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 @RequestMapping("/demo/embeddings")
-class EmbeddingsController : BaseController(Demo.EMBEDDINGS) {
+class EmbeddingsController(
+    private val openAI: OpenAI
+) : BaseController(Demo.EMBEDDINGS) {
 
     @GetMapping
     fun embeddingsDemo(model: Model): String {
@@ -32,11 +33,7 @@ class EmbeddingsController : BaseController(Demo.EMBEDDINGS) {
         
         if (inputText.isNotBlank()) {
             try {
-                val apiKey = OPEN_AI_KEY
-
-                val openAI = OpenAI(apiKey)
                 val embedding = openAI.createEmbedding(inputText)
-                openAI.close()
                 
                 model.addAttribute("embeddingResult", EmbeddingResult(
                     text = inputText,

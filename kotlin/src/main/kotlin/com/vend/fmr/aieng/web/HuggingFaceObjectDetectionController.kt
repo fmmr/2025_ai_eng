@@ -1,6 +1,6 @@
 package com.vend.fmr.aieng.web
 
-import com.vend.fmr.aieng.huggingface
+import com.vend.fmr.aieng.apis.huggingface.HuggingFace
 import com.vend.fmr.aieng.utils.Demo
 import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Controller
@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.multipart.MultipartFile
 
 @Controller
-class HuggingFaceObjectDetectionController : BaseController(Demo.OBJECT_DETECTION) {
+class HuggingFaceObjectDetectionController(
+    private val huggingface: HuggingFace
+) : BaseController(Demo.OBJECT_DETECTION) {
 
     @GetMapping("/demo/huggingface-object-detection")
     fun objectDetectionDemo(model: Model): String {

@@ -7,12 +7,12 @@ import com.vend.fmr.aieng.dtos.*
 import com.vend.fmr.aieng.apis.chunker.Chunker
 import com.vend.fmr.aieng.apis.supabase.Document
 import com.vend.fmr.aieng.apis.supabase.DocumentMatch
-import com.vend.fmr.aieng.openAI
-import com.vend.fmr.aieng.polygon
-import com.vend.fmr.aieng.supabase
+import com.vend.fmr.aieng.apis.openai.OpenAI
+import com.vend.fmr.aieng.apis.polygon.Polygon
+import com.vend.fmr.aieng.apis.supabase.Supabase
 
 
-suspend fun tickers(vararg tickers: String, debug: Boolean = false): String {
+suspend fun tickers(openAI: OpenAI, polygon: Polygon, vararg tickers: String, debug: Boolean = false): String {
     val aggregates = polygon.getAggregates(*tickers)
     if (debug) {
         println(aggregates)
@@ -26,8 +26,8 @@ suspend fun tickers(vararg tickers: String, debug: Boolean = false): String {
     return response.text()
 }
 
-suspend fun enrichedMovieChat(query: String, debug: Boolean = false): String {
-    val fromDb = queryVectorDbForMovies(query, 5).joinToString("\n") { it.content }
+suspend fun enrichedMovieChat(openAI: OpenAI, supabase: Supabase, query: String, debug: Boolean = false): String {
+    val fromDb = queryVectorDbForMovies(openAI, supabase, query, 5).joinToString("\n") { it.content }
     val chatGPT = openAI.createChatCompletion(Prompts.formatRagQuery(fromDb, query), Prompts.MOVIE_EXPERT_RAG)
     val response = chatGPT.text()
     if (debug) {
@@ -37,8 +37,8 @@ suspend fun enrichedMovieChat(query: String, debug: Boolean = false): String {
     return response
 }
 
-suspend fun clearDbAndInsertDocs(file: String, debug: Boolean = false): List<Document> {
-    val embeddingData = embeddings(file)
+suspend fun clearDbAndInsertDocs(openAI: OpenAI, supabase: Supabase, chunker: Chunker, file: String, debug: Boolean = false): List<Document> {
+    val embeddingData = embeddings(openAI, chunker, file)
     supabase.clearDocuments()
     val docs = supabase.insertDocumentsFromPair(embeddingData)
     if (debug) {
@@ -49,8 +49,8 @@ suspend fun clearDbAndInsertDocs(file: String, debug: Boolean = false): List<Doc
 }
 
 
-suspend fun embeddings(file: String, debug: Boolean = false): List<Pair<String, List<Double>>> {
-    val texts = splitText(file)
+suspend fun embeddings(openAI: OpenAI, chunker: Chunker, file: String, debug: Boolean = false): List<Pair<String, List<Double>>> {
+    val texts = splitText(chunker, file)
     val embeddings = openAI.createEmbeddings(texts).mapIndexed { i, it ->
         texts[i] to it
     }
@@ -62,9 +62,9 @@ suspend fun embeddings(file: String, debug: Boolean = false): List<Pair<String, 
     return embeddings
 }
 
-fun splitText(file: String, debug: Boolean = false): List<String> {
+fun splitText(chunker: Chunker, file: String, debug: Boolean = false): List<String> {
     val text = file.read()
-    val splits = Chunker().split(text)
+    val splits = chunker.split(text)
     if (debug) {
         splits.forEachIndexed { index, split ->
             println("Chunk $index: $split (${split.length} characters)")
@@ -74,7 +74,7 @@ fun splitText(file: String, debug: Boolean = false): List<String> {
 }
 
 
-suspend fun chatGPT() {
+suspend fun chatGPT(openAI: OpenAI) {
     val chatGPT = openAI.createChatCompletion(
         "What is the capital of France?",
         Prompts.RHYMING_ASSISTANT
@@ -83,7 +83,7 @@ suspend fun chatGPT() {
     println(chatGPT.usage())
 }
 
-suspend fun multiMessageChat(debug: Boolean = false): String {
+suspend fun multiMessageChat(openAI: OpenAI, debug: Boolean = false): String {
     val conversationHistory = mutableListOf<com.vend.fmr.aieng.apis.openai.Message>()
     
     conversationHistory.add(
@@ -137,7 +137,7 @@ suspend fun multiMessageChat(debug: Boolean = false): String {
     return results.joinToString("\n\n")
 }
 
-suspend fun queryVectorDbForMovies(query: String, matches: Int = 5, debug: Boolean = false): List<DocumentMatch> {
+suspend fun queryVectorDbForMovies(openAI: OpenAI, supabase: Supabase, query: String, matches: Int = 5, debug: Boolean = false): List<DocumentMatch> {
     val response = supabase.matchDocuments(openAI.createEmbedding(query), matches)
     if (debug) {
         response.forEach { match ->
@@ -147,7 +147,7 @@ suspend fun queryVectorDbForMovies(query: String, matches: Int = 5, debug: Boole
     return response
 }
 
-suspend fun promptEngineeringDemo(debug: Boolean = false) {
+suspend fun promptEngineeringDemo(openAI: OpenAI, debug: Boolean = false) {
     val scenarios = listOf(
         PromptComparison(
             scenario = "Recipe Generation",
@@ -190,7 +190,7 @@ suspend fun promptEngineeringDemo(debug: Boolean = false) {
     }
 }
 
-suspend fun temperatureDemo(debug: Boolean = false) {
+suspend fun temperatureDemo(openAI: OpenAI, debug: Boolean = false) {
     val prompt = Prompts.Defaults.CHAT_PARAMETERS_PROMPT
     val fixedTopP = 0.9
     
@@ -259,7 +259,7 @@ suspend fun temperatureDemo(debug: Boolean = false) {
     }
 }
 
-suspend fun topPDemo(debug: Boolean = false) {
+suspend fun topPDemo(openAI: OpenAI, debug: Boolean = false) {
     val prompt = Prompts.Defaults.CHAT_PARAMETERS_PROMPT
     val fixedTemperature = 0.7
     
@@ -328,10 +328,10 @@ suspend fun topPDemo(debug: Boolean = false) {
     }
 }
 
-suspend fun chatParametersDemo(debug: Boolean = false) {
-    temperatureDemo(debug)
+suspend fun chatParametersDemo(openAI: OpenAI, debug: Boolean = false) {
+    temperatureDemo(openAI, debug)
     println("\n" + "🔄".repeat(40) + "\n")
-    topPDemo(debug)
+    topPDemo(openAI, debug)
     
     println("🎯 KEY LEARNINGS:")
     println("🌡️ TEMPERATURE:")

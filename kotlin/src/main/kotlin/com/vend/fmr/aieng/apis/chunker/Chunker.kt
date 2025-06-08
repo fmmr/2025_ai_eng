@@ -1,16 +1,20 @@
 package com.vend.fmr.aieng.apis.chunker
 
-class Chunker(
-    private val chunkSize: Int = 250,
-    private val chunkOverlap: Int = 35,
-    private val separators: List<String> = listOf("\n\n", "\n", " ", "")
-) {
+import org.springframework.stereotype.Service
+
+@Service
+class Chunker {
     
-    fun split(text: String): List<String> {
-        return splitText(text, separators)
+    fun split(
+        text: String,
+        chunkSize: Int = 250,
+        chunkOverlap: Int = 35,
+        separators: List<String> = listOf("\n\n", "\n", " ", "")
+    ): List<String> {
+        return splitText(text, separators, chunkSize, chunkOverlap)
     }
     
-    private fun splitText(text: String, separators: List<String>): List<String> {
+    private fun splitText(text: String, separators: List<String>, chunkSize: Int, chunkOverlap: Int): List<String> {
         val finalChunks = mutableListOf<String>()
         
         val separator = separators.firstOrNull { it in text } ?: separators.last()
@@ -29,25 +33,25 @@ class Chunker(
                 goodSplits.add(split)
             } else {
                 if (goodSplits.isNotEmpty()) {
-                    val mergedSplits = mergeSplits(goodSplits, separator)
+                    val mergedSplits = mergeSplits(goodSplits, separator, chunkSize, chunkOverlap)
                     finalChunks.addAll(mergedSplits)
                     goodSplits.clear()
                 }
                 
-                val otherInfo = splitText(split, remainingSeparators)
+                val otherInfo = splitText(split, remainingSeparators, chunkSize, chunkOverlap)
                 finalChunks.addAll(otherInfo)
             }
         }
         
         if (goodSplits.isNotEmpty()) {
-            val mergedSplits = mergeSplits(goodSplits, separator)
+            val mergedSplits = mergeSplits(goodSplits, separator, chunkSize, chunkOverlap)
             finalChunks.addAll(mergedSplits)
         }
         
         return finalChunks
     }
     
-    private fun mergeSplits(splits: List<String>, separator: String): List<String> {
+    private fun mergeSplits(splits: List<String>, separator: String, chunkSize: Int, chunkOverlap: Int): List<String> {
         val docs = mutableListOf<String>()
         val currentDoc = mutableListOf<String>()
         var total = 0

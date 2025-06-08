@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 @RequestMapping("/demo/chunking")
-class ChunkingController : BaseController(Demo.CHUNKING) {
+class ChunkingController(
+    private val chunker: Chunker
+) : BaseController(Demo.CHUNKING) {
 
     @GetMapping
     fun chunkingDemo(model: Model): String {
@@ -31,8 +33,7 @@ class ChunkingController : BaseController(Demo.CHUNKING) {
         model.addAttribute("activeTab", "chunking")
         
         if (textInput.isNotBlank()) {
-            val chunker = Chunker(chunkSize = chunkSize, chunkOverlap = chunkOverlap)
-            val chunks = chunker.split(textInput)
+            val chunks = chunker.split(textInput, chunkSize, chunkOverlap)
             
             val chunksWithOverlaps = chunks.mapIndexed { index, chunk ->
                 val prevOverlap = if (index > 0) findOverlap(chunks[index - 1], chunk).trim() else ""

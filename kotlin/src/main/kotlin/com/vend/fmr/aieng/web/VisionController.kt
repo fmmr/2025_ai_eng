@@ -1,6 +1,6 @@
 package com.vend.fmr.aieng.web
 
-import com.vend.fmr.aieng.openAI
+import com.vend.fmr.aieng.apis.openai.OpenAI
 import com.vend.fmr.aieng.utils.Demo
 import com.vend.fmr.aieng.utils.Models
 import org.springframework.stereotype.Controller
@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
-class VisionController : BaseController(Demo.GPT4_VISION) {
+class VisionController(
+    private val openAI: OpenAI
+) : BaseController(Demo.GPT4_VISION) {
 
     companion object {
         val DEMO_IMAGES = listOf(

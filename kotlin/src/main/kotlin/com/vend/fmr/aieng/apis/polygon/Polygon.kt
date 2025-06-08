@@ -1,37 +1,21 @@
 package com.vend.fmr.aieng.apis.polygon
 
+import com.vend.fmr.aieng.utils.env
 import io.ktor.client.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
 import io.ktor.utils.io.core.*
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Suppress("unused")
-class Polygon(private val apiKey: String) : Closeable {
-    companion object {
-        private val json = Json {
-            ignoreUnknownKeys = true
-            isLenient = true
-            explicitNulls = false
-        }
-    }
-
-    private val client = HttpClient(CIO) {
-        install(ContentNegotiation) {
-            json(json)
-        }
-        install(Logging) {
-            level = LogLevel.NONE
-        }
-    }
+@Service
+class Polygon(val client: HttpClient, val json: Json) : Closeable {
+    private val apiKey = "POLYGON_API_KEY".env()
 
     suspend fun getTickers(
         ticker: String? = null,

@@ -1,6 +1,6 @@
 package com.vend.fmr.aieng.web
 
-import com.vend.fmr.aieng.openAI
+import com.vend.fmr.aieng.apis.openai.OpenAI
 import com.vend.fmr.aieng.dtos.PromptComparison
 import com.vend.fmr.aieng.utils.Demo
 import com.vend.fmr.aieng.utils.Prompts
@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
-class PromptController : BaseController(Demo.PROMPT_ENGINEERING) {
+class PromptController(
+    private val openAI: OpenAI
+) : BaseController(Demo.PROMPT_ENGINEERING) {
 
     @GetMapping("/demo/prompt-engineering")
     fun promptDemo(model: Model): String {

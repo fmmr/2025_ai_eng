@@ -8,6 +8,10 @@ import org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import com.vend.fmr.aieng.utils.isValidApiKey
+import com.vend.fmr.aieng.utils.createJson
+import com.vend.fmr.aieng.utils.createHttpClient
+import io.ktor.client.*
+import kotlinx.serialization.json.Json
 
 @SpringBootApplication(exclude = [R2dbcAutoConfiguration::class])
 class Application {
@@ -32,6 +36,12 @@ class Application {
             DisabledChatModel()
         }
     }
+
+    @Bean
+    fun json(): Json = createJson()
+
+    @Bean
+    fun httpClient(json: Json): HttpClient = createHttpClient(json)
 }
 
 fun main(args: Array<String>) {

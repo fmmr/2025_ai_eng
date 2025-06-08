@@ -1,8 +1,5 @@
 package com.vend.fmr.aieng.web
 
-import com.vend.fmr.aieng.OPEN_AI_KEY
-import com.vend.fmr.aieng.SUPABASE_KEY
-import com.vend.fmr.aieng.SUPABASE_URL
 import com.vend.fmr.aieng.apis.openai.OpenAI
 import com.vend.fmr.aieng.apis.supabase.DocumentMatch
 import com.vend.fmr.aieng.apis.supabase.Supabase
@@ -16,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 @RequestMapping("/demo/supabase")
-class SupabaseController : BaseController(Demo.VECTOR_DATABASE) {
+class SupabaseController(
+    private val openAI: OpenAI,
+    private val supabase: Supabase
+) : BaseController(Demo.VECTOR_DATABASE) {
 
     @GetMapping
     fun supabaseDemo(model: Model): String {
@@ -36,14 +36,8 @@ class SupabaseController : BaseController(Demo.VECTOR_DATABASE) {
         
         if (query.isNotBlank()) {
             try {
-                val openAI = OpenAI(OPEN_AI_KEY)
-                val supabase = Supabase(SUPABASE_URL, SUPABASE_KEY)
-                
                 val queryEmbedding = openAI.createEmbedding(query)
                 val matches = supabase.matchDocuments(queryEmbedding, maxMatches)
-                
-                openAI.close()
-                supabase.close()
                 
                 model.addAttribute("vectorResult", VectorResult(
                     originalQuery = query,

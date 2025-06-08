@@ -4,7 +4,7 @@ import com.vend.fmr.aieng.apis.mocks.Mocks
 import com.vend.fmr.aieng.utils.Demo
 import com.vend.fmr.aieng.apis.openai.Message
 import com.vend.fmr.aieng.apis.openai.TextContent
-import com.vend.fmr.aieng.openAI
+import com.vend.fmr.aieng.apis.openai.OpenAI
 import com.vend.fmr.aieng.utils.Prompts
 import com.vend.fmr.aieng.utils.truncate
 import kotlinx.coroutines.runBlocking
@@ -26,7 +26,9 @@ data class FunctionCallingStep(
 
 @Controller
 @RequestMapping("/demo/function-calling")
-class FunctionCallingController : BaseController(Demo.FUNCTION_CALLING) {
+class FunctionCallingController(
+    private val openAI: OpenAI
+) : BaseController(Demo.FUNCTION_CALLING) {
 
     @GetMapping
     fun functionCallingDemo(model: Model): String {
