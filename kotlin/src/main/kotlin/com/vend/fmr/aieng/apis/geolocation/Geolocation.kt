@@ -14,13 +14,10 @@ class Geolocation(val client: HttpClient, val json: Json) : Closeable {
     
     companion object {
         private const val BASE_URL = "https://ipapi.co"
-        private const val USER_AGENT = "AI-Engineering-Course/1.0 (contact@rodland.no)"
     }
 
     suspend fun getLocationByIp(ipAddress: String, debug: Boolean = false): GeolocationResponse {
-        val response = client.get("$BASE_URL/$ipAddress/json/") {
-            header("User-Agent", USER_AGENT)
-        }
+        val response = client.get("$BASE_URL/$ipAddress/json/")
 
         val responseText = response.bodyAsText()
         if (debug) {

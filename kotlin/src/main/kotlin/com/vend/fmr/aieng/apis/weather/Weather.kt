@@ -15,14 +15,12 @@ class Weather(val client: HttpClient, val json: Json) : Closeable {
     companion object {
         private const val NOWCAST_URL = "https://api.met.no/weatherapi/nowcast/2.0"
         private const val FORECAST_URL = "https://api.met.no/weatherapi/locationforecast/2.0"
-        private const val USER_AGENT = "AI-Engineering-Course/1.0 (contact@rodland.no)"
     }
 
     suspend fun getNowcast(latitude: Double, longitude: Double, debug: Boolean = false): WeatherResponse {
         val response = client.get("$NOWCAST_URL/complete") {
             parameter("lat", latitude)
             parameter("lon", longitude)
-            header("User-Agent", USER_AGENT)
         }
 
         val responseText = response.bodyAsText()
@@ -42,7 +40,6 @@ class Weather(val client: HttpClient, val json: Json) : Closeable {
         val response = client.get("$FORECAST_URL/compact") {
             parameter("lat", latitude)
             parameter("lon", longitude)
-            header("User-Agent", USER_AGENT)
         }
 
         val responseText = response.bodyAsText()

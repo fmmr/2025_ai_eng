@@ -4,6 +4,7 @@ import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
+import io.ktor.client.plugins.*
 import io.ktor.serialization.kotlinx.json.*
 import jakarta.servlet.http.HttpServletRequest
 import kotlinx.serialization.json.Json
@@ -83,5 +84,8 @@ fun createHttpClient(json: Json): HttpClient = HttpClient(CIO) {
     }
     install(Logging) {
         level = LogLevel.NONE
+    }
+    install(UserAgent) {
+        agent = "AI-Engineering-Course/1.0 (contact@rodland.no)"
     }
 }

@@ -14,6 +14,7 @@ Working in kotlin directory - AI engineering course using Kotlin/Spring Boot.
 - Remove debug code when done
 - Process data in Kotlin backend, not Thymeleaf
 - Don't guess - find out the answer by inspecting and looking at documentation
+- **NEVER commit unless explicitly asked** - BOSS decides when to commit
 
 ## Stack & Standards
 - Spring Boot 3.5.0 with Kotlin, Bootstrap 5.3.0 + Thymeleaf fragments
