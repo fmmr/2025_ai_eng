@@ -52,7 +52,8 @@
       "Bash(/Users/fmr/.nvm/versions/node/v23.11.0/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/rg \"import.*\\.openAI|import.*\\.huggingface|import.*\\.polygon|import.*\\.supabase|import.*\\.assistant\" *.kt)",
       "Bash(/Users/fmr/.nvm/versions/node/v23.11.0/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/rg \"com\\.vend\\.fmr\\.aieng\\.openAI|com\\.vend\\.fmr\\.aieng\\.huggingface|com\\.vend\\.fmr\\.aieng\\.polygon|com\\.vend\\.fmr\\.aieng\\.supabase|com\\.vend\\.fmr\\.aieng\\.assistant\" *.kt)",
       "Bash(/Users/fmr/.nvm/versions/node/v23.11.0/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/rg \"\\.openAI|\\.huggingface|\\.polygon|\\.supabase|\\.assistant\" *.kt)",
-      "Bash(/Users/fmr/.nvm/versions/node/v23.11.0/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/rg \"openAI\\.|huggingface\\.|polygon\\.|supabase\\.|assistant\\.\" *.kt)"
+      "Bash(/Users/fmr/.nvm/versions/node/v23.11.0/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/rg \"openAI\\.|huggingface\\.|polygon\\.|supabase\\.|assistant\\.\" *.kt)",
+      "WebFetch(domain:api.nasa.gov)"
     ],
     "deny": []
   },

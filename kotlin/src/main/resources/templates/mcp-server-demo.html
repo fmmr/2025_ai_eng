@@ -34,40 +34,17 @@
                     </div>
                     <div class="card-body">
                         <div class="list-group">
-                            <div class="list-group-item">
-                                <strong>hello_world</strong>
-                                <p class="mb-1">Says hello to test MCP connection</p>
-                                <small class="text-muted">Parameters: name (string)</small>
-                            </div>
-                            <div class="list-group-item">
-                                <strong>get_company_info</strong>
-                                <p class="mb-1">Get company details and description for a stock symbol</p>
-                                <small class="text-muted">Parameters: symbol (string) - e.g. AAPL, MSFT</small>
-                            </div>
-                            <div class="list-group-item">
-                                <strong>get_stock_price</strong>
-                                <p class="mb-1">Get current stock price data (open, close, volume) for a symbol</p>
-                                <small class="text-muted">Parameters: symbol (string) - e.g. AAPL, NHYDY</small>
-                            </div>
-                            <div class="list-group-item">
-                                <strong>get_weather_nowcast</strong>
-                                <p class="mb-1">Get high-precision nowcast weather for Nordic countries - 5-minute resolution, 2-hour forecast</p>
-                                <small class="text-muted">Parameters: latitude (55°N-75°N), longitude (0°E-35°E)</small>
-                            </div>
-                            <div class="list-group-item">
-                                <strong>get_weather_forecast</strong>
-                                <p class="mb-1">Get weather forecast for any global location - hourly resolution, multi-day forecast</p>
-                                <small class="text-muted">Parameters: latitude (global), longitude (global)</small>
-                            </div>
-                            <div class="list-group-item">
-                                <strong>get_location_from_ip</strong>
-                                <p class="mb-1">Get geographic location from IP address (defaults to client IP)</p>
-                                <small class="text-muted">Parameters: ip (string, optional)</small>
-                            </div>
-                            <div class="list-group-item">
-                                <strong>get_random_quote</strong>
-                                <p class="mb-1">Get a random inspirational quote</p>
-                                <small class="text-muted">No parameters required</small>
+                            <div th:each="tool : ${availableTools}" class="list-group-item">
+                                <strong th:text="${tool.functionName}">tool_name</strong>
+                                <p class="mb-1" th:text="${tool.description}">Tool description</p>
+                                <small class="text-muted" th:if="${!tool.parameters.isEmpty()}">
+                                    Parameters: 
+                                    <span th:each="parameter, iterStat : ${tool.parameters}" 
+                                          th:text="${parameter.key + ' (' + parameter.value.type + ')' + (parameter.value.required ? ' - required' : ' - optional') + (!iterStat.last ? ', ' : '')}">
+                                        param_name (type)
+                                    </span>
+                                </small>
+                                <small class="text-muted" th:if="${tool.parameters.isEmpty()}">No parameters required</small>
                             </div>
                         </div>
                     </div>
@@ -88,29 +65,14 @@
                         <h6>2. List Available Tools</h6>
                         <button class="btn btn-info btn-sm mb-2" onclick="testToolsList()">List Tools</button>
                         
-                        <h6>3. Call Tools</h6>
-                        <button class="btn btn-success btn-sm mb-2" onclick="testHelloTool()">Say Hello</button>
-                        
-                        <div class="mb-3">
-                            <label for="tickerSelect" class="form-label">Select Stock Symbol:</label>
-                            <select class="form-select form-select-sm" id="tickerSelect">
-                                <option value="AAPL">AAPL - Apple Inc.</option>
-                                <option value="MSFT">MSFT - Microsoft</option>
-                                <option value="GOOGL">GOOGL - Alphabet Inc.</option>
-                                <option value="TSLA">TSLA - Tesla Inc.</option>
-                                <option value="AMZN" selected>AMZN - Amazon</option>
-                                <option value="META">META - Meta Platforms</option>
-                                <option value="NVDA">NVDA - NVIDIA</option>
-                                <option value="NHYDY">NHYDY - Norsk Hydro</option>
-                            </select>
+                        <h6>3. Test Tools</h6>
+                        <div th:each="tool : ${availableTools}">
+                            <button class="btn btn-outline-primary btn-sm mb-2 tool-test-btn" 
+                                    th:data-tool-name="${tool.functionName}"
+                                    th:text="${tool.functionName}">
+                                Tool Name
+                            </button>
                         </div>
-                        
-                        <button class="btn btn-primary btn-sm mb-2" onclick="testCompanyInfo()">Get Company Info</button>
-                        <button class="btn btn-secondary btn-sm mb-2" onclick="testStockPrice()">Get Stock Price</button>
-                        <button class="btn btn-info btn-sm mb-2" onclick="testWeatherNowcast()">Weather Nowcast (Oslo)</button>
-                        <button class="btn btn-info btn-sm mb-2" onclick="testWeatherForecast()">Weather Forecast (Tokyo)</button>
-                        <button class="btn btn-warning btn-sm mb-2" onclick="testLocationTool()">Get My Location</button>
-                        <button class="btn btn-success btn-sm mb-2" onclick="testRandomQuote()">Get Random Quote</button>
                         
                         <div class="mt-3">
                             <strong>Response:</strong>
@@ -146,6 +108,11 @@
 
     <div th:replace="~{fragments/footer :: common-footer}"></div>
     <div th:replace="~{fragments/scripts :: common-scripts}"></div>
+    
+    <script th:inline="javascript">
+        // Make tools available to JavaScript
+        window.availableTools = /*[[${availableTools}]]*/ [];
+    </script>
     <script src="/js/mcp-demo.js"></script>
 </body>
 </html>

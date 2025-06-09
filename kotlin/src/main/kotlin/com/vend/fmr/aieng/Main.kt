@@ -3,6 +3,7 @@ package com.vend.fmr.aieng
 import com.vend.fmr.aieng.apis.chunker.Chunker
 import com.vend.fmr.aieng.apis.geolocation.Geolocation
 import com.vend.fmr.aieng.apis.huggingface.HuggingFace
+import com.vend.fmr.aieng.apis.nasa.Nasa
 import com.vend.fmr.aieng.apis.openai.OpenAI
 import com.vend.fmr.aieng.apis.openai.OpenAIAssistant
 import com.vend.fmr.aieng.apis.polygon.Polygon
@@ -22,6 +23,7 @@ suspend fun main() {
     val polygon = Polygon(httpClient, json)
     val weather = Weather(httpClient, json)
     val geolocation = Geolocation(httpClient, json)
+    val nasa = Nasa(httpClient, json)
     val chunker = Chunker()
     val huggingface = HuggingFace(httpClient, json)
     Runtime.getRuntime().addShutdownHook(Thread { close(listOf(openAI, assistant, supabase, polygon, weather, geolocation, huggingface)) })
@@ -78,6 +80,16 @@ suspend fun main() {
 
 //    huggingFaceDemo(huggingface, openAI, debug = true)
 //    huggingFaceObjectDetectionDemo(huggingface)
+
+    // === NASA API TEST ===
+    val apodResult = nasa.getApodSummary(debug = true)
+    println("NASA APOD Test:")
+    println(apodResult)
+    println()
+    
+    val neoResult = nasa.getNearEarthObjectsSummary(debug = true)
+    println("NASA NEO Test:")
+    println(neoResult)
 }
 
 

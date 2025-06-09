@@ -2,9 +2,11 @@ package com.vend.fmr.aieng.utils
 
 import com.vend.fmr.aieng.apis.geolocation.Geolocation
 import com.vend.fmr.aieng.apis.mocks.Mocks
+import com.vend.fmr.aieng.apis.nasa.Nasa
 import com.vend.fmr.aieng.apis.openai.*
 import com.vend.fmr.aieng.apis.polygon.Polygon
 import com.vend.fmr.aieng.apis.weather.Weather
+import kotlinx.serialization.json.Json
 import com.vend.fmr.aieng.mcp.InputSchema
 import com.vend.fmr.aieng.mcp.PropertySchema
 import jakarta.annotation.PostConstruct
@@ -22,6 +24,7 @@ enum class Tools(
     val functionName: String,
     val description: String,
     val parameters: Map<String, ToolParameter>,
+    val testParams: Map<String, String>, // sample parameters for testing
     val mock: Boolean,  // has mock implementation
     val api: Boolean,   // has API implementation
     val executor: suspend (Map<String, String>, HttpServletRequest?) -> String
@@ -32,6 +35,7 @@ enum class Tools(
         parameters = mapOf(
             "name" to ToolParameter("string", "Name to greet", false)
         ),
+        testParams = mapOf("name" to "BOSS"),
         mock = true,
         api = false,
         executor = { args, _ ->
@@ -44,6 +48,7 @@ enum class Tools(
         functionName = "get_location",
         description = "Get a mock geographic location (Oslo) for testing. Use get_location_from_ip for real user location.",
         parameters = emptyMap(),
+        testParams = emptyMap(),
         mock = true,
         api = false,
         executor = { _, _ ->
@@ -58,6 +63,7 @@ enum class Tools(
         parameters = mapOf(
             "location" to ToolParameter("string", "The city or location to get weather for (e.g., 'Oslo', 'New York')", true)
         ),
+        testParams = mapOf("location" to "Oslo"),
         mock = true,
         api = false,
         executor = { args, _ ->
@@ -73,6 +79,7 @@ enum class Tools(
         parameters = mapOf(
             "symbol" to ToolParameter("string", "Stock symbol (e.g., 'AAPL', 'MSFT', 'GOOGL')", true)
         ),
+        testParams = mapOf("symbol" to "AAPL"),
         mock = true,
         api = false,
         executor = { args, _ ->
@@ -86,6 +93,7 @@ enum class Tools(
         functionName = "get_current_time",
         description = "Get the current date and time. Returns server time plus UTC time with timezone calculation examples. Use this for any time-related queries including specific locations like Tokyo, New York, etc.",
         parameters = emptyMap(),
+        testParams = emptyMap(),
         mock = true,
         api = true,
         executor = { _, _ ->
@@ -97,6 +105,7 @@ enum class Tools(
         functionName = "get_news_headlines",
         description = "Get recent news headlines from various sources.",
         parameters = emptyMap(),
+        testParams = emptyMap(),
         mock = true,
         api = false,
         executor = { _, _ ->
@@ -109,6 +118,7 @@ enum class Tools(
         functionName = "get_random_quote",
         description = "Generate a random inspirational quote using AI.",
         parameters = emptyMap(),
+        testParams = emptyMap(),
         mock = false,
         api = true,
         executor = { _, _ ->
@@ -132,6 +142,7 @@ enum class Tools(
         parameters = mapOf(
             "symbol" to ToolParameter("string", "Stock symbol (e.g. AAPL, MSFT)", true)
         ),
+        testParams = mapOf("symbol" to "AAPL"),
         mock = false,
         api = true,
         executor = { args, _ ->
@@ -149,6 +160,7 @@ enum class Tools(
             "latitude" to ToolParameter("number", "Latitude (Nordic region: 55°N-75°N)", true),
             "longitude" to ToolParameter("number", "Longitude (Nordic region: 0°E-35°E)", true)
         ),
+        testParams = mapOf("latitude" to "59.9139", "longitude" to "10.7522"),
         mock = false,
         api = true,
         executor = { args, _ ->
@@ -165,6 +177,7 @@ enum class Tools(
             "latitude" to ToolParameter("number", "Latitude (global coverage)", true),
             "longitude" to ToolParameter("number", "Longitude (global coverage)", true)
         ),
+        testParams = mapOf("latitude" to "35.6762", "longitude" to "139.6503"),
         mock = false,
         api = true,
         executor = { args, _ ->
@@ -180,6 +193,7 @@ enum class Tools(
         parameters = mapOf(
             "ip" to ToolParameter("string", "IP address (optional - uses client IP if not provided)", false)
         ),
+        testParams = emptyMap(),
         mock = false,
         api = true,
         executor = { args, request ->
@@ -196,6 +210,7 @@ enum class Tools(
         parameters = mapOf(
             "symbol" to ToolParameter("string", "Stock symbol (e.g. AAPL, NHYDY)", true)
         ),
+        testParams = mapOf("symbol" to "AAPL"),
         mock = false,
         api = true,
         executor = { args, _ ->
@@ -207,6 +222,36 @@ enum class Tools(
             } else {
                 "📈 $symbol: No recent price data available"
             }
+        }
+    ),
+    
+    GET_NASA_APOD(
+        functionName = "get_nasa_apod",
+        description = "Get NASA's Astronomy Picture of the Day with stunning space images and explanations. Optionally specify a date (YYYY-MM-DD format).",
+        parameters = mapOf(
+            "date" to ToolParameter("string", "Date in YYYY-MM-DD format (optional, defaults to today)", false)
+        ),
+        testParams = emptyMap(),
+        mock = false,
+        api = true,
+        executor = { args, _ ->
+            val date = args["date"]
+            nasa.getApodSummary(date, debug = false)
+        }
+    ),
+    
+    GET_NEAR_EARTH_OBJECTS(
+        functionName = "get_near_earth_objects",
+        description = "Get information about asteroids and other Near Earth Objects approaching Earth. Shows distances, speeds, and potential hazards.",
+        parameters = mapOf(
+            "date" to ToolParameter("string", "Date in YYYY-MM-DD format (optional, defaults to today)", false)
+        ),
+        testParams = emptyMap(),
+        mock = false,
+        api = true,
+        executor = { args, _ ->
+            val date = args["date"]
+            nasa.getNearEarthObjectsSummary(date, date, debug = false)
         }
     );
     
@@ -255,13 +300,17 @@ enum class Tools(
         private lateinit var weather: Weather
         private lateinit var polygon: Polygon
         private lateinit var geolocation: Geolocation
+        private lateinit var nasa: Nasa
+        private lateinit var json: Json
         
         
-        fun setServices(openAI: OpenAI, weather: Weather, polygon: Polygon, geolocation: Geolocation) {
+        fun setServices(openAI: OpenAI, weather: Weather, polygon: Polygon, geolocation: Geolocation, nasa: Nasa, json: Json) {
             Companion.openAI = openAI
             Companion.weather = weather
             Companion.polygon = polygon
             Companion.geolocation = geolocation
+            Companion.nasa = nasa
+            Companion.json = json
         }
         
         /**
@@ -275,7 +324,6 @@ enum class Tools(
                 emptyMap()
             } else {
                 try {
-                    val json = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
                     val args = json.parseToJsonElement(arguments).jsonObject
                     args.mapValues { it.value.jsonPrimitive.content }
                 } catch (e: Exception) {
@@ -330,11 +378,13 @@ enum class Tools(
         private val openAI: OpenAI,
         private val weather: Weather,
         private val polygon: Polygon,
-        private val geolocation: Geolocation
+        private val geolocation: Geolocation,
+        private val nasa: Nasa,
+        private val json: Json
     ) {
         @PostConstruct
         fun injectServices() {
-            Tools.setServices(openAI, weather, polygon, geolocation)
+            Tools.setServices(openAI, weather, polygon, geolocation, nasa, json)
         }
     }
 }

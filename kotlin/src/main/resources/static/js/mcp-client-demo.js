@@ -191,6 +191,13 @@ async function testTool() {
 
 // AI assistant functions removed - this is educational MCP protocol demo only
 
+function getDefaultParameterValue(toolName, paramName) {
+    // Use testParams from Tools enum via server-provided data
+    if (window.toolDefaults && window.toolDefaults[toolName]) {
+        return window.toolDefaults[toolName][paramName] || null;
+    }
+    return null;
+}
 
 function showToolParameterForm(tool) {
     selectedTool = tool;
@@ -244,11 +251,17 @@ async function executeToolWithParams() {
     const properties = selectedTool.inputSchema?.properties || {};
     const arguments = {};
     
-    // Collect parameter values
+    // Collect parameter values from inputs, with fallback to sensible defaults
     Object.keys(properties).forEach(paramName => {
         const input = document.getElementById(`param-${paramName}`);
         if (input && input.value) {
             arguments[paramName] = input.value;
+        } else {
+            // Provide default values for common parameters when user doesn't enter anything
+            const defaultValue = getDefaultParameterValue(selectedTool.name, paramName);
+            if (defaultValue !== null) {
+                arguments[paramName] = defaultValue;
+            }
         }
     });
     

@@ -135,3 +135,30 @@ function testRandomQuote() {
         }
     });
 }
+
+function testTool(toolName) {
+    // Get test parameters from Tools enum via server
+    const tool = window.availableTools.find(t => t.functionName === toolName);
+    const arguments = tool ? tool.testParams || {} : {};
+    
+    sendMcpRequest({
+        jsonrpc: "2.0",
+        id: Math.floor(Math.random() * 1000),
+        method: "tools/call",
+        params: {
+            name: toolName,
+            arguments: arguments
+        }
+    });
+}
+
+// Add event listeners when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Add click listeners to all tool test buttons
+    document.querySelectorAll('.tool-test-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const toolName = this.getAttribute('data-tool-name');
+            testTool(toolName);
+        });
+    });
+});
