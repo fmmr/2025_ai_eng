@@ -1,11 +1,6 @@
 package com.vend.fmr.aieng.apis.mocks
 
-import com.vend.fmr.aieng.apis.openai.*
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
 
 /**
  * Mock functions and utilities for AI agent demos
@@ -78,27 +73,14 @@ object Mocks {
     }
     
     fun getCurrentTime(): String {
-        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+        val now = java.time.ZonedDateTime.now()
+        val utc = now.withZoneSameInstant(java.time.ZoneId.of("UTC"))
+        return """
+            Server time: ${now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))} ${now.zone}
+            UTC time: ${utc.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))} UTC
+        """.trimIndent()
     }
     
-    fun calculateDistance(from: String, to: String): String {
-        val mockDistances = mapOf(
-            "oslo-london" to 1154,
-            "oslo-new york" to 5585,
-            "london-new york" to 5585,
-            "oslo-tokyo" to 8587,
-            "oslo-paris" to 1359,
-            "london-paris" to 344,
-            "new york-tokyo" to 10838,
-            "berlin-stockholm" to 504
-        )
-        
-        val key1 = "${from.lowercase()}-${to.lowercase()}"
-        val key2 = "${to.lowercase()}-${from.lowercase()}"
-        
-        val distance = mockDistances[key1] ?: mockDistances[key2] ?: (100..10000).random()
-        return "$distance km"
-    }
     
     fun getNewsHeadlines(): List<String> {
         return listOf(
@@ -113,188 +95,5 @@ object Mocks {
         )
     }
     
-    /**
-     * Parse AI response to extract function calls - centralized action parser
-     * Returns function name and parameters, or null if no action found
-     */
-    fun parseAction(response: String): Pair<String, List<String>>? {
-        val actionRegex = Regex("Action:\\s*(\\w+)\\((.*?)\\)", RegexOption.IGNORE_CASE)
-        val match = actionRegex.find(response) ?: return null
-        
-        val functionName = match.groupValues[1]
-        val paramsString = match.groupValues[2].trim()
-        
-        val params = if (paramsString.isEmpty()) {
-            emptyList()
-        } else {
-            paramsString.split(",").map { it.trim().removeSurrounding("\"", "'") }
-        }
-        
-        return functionName to params
-    }
     
-    /**
-     * Execute a function call based on parsed action - centralized function executor
-     * This is the single point where all function calls are handled
-     */
-    fun executeFunction(functionName: String, params: List<String>): String {
-        return try {
-            when (functionName.lowercase()) {
-                "getlocation" -> {
-                    val location = getLocation()
-                    "Location: ${location.city}, ${location.country} (${location.latitude}, ${location.longitude})"
-                }
-                "getweather" -> {
-                    val location = params.firstOrNull() ?: "oslo"
-                    val weather = getWeather(location)
-                    "Weather in ${weather.location}: ${weather.temperature}°C, ${weather.condition}, Humidity: ${weather.humidity}%"
-                }
-                "getstockprice" -> {
-                    val ticker = params.firstOrNull() ?: "AAPL"
-                    val stock = getStockPrice(ticker)
-                    "Stock ${stock.ticker}: $${String.format("%.2f", stock.price)} (${if (stock.change >= 0) "+" else ""}${String.format("%.2f", stock.change)}, ${String.format("%.2f", stock.changePercent)}%)"
-                }
-                "getcurrenttime" -> {
-                    "Current time: ${getCurrentTime()}"
-                }
-                "calculatedistance" -> {
-                    val from = params.getOrNull(0) ?: "Oslo"
-                    val to = params.getOrNull(1) ?: "London"
-                    "Distance from $from to $to: ${calculateDistance(from, to)}"
-                }
-                "getnewsheadlines" -> {
-                    val headlines = getNewsHeadlines()
-                    "Recent headlines:\n" + headlines.joinToString("\n") { "- $it" }
-                }
-                else -> "Error: Unknown function '$functionName'"
-            }
-        } catch (e: Exception) {
-            "Error executing $functionName: ${e.message}"
-        }
-    }
-    
-    // OpenAI Function Calling Support
-    
-    fun getAvailableTools(): List<Tool> {
-        return listOf(
-            Tool(
-                function = FunctionDefinition(
-                    name = "getLocation",
-                    description = "Get the current location (GPS coordinates) of the user",
-                    parameters = FunctionParameters(
-                        properties = emptyMap(),
-                        required = emptyList()
-                    )
-                )
-            ),
-            Tool(
-                function = FunctionDefinition(
-                    name = "getWeather",
-                    description = "Get current weather information for a specific location",
-                    parameters = FunctionParameters(
-                        properties = mapOf(
-                            "location" to PropertyDefinition(
-                                type = "string",
-                                description = "The city or location to get weather for (e.g., 'Oslo', 'New York')"
-                            )
-                        ),
-                        required = listOf("location")
-                    )
-                )
-            ),
-            Tool(
-                function = FunctionDefinition(
-                    name = "getStockPrice",
-                    description = "Get current stock price and information for a ticker symbol",
-                    parameters = FunctionParameters(
-                        properties = mapOf(
-                            "ticker" to PropertyDefinition(
-                                type = "string",
-                                description = "Stock ticker symbol (e.g., 'AAPL', 'MSFT', 'GOOGL')"
-                            )
-                        ),
-                        required = listOf("ticker")
-                    )
-                )
-            ),
-            Tool(
-                function = FunctionDefinition(
-                    name = "getCurrentTime",
-                    description = "Get the current date and time",
-                    parameters = FunctionParameters(
-                        properties = emptyMap(),
-                        required = emptyList()
-                    )
-                )
-            ),
-            Tool(
-                function = FunctionDefinition(
-                    name = "calculateDistance",
-                    description = "Calculate the distance between two locations",
-                    parameters = FunctionParameters(
-                        properties = mapOf(
-                            "from" to PropertyDefinition(
-                                type = "string",
-                                description = "Starting location (e.g., 'Oslo', 'London')"
-                            ),
-                            "to" to PropertyDefinition(
-                                type = "string",
-                                description = "Destination location (e.g., 'Paris', 'New York')"
-                            )
-                        ),
-                        required = listOf("from", "to")
-                    )
-                )
-            ),
-            Tool(
-                function = FunctionDefinition(
-                    name = "getNewsHeadlines",
-                    description = "Get current news headlines",
-                    parameters = FunctionParameters(
-                        properties = emptyMap(),
-                        required = emptyList()
-                    )
-                )
-            )
-        )
-    }
-    
-    /**
-     * Execute a function call from OpenAI function calling format
-     * Parses the JSON arguments and delegates to executeFunction
-     */
-    fun executeFunctionCall(functionCall: FunctionCall): String {
-        val json = Json { ignoreUnknownKeys = true }
-        
-        return try {
-            val params = if (functionCall.arguments.isBlank() || functionCall.arguments == "{}") {
-                emptyList()
-            } else {
-                val args = json.parseToJsonElement(functionCall.arguments).jsonObject
-                when (functionCall.name.lowercase()) {
-                    "getlocation", "getcurrenttime", "getnewsheadlines" -> {
-                        emptyList()
-                    }
-                    "getweather" -> {
-                        listOf(args["location"]?.jsonPrimitive?.content ?: "oslo")
-                    }
-                    "getstockprice" -> {
-                        listOf(args["ticker"]?.jsonPrimitive?.content ?: "AAPL")
-                    }
-                    "calculatedistance" -> {
-                        listOf(
-                            args["from"]?.jsonPrimitive?.content ?: "Oslo",
-                            args["to"]?.jsonPrimitive?.content ?: "London"
-                        )
-                    }
-                    else -> emptyList()
-                }
-            }
-            
-            executeFunction(functionCall.name, params)
-            
-        } catch (e: Exception) {
-            "Error executing ${functionCall.name}: ${e.message}"
-        }
-    }
 }

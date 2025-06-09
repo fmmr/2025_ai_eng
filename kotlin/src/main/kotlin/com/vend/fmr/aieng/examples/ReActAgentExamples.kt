@@ -3,10 +3,7 @@
 package com.vend.fmr.aieng.examples
 
 import com.vend.fmr.aieng.utils.*
-import com.vend.fmr.aieng.apis.mocks.Mocks
-import com.vend.fmr.aieng.apis.openai.Message
-import com.vend.fmr.aieng.apis.openai.TextContent
-import com.vend.fmr.aieng.apis.openai.OpenAI
+import com.vend.fmr.aieng.apis.openai.*
 
 /**
  * ReAct Agent Examples - Reasoning + Acting pattern implementation
@@ -28,7 +25,7 @@ object ReActAgentExamples {
     suspend fun reactAgent(openAI: OpenAI, userQuery: String, maxIterations: Int = 10, debug: Boolean = false): String {
         val messages = mutableListOf<Message>()
         
-        messages.add(Message(Prompts.Roles.SYSTEM, TextContent(Prompts.REACT_AGENT_SYSTEM)))
+        messages.add(Message(Prompts.Roles.SYSTEM, TextContent(Prompts.getReActSystemPrompt())))
         
         messages.add(Message(Prompts.Roles.USER, TextContent(userQuery)))
         
@@ -69,14 +66,14 @@ object ReActAgentExamples {
                 }
             }
             
-            val action = Mocks.parseAction(currentResponse)
+            val action = Tools.parseAction(currentResponse)
             if (action != null) {
-                val (functionName, params) = action
+                val (functionName, argumentsJson) = action
                 if (debug) {
-                    println("🔧 Executing: $functionName(${params.joinToString(", ")})")
+                    println("🔧 Executing: $functionName($argumentsJson)")
                 }
                 
-                val result = Mocks.executeFunction(functionName, params)
+                val result = Tools.execute(functionName, argumentsJson)
                 val observation = "Observation: $result"
                 
                 if (debug) {

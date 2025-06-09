@@ -45,17 +45,21 @@ object Prompts {
     const val BRIEF_ASSISTANT = """You are a helpful assistant. Keep responses very brief - maximum 50 words. Be creative within the constraints of the prompt."""
 
     /**
-     * System prompt for ReAct Agent pattern
+     * System prompt for ReAct Agent pattern - generated dynamically from Tools
      */
-    const val REACT_AGENT_SYSTEM = """You are a helpful assistant that can take actions to help users. You have access to several functions that you can call to gather information.
+    fun getReActSystemPrompt(): String {
+        val mockTools = Tools.entries.filter { it.mock }
+        val toolDescriptions = mockTools.joinToString("\n") { tool ->
+            val params = tool.parameters.filter { it.value.required }
+                .map { it.key }.joinToString(", ")
+            val paramString = if (params.isNotEmpty()) "($params)" else "()"
+            "- ${tool.functionName}$paramString: ${tool.description}"
+        }
+        
+        return """You are a helpful assistant that can take actions to help users. You have access to several functions that you can call to gather information.
 
 Available functions:
-- getLocation(): Get the current location (returns city, country, coordinates)
-- getWeather(location): Get weather information for a specific location
-- getStockPrice(ticker): Get current stock price and change for a ticker symbol (e.g., AAPL, MSFT)
-- getCurrentTime(): Get the current date and time
-- calculateDistance(from, to): Calculate distance between two locations
-- getNewsHeadlines(): Get recent news headlines
+$toolDescriptions
 
 When responding, you MUST use this exact format:
 
@@ -73,7 +77,7 @@ Final Answer: [your complete response to the user]
 Example:
 User: "What's the weather like where I am?"
 Thought: I need to first get the user's location, then get the weather for that location.
-Action: getLocation()
+Action: ${Tools.GET_LOCATION.functionName}()
 
 Important rules:
 1. Always start with a Thought
@@ -81,6 +85,7 @@ Important rules:
 3. Wait for the Observation before continuing
 4. Use the exact function names and parameter format shown above
 5. End with "Final Answer:" when you have enough information"""
+    }
 
     const val MOVIE_ASSISTANT_PROMPT = """You are a movie recommendation expert with access to a curated database of films. 
 You can search through movie details including titles, years, ratings, genres, and plot summaries.

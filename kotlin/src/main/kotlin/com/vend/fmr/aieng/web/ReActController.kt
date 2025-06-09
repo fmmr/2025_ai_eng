@@ -1,11 +1,9 @@
 package com.vend.fmr.aieng.web
 
-import com.vend.fmr.aieng.apis.mocks.Mocks
 import com.vend.fmr.aieng.utils.Demo
-import com.vend.fmr.aieng.apis.openai.Message
-import com.vend.fmr.aieng.apis.openai.TextContent
-import com.vend.fmr.aieng.apis.openai.OpenAI
+import com.vend.fmr.aieng.apis.openai.*
 import com.vend.fmr.aieng.utils.Prompts
+import com.vend.fmr.aieng.utils.Tools
 import com.vend.fmr.aieng.utils.truncate
 import kotlinx.coroutines.runBlocking
 import org.springframework.stereotype.Controller
@@ -33,8 +31,9 @@ class ReActController(
         model.addAttribute("pageTitle", "ReAct Agent")
         model.addAttribute("activeTab", "react")
         model.addAttribute("defaultQuery", Prompts.Defaults.REACT_AGENT_QUERY)
-        model.addAttribute("systemPrompt", Prompts.REACT_AGENT_SYSTEM)
-        model.addAttribute("systemPromptTruncated", Prompts.REACT_AGENT_SYSTEM.truncate())
+        model.addAttribute("systemPrompt", Prompts.getReActSystemPrompt())
+        model.addAttribute("systemPromptTruncated", Prompts.getReActSystemPrompt().truncate())
+        model.addAttribute("availableTools", Tools.entries.filter { it.mock })
         return "react-demo"
     }
 
@@ -46,8 +45,9 @@ class ReActController(
         model.addAttribute("pageTitle", "ReAct Agent")
         model.addAttribute("activeTab", "react")
         model.addAttribute("defaultQuery", userQuery)
-        model.addAttribute("systemPrompt", Prompts.REACT_AGENT_SYSTEM)
-        model.addAttribute("systemPromptTruncated", Prompts.REACT_AGENT_SYSTEM.truncate())
+        model.addAttribute("systemPrompt", Prompts.getReActSystemPrompt())
+        model.addAttribute("systemPromptTruncated", Prompts.getReActSystemPrompt().truncate())
+        model.addAttribute("availableTools", Tools.entries.filter { it.mock })
 
         try {
             val steps = runReActAgent(userQuery)
@@ -67,10 +67,10 @@ class ReActController(
         val messages = mutableListOf<Message>()
         var stepCounter = 1
 
-        messages.add(Message(Prompts.Roles.SYSTEM, TextContent(Prompts.REACT_AGENT_SYSTEM)))
+        messages.add(Message(Prompts.Roles.SYSTEM, TextContent(Prompts.getReActSystemPrompt())))
         messages.add(Message(Prompts.Roles.USER, TextContent(userQuery)))
 
-        for (iteration in 0 until maxIterations) {
+        for (@Suppress("UNUSED_VARIABLE") iteration in 0 until maxIterations) {
             val aiResponse = openAI.createChatCompletion(
                 messages = messages,
                 temperature = 0.1,
@@ -86,18 +86,18 @@ class ReActController(
                 val match = finalAnswerRegex.find(currentResponse)
                 if (match != null) {
                     val finalAnswer = match.groupValues[1].trim()
-                    steps.add(ReActStep(stepCounter++, "final_answer", finalAnswer))
+                    steps.add(ReActStep(stepCounter, "final_answer", finalAnswer))
                     break
                 }
             }
 
             parseThoughtAndAction(currentResponse, stepCounter, steps)
-            val action = Mocks.parseAction(currentResponse)
+            val action = Tools.parseAction(currentResponse)
             if (action != null) {
-                val (functionName, params) = action
+                val (functionName, argumentsJson) = action
                 stepCounter = steps.size + 1
 
-                val result = Mocks.executeFunction(functionName, params)
+                val result = Tools.execute(functionName, argumentsJson)
                 val observation = "Observation: $result"
 
                 steps.add(ReActStep(stepCounter++, "observation", result))

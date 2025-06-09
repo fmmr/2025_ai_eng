@@ -16,6 +16,22 @@ class Geolocation(val client: HttpClient, val json: Json) : Closeable {
         private const val BASE_URL = "https://ipapi.co"
     }
 
+    /**
+     * Get location by IP with automatic fallback for local/localhost IPs
+     */
+    suspend fun getLocationByIpWithFallback(ipAddress: String?, debug: Boolean = false): Pair<GeolocationResponse, String> {
+        val ip = when {
+            ipAddress.isNullOrBlank() -> "8.8.8.8"
+            ipAddress == "0:0:0:0:0:0:0:1" || ipAddress == "127.0.0.1" || ipAddress == "::1" -> "8.8.8.8"
+            else -> ipAddress
+        }
+        
+        val location = getLocationByIp(ip, debug)
+        val note = if (ip == "8.8.8.8") " (Demo: Using Google DNS location for local testing)" else ""
+        
+        return location to note
+    }
+
     suspend fun getLocationByIp(ipAddress: String, debug: Boolean = false): GeolocationResponse {
         val response = client.get("$BASE_URL/$ipAddress/json/")
 

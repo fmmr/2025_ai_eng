@@ -1,11 +1,9 @@
 package com.vend.fmr.aieng.web
 
-import com.vend.fmr.aieng.apis.mocks.Mocks
 import com.vend.fmr.aieng.utils.Demo
-import com.vend.fmr.aieng.apis.openai.Message
-import com.vend.fmr.aieng.apis.openai.TextContent
-import com.vend.fmr.aieng.apis.openai.OpenAI
+import com.vend.fmr.aieng.apis.openai.*
 import com.vend.fmr.aieng.utils.Prompts
+import com.vend.fmr.aieng.utils.Tools
 import com.vend.fmr.aieng.utils.truncate
 import kotlinx.coroutines.runBlocking
 import org.springframework.stereotype.Controller
@@ -37,6 +35,7 @@ class FunctionCallingController(
         model.addAttribute("defaultQuery", "Do you have any ideas for activities I can do at my location?")
         model.addAttribute("systemPrompt", Prompts.FUNCTION_CALLING_SYSTEM)
         model.addAttribute("systemPromptTruncated", Prompts.FUNCTION_CALLING_SYSTEM.truncate())
+        model.addAttribute("availableTools", Tools.entries.filter { it.mock })
         return "function-calling-demo"
     }
 
@@ -50,6 +49,7 @@ class FunctionCallingController(
         model.addAttribute("defaultQuery", userQuery)
         model.addAttribute("systemPrompt", Prompts.FUNCTION_CALLING_SYSTEM)
         model.addAttribute("systemPromptTruncated", Prompts.FUNCTION_CALLING_SYSTEM.truncate())
+        model.addAttribute("availableTools", Tools.entries.filter { it.mock })
 
         try {
             val steps = runFunctionCallingAgent(userQuery)
@@ -67,7 +67,7 @@ class FunctionCallingController(
     private suspend fun runFunctionCallingAgent(userQuery: String, maxIterations: Int = 5): List<FunctionCallingStep> {
         val steps = mutableListOf<FunctionCallingStep>()
         val messages = mutableListOf<Message>()
-        val tools = Mocks.getAvailableTools()
+        val tools = Tools.entries.filter { it.mock }.map { it.toOpenAITool() }
         var stepCounter = 1
 
         messages.add(Message(
@@ -83,7 +83,7 @@ class FunctionCallingController(
             content = userQuery
         ))
 
-        for (iteration in 0 until maxIterations) {
+        for (@Suppress("UNUSED_VARIABLE") iteration in 0 until maxIterations) {
             val response = openAI.createChatCompletion(
                 messages = messages,
                 tools = tools,
@@ -120,7 +120,7 @@ class FunctionCallingController(
                         functionArgs = formattedArgs
                     ))
                     
-                    val result = Mocks.executeFunctionCall(toolCall.function)
+                    val result = Tools.execute(toolCall.function.name, toolCall.function.arguments)
                     
                     steps.add(FunctionCallingStep(
                         stepNumber = stepCounter++,
@@ -138,7 +138,7 @@ class FunctionCallingController(
             } else {
                 val finalAnswer = response.text()
                 steps.add(FunctionCallingStep(
-                    stepNumber = stepCounter++,
+                    stepNumber = stepCounter,
                     type = "final_answer",
                     content = finalAnswer
                 ))

@@ -110,6 +110,24 @@ class Weather(val client: HttpClient, val json: Json) : Closeable {
             Time: ${forecast.time}
         """.trimIndent()
     }
+    
+    /**
+     * Get formatted nowcast weather summary for coordinates
+     */
+    suspend fun getNowcastSummary(latitude: Double, longitude: Double, debug: Boolean = false): String {
+        val weatherData = getNowcast(latitude, longitude, debug)
+        val current = getCurrentWeather(weatherData)
+        return current?.let { formatWeatherSummary(it) } ?: "Nowcast data not available"
+    }
+    
+    /**
+     * Get formatted forecast weather summary for coordinates
+     */
+    suspend fun getForecastSummary(latitude: Double, longitude: Double, debug: Boolean = false): String {
+        val forecastData = getLocationForecast(latitude, longitude, debug)
+        val current = getCurrentForecast(forecastData)
+        return current?.let { formatForecastSummary(it) } ?: "Forecast data not available"
+    }
 
     override fun close() {
         client.close()

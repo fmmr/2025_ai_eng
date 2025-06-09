@@ -93,51 +93,11 @@
         <section class="demo-section">
             <h2>Available Functions</h2>
             <div class="row">
-                <div class="col-md-6 col-lg-4 mb-3">
+                <div th:each="tool : ${availableTools}" class="col-md-6 col-lg-4 mb-3">
                     <div class="card h-100">
                         <div class="card-body">
-                            <h6 class="card-title">📍 getLocation()</h6>
-                            <p class="card-text small">Returns current location with city, country, and coordinates</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 mb-3">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h6 class="card-title">🌤️ getWeather(location)</h6>
-                            <p class="card-text small">Gets weather information for a specific location</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 mb-3">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h6 class="card-title">📈 getStockPrice(ticker)</h6>
-                            <p class="card-text small">Real stock price data from Polygon API (e.g., AAPL, MSFT)</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 mb-3">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h6 class="card-title">⏰ getCurrentTime()</h6>
-                            <p class="card-text small">Returns current date and time</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 mb-3">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h6 class="card-title">📏 calculateDistance(from, to)</h6>
-                            <p class="card-text small">Calculates distance between two locations</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 mb-3">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h6 class="card-title">📰 getNewsHeadlines()</h6>
-                            <p class="card-text small">Returns recent news headlines</p>
+                            <h6 class="card-title" th:text="${tool.functionName + '(' + #strings.listJoin(tool.parameters.keySet(), ', ') + ')'}">functionName(params)</h6>
+                            <p class="card-text small" th:text="${tool.description}">Function description</p>
                         </div>
                     </div>
                 </div>

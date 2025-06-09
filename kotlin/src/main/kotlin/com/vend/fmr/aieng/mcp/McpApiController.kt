@@ -1,10 +1,6 @@
 package com.vend.fmr.aieng.mcp
 
-import com.vend.fmr.aieng.apis.geolocation.Geolocation
-import com.vend.fmr.aieng.apis.openai.OpenAI
-import com.vend.fmr.aieng.apis.polygon.Polygon
-import com.vend.fmr.aieng.utils.getClientIpAddress
-import com.vend.fmr.aieng.apis.weather.Weather
+import com.vend.fmr.aieng.utils.Tools
 import jakarta.servlet.http.HttpServletRequest
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
@@ -14,12 +10,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/mcp")
 @CrossOrigin(origins = ["*"])
-class McpApiController(
-    private val geolocation: Geolocation,
-    private val openAI: OpenAI,
-    private val polygon: Polygon,
-    private val weather: Weather
-) {
+class McpApiController {
 
     companion object {
         private val json = Json {
@@ -71,71 +62,7 @@ class McpApiController(
     }
 
     private fun handleToolsList(id: Int?): String {
-        val tools = listOf(
-            Tool(
-                name = "hello_world",
-                description = "Says hello to test MCP connection",
-                inputSchema = InputSchema(
-                    properties = mapOf(
-                        "name" to PropertySchema(type = "string", description = "Name to greet")
-                    )
-                )
-            ),
-            Tool(
-                name = "get_company_info",
-                description = "Get company details and description for a stock symbol",
-                inputSchema = InputSchema(
-                    properties = mapOf(
-                        "symbol" to PropertySchema(type = "string", description = "Stock symbol (e.g. AAPL, MSFT)")
-                    )
-                )
-            ),
-            Tool(
-                name = "get_weather_nowcast",
-                description = "Get high-precision nowcast weather for Nordic countries (Norway, Sweden, Denmark, Finland) - 5-minute resolution, 2-hour forecast",
-                inputSchema = InputSchema(
-                    properties = mapOf(
-                        "latitude" to PropertySchema(type = "number", description = "Latitude (Nordic region: 55°N-75°N)"),
-                        "longitude" to PropertySchema(type = "number", description = "Longitude (Nordic region: 0°E-35°E)")
-                    )
-                )
-            ),
-            Tool(
-                name = "get_weather_forecast",
-                description = "Get weather forecast for any global location - hourly resolution, multi-day forecast with pressure and cloud data",
-                inputSchema = InputSchema(
-                    properties = mapOf(
-                        "latitude" to PropertySchema(type = "number", description = "Latitude (global coverage)"),
-                        "longitude" to PropertySchema(type = "number", description = "Longitude (global coverage)")
-                    )
-                )
-            ),
-            Tool(
-                name = "get_location_from_ip",
-                description = "Get geographic location from IP address (defaults to client IP if not specified)",
-                inputSchema = InputSchema(
-                    properties = mapOf(
-                        "ip" to PropertySchema(type = "string", description = "IP address (optional - uses client IP if not provided)")
-                    )
-                )
-            ),
-            Tool(
-                name = "get_stock_price",
-                description = "Get current stock price data (open, close, volume) for a symbol",
-                inputSchema = InputSchema(
-                    properties = mapOf(
-                        "symbol" to PropertySchema(type = "string", description = "Stock symbol (e.g. AAPL, NHYDY)")
-                    )
-                )
-            ),
-            Tool(
-                name = "get_random_quote",
-                description = "Get a random inspirational quote",
-                inputSchema = InputSchema(
-                    properties = emptyMap()
-                )
-            ),
-        )
+        val tools = Tools.entries.filter { it.api }.map { it.toMcpTool() }
         
         val response = McpResponse(
             id = id,
@@ -145,83 +72,14 @@ class McpApiController(
     }
 
     private fun handleToolsCall(mcpRequest: McpRequest, id: Int?, httpRequest: HttpServletRequest): String {
-        val toolName = mcpRequest.params?.name
-        val arguments = mcpRequest.params?.arguments
+        val toolName = mcpRequest.params?.name ?: return createErrorResponse(id, -32602, "Missing tool name")
+        val arguments = mcpRequest.params.arguments ?: emptyMap()
         
         return try {
-            when (toolName) {
-                "hello_world" -> {
-                    val name = arguments?.get("name") ?: "World"
-                    createSuccessResponse(id, "Hello, $name! 🎉 MCP is working from Kotlin Spring Boot!")
-                }
-                "get_company_info" -> {
-                    val symbol = arguments?.get("symbol") ?: return createErrorResponse(id, -32602, "Missing symbol parameter")
-                    runBlocking {
-                        val stockInfo = polygon.getTickerDetails(symbol, debug = false)
-                        val description = stockInfo.results.description ?: "No description for: ${stockInfo.results.name}"
-                        createSuccessResponse(id, "🏢 $symbol: ${stockInfo.results.name}\n$description")
-                    }
-                }
-                "get_weather_nowcast" -> {
-                    val lat = arguments?.get("latitude")?.toDoubleOrNull() ?: return createErrorResponse(id, -32602, "Missing or invalid latitude")
-                    val lon = arguments["longitude"]?.toDoubleOrNull() ?: return createErrorResponse(id, -32602, "Missing or invalid longitude")
-                    runBlocking {
-                        val weatherData = weather.getNowcast(lat, lon, debug = false)
-                        val current = weather.getCurrentWeather(weatherData)
-                        val summary = current?.let { weather.formatWeatherSummary(it) } ?: "Nowcast data not available"
-                        createSuccessResponse(id, "⚡ $summary")
-                    }
-                }
-                "get_weather_forecast" -> {
-                    val lat = arguments?.get("latitude")?.toDoubleOrNull() ?: return createErrorResponse(id, -32602, "Missing or invalid latitude")
-                    val lon = arguments["longitude"]?.toDoubleOrNull() ?: return createErrorResponse(id, -32602, "Missing or invalid longitude")
-                    runBlocking {
-                        val forecastData = weather.getLocationForecast(lat, lon, debug = false)
-                        val current = weather.getCurrentForecast(forecastData)
-                        val summary = current?.let { weather.formatForecastSummary(it) } ?: "Forecast data not available"
-                        createSuccessResponse(id, "🌍 $summary")
-                    }
-                }
-                "get_location_from_ip" -> {
-                    val rawIp = arguments?.get("ip") ?: getClientIpAddress(httpRequest)
-                    // Use fallback IP for local testing (IPv6 localhost won't work with geolocation API)
-                    val ip = if (rawIp == "0:0:0:0:0:0:0:1" || rawIp == "127.0.0.1" || rawIp == "::1") {
-                        "8.8.8.8" // Google DNS as fallback for demo purposes
-                    } else {
-                        rawIp
-                    }
-                    runBlocking {
-                        val location = geolocation.getLocationByIp(ip, debug = false)
-                        val summary = geolocation.formatLocationSummary(location)
-                        val note = if (ip == "8.8.8.8") " (Demo: Using Google DNS location for local testing)" else ""
-                        createSuccessResponse(id, "📍 $summary$note")
-                    }
-                }
-                "get_stock_price" -> {
-                    val symbol = arguments?.get("symbol") ?: return createErrorResponse(id, -32602, "Missing symbol parameter")
-                    runBlocking {
-                        val aggregates = polygon.getAggregates(symbol, debug = false)
-                        val latest = aggregates.firstOrNull()?.results?.lastOrNull()
-                        if (latest != null) {
-                            createSuccessResponse(id, "📈 $symbol ${latest.formattedDate()}: Open $${latest.openPrice}, Close $${latest.closePrice}, Volume ${latest.volume}")
-                        } else {
-                            createSuccessResponse(id, "📈 $symbol: No recent price data available")
-                        }
-                    }
-                }
-                "get_random_quote" -> {
-                    runBlocking {
-                        val response = openAI.createChatCompletion(
-                            prompt = "Generate a random inspirational quote. Return only the quote with attribution, nothing else.",
-                            maxTokens = 100,
-                            temperature = 0.9,
-                            debug = false
-                        )
-                        val quote = response.choices.firstOrNull()?.message?.content ?: "Inspiration comes from within."
-                        createSuccessResponse(id, "✨ $quote")
-                    }
-                }
-                else -> createErrorResponse(id, -32602, "Unknown tool: $toolName")
+            runBlocking {
+                val argumentsJson = if (arguments.isEmpty()) "{}" else "{" + arguments.entries.joinToString(",") { "\"${it.key}\":\"${it.value}\"" } + "}"
+                val result = Tools.execute(toolName, argumentsJson, httpRequest)
+                createSuccessResponse(id, result)
             }
         } catch (e: Exception) {
             createErrorResponse(id, -32603, "Tool execution failed: ${e.message}")

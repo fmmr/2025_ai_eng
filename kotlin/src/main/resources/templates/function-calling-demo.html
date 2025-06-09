@@ -105,40 +105,10 @@
         <section class="functions-section">
             <h2>Available Functions</h2>
             <div class="row">
-                <div class="col-md-6 mb-3">
+                <div th:each="tool : ${availableTools}" class="col-md-6 mb-3">
                     <div class="function-card">
-                        <h5>getLocation()</h5>
-                        <p>Get current GPS coordinates and location information</p>
-                    </div>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <div class="function-card">
-                        <h5>getWeather(location)</h5>
-                        <p>Get weather information for a specific location</p>
-                    </div>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <div class="function-card">
-                        <h5>getStockPrice(ticker)</h5>
-                        <p>Get current stock price and change information</p>
-                    </div>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <div class="function-card">
-                        <h5>getCurrentTime()</h5>
-                        <p>Get current date and time</p>
-                    </div>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <div class="function-card">
-                        <h5>calculateDistance(from, to)</h5>
-                        <p>Calculate distance between two locations</p>
-                    </div>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <div class="function-card">
-                        <h5>getNewsHeadlines()</h5>
-                        <p>Get recent news headlines</p>
+                        <h5 th:text="${tool.functionName + '(' + #strings.listJoin(tool.parameters.keySet(), ', ') + ')'}">functionName(params)</h5>
+                        <p th:text="${tool.description}">Function description</p>
                     </div>
                 </div>
             </div>

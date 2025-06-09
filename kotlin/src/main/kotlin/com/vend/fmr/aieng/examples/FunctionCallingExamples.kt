@@ -3,10 +3,7 @@
 package com.vend.fmr.aieng.examples
 
 import com.vend.fmr.aieng.utils.*
-import com.vend.fmr.aieng.apis.mocks.Mocks
-import com.vend.fmr.aieng.apis.openai.Message
-import com.vend.fmr.aieng.apis.openai.TextContent
-import com.vend.fmr.aieng.apis.openai.OpenAI
+import com.vend.fmr.aieng.apis.openai.*
 
 /**
  * OpenAI Function Calling Examples
@@ -24,7 +21,7 @@ object FunctionCallingExamples {
      */
     suspend fun functionCallingAgent(openAI: OpenAI, userQuery: String, debug: Boolean = false): String {
         val messages = mutableListOf<Message>()
-        val tools = Mocks.getAvailableTools()
+        val tools = Tools.entries.filter { it.mock }.map { it.toOpenAITool() }
         
         messages.add(Message(
             role = Prompts.Roles.SYSTEM, 
@@ -78,7 +75,7 @@ object FunctionCallingExamples {
                         println("Executing: ${toolCall.function.name}(${toolCall.function.arguments})")
                     }
                     
-                    val result = Mocks.executeFunctionCall(toolCall.function)
+                    val result = Tools.execute(toolCall.function.name, toolCall.function.arguments)
                     
                     if (debug) {
                         println("📋 Result: $result")
