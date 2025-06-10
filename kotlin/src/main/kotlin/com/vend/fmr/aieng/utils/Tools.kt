@@ -34,7 +34,7 @@ enum class Tools(
         parameters = mapOf(
             "name" to ToolParameter("string", "Name to greet", false)
         ),
-        "Simple greeting function for testing",
+        readmeDescription = "Simple greeting function for testing",
         testParams = mapOf("name" to "BOSS"),
         executor = { args, _ ->
             val name = args["name"] ?: "World"
@@ -47,7 +47,7 @@ enum class Tools(
         functionName = "get_current_time",
         description = "Get the current date and time. Returns server time plus UTC time with timezone calculation examples. Use this for any time-related queries including specific locations like Tokyo, New York, etc.",
         parameters = emptyMap(),
-        "Current date and time with timezone examples",
+        readmeDescription = "Current date and time with timezone examples",
         testParams = emptyMap(),
         executor = { _, _ ->
             val now = java.time.ZonedDateTime.now()
@@ -65,7 +65,7 @@ enum class Tools(
         functionName = "get_random_quote",
         description = "Generate a random inspirational quote using AI.",
         parameters = emptyMap(),
-        "AI-generated inspirational quotes",
+        readmeDescription = "AI-generated inspirational quotes",
         testParams = emptyMap(),
         executor = { _, _ ->
             val response = openAI.createChatCompletion(
@@ -88,7 +88,7 @@ enum class Tools(
         parameters = mapOf(
             "symbol" to ToolParameter("string", "Stock symbol (e.g. AAPL, MSFT)", true)
         ),
-        "Company information and business details",
+        readmeDescription = "Company information and business details",
         testParams = mapOf("symbol" to "AAPL"),
         executor = { args, _ ->
             val symbol = args["symbol"] ?: throw IllegalArgumentException("Missing symbol parameter")
@@ -105,7 +105,7 @@ enum class Tools(
             "latitude" to ToolParameter("number", "Latitude (Nordic region: 55°N-75°N)", true),
             "longitude" to ToolParameter("number", "Longitude (Nordic region: 0°E-35°E)", true)
         ),
-        "5-minute precision weather for Nordic countries",
+        readmeDescription = "5-minute precision weather for Nordic countries",
         testParams = mapOf("latitude" to "59.9139", "longitude" to "10.7522"),
         executor = { args, _ ->
             val lat = args["latitude"]?.toDoubleOrNull() ?: throw IllegalArgumentException("Missing or invalid latitude")
@@ -121,7 +121,7 @@ enum class Tools(
             "latitude" to ToolParameter("number", "Latitude (global coverage)", true),
             "longitude" to ToolParameter("number", "Longitude (global coverage)", true)
         ),
-        "Global weather forecasts with detailed metrics",
+        readmeDescription = "Global weather forecasts with detailed metrics",
         testParams = mapOf("latitude" to "35.6762", "longitude" to "139.6503"),
         executor = { args, _ ->
             val lat = args["latitude"]?.toDoubleOrNull() ?: throw IllegalArgumentException("Missing or invalid latitude")
@@ -136,7 +136,7 @@ enum class Tools(
         parameters = mapOf(
             "ip" to ToolParameter("string", "IP address (optional - uses client IP if not provided)", false)
         ),
-        "Real user location from IP address",
+        readmeDescription = "Real user location from IP address",
         testParams = emptyMap(),
         executor = { args, request ->
             val ip = args["ip"] ?: request?.let { getClientIpAddress(it) }
@@ -152,7 +152,7 @@ enum class Tools(
         parameters = mapOf(
             "symbol" to ToolParameter("string", "Stock symbol (e.g. AAPL, NHYDY)", true)
         ),
-        "Real-time stock market data",
+        readmeDescription = "Real-time stock market data",
         testParams = mapOf("symbol" to "AAPL"),
         executor = { args, _ ->
             val symbol = args["symbol"] ?: throw IllegalArgumentException("Missing symbol parameter")
@@ -173,7 +173,7 @@ enum class Tools(
             "country" to ToolParameter("string", "2-letter country code: us, gb, fr, de, no, se, ca, au, etc. Defaults to 'us'", false),
             "category" to ToolParameter("string", "Category: business, entertainment, health, science, sports, technology", false)
         ),
-        "Current news headlines worldwide",
+        readmeDescription = "Current news headlines worldwide",
         testParams = emptyMap(),
         executor = { args, _ ->
             val country = args["country"] ?: "us"
@@ -188,7 +188,7 @@ enum class Tools(
         parameters = mapOf(
             "date" to ToolParameter("string", "Date in YYYY-MM-DD format (optional, defaults to today)", false)
         ),
-        "NASA's daily space images and explanations",
+        readmeDescription = "NASA's daily space images and explanations",
         testParams = emptyMap(),
         executor = { args, _ ->
             val date = args["date"]
@@ -202,7 +202,7 @@ enum class Tools(
         parameters = mapOf(
             "date" to ToolParameter("string", "Date in YYYY-MM-DD format (optional, defaults to today)", false)
         ),
-        "Asteroids and objects approaching Earth",
+        readmeDescription = "Asteroids and objects approaching Earth",
         testParams = emptyMap(),
         executor = { args, _ ->
             val date = args["date"]
