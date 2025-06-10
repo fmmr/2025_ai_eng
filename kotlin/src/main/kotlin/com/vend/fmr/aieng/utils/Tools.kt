@@ -25,9 +25,10 @@ enum class Tools(
     val functionName: String,
     val description: String,
     val parameters: Map<String, ToolParameter>,
-    val testParams: Map<String, String>, // sample parameters for testing
-    val mock: Boolean,  // has mock implementation
-    val api: Boolean,   // has API implementation
+    val readmeDescription: String, // sample parameters for testing
+    val testParams: Map<String, String>,  // has mock implementation
+    val mock: Boolean,   // has API implementation
+    val api: Boolean,
     val executor: suspend (Map<String, String>, HttpServletRequest?) -> String
 ) {
     HELLO_WORLD(
@@ -36,6 +37,7 @@ enum class Tools(
         parameters = mapOf(
             "name" to ToolParameter("string", "Name to greet", false)
         ),
+        "Simple greeting function for testing",
         testParams = mapOf("name" to "BOSS"),
         mock = true,
         api = false,
@@ -49,6 +51,7 @@ enum class Tools(
         functionName = "get_location",
         description = "Get a mock geographic location (Oslo) for testing. Use get_location_from_ip for real user location.",
         parameters = emptyMap(),
+        "Mock location data (Oslo)",
         testParams = emptyMap(),
         mock = true,
         api = false,
@@ -64,6 +67,7 @@ enum class Tools(
         parameters = mapOf(
             "location" to ToolParameter("string", "The city or location to get weather for (e.g., 'Oslo', 'New York')", true)
         ),
+        "Mock weather data for any city",
         testParams = mapOf("location" to "Oslo"),
         mock = true,
         api = false,
@@ -76,10 +80,11 @@ enum class Tools(
     
     GET_STOCK_PRICE(
         functionName = "get_stock_price_mock",
-        description = "Get mock stock price data for testing and demos. Always available, works with any symbol.", 
+        description = "Get mock stock price data for testing and demos. Always available, works with any symbol.",
         parameters = mapOf(
             "symbol" to ToolParameter("string", "Stock symbol (e.g., 'AAPL', 'MSFT', 'GOOGL')", true)
         ),
+        "Mock stock prices for demos",
         testParams = mapOf("symbol" to "AAPL"),
         mock = true,
         api = false,
@@ -94,6 +99,7 @@ enum class Tools(
         functionName = "get_current_time",
         description = "Get the current date and time. Returns server time plus UTC time with timezone calculation examples. Use this for any time-related queries including specific locations like Tokyo, New York, etc.",
         parameters = emptyMap(),
+        "Current date and time with timezone examples",
         testParams = emptyMap(),
         mock = true,
         api = true,
@@ -106,6 +112,7 @@ enum class Tools(
         functionName = "get_news_headlines",
         description = "Get recent news headlines from various sources.",
         parameters = emptyMap(),
+        "Mock news headlines for testing",
         testParams = emptyMap(),
         mock = true,
         api = false,
@@ -119,6 +126,7 @@ enum class Tools(
         functionName = "get_random_quote",
         description = "Generate a random inspirational quote using AI.",
         parameters = emptyMap(),
+        "AI-generated inspirational quotes",
         testParams = emptyMap(),
         mock = false,
         api = true,
@@ -143,6 +151,7 @@ enum class Tools(
         parameters = mapOf(
             "symbol" to ToolParameter("string", "Stock symbol (e.g. AAPL, MSFT)", true)
         ),
+        "Company information and business details",
         testParams = mapOf("symbol" to "AAPL"),
         mock = false,
         api = true,
@@ -155,12 +164,13 @@ enum class Tools(
     ),
     
     GET_WEATHER_NOWCAST(
-        functionName = "get_weather_nowcast", 
+        functionName = "get_weather_nowcast",
         description = "Get real-time weather nowcast with 5-minute precision. Only works for Nordic countries (Norway, Sweden, Denmark, Finland).",
         parameters = mapOf(
             "latitude" to ToolParameter("number", "Latitude (Nordic region: 55°N-75°N)", true),
             "longitude" to ToolParameter("number", "Longitude (Nordic region: 0°E-35°E)", true)
         ),
+        "5-minute precision weather for Nordic countries",
         testParams = mapOf("latitude" to "59.9139", "longitude" to "10.7522"),
         mock = false,
         api = true,
@@ -173,11 +183,12 @@ enum class Tools(
     
     GET_WEATHER_FORECAST(
         functionName = "get_weather_forecast",
-        description = "Get detailed weather forecast for any location worldwide including temperature, humidity, wind, pressure, and clouds.", 
+        description = "Get detailed weather forecast for any location worldwide including temperature, humidity, wind, pressure, and clouds.",
         parameters = mapOf(
             "latitude" to ToolParameter("number", "Latitude (global coverage)", true),
             "longitude" to ToolParameter("number", "Longitude (global coverage)", true)
         ),
+        "Global weather forecasts with detailed metrics",
         testParams = mapOf("latitude" to "35.6762", "longitude" to "139.6503"),
         mock = false,
         api = true,
@@ -194,6 +205,7 @@ enum class Tools(
         parameters = mapOf(
             "ip" to ToolParameter("string", "IP address (optional - uses client IP if not provided)", false)
         ),
+        "Real user location from IP address",
         testParams = emptyMap(),
         mock = false,
         api = true,
@@ -211,6 +223,7 @@ enum class Tools(
         parameters = mapOf(
             "symbol" to ToolParameter("string", "Stock symbol (e.g. AAPL, NHYDY)", true)
         ),
+        "Real-time stock market data",
         testParams = mapOf("symbol" to "AAPL"),
         mock = false,
         api = true,
@@ -233,6 +246,7 @@ enum class Tools(
             "country" to ToolParameter("string", "2-letter country code: us, gb, fr, de, no, se, ca, au, etc. Defaults to 'us'", false),
             "category" to ToolParameter("string", "Category: business, entertainment, health, science, sports, technology", false)
         ),
+        "Current news headlines worldwide",
         testParams = emptyMap(),
         mock = false,
         api = true,
@@ -249,6 +263,7 @@ enum class Tools(
         parameters = mapOf(
             "date" to ToolParameter("string", "Date in YYYY-MM-DD format (optional, defaults to today)", false)
         ),
+        "NASA's daily space images and explanations",
         testParams = emptyMap(),
         mock = false,
         api = true,
@@ -264,6 +279,7 @@ enum class Tools(
         parameters = mapOf(
             "date" to ToolParameter("string", "Date in YYYY-MM-DD format (optional, defaults to today)", false)
         ),
+        "Asteroids and objects approaching Earth",
         testParams = emptyMap(),
         mock = false,
         api = true,

@@ -63,6 +63,34 @@ object ReadmeGenerator {
         return sb.toString()
     }
     
+    fun generateToolsList(): String {
+        val sb = StringBuilder()
+        
+        // Group tools by type
+        val mockTools = Tools.entries.filter { it.mock && !it.api }
+        val apiTools = Tools.entries.filter { it.api }
+        
+        if (mockTools.isNotEmpty()) {
+            sb.appendLine("#### 🧪 Mock Tools (Testing & Development)")
+            sb.appendLine()
+            mockTools.forEach { tool ->
+                sb.appendLine("- **${tool.functionName}** - ${tool.readmeDescription}")
+            }
+            sb.appendLine()
+        }
+        
+        if (apiTools.isNotEmpty()) {
+            sb.appendLine("#### 🌐 API Tools (Live Data)")
+            sb.appendLine()
+            apiTools.forEach { tool ->
+                sb.appendLine("- **${tool.functionName}** - ${tool.readmeDescription}")
+            }
+            sb.appendLine()
+        }
+        
+        return sb.toString()
+    }
+    
     private fun getProjectTypeText(demo: Demo, statusText: String? = null): String {
         return when {
             demo.soloProject -> " (Solo Project${statusText?.let { " - $it" } ?: ""})"
@@ -78,6 +106,7 @@ fun main(args: Array<String>) {
     when (args.getOrNull(0)) {
         "external" -> println(ReadmeGenerator.generateExternalDemos())
         "operations" -> println(ReadmeGenerator.generateOperationsLinks())
+        "tools" -> println(ReadmeGenerator.generateToolsList())
         else -> println(ReadmeGenerator.generateInternalDemos()) // default - internal demos
     }
 }

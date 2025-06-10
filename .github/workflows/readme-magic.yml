@@ -9,6 +9,7 @@ on:
       - 'kotlin/src/main/kotlin/com/vend/fmr/aieng/utils/DemoStatus.kt'
       - 'kotlin/src/main/kotlin/com/vend/fmr/aieng/utils/OperationsLink.kt'
       - 'kotlin/src/main/kotlin/com/vend/fmr/aieng/utils/ReadmeGenerator.kt'
+      - 'kotlin/src/main/kotlin/com/vend/fmr/aieng/utils/Tools.kt'
       - 'README.md'
       - 'kotlin/README.md'
       - '.github/workflows/readme-magic.yml'
@@ -69,6 +70,14 @@ jobs:
           cat operations.md
           exit 1
         }
+        
+        # Generate tools list
+        echo "🔨 Generating tools list..."
+        mvn -q exec:java -Dexec.mainClass="com.vend.fmr.aieng.utils.ReadmeGeneratorKt" -Dexec.args="tools" -Dexec.classpathScope="compile" > tools.md 2>&1 || {
+          echo "❌ Tools list generation failed"
+          cat tools.md
+          exit 1
+        }
 
     - name: 👀 Peek at the internal masterpiece
       working-directory: ./kotlin
@@ -97,12 +106,21 @@ jobs:
         echo "================================"
         echo "📊 Operations links line count: $(wc -l < operations.md)"
 
+    - name: 👀 Peek at the tools list
+      working-directory: ./kotlin
+      run: |
+        echo "📋 Generated Tools List:"
+        echo "================================"
+        cat tools.md
+        echo "================================"
+        echo "📊 Tools list line count: $(wc -l < tools.md)"
+
     - name: ✨ Sprinkle README magic
       working-directory: ./kotlin
       run: |
-        # Update Kotlin README with internal demos
+        # Update Kotlin README with internal demos and tools list
         awk '
-        BEGIN { in_demo_section = 0 }
+        BEGIN { in_demo_section = 0; in_tools_section = 0 }
         /<!-- DEMO_LIST_START -->/ { 
           print $0
           while ((getline line < "kotlin_demos.md") > 0) {
@@ -117,7 +135,21 @@ jobs:
           in_demo_section = 0
           next
         }
-        !in_demo_section { print $0 }
+        /<!-- TOOLS_LIST_START -->/ { 
+          print $0
+          while ((getline line < "tools.md") > 0) {
+            print line
+          }
+          close("tools.md")
+          in_tools_section = 1
+          next
+        }
+        /<!-- TOOLS_LIST_END -->/ { 
+          print $0
+          in_tools_section = 0
+          next
+        }
+        !in_demo_section && !in_tools_section { print $0 }
         ' README.md > README_new.md
         
         # Replace the Kotlin README
@@ -175,7 +207,7 @@ jobs:
         mv ../README_new.md ../README.md
         
         # Clean up
-        rm kotlin_demos.md js_demos.md operations.md
+        rm kotlin_demos.md js_demos.md operations.md tools.md
 
     - name: 🔍 Detective work for changes
       id: verify-changed-files

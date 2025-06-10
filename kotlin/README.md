@@ -69,6 +69,11 @@ This project implements the core concepts from the Scrimba AI Engineering course
 
 <!-- DEMO_LIST_END -->
 
+### Available Tools
+
+<!-- TOOLS_LIST_START -->
+<!-- TOOLS_LIST_END -->
+
 ### Technology Stack
 - **Backend**: Spring Boot 3.5.0 with Kotlin
 - **Frontend**: Thymeleaf templates with Bootstrap 5.3.0
