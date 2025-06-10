@@ -3,7 +3,7 @@ package com.vend.fmr.aieng.web
 import com.vend.fmr.aieng.utils.Demo
 import com.vend.fmr.aieng.apis.openai.*
 import com.vend.fmr.aieng.utils.Prompts
-import com.vend.fmr.aieng.utils.Tools
+import com.vend.fmr.aieng.utils.AgentTool
 import com.vend.fmr.aieng.utils.truncate
 import kotlinx.coroutines.runBlocking
 import org.springframework.stereotype.Controller
@@ -33,7 +33,7 @@ class ReActController(
         model.addAttribute("defaultQuery", Prompts.Defaults.REACT_AGENT_QUERY)
         model.addAttribute("systemPrompt", Prompts.getReActSystemPrompt())
         model.addAttribute("systemPromptTruncated", Prompts.getReActSystemPrompt().truncate())
-        model.addAttribute("availableTools", Tools.entries)
+        model.addAttribute("availableTools", AgentTool.entries)
         return "react-demo"
     }
 
@@ -47,7 +47,7 @@ class ReActController(
         model.addAttribute("defaultQuery", userQuery)
         model.addAttribute("systemPrompt", Prompts.getReActSystemPrompt())
         model.addAttribute("systemPromptTruncated", Prompts.getReActSystemPrompt().truncate())
-        model.addAttribute("availableTools", Tools.entries)
+        model.addAttribute("availableTools", AgentTool.entries)
 
         try {
             val steps = runReActAgent(userQuery)
@@ -70,7 +70,7 @@ class ReActController(
         messages.add(Message(Prompts.Roles.SYSTEM, TextContent(Prompts.getReActSystemPrompt())))
         messages.add(Message(Prompts.Roles.USER, TextContent(userQuery)))
 
-        for (@Suppress("UNUSED_VARIABLE") iteration in 0 until maxIterations) {
+        for (iteration in 0 until maxIterations) {
             val aiResponse = openAI.createChatCompletion(
                 messages = messages,
                 temperature = 0.1,
@@ -92,12 +92,12 @@ class ReActController(
             }
 
             parseThoughtAndAction(currentResponse, stepCounter, steps)
-            val action = Tools.parseAction(currentResponse)
+            val action = AgentTool.parseAction(currentResponse)
             if (action != null) {
                 val (functionName, argumentsJson) = action
                 stepCounter = steps.size + 1
 
-                val result = Tools.execute(functionName, argumentsJson)
+                val result = AgentTool.execute(functionName, argumentsJson)
                 val observation = "Observation: $result"
 
                 steps.add(ReActStep(stepCounter++, "observation", result))

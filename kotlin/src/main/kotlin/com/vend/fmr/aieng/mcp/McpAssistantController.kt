@@ -2,7 +2,7 @@ package com.vend.fmr.aieng.mcp
 
 import com.vend.fmr.aieng.apis.openai.OpenAI
 import com.vend.fmr.aieng.utils.Demo
-import com.vend.fmr.aieng.utils.Tools
+import com.vend.fmr.aieng.utils.AgentTool
 import com.vend.fmr.aieng.utils.getClientIpAddress
 import com.vend.fmr.aieng.web.BaseController
 import jakarta.servlet.http.HttpServletRequest
@@ -42,7 +42,7 @@ class McpAssistantController(
         model.addAttribute("activeTab", "mcp-assistant")
         
         // Pass available tools for display
-        model.addAttribute("availableTools", Tools.entries)
+        model.addAttribute("availableTools", AgentTool.entries)
         
         // Initialize session tools cache and conversation history
         if (session.getAttribute("mcpToolsCache") == null) {

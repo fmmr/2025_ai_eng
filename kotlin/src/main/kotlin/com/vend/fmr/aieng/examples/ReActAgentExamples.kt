@@ -66,14 +66,14 @@ object ReActAgentExamples {
                 }
             }
             
-            val action = Tools.parseAction(currentResponse)
+            val action = AgentTool.parseAction(currentResponse)
             if (action != null) {
                 val (functionName, argumentsJson) = action
                 if (debug) {
                     println("🔧 Executing: $functionName($argumentsJson)")
                 }
                 
-                val result = Tools.execute(functionName, argumentsJson)
+                val result = AgentTool.execute(functionName, argumentsJson)
                 val observation = "Observation: $result"
                 
                 if (debug) {

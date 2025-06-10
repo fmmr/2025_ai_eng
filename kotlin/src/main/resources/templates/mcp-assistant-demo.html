@@ -70,17 +70,6 @@
                             </div>
                         </div>
                         
-                        <div class="mt-3 border-top pt-3">
-                            <div class="d-flex gap-2">
-                                <button class="btn btn-warning btn-sm" onclick="newSession()">
-                                    🆕 New Session
-                                </button>
-                                <button class="btn btn-outline-secondary btn-sm" onclick="resetSession()">
-                                    🔄 Clear History
-                                </button>
-                            </div>
-                            <small class="text-muted d-block mt-1">New Session clears everything, Clear History keeps tools cached</small>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -90,7 +79,10 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5>💬 Conversation</h5>
-                        <button class="btn btn-sm btn-outline-secondary" onclick="clearLog()">Clear</button>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-sm btn-warning" onclick="newSession()">🆕 New Session</button>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="clearLog()">Clear Chat</button>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div id="activityLog" style="height: 500px; overflow-y: auto; font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; font-size: 12px;">

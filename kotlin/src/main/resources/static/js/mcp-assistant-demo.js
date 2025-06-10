@@ -33,6 +33,12 @@ function log(message, type = 'info') {
 function clearLog() {
     document.getElementById('activityLog').innerHTML = 
         '<div class="text-muted">🤖 Hello! I\'m your AI assistant. Ask me anything!</div>';
+    
+    // Focus input field for immediate typing
+    const userQueryInput = document.getElementById('userQuery');
+    if (userQueryInput) {
+        setTimeout(() => userQueryInput.focus(), 100);
+    }
 }
 
 function setupUserQueryInput() {
@@ -207,29 +213,18 @@ async function newSession() {
         // Clear activity log and reset
         clearLog();
         
-        // Clear user input
+        // Clear user input and focus for immediate typing
         const userQueryEl = document.getElementById('userQuery');
-        if (userQueryEl) userQueryEl.value = '';
+        if (userQueryEl) {
+            userQueryEl.value = '';
+            setTimeout(() => userQueryEl.focus(), 100);
+        }
         
     } catch (error) {
         log(`❌ New session failed: ${error.message}`, 'error');
     }
 }
 
-async function resetSession() {
-    log('🔄 Clearing conversation history (keeping tools cached)...', 'info');
-    
-    // Only clear conversation, keep tools cache for efficiency
-    conversationHistory = [];
-    
-    // Just clear the conversation visually
-    clearLog();
-    log('✅ Conversation history cleared. Tools remain cached for faster responses.', 'success');
-    
-    // Clear user input
-    const userQueryEl = document.getElementById('userQuery');
-    if (userQueryEl) userQueryEl.value = '';
-}
 
 
 

@@ -17,10 +17,10 @@ import org.springframework.stereotype.Component
 import com.vend.fmr.aieng.mcp.Tool as McpTool
 
 /**
- * Tools enum with service injection via static inner component
+ * AgentTool enum with service injection via static inner component
  * Each tool can use real Spring services in its executor lambda
  */
-enum class Tools(
+enum class AgentTool(
     val functionName: String,
     val description: String,
     val parameters: Map<String, ToolParameter>,
@@ -43,8 +43,8 @@ enum class Tools(
     ),
 
 
-    GET_CURRENT_TIME(
-        functionName = "get_current_time",
+    CURRENT_TIME(
+        functionName = "current_time",
         description = "Get the current date and time. Returns server time plus UTC time with timezone calculation examples. Use this for any time-related queries including specific locations like Tokyo, New York, etc.",
         parameters = emptyMap(),
         readmeDescription = "Current date and time with timezone examples",
@@ -61,8 +61,8 @@ enum class Tools(
     ),
 
 
-    GET_RANDOM_QUOTE(
-        functionName = "get_random_quote",
+    RANDOM_QUOTE(
+        functionName = "random_quote",
         description = "Generate a random inspirational quote using AI.",
         parameters = emptyMap(),
         readmeDescription = "AI-generated inspirational quotes",
@@ -82,8 +82,8 @@ enum class Tools(
         }
     ),
 
-    GET_COMPANY_INFO(
-        functionName = "get_company_info",
+    COMPANY_INFO(
+        functionName = "company_info",
         description = "Get detailed company information including name, description, and business details for any stock symbol.",
         parameters = mapOf(
             "symbol" to ToolParameter("string", "Stock symbol (e.g. AAPL, MSFT)", true)
@@ -98,8 +98,8 @@ enum class Tools(
         }
     ),
 
-    GET_WEATHER_NOWCAST(
-        functionName = "get_weather_nowcast",
+    WEATHER_NOWCAST(
+        functionName = "weather_nowcast",
         description = "Get real-time weather nowcast with 5-minute precision. Only works for Nordic countries (Norway, Sweden, Denmark, Finland).",
         parameters = mapOf(
             "latitude" to ToolParameter("number", "Latitude (Nordic region: 55°N-75°N)", true),
@@ -114,8 +114,8 @@ enum class Tools(
         }
     ),
 
-    GET_WEATHER_FORECAST(
-        functionName = "get_weather_forecast",
+    WEATHER_FORECAST(
+        functionName = "weather_forecast",
         description = "Get detailed weather forecast for any location worldwide including temperature, humidity, wind, pressure, and clouds.",
         parameters = mapOf(
             "latitude" to ToolParameter("number", "Latitude (global coverage)", true),
@@ -130,8 +130,8 @@ enum class Tools(
         }
     ),
 
-    GET_LOCATION_FROM_IP(
-        functionName = "get_location_from_ip",
+    LOCATION(
+        functionName = "location",
         description = "Get user's real geographic location from their IP address including city, country, and coordinates. Use this when you need the actual user location.",
         parameters = mapOf(
             "ip" to ToolParameter("string", "IP address (optional - uses client IP if not provided)", false)
@@ -146,8 +146,8 @@ enum class Tools(
         }
     ),
 
-    GET_STOCK_PRICE_API(
-        functionName = "get_stock_price",
+    STOCK_PRICE(
+        functionName = "stock_price",
         description = "Get real-time stock market data including current price, open/close prices, volume, and trading information. Use this for actual market data.",
         parameters = mapOf(
             "symbol" to ToolParameter("string", "Stock symbol (e.g. AAPL, NHYDY)", true)
@@ -166,8 +166,8 @@ enum class Tools(
         }
     ),
 
-    GET_REAL_NEWS_HEADLINES(
-        functionName = "get_real_news_headlines",
+    NEWS_HEADLINES(
+        functionName = "news_headlines",
         description = "Get real current news headlines from major news sources worldwide. Use country codes: 'us' (USA), 'gb' (UK), 'fr' (France), 'de' (Germany), 'no' (Norway), 'se' (Sweden), 'ca' (Canada), 'au' (Australia).",
         parameters = mapOf(
             "country" to ToolParameter("string", "2-letter country code: us, gb, fr, de, no, se, ca, au, etc. Defaults to 'us'", false),
@@ -182,8 +182,8 @@ enum class Tools(
         }
     ),
 
-    GET_NASA_APOD(
-        functionName = "get_nasa_apod",
+    NASA_APOD(
+        functionName = "nasa_apod",
         description = "Get NASA's Astronomy Picture of the Day with stunning space images and explanations. Optionally specify a date (YYYY-MM-DD format).",
         parameters = mapOf(
             "date" to ToolParameter("string", "Date in YYYY-MM-DD format (optional, defaults to today)", false)
@@ -196,8 +196,8 @@ enum class Tools(
         }
     ),
 
-    GET_NEAR_EARTH_OBJECTS(
-        functionName = "get_near_earth_objects",
+    NEAR_EARTH_OBJECTS(
+        functionName = "near_earth_objects",
         description = "Get information about asteroids and other Near Earth Objects approaching Earth. Shows distances, speeds, and potential hazards.",
         parameters = mapOf(
             "date" to ToolParameter("string", "Date in YYYY-MM-DD format (optional, defaults to today)", false)
@@ -261,13 +261,13 @@ enum class Tools(
 
 
         fun setServices(openAI: OpenAI, weather: Weather, polygon: Polygon, geolocation: Geolocation, nasa: Nasa, news: News, json: Json) {
-            Companion.openAI = openAI
-            Companion.weather = weather
-            Companion.polygon = polygon
-            Companion.geolocation = geolocation
-            Companion.nasa = nasa
-            Companion.news = news
-            Companion.json = json
+            this.openAI = openAI
+            this.weather = weather
+            this.polygon = polygon
+            this.geolocation = geolocation
+            this.nasa = nasa
+            this.news = news
+            this.json = json
         }
 
         /**
@@ -342,16 +342,8 @@ enum class Tools(
     ) {
         @PostConstruct
         fun injectServices() {
-            Tools.setServices(openAI, weather, polygon, geolocation, nasa, news, json)
+            AgentTool.setServices(openAI, weather, polygon, geolocation, nasa, news, json)
         }
     }
 }
 
-/**
- * Tool parameter definition
- */
-data class ToolParameter(
-    val type: String,
-    val description: String,
-    val required: Boolean
-)

@@ -21,7 +21,7 @@ object FunctionCallingExamples {
      */
     suspend fun functionCallingAgent(openAI: OpenAI, userQuery: String, debug: Boolean = false): String {
         val messages = mutableListOf<Message>()
-        val tools = Tools.entries.map { it.toOpenAITool() }
+        val tools = AgentTool.entries.map { it.toOpenAITool() }
         
         messages.add(Message(
             role = Prompts.Roles.SYSTEM, 
@@ -75,7 +75,7 @@ object FunctionCallingExamples {
                         println("Executing: ${toolCall.function.name}(${toolCall.function.arguments})")
                     }
                     
-                    val result = Tools.execute(toolCall.function.name, toolCall.function.arguments)
+                    val result = AgentTool.execute(toolCall.function.name, toolCall.function.arguments)
                     
                     if (debug) {
                         println("📋 Result: $result")

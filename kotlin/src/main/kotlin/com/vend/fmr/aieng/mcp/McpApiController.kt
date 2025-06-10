@@ -1,6 +1,6 @@
 package com.vend.fmr.aieng.mcp
 
-import com.vend.fmr.aieng.utils.Tools
+import com.vend.fmr.aieng.utils.AgentTool
 import jakarta.servlet.http.HttpServletRequest
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
@@ -62,7 +62,7 @@ class McpApiController {
     }
 
     private fun handleToolsList(id: Int?): String {
-        val tools = Tools.entries.map { it.toMcpTool() }
+        val tools = AgentTool.entries.map { it.toMcpTool() }
         
         val response = McpResponse(
             id = id,
@@ -78,7 +78,7 @@ class McpApiController {
         return try {
             runBlocking {
                 val argumentsJson = if (arguments.isEmpty()) "{}" else "{" + arguments.entries.joinToString(",") { "\"${it.key}\":\"${it.value}\"" } + "}"
-                val result = Tools.execute(toolName, argumentsJson, httpRequest)
+                val result = AgentTool.execute(toolName, argumentsJson, httpRequest)
                 createSuccessResponse(id, result)
             }
         } catch (e: Exception) {

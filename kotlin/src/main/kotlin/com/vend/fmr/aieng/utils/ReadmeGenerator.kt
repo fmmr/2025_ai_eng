@@ -66,7 +66,7 @@ object ReadmeGenerator {
     fun generateToolsList(): String {
         val sb = StringBuilder()
         
-        Tools.entries.forEach { tool ->
+        AgentTool.entries.forEach { tool ->
             sb.appendLine("- **${tool.functionName}** - ${tool.readmeDescription}")
         }
         

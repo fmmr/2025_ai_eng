@@ -48,8 +48,8 @@ object Prompts {
      * System prompt for ReAct Agent pattern - generated dynamically from Tools
      */
     fun getReActSystemPrompt(): String {
-        val mockTools = Tools.entries
-        val toolDescriptions = mockTools.joinToString("\n") { tool ->
+        val tools = AgentTool.entries
+        val toolDescriptions = tools.joinToString("\n") { tool ->
             val params = tool.parameters.filter { it.value.required }
                 .map { it.key }.joinToString(", ")
             val paramString = if (params.isNotEmpty()) "($params)" else "()"
@@ -77,7 +77,7 @@ Final Answer: [your complete response to the user]
 Example:
 User: "What's the weather like where I am?"
 Thought: I need to first get the user's location, then get the weather for that location.
-Action: ${Tools.GET_LOCATION_FROM_IP.functionName}()
+Action: ${AgentTool.LOCATION.functionName}()
 
 Important rules:
 1. Always start with a Thought

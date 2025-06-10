@@ -3,7 +3,7 @@ package com.vend.fmr.aieng.web
 import com.vend.fmr.aieng.utils.Demo
 import com.vend.fmr.aieng.apis.openai.*
 import com.vend.fmr.aieng.utils.Prompts
-import com.vend.fmr.aieng.utils.Tools
+import com.vend.fmr.aieng.utils.AgentTool
 import com.vend.fmr.aieng.utils.truncate
 import kotlinx.coroutines.runBlocking
 import org.springframework.stereotype.Controller
@@ -35,7 +35,7 @@ class FunctionCallingController(
         model.addAttribute("defaultQuery", "Do you have any ideas for activities I can do at my location?")
         model.addAttribute("systemPrompt", Prompts.FUNCTION_CALLING_SYSTEM)
         model.addAttribute("systemPromptTruncated", Prompts.FUNCTION_CALLING_SYSTEM.truncate())
-        model.addAttribute("availableTools", Tools.entries)
+        model.addAttribute("availableTools", AgentTool.entries)
         return "function-calling-demo"
     }
 
@@ -49,7 +49,7 @@ class FunctionCallingController(
         model.addAttribute("defaultQuery", userQuery)
         model.addAttribute("systemPrompt", Prompts.FUNCTION_CALLING_SYSTEM)
         model.addAttribute("systemPromptTruncated", Prompts.FUNCTION_CALLING_SYSTEM.truncate())
-        model.addAttribute("availableTools", Tools.entries)
+        model.addAttribute("availableTools", AgentTool.entries)
 
         try {
             val steps = runFunctionCallingAgent(userQuery)
@@ -67,7 +67,7 @@ class FunctionCallingController(
     private suspend fun runFunctionCallingAgent(userQuery: String, maxIterations: Int = 5): List<FunctionCallingStep> {
         val steps = mutableListOf<FunctionCallingStep>()
         val messages = mutableListOf<Message>()
-        val tools = Tools.entries.map { it.toOpenAITool() }
+        val tools = AgentTool.entries.map { it.toOpenAITool() }
         var stepCounter = 1
 
         messages.add(Message(
@@ -120,7 +120,7 @@ class FunctionCallingController(
                         functionArgs = formattedArgs
                     ))
                     
-                    val result = Tools.execute(toolCall.function.name, toolCall.function.arguments)
+                    val result = AgentTool.execute(toolCall.function.name, toolCall.function.arguments)
                     
                     steps.add(FunctionCallingStep(
                         stepNumber = stepCounter++,
