@@ -5,6 +5,7 @@ import com.vend.fmr.aieng.apis.nasa.Nasa
 import com.vend.fmr.aieng.apis.news.News
 import com.vend.fmr.aieng.apis.openai.*
 import com.vend.fmr.aieng.apis.polygon.Polygon
+import com.vend.fmr.aieng.apis.spotify.Spotify
 import com.vend.fmr.aieng.apis.weather.Weather
 import com.vend.fmr.aieng.mcp.InputSchema
 import com.vend.fmr.aieng.mcp.PropertySchema
@@ -208,6 +209,48 @@ enum class AgentTool(
             val date = args["date"]
             nasa.getNearEarthObjectsSummary(date, date, debug = false)
         }
+    ),
+    
+    SEARCH_TRACKS(
+        functionName = "search_tracks",
+        description = "Search for music tracks on Spotify. Find songs by title, artist, or keywords.",
+        parameters = mapOf(
+            "query" to ToolParameter("string", "Search query for tracks (e.g., 'Bohemian Rhapsody Queen')", true)
+        ),
+        readmeDescription = "Search for music tracks on Spotify",
+        testParams = mapOf("query" to "Bohemian Rhapsody"),
+        executor = { args, _ ->
+            val query = args["query"] ?: throw IllegalArgumentException("Missing query parameter")
+            spotify.searchTracksSummary(query, debug = false)
+        }
+    ),
+    
+    SEARCH_ARTISTS(
+        functionName = "search_artists", 
+        description = "Search for music artists on Spotify. Find artist information, genres, and follower counts.",
+        parameters = mapOf(
+            "query" to ToolParameter("string", "Search query for artists (e.g., 'Taylor Swift')", true)
+        ),
+        readmeDescription = "Search for music artists on Spotify",
+        testParams = mapOf("query" to "Taylor Swift"),
+        executor = { args, _ ->
+            val query = args["query"] ?: throw IllegalArgumentException("Missing query parameter")
+            spotify.searchArtistsSummary(query, debug = false)
+        }
+    ),
+    
+    POPULAR_TRACKS(
+        functionName = "popular_tracks",
+        description = "Get popular/trending tracks from 2024. Optionally filter by music genre (pop, rock, hip-hop, jazz, etc.).",
+        parameters = mapOf(
+            "genre" to ToolParameter("string", "Music genre to filter by (optional, e.g., 'pop', 'rock', 'hip-hop')", false)
+        ),
+        readmeDescription = "Get popular and trending music tracks",
+        testParams = mapOf("genre" to "pop"),
+        executor = { args, _ ->
+            val genre = args["genre"]
+            spotify.getPopularTracksSummary(genre, debug = false)
+        }
     );
 
 
@@ -257,16 +300,18 @@ enum class AgentTool(
         private lateinit var geolocation: Geolocation
         private lateinit var nasa: Nasa
         private lateinit var news: News
+        private lateinit var spotify: Spotify
         private lateinit var json: Json
 
 
-        fun setServices(openAI: OpenAI, weather: Weather, polygon: Polygon, geolocation: Geolocation, nasa: Nasa, news: News, json: Json) {
+        fun setServices(openAI: OpenAI, weather: Weather, polygon: Polygon, geolocation: Geolocation, nasa: Nasa, news: News, spotify: Spotify, json: Json) {
             this.openAI = openAI
             this.weather = weather
             this.polygon = polygon
             this.geolocation = geolocation
             this.nasa = nasa
             this.news = news
+            this.spotify = spotify
             this.json = json
         }
 
@@ -338,11 +383,12 @@ enum class AgentTool(
         private val geolocation: Geolocation,
         private val nasa: Nasa,
         private val news: News,
+        private val spotify: Spotify,
         private val json: Json
     ) {
         @PostConstruct
         fun injectServices() {
-            AgentTool.setServices(openAI, weather, polygon, geolocation, nasa, news, json)
+            AgentTool.setServices(openAI, weather, polygon, geolocation, nasa, news, spotify, json)
         }
     }
 }
