@@ -73,16 +73,16 @@ This project implements the core concepts from the Scrimba AI Engineering course
 
 <!-- TOOLS_LIST_START -->
 - **hello_world** - Simple greeting function for testing
-- **get_current_time** - Current date and time with timezone examples
-- **get_random_quote** - AI-generated inspirational quotes
-- **get_company_info** - Company information and business details
-- **get_weather_nowcast** - 5-minute precision weather for Nordic countries
-- **get_weather_forecast** - Global weather forecasts with detailed metrics
-- **get_location_from_ip** - Real user location from IP address
-- **get_stock_price** - Real-time stock market data
-- **get_real_news_headlines** - Current news headlines worldwide
-- **get_nasa_apod** - NASA's daily space images and explanations
-- **get_near_earth_objects** - Asteroids and objects approaching Earth
+- **current_time** - Current date and time with timezone examples
+- **random_quote** - AI-generated inspirational quotes
+- **company_info** - Company information and business details
+- **weather_nowcast** - 5-minute precision weather for Nordic countries
+- **weather_forecast** - Global weather forecasts with detailed metrics
+- **location** - Real user location from IP address
+- **stock_price** - Real-time stock market data
+- **news_headlines** - Current news headlines worldwide
+- **nasa_apod** - NASA's daily space images and explanations
+- **near_earth_objects** - Asteroids and objects approaching Earth
 
 <!-- TOOLS_LIST_END -->
 
