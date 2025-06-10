@@ -2,6 +2,7 @@ package com.vend.fmr.aieng.mcp
 
 import com.vend.fmr.aieng.apis.openai.OpenAI
 import com.vend.fmr.aieng.utils.Demo
+import com.vend.fmr.aieng.utils.Tools
 import com.vend.fmr.aieng.utils.getClientIpAddress
 import com.vend.fmr.aieng.web.BaseController
 import jakarta.servlet.http.HttpServletRequest
@@ -23,6 +24,10 @@ class McpAssistantController(
     fun mcpAssistantDemo(model: Model, session: HttpSession): String {
         model.addAttribute("pageTitle", "MCP Assistant Demo")
         model.addAttribute("activeTab", "mcp-assistant")
+        
+        // Pass available API tools for display
+        val apiTools = Tools.entries.filter { it.api }
+        model.addAttribute("availableTools", apiTools)
         
         // Initialize session tools cache and conversation history
         if (session.getAttribute("mcpToolsCache") == null) {

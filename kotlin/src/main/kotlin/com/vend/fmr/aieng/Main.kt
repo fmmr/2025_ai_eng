@@ -4,6 +4,7 @@ import com.vend.fmr.aieng.apis.chunker.Chunker
 import com.vend.fmr.aieng.apis.geolocation.Geolocation
 import com.vend.fmr.aieng.apis.huggingface.HuggingFace
 import com.vend.fmr.aieng.apis.nasa.Nasa
+import com.vend.fmr.aieng.apis.news.News
 import com.vend.fmr.aieng.apis.openai.OpenAI
 import com.vend.fmr.aieng.apis.openai.OpenAIAssistant
 import com.vend.fmr.aieng.apis.polygon.Polygon
@@ -24,6 +25,7 @@ suspend fun main() {
     val weather = Weather(httpClient, json)
     val geolocation = Geolocation(httpClient, json)
     val nasa = Nasa(httpClient, json)
+    val news = News(httpClient, json)
     val chunker = Chunker()
     val huggingface = HuggingFace(httpClient, json)
     Runtime.getRuntime().addShutdownHook(Thread { close(listOf(openAI, assistant, supabase, polygon, weather, geolocation, huggingface)) })
@@ -80,6 +82,22 @@ suspend fun main() {
 
 //    huggingFaceDemo(huggingface, openAI, debug = true)
 //    huggingFaceObjectDetectionDemo(huggingface)
+
+    // === NEWS API TEST ===
+    val newsUSResult = news.getHeadlinesSummary("us", debug = true)
+    println("News US Test:")
+    println(newsUSResult)
+    println()
+    
+    val newsNorwayResult = news.getHeadlinesSummary("no", debug = true)
+    println("News Norway Test:")
+    println(newsNorwayResult)
+    println()
+    
+    val newsFranceResult = news.getHeadlinesSummary("fr", debug = true)
+    println("News France Test:")
+    println(newsFranceResult)
+    println()
 
     // === NASA API TEST ===
     val apodResult = nasa.getApodSummary(debug = true)

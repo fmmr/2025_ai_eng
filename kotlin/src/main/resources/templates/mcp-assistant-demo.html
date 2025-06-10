@@ -12,32 +12,8 @@
         <div th:replace="~{fragments/hero-section :: demo-hero(${demo})}"></div>
 
         <div class="row">
-            <!-- Left Panel: Information -->
+            <!-- Left Panel: Chat Interface -->
             <div class="col-md-6">
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h5>🧠 How MCP Assistants Work</h5>
-                    </div>
-                    <div class="card-body">
-                        <p>This AI assistant demonstrates real-world AI tool usage patterns:</p>
-                        <ul>
-                            <li><strong>Dynamic Discovery</strong> - Automatically finds available tools</li>
-                            <li><strong>Smart Selection</strong> - AI chooses the right tool for each request</li>
-                            <li><strong>Parameter Extraction</strong> - AI extracts parameters from natural language</li>
-                            <li><strong>Session Memory</strong> - Remembers conversation context</li>
-                            <li><strong>Efficient Caching</strong> - Optimizes performance for multiple requests</li>
-                        </ul>
-                        
-                        <h6 class="mt-3">Available Capabilities:</h6>
-                        <ul>
-                            <li>🌍 Weather information (Nordic nowcast + global forecasts)</li>
-                            <li>📈 Stock market data (company info + price data)</li>
-                            <li>📍 IP geolocation (defaults to your location)</li>
-                            <li>✨ Inspirational quotes</li>
-                        </ul>
-                    </div>
-                </div>
-
                 <div class="card">
                     <div class="card-header">
                         <h5>💬 Chat with MCP Assistant</h5>
@@ -55,14 +31,31 @@
                         
                         <div class="border-top pt-3">
                             <h6>💡 Try these examples:</h6>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <button class="btn btn-outline-info btn-sm mb-2 w-100" onclick="setQuery('What\'s the weather in Stockholm?')">🌤️ Weather in Stockholm</button>
-                                    <button class="btn btn-outline-success btn-sm mb-2 w-100" onclick="setQuery('Tell me about Tesla stock')">📈 Tesla Company Info</button>
+                            <div class="mb-3">
+                                <small class="text-muted">Simple examples (1 tool):</small>
+                                <div class="row mt-1">
+                                    <div class="col-md-6">
+                                        <button class="btn btn-outline-info btn-sm mb-2 w-100" onclick="setQuery('What\'s the weather in Stockholm?')">🌤️ Weather in Stockholm</button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button class="btn btn-outline-success btn-sm mb-2 w-100" onclick="setQuery('Tell me about Tesla stock')">📈 Tesla Company Info</button>
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <button class="btn btn-outline-warning btn-sm mb-2 w-100" onclick="setQuery('Where am I located?')">📍 My Location</button>
-                                    <button class="btn btn-outline-primary btn-sm mb-2 w-100" onclick="setQuery('Give me an inspirational quote')">✨ Inspirational Quote</button>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <small class="text-muted">Complex examples (multiple tools):</small>
+                                <div class="row mt-1">
+                                    <div class="col-md-6">
+                                        <button class="btn btn-outline-warning btn-sm mb-2 w-100" onclick="setQuery('Find my location and tell me the weather forecast there')">📍🌦️ My Location + Weather</button>
+                                        <button class="btn btn-outline-primary btn-sm mb-2 w-100" onclick="setQuery('What\'s the news in Norway and what time is it there?')">📰⏰ Norway News + Time</button>
+                                        <button class="btn btn-outline-info btn-sm mb-2 w-100" onclick="setQuery('Compare Apple and Microsoft stock prices, then inspire me')">📊✨ Stocks + Quote</button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button class="btn btn-outline-success btn-sm mb-2 w-100" onclick="setQuery('Show me today\'s space picture and any asteroids near Earth')">🚀☄️ NASA APOD + NEO</button>
+                                        <button class="btn btn-outline-danger btn-sm mb-2 w-100" onclick="setQuery('Get French tech news and tell me about a French company stock')">🇫🇷📈 France News + Stock</button>
+                                        <button class="btn btn-outline-dark btn-sm mb-2 w-100" onclick="setQuery('What\'s happening in space today and what\'s the weather like in space center locations?')">🌌🌍 Space + Weather</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -92,6 +85,55 @@
                     <div class="card-body">
                         <div id="activityLog" style="height: 500px; overflow-y: auto; font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; font-size: 12px;">
                             <div class="text-muted">🤖 Hello! I'm your AI assistant. Ask me anything!</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Information Panel at Bottom -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>🧠 How MCP Assistants Work</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>This AI assistant demonstrates real-world AI tool usage patterns:</p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul>
+                                    <li><strong>Dynamic Discovery</strong> - Automatically finds available tools</li>
+                                    <li><strong>Smart Selection</strong> - AI chooses the right tool for each request</li>
+                                    <li><strong>Parameter Extraction</strong> - AI extracts parameters from natural language</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul>
+                                    <li><strong>Session Memory</strong> - Remembers conversation context</li>
+                                    <li><strong>Efficient Caching</strong> - Optimizes performance for multiple requests</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <h6 class="mt-3">Available Capabilities:</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="small">
+                                    <li th:each="tool, iterStat : ${availableTools}" th:if="${iterStat.index < (availableTools.size() + 1) / 2}">
+                                        <strong th:text="${tool.functionName}">tool_name</strong>
+                                        - <span th:text="${tool.description}">Tool description</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="small">
+                                    <li th:each="tool, iterStat : ${availableTools}" th:if="${iterStat.index >= (availableTools.size() + 1) / 2}">
+                                        <strong th:text="${tool.functionName}">tool_name</strong>
+                                        - <span th:text="${tool.description}">Tool description</span>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>

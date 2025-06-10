@@ -3,6 +3,7 @@ package com.vend.fmr.aieng.utils
 import com.vend.fmr.aieng.apis.geolocation.Geolocation
 import com.vend.fmr.aieng.apis.mocks.Mocks
 import com.vend.fmr.aieng.apis.nasa.Nasa
+import com.vend.fmr.aieng.apis.news.News
 import com.vend.fmr.aieng.apis.openai.*
 import com.vend.fmr.aieng.apis.polygon.Polygon
 import com.vend.fmr.aieng.apis.weather.Weather
@@ -225,6 +226,23 @@ enum class Tools(
         }
     ),
     
+    GET_REAL_NEWS_HEADLINES(
+        functionName = "get_real_news_headlines",
+        description = "Get real current news headlines from major news sources worldwide. Use country codes: 'us' (USA), 'gb' (UK), 'fr' (France), 'de' (Germany), 'no' (Norway), 'se' (Sweden), 'ca' (Canada), 'au' (Australia).",
+        parameters = mapOf(
+            "country" to ToolParameter("string", "2-letter country code: us, gb, fr, de, no, se, ca, au, etc. Defaults to 'us'", false),
+            "category" to ToolParameter("string", "Category: business, entertainment, health, science, sports, technology", false)
+        ),
+        testParams = emptyMap(),
+        mock = false,
+        api = true,
+        executor = { args, _ ->
+            val country = args["country"] ?: "us"
+            val category = args["category"]
+            news.getHeadlinesSummary(country, category, debug = true)
+        }
+    ),
+    
     GET_NASA_APOD(
         functionName = "get_nasa_apod",
         description = "Get NASA's Astronomy Picture of the Day with stunning space images and explanations. Optionally specify a date (YYYY-MM-DD format).",
@@ -301,15 +319,17 @@ enum class Tools(
         private lateinit var polygon: Polygon
         private lateinit var geolocation: Geolocation
         private lateinit var nasa: Nasa
+        private lateinit var news: News
         private lateinit var json: Json
         
         
-        fun setServices(openAI: OpenAI, weather: Weather, polygon: Polygon, geolocation: Geolocation, nasa: Nasa, json: Json) {
+        fun setServices(openAI: OpenAI, weather: Weather, polygon: Polygon, geolocation: Geolocation, nasa: Nasa, news: News, json: Json) {
             Companion.openAI = openAI
             Companion.weather = weather
             Companion.polygon = polygon
             Companion.geolocation = geolocation
             Companion.nasa = nasa
+            Companion.news = news
             Companion.json = json
         }
         
@@ -380,11 +400,12 @@ enum class Tools(
         private val polygon: Polygon,
         private val geolocation: Geolocation,
         private val nasa: Nasa,
+        private val news: News,
         private val json: Json
     ) {
         @PostConstruct
         fun injectServices() {
-            Tools.setServices(openAI, weather, polygon, geolocation, nasa, json)
+            Tools.setServices(openAI, weather, polygon, geolocation, nasa, news, json)
         }
     }
 }
