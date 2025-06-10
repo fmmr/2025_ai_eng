@@ -83,22 +83,6 @@ data class McpError(
     val message: String
 )
 
-// MCP Client Response Data Classes
-@Serializable
-data class AiAssistResponse(
-    val status: String,
-    val selectedTool: String? = null,
-    val arguments: Map<String, String> = emptyMap(),
-    val reasoning: String? = null,
-    val response: String? = null,
-    val error: String? = null
-)
-
-@Serializable
-data class AiAssistRequest(
-    val query: String,
-    val tools: List<Tool>? = null
-)
 
 // Session conversation data class
 @Serializable

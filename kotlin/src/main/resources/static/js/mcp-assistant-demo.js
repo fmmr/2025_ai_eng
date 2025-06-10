@@ -4,18 +4,27 @@ let conversationHistory = [];
 function log(message, type = 'info') {
     const activityLog = document.getElementById('activityLog');
     const timestamp = new Date().toLocaleTimeString();
-    const typeColors = {
-        'info': 'text-primary',
-        'success': 'text-success', 
-        'error': 'text-danger',
-        'warning': 'text-warning',
-        'request': 'text-info',
-        'response': 'text-success'
-    };
     
     const entry = document.createElement('div');
-    entry.className = `mb-2 ${typeColors[type] || 'text-muted'}`;
-    entry.innerHTML = `<small class="text-muted">[${timestamp}]</small> ${message}`;
+    
+    // Special styling for user questions and AI responses
+    if (type === 'user_question') {
+        entry.className = 'mb-3 p-2 border-start border-primary border-3 bg-light';
+        entry.innerHTML = message;
+    } else if (type === 'final_result') {
+        entry.className = 'mb-3 p-2 border-start border-success border-3 bg-light';
+        entry.innerHTML = message;
+    } else {
+        // Debug/progress messages - smaller and muted
+        const typeColors = {
+            'info': 'text-muted',
+            'success': 'text-success', 
+            'error': 'text-danger',
+            'warning': 'text-warning'
+        };
+        entry.className = `mb-1 ${typeColors[type] || 'text-muted'}`;
+        entry.innerHTML = `<small class="text-muted">[${timestamp}]</small> <small>${message}</small>`;
+    }
     
     activityLog.appendChild(entry);
     activityLog.scrollTop = activityLog.scrollHeight;
@@ -32,26 +41,29 @@ function setupUserQueryInput() {
         userQueryInput.addEventListener('keydown', function(event) {
             if (event.key === 'Enter') {
                 event.preventDefault();
-                aiAssisted();
+                aiAssistedStreaming();
             }
         });
     }
 }
 
-function setAiButtonState(isProcessing) {
-    const aiBtn = document.getElementById('aiBtn');
+function setSendButtonState(isProcessing) {
+    const sendBtn = document.getElementById('sendBtn');
     const userQuery = document.getElementById('userQuery');
+    const verbosityLevel = document.getElementById('verbosityLevel');
     
     if (isProcessing) {
-        aiBtn.innerHTML = '⏳ Processing...';
-        aiBtn.disabled = true;
-        aiBtn.className = 'btn btn-secondary mb-3';
+        sendBtn.innerHTML = '⏳ Processing...';
+        sendBtn.disabled = true;
+        sendBtn.className = 'btn btn-secondary mb-3';
         userQuery.disabled = true;
+        verbosityLevel.disabled = true;
     } else {
-        aiBtn.innerHTML = '🤖 Send Message';
-        aiBtn.disabled = false;
-        aiBtn.className = 'btn btn-primary mb-3';
+        sendBtn.innerHTML = '🤖 Send';
+        sendBtn.disabled = false;
+        sendBtn.className = 'btn btn-primary mb-3';
         userQuery.disabled = false;
+        verbosityLevel.disabled = false;
     }
 }
 
@@ -72,79 +84,104 @@ function clearInputAndFocus() {
 }
 
 
-async function aiAssisted() {
+async function aiAssistedStreaming() {
     const userQuery = document.getElementById('userQuery').value.trim();
+    const verbosity = document.getElementById('verbosityLevel').value;
+    
     if (!userQuery) {
         log('❌ Please enter a question or request first!', 'error');
         return;
     }
     
     // Set button to processing state
-    setAiButtonState(true);
+    setSendButtonState(true);
     
-    // AI assistant can work without manual tool discovery - it handles connection internally
-    
-    log(`🤖 AI analyzing request: "${userQuery}"`, 'info');
+    // Log the user question prominently
+    log(userQuery, 'user_question');
     
     try {
-        const response = await fetch('/demo/mcp-assistant/chat', {
+        // Start streaming request first to get the session ID
+        const response = await fetch('/demo/mcp-assistant/stream-chat', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                query: userQuery
+                query: userQuery,
+                verbosity: verbosity
             })
         });
         
         const result = await response.json();
         
-        if (result.error) {
-            log(`❌ AI Error: ${result.error}`, 'error');
-            setAiButtonState(false);
-            clearInputAndFocus();
-            return;
-        }
-        
-        if (result.status === 'no_tool_needed') {
-            log(`💭 AI Response: ${result.response}`, 'info');
-            setAiButtonState(false);
-            clearInputAndFocus();
-            return;
-        }
-        
-        if (result.status === 'success') {
-            log(`🎯 ${result.reasoning}`, 'success');
+        if (result.sessionId) {
+            log(`🔗 Setting up SSE connection for session: ${result.sessionId}`, 'info');
             
-            // Show multi-step tool execution details
-            if (result.selectedTool && result.selectedTool.includes('→')) {
-                const tools = result.selectedTool.split(' → ');
-                log(`🔄 Multi-step execution: ${tools.length} tools used`, 'info');
-                tools.forEach((tool, index) => {
-                    log(`  Step ${index + 1}: ${tool}`, 'info');
-                });
-            } else if (result.selectedTool) {
-                log(`🛠️ Tool used: ${result.selectedTool}`, 'info');
-            }
+            // Set up SSE connection with the actual session ID
+            const eventSource = new EventSource(`/demo/mcp-assistant/stream/${result.sessionId}`);
             
-            log(`✅ Final Result: ${result.response}`, 'success');
-            log(`💬 Session: Conversation context maintained (${conversationHistory.length + 1} messages)`, 'info');
+            eventSource.onopen = function() {
+                log('✅ SSE connection opened', 'success');
+            };
             
-            // Tool already executed by MCP client - no need to execute again
-            conversationHistory.push({
-                query: userQuery,
-                tool: result.selectedTool,
-                result: result.response,
-                timestamp: new Date().toLocaleTimeString()
+            eventSource.addEventListener('connected', function(event) {
+                const data = JSON.parse(event.data);
+                log(`🔌 SSE connected: ${data.message}`, 'info');
             });
+            
+            eventSource.addEventListener('progress', function(event) {
+                const data = JSON.parse(event.data);
+                log(data.message, 'info');
+            });
+            
+            eventSource.addEventListener('result', function(event) {
+                const data = JSON.parse(event.data);
+                
+                // Extract and display the actual AI response prominently
+                const aiResponse = data.data?.response || data.message;
+                if (aiResponse) {
+                    // Remove any "Final Result:" prefix and show just the response
+                    const cleanResponse = aiResponse.replace(/^.*Final Result:\s*/, '');
+                    log(cleanResponse, 'final_result');
+                }
+                
+                // Track conversation history
+                conversationHistory.push({
+                    query: userQuery,
+                    result: aiResponse,
+                    timestamp: data.timestamp
+                });
+            });
+            
+            eventSource.addEventListener('error', function(event) {
+                const data = JSON.parse(event.data);
+                log(data.message, 'error');
+            });
+            
+            eventSource.addEventListener('complete', function(event) {
+                const data = JSON.parse(event.data);
+                log(data.message, 'success');
+                eventSource.close();
+                setSendButtonState(false);
+                clearInputAndFocus();
+            });
+            
+            eventSource.onerror = function(event) {
+                console.error('SSE Error:', event);
+                log('❌ Streaming connection error', 'error');
+                eventSource.close();
+                setSendButtonState(false);
+                clearInputAndFocus();
+            };
+            
+        } else {
+            log('❌ Failed to start streaming session', 'error');
+            setSendButtonState(false);
+            clearInputAndFocus();
         }
-        
-        // Reset button state and clear input for next query
-        setAiButtonState(false);
-        clearInputAndFocus();
         
     } catch (error) {
-        log(`❌ AI assistance failed: ${error.message}`, 'error');
+        log(`❌ Streaming failed: ${error.message}`, 'error');
         setAiButtonState(false);
         clearInputAndFocus();
     }

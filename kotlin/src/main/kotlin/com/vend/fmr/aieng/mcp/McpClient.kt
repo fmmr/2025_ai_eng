@@ -1,6 +1,5 @@
 package com.vend.fmr.aieng.mcp
 
-import com.vend.fmr.aieng.apis.openai.OpenAI
 import com.vend.fmr.aieng.apis.openai.*
 import com.vend.fmr.aieng.utils.Prompts
 import io.ktor.client.*
@@ -134,7 +133,7 @@ class McpClient(private val serverUrl: String, private val openAI: OpenAI, priva
      * AI-powered tool selection with conversation context
      * Maintains session state and conversation history
      */
-    suspend fun process(conversationHistory: List<McpChatMessage>): McpAiResult {
+    suspend fun process(conversationHistory: List<McpChatMessage>, progressCallback: ((String) -> Unit)? = null): McpAiResult {
         if (availableTools.isEmpty()) {
             return McpAiResult(
                 success = false,
@@ -160,13 +159,28 @@ class McpClient(private val serverUrl: String, private val openAI: OpenAI, priva
                 )
             }
 
-            val aiResponse = openAI.createChatCompletion(
-                messages = conversationMessages,
-                tools = openaiTools,
-                toolChoice = "auto",
-                maxTokens = 300,
-                temperature = 0.1
-            )
+            progressCallback?.invoke("🧠 AI analyzing query and considering available tools...")
+
+            // Add a delay to give progress feedback for long operations
+            kotlinx.coroutines.delay(500)
+            progressCallback?.invoke("⏳ Waiting for OpenAI response...")
+
+            val aiResponse = try {
+                openAI.createChatCompletion(
+                    messages = conversationMessages,
+                    tools = openaiTools,
+                    toolChoice = "auto",
+                    maxTokens = 300,
+                    temperature = 0.1,
+                    timeoutMs = 30000 // 30 second timeout
+                )
+            } catch (e: Exception) {
+                progressCallback?.invoke("❌ OpenAI API call failed: ${e.message}")
+                return McpAiResult(
+                    success = false,
+                    error = "OpenAI API call failed: ${e.message}"
+                )
+            }
 
             // Implement iterative tool execution for multi-step reasoning
             val maxIterations = 5
@@ -178,19 +192,36 @@ class McpClient(private val serverUrl: String, private val openAI: OpenAI, priva
                     aiResponse
                 } else {
                     // Make new AI call with updated conversation context
-                    openAI.createChatCompletion(
-                        messages = conversationMessages,
-                        tools = openaiTools,
-                        toolChoice = "auto",
-                        maxTokens = 300,
-                        temperature = 0.1
-                    )
+                    progressCallback?.invoke("🔄 AI continuing analysis (iteration ${currentIteration + 1})...")
+                    try {
+                        openAI.createChatCompletion(
+                            messages = conversationMessages,
+                            tools = openaiTools,
+                            toolChoice = "auto",
+                            maxTokens = 300,
+                            temperature = 0.1,
+                            timeoutMs = 30000 // 30 second timeout
+                        )
+                    } catch (e: Exception) {
+                        progressCallback?.invoke("❌ OpenAI API call failed on iteration ${currentIteration + 1}: ${e.message}")
+                        return McpAiResult(
+                            success = false,
+                            error = "OpenAI API call failed: ${e.message}"
+                        )
+                    }
                 }
 
                 val choice = currentResponse.choices.firstOrNull()
                 val toolCalls = choice?.message?.toolCalls
 
                 if (toolCalls?.isNotEmpty() == true) {
+                    // AI decided to use tools
+                    if (toolCalls.size == 1) {
+                        progressCallback?.invoke("🛠️ AI selected tool: ${toolCalls.first().function.name}")
+                    } else {
+                        progressCallback?.invoke("🔧 AI selected ${toolCalls.size} tools: ${toolCalls.joinToString(", ") { it.function.name }}")
+                    }
+
                     // Add assistant message with tool calls to conversation
                     conversationMessages.add(
                         Message(
@@ -202,8 +233,10 @@ class McpClient(private val serverUrl: String, private val openAI: OpenAI, priva
 
                     // Execute tools and add results to conversation
                     for (toolCall in toolCalls) {
+                        progressCallback?.invoke("⚡ Executing ${toolCall.function.name}...")
                         val toolResult = executeToolCall(toolCall.function.name, toolCall.function.arguments)
                         allToolsUsed.add(toolCall.function.name)
+                        progressCallback?.invoke("✅ ${toolCall.function.name} completed")
 
                         // Add tool result to conversation
                         conversationMessages.add(
@@ -215,10 +248,14 @@ class McpClient(private val serverUrl: String, private val openAI: OpenAI, priva
                         )
                     }
 
+                    if (allToolsUsed.isNotEmpty()) {
+                        progressCallback?.invoke("🤔 AI analyzing tool results...")
+                    }
                     currentIteration++
                 } else {
                     // AI is done with tool calls, return final response
-                    val finalContent = choice?.message?.content?.toString() ?: "I've completed the requested analysis."
+                    progressCallback?.invoke("📝 AI formulating final response...")
+                    val finalContent = currentResponse.text().ifEmpty { "I've completed the requested analysis." }
 
                     return McpAiResult(
                         success = true,

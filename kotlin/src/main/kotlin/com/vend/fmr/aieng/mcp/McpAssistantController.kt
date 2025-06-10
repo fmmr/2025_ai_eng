@@ -7,18 +7,34 @@ import com.vend.fmr.aieng.utils.getClientIpAddress
 import com.vend.fmr.aieng.web.BaseController
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpSession
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.bind.annotation.*
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
+import java.util.concurrent.ConcurrentHashMap
+
+data class StreamRequest(
+    val query: String,
+    val verbosity: String = "function_calls" // "minimal", "function_calls", "debug"
+)
+
+data class StreamEvent(
+    val type: String, // "progress", "result", "error", "complete"
+    val message: String,
+    val data: Any? = null,
+    val timestamp: String = java.time.LocalTime.now().toString()
+)
 
 @Controller
 class McpAssistantController(
     private val openAI: OpenAI
 ) : BaseController(Demo.MCP_ASSISTANT) {
+    
+    private val activeStreams = ConcurrentHashMap<String, SseEmitter>()
 
     @GetMapping("/demo/mcp-assistant")
     fun mcpAssistantDemo(model: Model, session: HttpSession): String {
@@ -42,10 +58,80 @@ class McpAssistantController(
         
         return "mcp-assistant-demo"
     }
+    
+    @GetMapping("/demo/mcp-assistant/stream/{sessionId}")
+    fun streamEvents(@PathVariable sessionId: String): SseEmitter {
+        val emitter = SseEmitter(0L) // No timeout - let it run until complete
+        
+        activeStreams[sessionId] = emitter
+        
+        emitter.onCompletion {
+            activeStreams.remove(sessionId)
+        }
+        
+        emitter.onTimeout {
+            activeStreams.remove(sessionId)
+        }
+        
+        emitter.onError { ex ->
+            activeStreams.remove(sessionId)
+        }
+        
+        // Send initial keepalive
+        try {
+            emitter.send(SseEmitter.event()
+                .name("connected")
+                .data("{\"message\":\"SSE connection established\",\"sessionId\":\"$sessionId\"}")
+            )
+        } catch (_: Exception) {
+            activeStreams.remove(sessionId)
+        }
+        
+        return emitter
+    }
+    
+    private fun sendStreamEvent(sessionId: String, event: StreamEvent) {
+        val emitter = activeStreams[sessionId]
+        if (emitter != null) {
+            try {
+                emitter.send(
+                    SseEmitter.event()
+                        .name(event.type)
+                        .data(event)
+                )
+            } catch (_: Exception) {
+                activeStreams.remove(sessionId)
+            }
+        }
+    }
 
-    @PostMapping("/demo/mcp-assistant/chat")
+    @PostMapping("/demo/mcp-assistant/stream-chat")
     @ResponseBody
-    fun mcpChat(@RequestBody request: AiAssistRequest, session: HttpSession, httpRequest: HttpServletRequest): AiAssistResponse = runBlocking {
+    fun mcpStreamChat(@RequestBody request: StreamRequest, session: HttpSession, httpRequest: HttpServletRequest): Map<String, String> = runBlocking {
+        val streamId = "${session.id}-${System.currentTimeMillis()}" // Unique ID for each request
+        val clientIp = getClientIpAddress(httpRequest)
+        
+        // Process in background
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                sendStreamEvent(streamId, StreamEvent(
+                    type = "progress",
+                    message = "🤖 AI analyzing request: \"${request.query}\""
+                ))
+                
+                processMcpStreamRequest(request, session, clientIp, streamId)
+            } catch (e: Exception) {
+                sendStreamEvent(streamId, StreamEvent(
+                    type = "error",
+                    message = "❌ Processing failed: ${e.message}"
+                ))
+            }
+        }
+        
+        mapOf("sessionId" to streamId, "status" to "streaming")
+    }
+    
+    private suspend fun processMcpStreamRequest(request: StreamRequest, session: HttpSession, clientIp: String, streamId: String) {
         @Suppress("UNCHECKED_CAST")
         val mcpConversation = session.getAttribute("mcpConversation") as? MutableList<McpChatMessage> 
             ?: mutableListOf<McpChatMessage>().also { session.setAttribute("mcpConversation", it) }
@@ -58,67 +144,132 @@ class McpAssistantController(
         // Add user message to conversation
         mcpConversation.add(McpChatMessage("user", request.query))
         
-        return@runBlocking try {
+        try {
             val serverUrl = "http://localhost:8080/mcp/"
-            val clientIp = getClientIpAddress(httpRequest)
             val mcpClient = McpClient(serverUrl, openAI, clientIp)
             
             try {
-                // Only connect and discover tools if not cached
+                // Connection phase
                 if (cachedTools.isEmpty()) {
+                    if (request.verbosity == "debug") {
+                        sendStreamEvent(streamId, StreamEvent(
+                            type = "progress",
+                            message = "🔌 Connecting to MCP server..."
+                        ))
+                    }
+                    
                     val connectionResult = mcpClient.initialize()
                     if (!connectionResult.success) {
-                        return@runBlocking AiAssistResponse(
-                            status = "error",
-                            error = "Failed to connect to MCP server: ${connectionResult.error}"
-                        )
+                        sendStreamEvent(streamId, StreamEvent(
+                            type = "error",
+                            message = "❌ Failed to connect to MCP server: ${connectionResult.error}"
+                        ))
+                        return
+                    }
+                    
+                    if (request.verbosity == "debug") {
+                        sendStreamEvent(streamId, StreamEvent(
+                            type = "progress",
+                            message = "🔍 Discovering available tools..."
+                        ))
                     }
                     
                     val toolsResult = mcpClient.discoverTools()
                     if (!toolsResult.success) {
-                        return@runBlocking AiAssistResponse(
-                            status = "error", 
-                            error = "Failed to discover tools: ${toolsResult.error}"
-                        )
+                        sendStreamEvent(streamId, StreamEvent(
+                            type = "error",
+                            message = "❌ Failed to discover tools: ${toolsResult.error}"
+                        ))
+                        return
                     }
                     
                     cachedTools = toolsResult.tools
                     session.setAttribute("mcpToolsCache", cachedTools)
                     
-                    // Convert and cache OpenAI tools too
                     cachedOpenAITools = mcpClient.convertMcpToolsToOpenAI(cachedTools)
                     session.setAttribute("mcpOpenAIToolsCache", cachedOpenAITools)
                     
+                    if (request.verbosity == "debug") {
+                        sendStreamEvent(streamId, StreamEvent(
+                            type = "progress",
+                            message = "✅ Found ${cachedTools.size} tools, converted to OpenAI format"
+                        ))
+                    }
                 } else {
-                    // Quick connection for subsequent requests
                     mcpClient.initialize()
                     mcpClient.setAvailableTools(cachedTools)
                     mcpClient.setConvertedTools(cachedOpenAITools)
+                    
+                    if (request.verbosity == "debug") {
+                        sendStreamEvent(streamId, StreamEvent(
+                            type = "progress",
+                            message = "♻️ Using cached tools (${cachedTools.size} available)"
+                        ))
+                    }
                 }
                 
-                // Process with conversation context
-                val aiResult = mcpClient.process(mcpConversation)
+                // AI Processing phase
+                val aiResult = mcpClient.process(mcpConversation) { progressMessage ->
+                    if (request.verbosity in listOf("function_calls", "debug")) {
+                        sendStreamEvent(streamId, StreamEvent(
+                            type = "progress",
+                            message = progressMessage
+                        ))
+                    }
+                }
                 
                 if (aiResult.success) {
-                    val assistantMessage = if (aiResult.toolsUsed.isNotEmpty()) {
+                     if (aiResult.toolsUsed.isNotEmpty()) {
                         // AI used tools
                         mcpConversation.add(McpChatMessage("assistant", aiResult.response ?: "", aiResult.toolsUsed.firstOrNull()))
                         
-                        AiAssistResponse(
-                            status = "success",
-                            response = aiResult.response,
-                            selectedTool = aiResult.toolsUsed.joinToString(" → "),
-                            reasoning = aiResult.reasoning ?: "AI selected tools to answer your question"
-                        )
+                        if (request.verbosity in listOf("function_calls", "debug")) {
+                            sendStreamEvent(streamId, StreamEvent(
+                                type = "progress",
+                                message = "🎯 ${aiResult.reasoning ?: "AI selected tools to answer your question"}"
+                            ))
+                            
+                            if (aiResult.toolsUsed.size > 1) {
+                                sendStreamEvent(streamId, StreamEvent(
+                                    type = "progress",
+                                    message = "🔄 Multi-step execution: ${aiResult.toolsUsed.size} tools used"
+                                ))
+                                
+                                aiResult.toolsUsed.forEachIndexed { index, tool ->
+                                    sendStreamEvent(streamId, StreamEvent(
+                                        type = "progress",
+                                        message = "  Step ${index + 1}: $tool"
+                                    ))
+                                }
+                            } else {
+                                sendStreamEvent(streamId, StreamEvent(
+                                    type = "progress",
+                                    message = "🛠️ Tool used: ${aiResult.toolsUsed.first()}"
+                                ))
+                            }
+                        }
+                        
+                        sendStreamEvent(streamId, StreamEvent(
+                            type = "result",
+                            message = "${aiResult.response}",
+                            data = mapOf(
+                                "response" to aiResult.response,
+                                "toolsUsed" to aiResult.toolsUsed,
+                                "reasoning" to aiResult.reasoning
+                            )
+                        ))
                     } else {
                         // AI answered directly
                         mcpConversation.add(McpChatMessage("assistant", aiResult.response ?: ""))
                         
-                        AiAssistResponse(
-                            status = "no_tool_needed",
-                            response = aiResult.response,
-                            reasoning = aiResult.reasoning ?: "AI answered without using tools"
-                        )
+                        sendStreamEvent(streamId, StreamEvent(
+                            type = "result",
+                            message = "${aiResult.response}",
+                            data = mapOf(
+                                "response" to aiResult.response,
+                                "reasoning" to aiResult.reasoning
+                            )
+                        ))
                     }
                     
                     // Keep conversation history manageable
@@ -126,12 +277,15 @@ class McpAssistantController(
                         mcpConversation.removeAt(0)
                     }
                     
-                    assistantMessage
+                    sendStreamEvent(streamId, StreamEvent(
+                        type = "progress",
+                        message = "💬 Session: Conversation context maintained (${mcpConversation.size} messages)"
+                    ))
                 } else {
-                    AiAssistResponse(
-                        status = "error",
-                        error = aiResult.error ?: "AI processing failed"
-                    )
+                    sendStreamEvent(streamId, StreamEvent(
+                        type = "error",
+                        message = "❌ AI processing failed: ${aiResult.error ?: "Unknown error"}"
+                    ))
                 }
                 
             } finally {
@@ -139,12 +293,20 @@ class McpAssistantController(
             }
             
         } catch (e: Exception) {
-            AiAssistResponse(
-                status = "error",
-                error = "MCP client failed: ${e.message}"
-            )
+            sendStreamEvent(streamId, StreamEvent(
+                type = "error",
+                message = "❌ MCP client failed: ${e.message}"
+            ))
+        } finally {
+            sendStreamEvent(streamId, StreamEvent(
+                type = "complete",
+                message = "✅ Processing complete"
+            ))
+            // Clean up SSE connection after processing
+            activeStreams.remove(streamId)
         }
     }
+
     
     @PostMapping("/demo/mcp-assistant/reset")
     @ResponseBody

@@ -25,8 +25,18 @@
                             <small class="text-muted">I can help with weather, stocks, location info, and more!</small>
                         </div>
                         
-                        <button class="btn btn-primary mb-3" onclick="aiAssisted()" id="aiBtn">
-                            🤖 Send Message
+                        <div class="mb-3">
+                            <label for="verbosityLevel" class="form-label">Progress Detail Level:</label>
+                            <select class="form-select form-select-sm" id="verbosityLevel">
+                                <option value="minimal">Minimal - Just results</option>
+                                <option value="function_calls" selected>Function Calls - Show tool usage</option>
+                                <option value="debug">Debug - All internal details</option>
+                            </select>
+                            <small class="text-muted">Controls how much real-time progress you see</small>
+                        </div>
+                        
+                        <button class="btn btn-primary mb-3" onclick="aiAssistedStreaming()" id="sendBtn">
+                            🤖 Send
                         </button>
                         
                         <div class="border-top pt-3">
@@ -47,14 +57,14 @@
                                 <small class="text-muted">Complex examples (multiple tools):</small>
                                 <div class="row mt-1">
                                     <div class="col-md-6">
-                                        <button class="btn btn-outline-warning btn-sm mb-2 w-100" onclick="setQuery('Find my location and tell me the weather forecast there')">📍🌦️ My Location + Weather</button>
-                                        <button class="btn btn-outline-primary btn-sm mb-2 w-100" onclick="setQuery('What\'s the news in Norway and what time is it there?')">📰⏰ Norway News + Time</button>
-                                        <button class="btn btn-outline-info btn-sm mb-2 w-100" onclick="setQuery('Compare Apple and Microsoft stock prices, then inspire me')">📊✨ Stocks + Quote</button>
+                                        <button class="btn btn-outline-warning btn-sm mb-2 w-100" onclick="setQuery('Should I invest in Apple right now?')">💰 Investment Analysis</button>
+                                        <button class="btn btn-outline-primary btn-sm mb-2 w-100" onclick="setQuery('What should I know about French markets today?')">🇫🇷 Market Intelligence</button>
+                                        <button class="btn btn-outline-info btn-sm mb-2 w-100" onclick="setQuery('Is it a good day to go outside where I am?')">🌤️ Activity Planning</button>
                                     </div>
                                     <div class="col-md-6">
-                                        <button class="btn btn-outline-success btn-sm mb-2 w-100" onclick="setQuery('Show me today\'s space picture and any asteroids near Earth')">🚀☄️ NASA APOD + NEO</button>
-                                        <button class="btn btn-outline-danger btn-sm mb-2 w-100" onclick="setQuery('Get French tech news and tell me about a French company stock')">🇫🇷📈 France News + Stock</button>
-                                        <button class="btn btn-outline-dark btn-sm mb-2 w-100" onclick="setQuery('What\'s happening in space today and what\'s the weather like in space center locations?')">🌌🌍 Space + Weather</button>
+                                        <button class="btn btn-outline-success btn-sm mb-2 w-100" onclick="setQuery('What cool space stuff can I see tonight?')">🌙 Stargazing Guide</button>
+                                        <button class="btn btn-outline-danger btn-sm mb-2 w-100" onclick="setQuery('Plan my day in Norway based on current conditions')">🇳🇴 Daily Planning</button>
+                                        <button class="btn btn-outline-dark btn-sm mb-2 w-100" onclick="setQuery('What would be a smart investment right now?')">📈 Smart Investing</button>
                                     </div>
                                 </div>
                             </div>
@@ -99,19 +109,21 @@
                         <h5>🧠 How MCP Assistants Work</h5>
                     </div>
                     <div class="card-body">
-                        <p>This AI assistant demonstrates real-world AI tool usage patterns:</p>
+                        <p>This AI assistant demonstrates real-world AI tool usage patterns with real-time streaming:</p>
                         <div class="row">
                             <div class="col-md-6">
                                 <ul>
                                     <li><strong>Dynamic Discovery</strong> - Automatically finds available tools</li>
                                     <li><strong>Smart Selection</strong> - AI chooses the right tool for each request</li>
                                     <li><strong>Parameter Extraction</strong> - AI extracts parameters from natural language</li>
+                                    <li><strong>Real-time Streaming</strong> - See progress updates as they happen</li>
                                 </ul>
                             </div>
                             <div class="col-md-6">
                                 <ul>
                                     <li><strong>Session Memory</strong> - Remembers conversation context</li>
                                     <li><strong>Efficient Caching</strong> - Optimizes performance for multiple requests</li>
+                                    <li><strong>Configurable Verbosity</strong> - Choose your level of detail</li>
                                 </ul>
                             </div>
                         </div>
