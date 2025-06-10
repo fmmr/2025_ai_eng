@@ -9,15 +9,22 @@ import jakarta.servlet.http.HttpSession
 import kotlinx.coroutines.runBlocking
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.*
 
 data class ChatMessage(
     val role: String,
     val content: String,
     val timestamp: Long = System.currentTimeMillis()
+)
+
+data class ChatRequest(
+    val message: String
+)
+
+data class ChatResponse(
+    val status: String,
+    val response: String? = null,
+    val error: String? = null
 )
 
 @Controller
@@ -38,20 +45,17 @@ class ChatController(
         return "chat-demo"
     }
 
-    @PostMapping
+    @PostMapping("/message")
+    @ResponseBody
     fun processMessage(
-        @RequestParam userMessage: String,
-        model: Model,
+        @RequestBody request: ChatRequest,
         session: HttpSession
-    ): String = runBlocking {
-        model.addAttribute("pageTitle", "Interactive Chat")
-        model.addAttribute("activeTab", "chat")
-
+    ): ChatResponse = runBlocking {
         @Suppress("UNCHECKED_CAST")
         val chatHistory = session.getAttribute("chatHistory") as? MutableList<ChatMessage>
             ?: mutableListOf<ChatMessage>().also { session.setAttribute("chatHistory", it) }
 
-        chatHistory.add(ChatMessage("user", userMessage))
+        chatHistory.add(ChatMessage("user", request.message))
 
         try {
             val conversationMessages = mutableListOf<Message>()
@@ -76,11 +80,26 @@ class ChatController(
                 chatHistory.removeAt(0)
             }
 
-        } catch (e: Exception) {
-            chatHistory.add(ChatMessage(Prompts.Roles.ASSISTANT, "Sorry, I encountered an error: ${e.message}"))
-        }
+            ChatResponse(
+                status = "success",
+                response = assistantReply
+            )
 
-        model.addAttribute("chatHistory", chatHistory)
-        return@runBlocking "chat-demo"
+        } catch (e: Exception) {
+            val errorMessage = "Sorry, I encountered an error: ${e.message}"
+            chatHistory.add(ChatMessage(Prompts.Roles.ASSISTANT, errorMessage))
+            
+            ChatResponse(
+                status = "error",
+                error = errorMessage
+            )
+        }
+    }
+
+    @PostMapping("/reset")
+    @ResponseBody
+    fun resetChatSession(session: HttpSession): Map<String, String> {
+        session.removeAttribute("chatHistory")
+        return mapOf("status" to "reset", "message" to "Chat history cleared")
     }
 }
