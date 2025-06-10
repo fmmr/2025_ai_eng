@@ -72,16 +72,7 @@ This project implements the core concepts from the Scrimba AI Engineering course
 ### [Available Tools](src/main/kotlin/com/vend/fmr/aieng/utils/Tools.kt)
 
 <!-- TOOLS_LIST_START -->
-#### 🧪 Mock Tools (Testing & Development)
-
 - **hello_world** - Simple greeting function for testing
-- **get_location** - Mock location data (Oslo)
-- **get_weather** - Mock weather data for any city
-- **get_stock_price_mock** - Mock stock prices for demos
-- **get_news_headlines** - Mock news headlines for testing
-
-#### 🌐 API Tools (Live Data)
-
 - **get_current_time** - Current date and time with timezone examples
 - **get_random_quote** - AI-generated inspirational quotes
 - **get_company_info** - Company information and business details
@@ -92,7 +83,6 @@ This project implements the core concepts from the Scrimba AI Engineering course
 - **get_real_news_headlines** - Current news headlines worldwide
 - **get_nasa_apod** - NASA's daily space images and explanations
 - **get_near_earth_objects** - Asteroids and objects approaching Earth
-
 
 <!-- TOOLS_LIST_END -->
 
