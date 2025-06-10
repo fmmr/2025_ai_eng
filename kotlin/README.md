@@ -72,6 +72,28 @@ This project implements the core concepts from the Scrimba AI Engineering course
 ### Available Tools
 
 <!-- TOOLS_LIST_START -->
+#### 🧪 Mock Tools (Testing & Development)
+
+- **hello_world** - Simple greeting function for testing
+- **get_location** - Mock location data (Oslo)
+- **get_weather** - Mock weather data for any city
+- **get_stock_price_mock** - Mock stock prices for demos
+- **get_news_headlines** - Mock news headlines for testing
+
+#### 🌐 API Tools (Live Data)
+
+- **get_current_time** - Current date and time with timezone examples
+- **get_random_quote** - AI-generated inspirational quotes
+- **get_company_info** - Company information and business details
+- **get_weather_nowcast** - 5-minute precision weather for Nordic countries
+- **get_weather_forecast** - Global weather forecasts with detailed metrics
+- **get_location_from_ip** - Real user location from IP address
+- **get_stock_price** - Real-time stock market data
+- **get_real_news_headlines** - Current news headlines worldwide
+- **get_nasa_apod** - NASA's daily space images and explanations
+- **get_near_earth_objects** - Asteroids and objects approaching Earth
+
+
 <!-- TOOLS_LIST_END -->
 
 ### Technology Stack
