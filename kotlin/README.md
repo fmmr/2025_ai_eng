@@ -69,7 +69,7 @@ This project implements the core concepts from the Scrimba AI Engineering course
 
 <!-- DEMO_LIST_END -->
 
-### [Available Tools](src/main/kotlin/com/vend/fmr/aieng/utils/Tools.kt)
+### [Available Tools](src/main/kotlin/com/vend/fmr/aieng/utils/AgentTool.kt)
 
 <!-- TOOLS_LIST_START -->
 - **hello_world** - Simple greeting function for testing
