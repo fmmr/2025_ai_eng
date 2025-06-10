@@ -69,7 +69,7 @@ This project implements the core concepts from the Scrimba AI Engineering course
 
 <!-- DEMO_LIST_END -->
 
-### Available Tools
+### [Available Tools](src/main/kotlin/com/vend/fmr/aieng/utils/Tools.kt)
 
 <!-- TOOLS_LIST_START -->
 #### 🧪 Mock Tools (Testing & Development)
