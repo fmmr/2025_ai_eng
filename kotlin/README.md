@@ -83,6 +83,9 @@ This project implements the core concepts from the Scrimba AI Engineering course
 - **news_headlines** - Current news headlines worldwide
 - **nasa_apod** - NASA's daily space images and explanations
 - **near_earth_objects** - Asteroids and objects approaching Earth
+- **search_tracks** - Search for music tracks on Spotify
+- **search_artists** - Search for music artists on Spotify
+- **popular_tracks** - Get popular and trending music tracks
 
 <!-- TOOLS_LIST_END -->
 
