@@ -35,7 +35,7 @@ class FunctionCallingController(
         model.addAttribute("defaultQuery", "Do you have any ideas for activities I can do at my location?")
         model.addAttribute("systemPrompt", Prompts.FUNCTION_CALLING_SYSTEM)
         model.addAttribute("systemPromptTruncated", Prompts.FUNCTION_CALLING_SYSTEM.truncate())
-        model.addAttribute("availableTools", Tools.entries.filter { it.mock })
+        model.addAttribute("availableTools", Tools.entries)
         return "function-calling-demo"
     }
 
@@ -49,7 +49,7 @@ class FunctionCallingController(
         model.addAttribute("defaultQuery", userQuery)
         model.addAttribute("systemPrompt", Prompts.FUNCTION_CALLING_SYSTEM)
         model.addAttribute("systemPromptTruncated", Prompts.FUNCTION_CALLING_SYSTEM.truncate())
-        model.addAttribute("availableTools", Tools.entries.filter { it.mock })
+        model.addAttribute("availableTools", Tools.entries)
 
         try {
             val steps = runFunctionCallingAgent(userQuery)
@@ -67,7 +67,7 @@ class FunctionCallingController(
     private suspend fun runFunctionCallingAgent(userQuery: String, maxIterations: Int = 5): List<FunctionCallingStep> {
         val steps = mutableListOf<FunctionCallingStep>()
         val messages = mutableListOf<Message>()
-        val tools = Tools.entries.filter { it.mock }.map { it.toOpenAITool() }
+        val tools = Tools.entries.map { it.toOpenAITool() }
         var stepCounter = 1
 
         messages.add(Message(

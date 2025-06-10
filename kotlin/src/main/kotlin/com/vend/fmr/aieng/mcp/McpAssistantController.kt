@@ -41,9 +41,8 @@ class McpAssistantController(
         model.addAttribute("pageTitle", "MCP Assistant Demo")
         model.addAttribute("activeTab", "mcp-assistant")
         
-        // Pass available API tools for display
-        val apiTools = Tools.entries.filter { it.api }
-        model.addAttribute("availableTools", apiTools)
+        // Pass available tools for display
+        model.addAttribute("availableTools", Tools.entries)
         
         // Initialize session tools cache and conversation history
         if (session.getAttribute("mcpToolsCache") == null) {

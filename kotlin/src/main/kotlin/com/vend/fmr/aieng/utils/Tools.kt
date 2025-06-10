@@ -1,17 +1,16 @@
 package com.vend.fmr.aieng.utils
 
 import com.vend.fmr.aieng.apis.geolocation.Geolocation
-import com.vend.fmr.aieng.apis.mocks.Mocks
 import com.vend.fmr.aieng.apis.nasa.Nasa
 import com.vend.fmr.aieng.apis.news.News
 import com.vend.fmr.aieng.apis.openai.*
 import com.vend.fmr.aieng.apis.polygon.Polygon
 import com.vend.fmr.aieng.apis.weather.Weather
-import kotlinx.serialization.json.Json
 import com.vend.fmr.aieng.mcp.InputSchema
 import com.vend.fmr.aieng.mcp.PropertySchema
 import jakarta.annotation.PostConstruct
 import jakarta.servlet.http.HttpServletRequest
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.springframework.stereotype.Component
@@ -25,10 +24,8 @@ enum class Tools(
     val functionName: String,
     val description: String,
     val parameters: Map<String, ToolParameter>,
-    val readmeDescription: String, // sample parameters for testing
-    val testParams: Map<String, String>,  // has mock implementation
-    val mock: Boolean,   // has API implementation
-    val api: Boolean,
+    val readmeDescription: String,
+    val testParams: Map<String, String>,
     val executor: suspend (Map<String, String>, HttpServletRequest?) -> String
 ) {
     HELLO_WORLD(
@@ -39,97 +36,37 @@ enum class Tools(
         ),
         "Simple greeting function for testing",
         testParams = mapOf("name" to "BOSS"),
-        mock = true,
-        api = false,
         executor = { args, _ ->
             val name = args["name"] ?: "World"
             "Hello, $name! 🎉"
         }
     ),
-    
-    GET_LOCATION(
-        functionName = "get_location",
-        description = "Get a mock geographic location (Oslo) for testing. Use get_location_from_ip for real user location.",
-        parameters = emptyMap(),
-        "Mock location data (Oslo)",
-        testParams = emptyMap(),
-        mock = true,
-        api = false,
-        executor = { _, _ ->
-            val location = Mocks.getLocation()
-            "Location: ${location.city}, ${location.country} (${location.latitude}, ${location.longitude})"
-        }
-    ),
-    
-    GET_WEATHER(
-        functionName = "get_weather",
-        description = "Get current weather conditions for any city or location including temperature, conditions, and humidity.",
-        parameters = mapOf(
-            "location" to ToolParameter("string", "The city or location to get weather for (e.g., 'Oslo', 'New York')", true)
-        ),
-        "Mock weather data for any city",
-        testParams = mapOf("location" to "Oslo"),
-        mock = true,
-        api = false,
-        executor = { args, _ ->
-            val location = args["location"] ?: throw IllegalArgumentException("Missing location parameter")
-            val weather = Mocks.getWeather(location)
-            "Weather in ${weather.location}: ${weather.temperature}°C, ${weather.condition}, Humidity: ${weather.humidity}%"
-        }
-    ),
-    
-    GET_STOCK_PRICE(
-        functionName = "get_stock_price_mock",
-        description = "Get mock stock price data for testing and demos. Always available, works with any symbol.",
-        parameters = mapOf(
-            "symbol" to ToolParameter("string", "Stock symbol (e.g., 'AAPL', 'MSFT', 'GOOGL')", true)
-        ),
-        "Mock stock prices for demos",
-        testParams = mapOf("symbol" to "AAPL"),
-        mock = true,
-        api = false,
-        executor = { args, _ ->
-            val symbol = args["symbol"] ?: throw IllegalArgumentException("Missing symbol parameter")
-            val stockInfo = Mocks.getStockPrice(symbol)
-            "${stockInfo.ticker}: $${stockInfo.price} (${if (stockInfo.change >= 0) "+" else ""}${stockInfo.change} / ${String.format("%.2f", stockInfo.changePercent)}%)"
-        }
-    ),
-    
+
+
     GET_CURRENT_TIME(
         functionName = "get_current_time",
         description = "Get the current date and time. Returns server time plus UTC time with timezone calculation examples. Use this for any time-related queries including specific locations like Tokyo, New York, etc.",
         parameters = emptyMap(),
         "Current date and time with timezone examples",
         testParams = emptyMap(),
-        mock = true,
-        api = true,
         executor = { _, _ ->
-            Mocks.getCurrentTime()
+            val now = java.time.ZonedDateTime.now()
+            val utc = now.withZoneSameInstant(java.time.ZoneId.of("UTC"))
+            val formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+            """
+            Server time: ${now.format(formatter)} ${now.zone}
+            UTC time: ${utc.format(formatter)} UTC
+            """.trimIndent()
         }
     ),
-    
-    GET_NEWS_HEADLINES(
-        functionName = "get_news_headlines",
-        description = "Get recent news headlines from various sources.",
-        parameters = emptyMap(),
-        "Mock news headlines for testing",
-        testParams = emptyMap(),
-        mock = true,
-        api = false,
-        executor = { _, _ ->
-            val headlines = Mocks.getNewsHeadlines()
-            "Recent headlines:\n" + headlines.joinToString("\n") { "- $it" }
-        }
-    ),
-    
+
+
     GET_RANDOM_QUOTE(
         functionName = "get_random_quote",
         description = "Generate a random inspirational quote using AI.",
         parameters = emptyMap(),
         "AI-generated inspirational quotes",
         testParams = emptyMap(),
-        mock = false,
-        api = true,
         executor = { _, _ ->
             val response = openAI.createChatCompletion(
                 prompt = "Generate a random inspirational quote. Return only the quote with attribution, nothing else.",
@@ -144,7 +81,7 @@ enum class Tools(
             }
         }
     ),
-    
+
     GET_COMPANY_INFO(
         functionName = "get_company_info",
         description = "Get detailed company information including name, description, and business details for any stock symbol.",
@@ -153,8 +90,6 @@ enum class Tools(
         ),
         "Company information and business details",
         testParams = mapOf("symbol" to "AAPL"),
-        mock = false,
-        api = true,
         executor = { args, _ ->
             val symbol = args["symbol"] ?: throw IllegalArgumentException("Missing symbol parameter")
             val stockInfo = polygon.getTickerDetails(symbol, debug = false)
@@ -162,7 +97,7 @@ enum class Tools(
             "🏢 $symbol: ${stockInfo.results.name}\n$description"
         }
     ),
-    
+
     GET_WEATHER_NOWCAST(
         functionName = "get_weather_nowcast",
         description = "Get real-time weather nowcast with 5-minute precision. Only works for Nordic countries (Norway, Sweden, Denmark, Finland).",
@@ -172,15 +107,13 @@ enum class Tools(
         ),
         "5-minute precision weather for Nordic countries",
         testParams = mapOf("latitude" to "59.9139", "longitude" to "10.7522"),
-        mock = false,
-        api = true,
         executor = { args, _ ->
             val lat = args["latitude"]?.toDoubleOrNull() ?: throw IllegalArgumentException("Missing or invalid latitude")
             val lon = args["longitude"]?.toDoubleOrNull() ?: throw IllegalArgumentException("Missing or invalid longitude")
             "⚡ ${weather.getNowcastSummary(lat, lon, debug = false)}"
         }
     ),
-    
+
     GET_WEATHER_FORECAST(
         functionName = "get_weather_forecast",
         description = "Get detailed weather forecast for any location worldwide including temperature, humidity, wind, pressure, and clouds.",
@@ -190,15 +123,13 @@ enum class Tools(
         ),
         "Global weather forecasts with detailed metrics",
         testParams = mapOf("latitude" to "35.6762", "longitude" to "139.6503"),
-        mock = false,
-        api = true,
         executor = { args, _ ->
             val lat = args["latitude"]?.toDoubleOrNull() ?: throw IllegalArgumentException("Missing or invalid latitude")
             val lon = args["longitude"]?.toDoubleOrNull() ?: throw IllegalArgumentException("Missing or invalid longitude")
             "🌍 ${weather.getForecastSummary(lat, lon, debug = false)}"
         }
     ),
-    
+
     GET_LOCATION_FROM_IP(
         functionName = "get_location_from_ip",
         description = "Get user's real geographic location from their IP address including city, country, and coordinates. Use this when you need the actual user location.",
@@ -207,8 +138,6 @@ enum class Tools(
         ),
         "Real user location from IP address",
         testParams = emptyMap(),
-        mock = false,
-        api = true,
         executor = { args, request ->
             val ip = args["ip"] ?: request?.let { getClientIpAddress(it) }
             val (location, note) = geolocation.getLocationByIpWithFallback(ip, debug = false)
@@ -216,7 +145,7 @@ enum class Tools(
             "📍 $summary$note"
         }
     ),
-    
+
     GET_STOCK_PRICE_API(
         functionName = "get_stock_price",
         description = "Get real-time stock market data including current price, open/close prices, volume, and trading information. Use this for actual market data.",
@@ -225,8 +154,6 @@ enum class Tools(
         ),
         "Real-time stock market data",
         testParams = mapOf("symbol" to "AAPL"),
-        mock = false,
-        api = true,
         executor = { args, _ ->
             val symbol = args["symbol"] ?: throw IllegalArgumentException("Missing symbol parameter")
             val aggregates = polygon.getAggregates(symbol, debug = false)
@@ -238,7 +165,7 @@ enum class Tools(
             }
         }
     ),
-    
+
     GET_REAL_NEWS_HEADLINES(
         functionName = "get_real_news_headlines",
         description = "Get real current news headlines from major news sources worldwide. Use country codes: 'us' (USA), 'gb' (UK), 'fr' (France), 'de' (Germany), 'no' (Norway), 'se' (Sweden), 'ca' (Canada), 'au' (Australia).",
@@ -248,15 +175,13 @@ enum class Tools(
         ),
         "Current news headlines worldwide",
         testParams = emptyMap(),
-        mock = false,
-        api = true,
         executor = { args, _ ->
             val country = args["country"] ?: "us"
             val category = args["category"]
             news.getHeadlinesSummary(country, category, debug = true)
         }
     ),
-    
+
     GET_NASA_APOD(
         functionName = "get_nasa_apod",
         description = "Get NASA's Astronomy Picture of the Day with stunning space images and explanations. Optionally specify a date (YYYY-MM-DD format).",
@@ -265,14 +190,12 @@ enum class Tools(
         ),
         "NASA's daily space images and explanations",
         testParams = emptyMap(),
-        mock = false,
-        api = true,
         executor = { args, _ ->
             val date = args["date"]
             nasa.getApodSummary(date, debug = false)
         }
     ),
-    
+
     GET_NEAR_EARTH_OBJECTS(
         functionName = "get_near_earth_objects",
         description = "Get information about asteroids and other Near Earth Objects approaching Earth. Shows distances, speeds, and potential hazards.",
@@ -281,15 +204,13 @@ enum class Tools(
         ),
         "Asteroids and objects approaching Earth",
         testParams = emptyMap(),
-        mock = false,
-        api = true,
         executor = { args, _ ->
             val date = args["date"]
             nasa.getNearEarthObjectsSummary(date, date, debug = false)
         }
     );
-    
-    
+
+
     /**
      * Convert to OpenAI Function Calling format
      */
@@ -310,7 +231,7 @@ enum class Tools(
             )
         )
     }
-    
+
     /**
      * Convert to MCP Protocol format
      */
@@ -337,8 +258,8 @@ enum class Tools(
         private lateinit var nasa: Nasa
         private lateinit var news: News
         private lateinit var json: Json
-        
-        
+
+
         fun setServices(openAI: OpenAI, weather: Weather, polygon: Polygon, geolocation: Geolocation, nasa: Nasa, news: News, json: Json) {
             Companion.openAI = openAI
             Companion.weather = weather
@@ -348,14 +269,14 @@ enum class Tools(
             Companion.news = news
             Companion.json = json
         }
-        
+
         /**
          * Execute a tool by function name with JSON arguments
          */
         suspend fun execute(functionName: String, arguments: String, request: HttpServletRequest? = null): String {
             val tool = entries.find { it.functionName == functionName }
                 ?: return "Error: Unknown function '$functionName'"
-            
+
             val params = if (arguments.isBlank() || arguments == "{}") {
                 emptyMap()
             } else {
@@ -366,32 +287,32 @@ enum class Tools(
                     return "Error parsing arguments: ${e.message}"
                 }
             }
-            
+
             return try {
                 tool.executor(params, request)
             } catch (e: Exception) {
                 "Error executing $functionName: ${e.message}"
             }
         }
-        
+
         /**
          * Parse ReAct action format: "Action: functionName(param1, param2)" and convert to JSON
          */
         fun parseAction(response: String): Pair<String, String>? {
             val actionRegex = Regex("Action:\\s*(\\w+)\\((.*?)\\)", RegexOption.IGNORE_CASE)
             val match = actionRegex.find(response) ?: return null
-            
+
             val functionName = match.groupValues[1]
             val paramsString = match.groupValues[2].trim()
-            
+
             if (paramsString.isEmpty()) {
                 return functionName to "{}"
             }
-            
+
             // Parse parameters and convert to JSON
             val params = paramsString.split(",").map { it.trim().removeSurrounding("\"", "'") }
             val tool = entries.find { it.functionName.equals(functionName, ignoreCase = true) }
-            
+
             val json = if (tool != null && tool.parameters.isNotEmpty()) {
                 // Map positional parameters to named parameters
                 val paramKeys = tool.parameters.keys.toList()
@@ -400,7 +321,7 @@ enum class Tools(
             } else {
                 "{}"
             }
-            
+
             return functionName to json
         }
     }
@@ -431,6 +352,6 @@ enum class Tools(
  */
 data class ToolParameter(
     val type: String,
-    val description: String, 
+    val description: String,
     val required: Boolean
 )

@@ -21,7 +21,7 @@ object FunctionCallingExamples {
      */
     suspend fun functionCallingAgent(openAI: OpenAI, userQuery: String, debug: Boolean = false): String {
         val messages = mutableListOf<Message>()
-        val tools = Tools.entries.filter { it.mock }.map { it.toOpenAITool() }
+        val tools = Tools.entries.map { it.toOpenAITool() }
         
         messages.add(Message(
             role = Prompts.Roles.SYSTEM, 

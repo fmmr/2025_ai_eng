@@ -62,7 +62,7 @@ class McpApiController {
     }
 
     private fun handleToolsList(id: Int?): String {
-        val tools = Tools.entries.filter { it.api }.map { it.toMcpTool() }
+        val tools = Tools.entries.map { it.toMcpTool() }
         
         val response = McpResponse(
             id = id,

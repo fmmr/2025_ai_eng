@@ -13,7 +13,7 @@ class McpServerController : BaseController(Demo.MCP_SERVER) {
     fun mcpServerDemo(model: Model): String {
         model.addAttribute("pageTitle", "MCP Server Demo")
         model.addAttribute("activeTab", "mcp-server")
-        model.addAttribute("availableTools", Tools.entries.filter { it.api })
+        model.addAttribute("availableTools", Tools.entries)
         return "mcp-server-demo"
     }
 }

@@ -33,7 +33,7 @@ class ReActController(
         model.addAttribute("defaultQuery", Prompts.Defaults.REACT_AGENT_QUERY)
         model.addAttribute("systemPrompt", Prompts.getReActSystemPrompt())
         model.addAttribute("systemPromptTruncated", Prompts.getReActSystemPrompt().truncate())
-        model.addAttribute("availableTools", Tools.entries.filter { it.mock })
+        model.addAttribute("availableTools", Tools.entries)
         return "react-demo"
     }
 
@@ -47,7 +47,7 @@ class ReActController(
         model.addAttribute("defaultQuery", userQuery)
         model.addAttribute("systemPrompt", Prompts.getReActSystemPrompt())
         model.addAttribute("systemPromptTruncated", Prompts.getReActSystemPrompt().truncate())
-        model.addAttribute("availableTools", Tools.entries.filter { it.mock })
+        model.addAttribute("availableTools", Tools.entries)
 
         try {
             val steps = runReActAgent(userQuery)

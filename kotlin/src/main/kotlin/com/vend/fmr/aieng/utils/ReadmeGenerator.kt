@@ -66,26 +66,8 @@ object ReadmeGenerator {
     fun generateToolsList(): String {
         val sb = StringBuilder()
         
-        // Group tools by type
-        val mockTools = Tools.entries.filter { it.mock && !it.api }
-        val apiTools = Tools.entries.filter { it.api }
-        
-        if (mockTools.isNotEmpty()) {
-            sb.appendLine("#### 🧪 Mock Tools (Testing & Development)")
-            sb.appendLine()
-            mockTools.forEach { tool ->
-                sb.appendLine("- **${tool.functionName}** - ${tool.readmeDescription}")
-            }
-            sb.appendLine()
-        }
-        
-        if (apiTools.isNotEmpty()) {
-            sb.appendLine("#### 🌐 API Tools (Live Data)")
-            sb.appendLine()
-            apiTools.forEach { tool ->
-                sb.appendLine("- **${tool.functionName}** - ${tool.readmeDescription}")
-            }
-            sb.appendLine()
+        Tools.entries.forEach { tool ->
+            sb.appendLine("- **${tool.functionName}** - ${tool.readmeDescription}")
         }
         
         return sb.toString()
