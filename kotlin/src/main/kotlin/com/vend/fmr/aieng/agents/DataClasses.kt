@@ -9,11 +9,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TripPlan(
-    val destination: String,
-    val researchInfo: ResearchInfo,
-    val weatherInfo: WeatherInfo,
-    val activities: List<Activity>,
-    val restaurants: List<Restaurant>,
     val summary: String,
     val timeline: List<TimelineItem>
 )
@@ -71,18 +66,4 @@ data class AgentResult(
     val error: String? = null,
     val insights: List<String> = emptyList(),
     val recommendations: List<String> = emptyList()
-)
-
-/**
- * Flexible data structure that allows agents to contribute to shared trip data
- */
-@Serializable
-data class AgentContribution(
-    val agentName: String,
-    val destinationInsights: String? = null,
-    val recommendations: List<String> = emptyList(),
-    val warnings: List<String> = emptyList(),
-    val keyFindings: List<String> = emptyList(),
-    val suggestedItinerary: List<String> = emptyList(),
-    @Contextual val specializedData: Any? = null
 )

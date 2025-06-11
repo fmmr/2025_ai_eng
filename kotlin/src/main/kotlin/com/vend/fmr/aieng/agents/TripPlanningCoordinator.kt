@@ -6,6 +6,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.serialization.json.Json
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 /**
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service
  */
 @Service
 class TripPlanningCoordinator(
-    private val weatherService: Weather,
+    weatherService: Weather,
     private val openAI: OpenAI
 ) {
 
@@ -22,6 +23,10 @@ class TripPlanningCoordinator(
     private val weatherAgent = WeatherAgent(weatherService)
     private val activityAgent = ActivityAgent()
     private val foodAgent = FoodAgent()
+
+    companion object {
+        private val logger = LoggerFactory.getLogger(TripPlanningCoordinator::class.java)
+    }
 
     /**
      * Main trip planning function - runs all agents in parallel
@@ -37,19 +42,19 @@ class TripPlanningCoordinator(
             // Launch all agents in parallel with immediate progress reporting
             val researchDeferred = async {
                 progressCallback?.invoke("🔍 Research Agent: Gathering destination information...")
-                researchAgent.process(destination)
+                researchAgent.process(destination).also { progressCallback?.invoke("🔍 Research agent: $it") }
             }
             val weatherDeferred = async {
                 progressCallback?.invoke("🌤️ Weather Agent: Analyzing weather conditions...")
-                weatherAgent.process(destination)
+                weatherAgent.process(destination).also { progressCallback?.invoke("🌤️ Weather Agent: $it") }
             }
             val activityDeferred = async {
                 progressCallback?.invoke("🎯 Activity Agent: Finding things to do...")
-                activityAgent.process(destination)
+                activityAgent.process(destination).also { progressCallback?.invoke("🎯 Activity Agent: $it") }
             }
             val foodDeferred = async {
                 progressCallback?.invoke("🍽️ Food Agent: Discovering local cuisine...")
-                foodAgent.process(destination)
+                foodAgent.process(destination).also { progressCallback?.invoke("🍽️ Food Agent: $it") }
             }
 
             // Wait for all agents to complete
@@ -78,7 +83,7 @@ class TripPlanningCoordinator(
                 progressCallback = progressCallback
             )
 
-            progressCallback?.invoke("🎉 Trip plan complete! Generated ${tripPlan.activities.size} activities and ${tripPlan.restaurants.size} restaurant recommendations")
+            progressCallback?.invoke("🎉 Trip plan complete! AI-synthesized comprehensive trip plan ready")
 
             tripPlan
         }
@@ -155,8 +160,8 @@ class TripPlanningCoordinator(
                         progressCallback?.invoke("🧠 AI: DONE: trip Summary... ${it.length} chars")
                     }
                 } catch (e: Exception) {
+                    logger.warn("Failed to generate summary", e)
                     "AI synthesis unavailable - Trip to $destination with ${activities.size} activities and ${restaurants.size} restaurants."
-
                 }
             }
 
@@ -166,6 +171,7 @@ class TripPlanningCoordinator(
                         progressCallback?.invoke("🧠 AI: DONE: timeline... ${it.size} items")
                     }
                 } catch (e: Exception) {
+                    logger.warn("Failed to generate summary", e)
                     listOf(
                         TimelineItem("Morning (9:00 AM)", "Start your adventure", "AI timeline generation failed")
                     )
@@ -179,11 +185,6 @@ class TripPlanningCoordinator(
         progressCallback?.invoke("✨ AI: Finalizing comprehensive trip plan...")
 
         return TripPlan(
-            destination = destination,
-            researchInfo = researchInfo ?: getDefaultResearchInfo(destination),
-            weatherInfo = weatherInfo ?: getDefaultWeatherInfo(),
-            activities = activities,
-            restaurants = restaurants,
             summary = aiSummary,
             timeline = aiTimeline
         )
@@ -194,26 +195,40 @@ class TripPlanningCoordinator(
      */
     private suspend fun generateAISummary(destination: String, agentData: String): String {
         val systemPrompt = """
-            You are an expert travel advisor creating compelling trip summaries for web display. 
-            Based on the comprehensive agent data provided, create a well-structured, engaging summary for a trip.
+            You are an expert travel advisor with extensive knowledge of global destinations. Create compelling trip summaries for web display.
             
-            Format your response as clean HTML with emojis and Bootstrap classes. Structure it as:
-            - Brief destination overview in a paragraph
-            - Weather section with appropriate styling
-            - Top activities in a list
-            - Restaurant recommendations in a list
-            - Cultural tips in a highlighted box
-            - Agent performance note
+            IMPORTANT: Use your comprehensive knowledge of $destination to create an authentic, detailed trip summary. The agent data is just basic information - you should ENHANCE it with your expertise.
             
-            Use proper HTML tags like <h4>, <p>, <ul>, <li>, <div class="alert alert-info">, etc.
-            Keep it concise but informative, around 200-300 words.
-            Make it visually appealing and easy to read.
+            For $destination specifically:
+            - Include famous landmarks, neighborhoods, and unique experiences
+            - Mention specific local dishes, restaurants types, and food culture
+            - Reference actual cultural practices, customs, and etiquette 
+            - Suggest realistic activities that match the destination's character
+            - Include practical local tips (transportation, tipping, language, etc.)
+            - Reference seasonal considerations and optimal timing
+            
+            IGNORE generic agent data like "Local Bistro" or "City Walking Tour" - replace with REAL destination-specific recommendations.
+            
+            Format as clean HTML with emojis and Bootstrap 5 classes:
+            - Engaging destination intro with flag emoji and specific highlights
+            - Weather section (use agent data if available, otherwise seasonal guidance)
+            - Top Activities: 4-5 SPECIFIC attractions/experiences for this destination
+            - Restaurants: 3-4 REAL cuisine types or famous food areas
+            - Cultural Tips: SPECIFIC customs, etiquette, language tips in alert box
+            - Local Insights: Transportation, neighborhoods, practical tips in alert box
+            
+            Boostrap 5 is used for styling, so use Bootstrap classes and HTML tags to format the response.
+            Use proper HTML: <h4>, <p>, <ul>, <li>, <div class="alert alert-info">, etc.
+            Make it destination-specific and informative, around 300-400 words.
         """.trimIndent()
 
         val userPrompt = """
-            Please create an engaging trip summary for $destination based on this agent data:
+            Create a comprehensive trip summary for $destination. Use your extensive knowledge of this destination.
             
+            Agent data (basic info only - enhance with your knowledge):
             $agentData
+            
+            Replace any generic content with REAL $destination recommendations. Make it specific and authentic to this destination.
         """.trimIndent()
 
         val response = openAI.createChatCompletion(
@@ -231,24 +246,34 @@ class TripPlanningCoordinator(
      */
     private suspend fun generateAITimeline(destination: String, agentData: String): List<TimelineItem> {
         val systemPrompt = """
-            You are an expert trip planner creating optimal daily itineraries.
-            Based on the provided data, create a realistic timeline considering:
-            - Weather conditions and seasonal factors
-            - Activity types (indoor/outdoor)
-            - Logical flow and travel time
-            - Energy levels throughout the day
-            - Cost distribution
+            You are an expert trip planner with deep knowledge of $destination. Create a realistic daily itinerary.
             
-            Return ONLY a JSON array of timeline items in this exact format:
-            [{"time":"Morning (9:00 AM)","activity":"Activity Name","notes":"Brief explanation"}]
+            IMPORTANT: Use your knowledge of $destination to suggest REAL places and experiences, not generic activities.
+            Include actual landmark names, neighborhoods, restaurant types, and local experiences specific to $destination.
             
-            Create 3-5 timeline items covering a full day.
+            Consider for $destination:
+            - Famous attractions and their optimal visiting times
+            - Local transportation patterns and travel times
+            - Traditional meal times and food culture
+            - Weather patterns and seasonal considerations
+            - Cultural rhythms (siesta, early dinners, etc.)
+            
+            IGNORE generic agent data - use your knowledge of what makes $destination unique.
+            
+            Return ONLY a JSON array in this exact format:
+            [{"time":"Morning (9:00 AM)","activity":"Specific Activity/Place Name","notes":"Why this timing works for this destination"}]
+            
+            Create 4-6 timeline items covering a full day with destination-specific recommendations.
         """.trimIndent()
 
         val userPrompt = """
-            Create an optimal timeline for $destination:
+            Create a realistic daily itinerary for $destination using your knowledge of this destination.
+            Include REAL places, attractions, and experiences specific to $destination.
             
+            Agent data (basic reference only):
             $agentData
+            
+            Focus on authentic $destination experiences with proper timing and flow.
         """.trimIndent()
 
         val response = openAI.createChatCompletion(
@@ -265,7 +290,7 @@ class TripPlanningCoordinator(
             val json = Json { ignoreUnknownKeys = true }
             json.decodeFromString<List<TimelineItem>>(jsonResponse)
         } catch (e: Exception) {
-            // Fallback to a simple timeline if parsing fails
+            logger.warn("unable to decode AI timeline response: $jsonResponse", e)
             listOf(
                 TimelineItem("Morning (9:00 AM)", "Start your adventure", "AI timeline generation failed - using fallback")
             )
@@ -273,19 +298,4 @@ class TripPlanningCoordinator(
     }
 
 
-    private fun getDefaultResearchInfo(destination: String) = ResearchInfo(
-        cityName = destination,
-        country = "Unknown",
-        description = "An exciting destination to explore",
-        topAttractions = emptyList(),
-        culturalNotes = "Local customs and culture to discover",
-        bestTimeToVisit = "Year-round"
-    )
-
-    private fun getDefaultWeatherInfo() = WeatherInfo(
-        currentConditions = "Variable conditions",
-        forecast = "Check local weather before your trip",
-        recommendedClothing = "Comfortable layers",
-        outdoorSuitability = "Prepare for changing conditions"
-    )
 }

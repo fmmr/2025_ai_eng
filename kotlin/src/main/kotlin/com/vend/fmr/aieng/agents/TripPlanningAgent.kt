@@ -19,11 +19,11 @@ class ResearchAgent : TripPlanningAgent {
         
         return try {
             // Simulate API call delay
-            kotlinx.coroutines.delay(1000)
-            
+            kotlinx.coroutines.delay(50)
+
             val researchInfo = getDestinationInfo(destination)
             
-            val insights = generateInsights(researchInfo, destination)
+            val insights = generateInsights(researchInfo)
             val recommendations = generateRecommendations(researchInfo)
             
             AgentResult(
@@ -84,7 +84,7 @@ class ResearchAgent : TripPlanningAgent {
         }
     }
     
-    private fun generateInsights(info: ResearchInfo, destination: String): List<String> {
+    private fun generateInsights(info: ResearchInfo): List<String> {
         return buildList {
             add("🏤 ${info.cityName} is known for: ${info.topAttractions.take(2).joinToString(" and ")}")
             add("👥 Cultural tip: ${info.culturalNotes.take(50)}...")

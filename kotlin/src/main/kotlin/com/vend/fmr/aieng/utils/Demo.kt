@@ -310,7 +310,7 @@ enum class Demo(
         icon = "bi-airplane",
         emoji = "✈️",
         courseContent = false,
-        status = DemoStatus.IN_PROGRESS,
+        status = DemoStatus.COMPLETED,
         category = DemoCategory.AI_AGENTS,
         route = "/demo/trip-planner"
     ),
