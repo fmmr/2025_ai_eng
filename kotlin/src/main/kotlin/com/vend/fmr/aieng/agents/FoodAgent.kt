@@ -15,18 +15,25 @@ class FoodAgent : TripPlanningAgent {
             
             val restaurants = getRestaurantsForDestination(destination)
             
+            val insights = generateFoodInsights(restaurants, destination)
+            val recommendations = generateFoodRecommendations(restaurants)
+            
             AgentResult(
                 agentName = agentName,
                 executionTimeMs = System.currentTimeMillis() - startTime,
                 success = true,
-                data = restaurants
+                data = restaurants,
+                insights = insights,
+                recommendations = recommendations
             )
         } catch (e: Exception) {
             AgentResult(
                 agentName = agentName,
                 executionTimeMs = System.currentTimeMillis() - startTime,
                 success = false,
-                error = e.message
+                error = e.message,
+                insights = listOf("⚠️ Unable to load restaurant recommendations"),
+                recommendations = listOf("Explore local food options independently")
             )
         }
     }
@@ -147,6 +154,48 @@ class FoodAgent : TripPlanningAgent {
                     specialty = "Authentic regional cuisine"
                 )
             )
+        }
+    }
+    
+    private fun generateFoodInsights(restaurants: List<Restaurant>, destination: String): List<String> {
+        return buildList {
+            val cuisineTypes = restaurants.map { it.cuisine }.distinct()
+            val priceRanges = restaurants.map { it.priceRange }.distinct().sorted()
+            
+            add("🍽️ ${restaurants.size} restaurants found in $destination")
+            add("🌎 Cuisine variety: ${cuisineTypes.joinToString(", ")}")
+            add("💰 Price ranges: ${priceRanges.joinToString(" to ")}")
+            
+            val hasHighEnd = restaurants.any { it.priceRange.contains("€€€") }
+            val hasBudget = restaurants.any { it.priceRange == "€" }
+            
+            if (hasHighEnd && hasBudget) {
+                add("🔄 Good mix of budget and fine dining options")
+            }
+        }
+    }
+    
+    private fun generateFoodRecommendations(restaurants: List<Restaurant>): List<String> {
+        return buildList {
+            val localCuisine = restaurants.filter { 
+                it.cuisine.contains("Swedish", ignoreCase = true) || 
+                it.cuisine.contains("Nordic", ignoreCase = true) ||
+                it.cuisine.contains("Danish", ignoreCase = true) ||
+                it.cuisine.contains("Norwegian", ignoreCase = true) ||
+                it.cuisine.contains("Local", ignoreCase = true)
+            }
+            
+            if (localCuisine.isNotEmpty()) {
+                add("Try local specialties: ${localCuisine.take(2).joinToString(", ") { it.name }}")
+            }
+            
+            val budgetOptions = restaurants.filter { it.priceRange == "€" || it.priceRange == "€-€€" }
+            if (budgetOptions.isNotEmpty()) {
+                add("Budget-friendly: ${budgetOptions.first().name}")
+            }
+            
+            add("Make reservations for high-end restaurants in advance")
+            add("Ask locals for hidden gem recommendations")
         }
     }
 }

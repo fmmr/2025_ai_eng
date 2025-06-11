@@ -12,7 +12,9 @@ import kotlinx.serialization.encoding.Encoder
 sealed class MessageContent
 
 @Serializable
-data class TextContent(val text: String) : MessageContent()
+data class TextContent(val text: String) : MessageContent() {
+    override fun toString(): String = text
+}
 
 @Serializable
 data class VisionContent(val parts: List<ContentPart>) : MessageContent()

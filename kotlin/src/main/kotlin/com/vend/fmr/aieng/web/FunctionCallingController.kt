@@ -98,10 +98,8 @@ class FunctionCallingController(
             if (response.hasToolCalls()) {
                 val toolCalls = response.getToolCalls()
                 
-                val contentText = when (val content = assistantMessage.content) {
-                    is TextContent -> content.text
-                    else -> ""
-                }
+                val contentText = assistantMessage.content.toString()
+
                 if (contentText.isNotBlank()) {
                     steps.add(FunctionCallingStep(
                         stepNumber = stepCounter++,

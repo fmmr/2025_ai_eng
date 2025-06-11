@@ -15,18 +15,25 @@ class ActivityAgent : TripPlanningAgent {
             
             val activities = getActivitiesForDestination(destination)
             
+            val insights = generateActivityInsights(activities, destination)
+            val recommendations = generateActivityRecommendations(activities)
+            
             AgentResult(
                 agentName = agentName,
                 executionTimeMs = System.currentTimeMillis() - startTime,
                 success = true,
-                data = activities
+                data = activities,
+                insights = insights,
+                recommendations = recommendations
             )
         } catch (e: Exception) {
             AgentResult(
                 agentName = agentName,
                 executionTimeMs = System.currentTimeMillis() - startTime,
                 success = false,
-                error = e.message
+                error = e.message,
+                insights = listOf("⚠️ Unable to load activity recommendations"),
+                recommendations = listOf("Research local activities independently")
             )
         }
     }
@@ -162,6 +169,42 @@ class ActivityAgent : TripPlanningAgent {
                     cost = "free"
                 )
             )
+        }
+    }
+    
+    private fun generateActivityInsights(activities: List<Activity>, destination: String): List<String> {
+        return buildList {
+            val outdoorCount = activities.count { it.type == "outdoor" }
+            val indoorCount = activities.count { it.type == "indoor" }
+            val freeCount = activities.count { it.cost == "free" }
+            
+            add("🎯 ${activities.size} activities available in $destination")
+            add("🌳 $outdoorCount outdoor and $indoorCount indoor options")
+            if (freeCount > 0) {
+                add("🆓 $freeCount free activities available")
+            }
+            
+            val weatherDependent = activities.count { it.weatherDependent }
+            if (weatherDependent > activities.size / 2) {
+                add("🌦️ Many activities are weather-dependent - have backup plans")
+            }
+        }
+    }
+    
+    private fun generateActivityRecommendations(activities: List<Activity>): List<String> {
+        return buildList {
+            val freeActivities = activities.filter { it.cost == "free" }
+            if (freeActivities.isNotEmpty()) {
+                add("Start with free activities: ${freeActivities.take(2).joinToString(", ") { it.name }}")
+            }
+            
+            val indoorActivities = activities.filter { it.type == "indoor" }
+            if (indoorActivities.isNotEmpty()) {
+                add("Rainy day options: ${indoorActivities.take(2).joinToString(", ") { it.name }}")
+            }
+            
+            add("Book weather-dependent activities when forecast is good")
+            add("Allow 2-4 hours for major activities and attractions")
         }
     }
 }

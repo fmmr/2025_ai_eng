@@ -68,5 +68,21 @@ data class AgentResult(
     val executionTimeMs: Long,
     val success: Boolean,
     @Contextual val data: Any? = null,
-    val error: String? = null
+    val error: String? = null,
+    val insights: List<String> = emptyList(),
+    val recommendations: List<String> = emptyList()
+)
+
+/**
+ * Flexible data structure that allows agents to contribute to shared trip data
+ */
+@Serializable
+data class AgentContribution(
+    val agentName: String,
+    val destinationInsights: String? = null,
+    val recommendations: List<String> = emptyList(),
+    val warnings: List<String> = emptyList(),
+    val keyFindings: List<String> = emptyList(),
+    val suggestedItinerary: List<String> = emptyList(),
+    @Contextual val specializedData: Any? = null
 )

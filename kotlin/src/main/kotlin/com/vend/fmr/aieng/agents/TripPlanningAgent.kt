@@ -23,18 +23,25 @@ class ResearchAgent : TripPlanningAgent {
             
             val researchInfo = getDestinationInfo(destination)
             
+            val insights = generateInsights(researchInfo, destination)
+            val recommendations = generateRecommendations(researchInfo)
+            
             AgentResult(
                 agentName = agentName,
                 executionTimeMs = System.currentTimeMillis() - startTime,
                 success = true,
-                data = researchInfo
+                data = researchInfo,
+                insights = insights,
+                recommendations = recommendations
             )
         } catch (e: Exception) {
             AgentResult(
                 agentName = agentName,
                 executionTimeMs = System.currentTimeMillis() - startTime,
                 success = false,
-                error = e.message
+                error = e.message,
+                insights = listOf("⚠️ Unable to gather destination research"),
+                recommendations = listOf("Research destination independently before traveling")
             )
         }
     }
@@ -74,6 +81,28 @@ class ResearchAgent : TripPlanningAgent {
                 culturalNotes = "Every destination has its unique culture and customs to discover.",
                 bestTimeToVisit = "Research the best time to visit based on weather and local events"
             )
+        }
+    }
+    
+    private fun generateInsights(info: ResearchInfo, destination: String): List<String> {
+        return buildList {
+            add("🏤 ${info.cityName} is known for: ${info.topAttractions.take(2).joinToString(" and ")}")
+            add("👥 Cultural tip: ${info.culturalNotes.take(50)}...")
+            add("📅 Optimal timing: ${info.bestTimeToVisit}")
+            if (info.topAttractions.size > 3) {
+                add("🎆 This destination has ${info.topAttractions.size} major attractions to explore")
+            }
+        }
+    }
+    
+    private fun generateRecommendations(info: ResearchInfo): List<String> {
+        return buildList {
+            add("Plan at least 2-3 days to see the main attractions")
+            add("Research local customs before visiting: ${info.culturalNotes.take(30)}...")
+            if (info.bestTimeToVisit.contains("summer", ignoreCase = true) || info.bestTimeToVisit.contains("May-September", ignoreCase = true)) {
+                add("Book accommodations early during peak season")
+            }
+            add("Consider purchasing a city pass for ${info.topAttractions.size} attractions")
         }
     }
 }

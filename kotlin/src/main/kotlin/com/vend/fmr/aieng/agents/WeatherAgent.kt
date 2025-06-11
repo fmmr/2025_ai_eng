@@ -20,21 +20,31 @@ class WeatherAgent(private val weatherService: Weather) : TripPlanningAgent {
             
             val weatherInfo = analyzeWeatherForTrip(forecast)
             
-            AgentResult(
-                agentName = agentName,
-                executionTimeMs = System.currentTimeMillis() - startTime,
-                success = true,
-                data = weatherInfo
-            )
-        } catch (_: Exception) {
-            // Fallback to mock data if weather service fails
-            val mockWeatherInfo = getMockWeatherInfo()
+            val insights = generateWeatherInsights(weatherInfo)
+            val recommendations = generateWeatherRecommendations(weatherInfo)
             
             AgentResult(
                 agentName = agentName,
                 executionTimeMs = System.currentTimeMillis() - startTime,
                 success = true,
-                data = mockWeatherInfo
+                data = weatherInfo,
+                insights = insights,
+                recommendations = recommendations
+            )
+        } catch (_: Exception) {
+            // Fallback to mock data if weather service fails
+            val mockWeatherInfo = getMockWeatherInfo()
+            
+            val insights = generateWeatherInsights(mockWeatherInfo)
+            val recommendations = generateWeatherRecommendations(mockWeatherInfo)
+            
+            AgentResult(
+                agentName = agentName,
+                executionTimeMs = System.currentTimeMillis() - startTime,
+                success = true,
+                data = mockWeatherInfo,
+                insights = insights,
+                recommendations = recommendations
             )
         }
     }
@@ -89,5 +99,48 @@ class WeatherAgent(private val weatherService: Weather) : TripPlanningAgent {
             recommendedClothing = "Layers, light jacket, comfortable walking shoes",
             outdoorSuitability = "Good for both indoor and outdoor activities"
         )
+    }
+    
+    private fun generateWeatherInsights(weatherInfo: WeatherInfo): List<String> {
+        return buildList {
+            add("🌡️ Current conditions: ${weatherInfo.currentConditions}")
+            
+            val isGoodWeather = weatherInfo.outdoorSuitability.contains("perfect", ignoreCase = true) ||
+                weatherInfo.outdoorSuitability.contains("good", ignoreCase = true)
+            
+            if (isGoodWeather) {
+                add("☀️ Excellent weather for outdoor activities!")
+            } else {
+                add("🌧️ Weather may limit outdoor activities")
+            }
+            
+            if (weatherInfo.recommendedClothing.contains("winter", ignoreCase = true)) {
+                add("🧥 Cold weather - dress warmly")
+            } else if (weatherInfo.recommendedClothing.contains("light", ignoreCase = true)) {
+                add("👕 Mild weather - comfortable clothing recommended")
+            }
+        }
+    }
+    
+    private fun generateWeatherRecommendations(weatherInfo: WeatherInfo): List<String> {
+        return buildList {
+            add("Pack: ${weatherInfo.recommendedClothing}")
+            
+            if (weatherInfo.outdoorSuitability.contains("perfect", ignoreCase = true)) {
+                add("Perfect day for outdoor sightseeing and walking tours")
+                add("Consider booking outdoor activities or boat tours")
+            } else if (weatherInfo.outdoorSuitability.contains("limited", ignoreCase = true)) {
+                add("Focus on indoor attractions and museums")
+                add("Have backup indoor plans ready")
+            }
+            
+            if (weatherInfo.forecast.contains("rain", ignoreCase = true)) {
+                add("Bring umbrella and waterproof clothing")
+            }
+            
+            if (weatherInfo.forecast.contains("sun", ignoreCase = true)) {
+                add("Don't forget sunscreen and sunglasses")
+            }
+        }
     }
 }

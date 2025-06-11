@@ -4,6 +4,7 @@ import com.vend.fmr.aieng.agents.TripPlanningCoordinator
 import com.vend.fmr.aieng.utils.Demo
 import jakarta.servlet.http.HttpServletRequest
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
@@ -44,33 +45,37 @@ class TripPlannerController(private val tripPlanningCoordinator: TripPlanningCoo
         emitter.onError { activeEmitters.remove(sessionId) }
 
 
-        return try {
-            emitter.send(SseEmitter.event().name("start").data("🚀 Starting trip planning for $destination..."))
-
-            // Run trip planning on IO thread
-            val tripPlan = withContext(Dispatchers.IO) {
-                tripPlanningCoordinator.planTrip(destination) { progress ->
+        // Start async processing immediately without blocking the SSE response
+        val startEvent = SseEmitter.event().name("start").data("🚀 Starting trip planning for $destination...")
+        emitter.send(startEvent)
+        
+        // Launch trip planning asynchronously - don't wait for it
+        kotlinx.coroutines.CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val tripPlan = tripPlanningCoordinator.planTrip(destination) { progress ->
                     try {
                         emitter.send(SseEmitter.event().name("progress").data(progress))
                     } catch (_: Exception) {
                         // Emitter might be closed, ignore
                     }
                 }
+                
+                session.setAttribute("tripPlan", tripPlan)
+                
+                // Send completion event
+                val completeEvent = SseEmitter.event().name("complete").data("ready")
+                emitter.send(completeEvent)
+                emitter.complete()
+                
+            } catch (e: Exception) {
+                val errorEvent = SseEmitter.event().name("error").data("❌ Trip planning failed: ${e.message}")
+                emitter.send(errorEvent)
+                emitter.completeWithError(e)
             }
-
-            session.setAttribute("tripPlan", tripPlan)
-
-            // Send completion event
-            emitter.send(SseEmitter.event().name("complete").data("ready"))
-            emitter.complete()
-
-            emitter
-
-        } catch (e: Exception) {
-            emitter.send(SseEmitter.event().name("error").data("❌ Trip planning failed: ${e.message}"))
-            emitter.completeWithError(e)
-            emitter
         }
+        
+        return emitter
+
     }
 
     @Suppress("SpringMVCViewInspection")

@@ -75,11 +75,7 @@ enum class AgentTool(
                 temperature = 0.9,
                 debug = false
             )
-            val content = response.choices.firstOrNull()?.message?.content
-            when (content) {
-                is TextContent -> content.text
-                else -> "Inspiration comes from within."
-            }
+            response.choices.firstOrNull()?.message?.content.toString()
         }
     ),
 
