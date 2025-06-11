@@ -28,8 +28,6 @@ class ReActController(
 
     @GetMapping
     fun reactDemo(model: Model): String {
-        model.addAttribute("pageTitle", "ReAct Agent")
-        model.addAttribute("activeTab", "react")
         model.addAttribute("defaultQuery", Prompts.Defaults.REACT_AGENT_QUERY)
         model.addAttribute("systemPrompt", Prompts.getReActSystemPrompt())
         model.addAttribute("systemPromptTruncated", Prompts.getReActSystemPrompt().truncate())
@@ -42,8 +40,6 @@ class ReActController(
         @RequestParam userQuery: String,
         model: Model
     ): String = runBlocking {
-        model.addAttribute("pageTitle", "ReAct Agent")
-        model.addAttribute("activeTab", "react")
         model.addAttribute("defaultQuery", userQuery)
         model.addAttribute("systemPrompt", Prompts.getReActSystemPrompt())
         model.addAttribute("systemPromptTruncated", Prompts.getReActSystemPrompt().truncate())

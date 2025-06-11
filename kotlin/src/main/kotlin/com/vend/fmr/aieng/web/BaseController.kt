@@ -7,4 +7,10 @@ abstract class BaseController(protected val demo: Demo) {
 
     @ModelAttribute("demo")
     fun demo(): Demo = demo
+    
+    @ModelAttribute("pageTitle")
+    fun pageTitle(): String = demo.title
+    
+    @ModelAttribute("activeTab")
+    fun activeTab(): String = demo.id
 }

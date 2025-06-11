@@ -15,9 +15,6 @@ class HuggingFaceClassificationController(
 
     @GetMapping("/demo/huggingface-classification")
     fun classificationDemo(model: Model): String {
-        model.addAttribute("pageTitle", "HuggingFace Classification")
-        model.addAttribute("activeTab", "huggingface-classification")
-        
         model.addAttribute("defaultText", "I love this new product, it works amazing!")
         model.addAttribute("defaultLabels", "positive, negative, neutral")
         model.addAttribute("explanation", "Classify text using open-source BART model")
@@ -31,9 +28,6 @@ class HuggingFaceClassificationController(
         @RequestParam("labels", defaultValue = "") labels: String,
         model: Model
     ): String {
-        model.addAttribute("pageTitle", "HuggingFace Classification")
-        model.addAttribute("activeTab", "huggingface-classification")
-        
         val inputText = if (text.isBlank()) "I love this new product, it works amazing!" else text.trim()
         val inputLabels = if (labels.isBlank()) "positive, negative, neutral" else labels.trim()
         val labelList = inputLabels.split(",").map { it.trim() }

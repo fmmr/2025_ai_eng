@@ -298,8 +298,9 @@ enum class Demo(
         longDescription = "Build persistent AI assistants using OpenAI's Assistants API with file handling, code execution, and long-term memory.<br>Advanced stateful assistants with tool capabilities beyond simple chat interactions.",
         icon = "bi-robot",
         emoji = "🤖",
-        status = DemoStatus.COFFEE,
-        category = DemoCategory.AI_AGENTS
+        status = DemoStatus.IN_PROGRESS,
+        category = DemoCategory.AI_AGENTS,
+        route = "/demo/assistants"
     ),
 
     TRAVEL_AGENT(

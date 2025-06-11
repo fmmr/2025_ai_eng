@@ -15,9 +15,6 @@ class HuggingFaceSummarizationController(
 
     @GetMapping("/demo/huggingface-summarization")
     fun summarizationDemo(model: Model): String {
-        model.addAttribute("pageTitle", "HuggingFace Summarization")
-        model.addAttribute("activeTab", "huggingface-summarization")
-        
         model.addAttribute("defaultText", """
             The emergence of artificial intelligence has transformed numerous industries and continues to shape our daily lives. 
             From healthcare to transportation, AI technologies are being integrated into systems that improve efficiency and decision-making. 
@@ -40,9 +37,6 @@ class HuggingFaceSummarizationController(
         @RequestParam("minLength", defaultValue = "30") minLength: String,
         model: Model
     ): String {
-        model.addAttribute("pageTitle", "HuggingFace Summarization")
-        model.addAttribute("activeTab", "huggingface-summarization")
-        
         val defaultText = """
             The emergence of artificial intelligence has transformed numerous industries and continues to shape our daily lives. 
             From healthcare to transportation, AI technologies are being integrated into systems that improve efficiency and decision-making. 

@@ -16,9 +16,7 @@ class EmbeddingsController(
 ) : BaseController(Demo.EMBEDDINGS) {
 
     @GetMapping
-    fun embeddingsDemo(model: Model): String {
-        model.addAttribute("pageTitle", "OpenAI Embeddings")
-        model.addAttribute("activeTab", "embeddings")
+    fun embeddingsDemo(): String {
         return "embeddings-demo"
     }
 
@@ -28,9 +26,7 @@ class EmbeddingsController(
         @RequestParam(defaultValue = "false") showVector: Boolean,
         model: Model
     ): String {
-        model.addAttribute("pageTitle", "OpenAI Embeddings")
-        model.addAttribute("activeTab", "embeddings")
-        
+
         if (inputText.isNotBlank()) {
             try {
                 val embedding = openAI.createEmbedding(inputText)

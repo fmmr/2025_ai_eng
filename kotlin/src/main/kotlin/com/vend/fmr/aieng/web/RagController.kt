@@ -20,9 +20,7 @@ class RagController(
 ) : BaseController(Demo.RAG) {
 
     @GetMapping
-    fun ragDemo(model: Model): String {
-        model.addAttribute("pageTitle", "RAG Implementation")
-        model.addAttribute("activeTab", "rag")
+    fun ragDemo(): String {
         return "rag-demo"
     }
 
@@ -32,9 +30,6 @@ class RagController(
         @RequestParam(defaultValue = "5") maxMatches: Int,
         model: Model
     ): String {
-        model.addAttribute("pageTitle", "RAG Implementation")
-        model.addAttribute("activeTab", "rag")
-        
         if (query.isNotBlank()) {
             try {
                 val queryEmbedding = openAI.createEmbedding(query)

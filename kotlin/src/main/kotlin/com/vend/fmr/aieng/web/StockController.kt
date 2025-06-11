@@ -20,9 +20,7 @@ class StockController(
 ) : BaseController(Demo.STOCK_DATA) {
 
     @GetMapping
-    fun stockDemo(model: Model): String {
-        model.addAttribute("pageTitle", "Stock Data Analysis")
-        model.addAttribute("activeTab", "stock")
+    fun stockDemo(): String {
         return "stock-demo"
     }
 
@@ -32,8 +30,6 @@ class StockController(
         @RequestParam(defaultValue = "3") daysBack: Int,
         model: Model
     ): String {
-        model.addAttribute("pageTitle", "Stock Data Analysis")
-        model.addAttribute("activeTab", "stock")
         if (tickers.isNotBlank()) {
             try {
                 

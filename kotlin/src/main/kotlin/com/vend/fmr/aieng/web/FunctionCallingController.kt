@@ -30,8 +30,6 @@ class FunctionCallingController(
 
     @GetMapping
     fun functionCallingDemo(model: Model): String {
-        model.addAttribute("pageTitle", "Function Calling Agent")
-        model.addAttribute("activeTab", "function-calling")
         model.addAttribute("defaultQuery", "Do you have any ideas for activities I can do at my location?")
         model.addAttribute("systemPrompt", Prompts.FUNCTION_CALLING_SYSTEM)
         model.addAttribute("systemPromptTruncated", Prompts.FUNCTION_CALLING_SYSTEM.truncate())
@@ -44,8 +42,6 @@ class FunctionCallingController(
         @RequestParam userQuery: String,
         model: Model
     ): String = runBlocking {
-        model.addAttribute("pageTitle", "Function Calling Agent")
-        model.addAttribute("activeTab", "function-calling")
         model.addAttribute("defaultQuery", userQuery)
         model.addAttribute("systemPrompt", Prompts.FUNCTION_CALLING_SYSTEM)
         model.addAttribute("systemPromptTruncated", Prompts.FUNCTION_CALLING_SYSTEM.truncate())

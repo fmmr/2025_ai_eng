@@ -16,9 +16,7 @@ class ChunkingController(
 ) : BaseController(Demo.CHUNKING) {
 
     @GetMapping
-    fun chunkingDemo(model: Model): String {
-        model.addAttribute("pageTitle", "Text Chunking")
-        model.addAttribute("activeTab", "chunking")
+    fun chunkingDemo(): String {
         return "chunking-demo"
     }
 
@@ -29,9 +27,6 @@ class ChunkingController(
         @RequestParam(defaultValue = "") textInput: String,
         model: Model
     ): String {
-        model.addAttribute("pageTitle", "Text Chunking")
-        model.addAttribute("activeTab", "chunking")
-        
         if (textInput.isNotBlank()) {
             val chunks = chunker.split(textInput, chunkSize, chunkOverlap)
             

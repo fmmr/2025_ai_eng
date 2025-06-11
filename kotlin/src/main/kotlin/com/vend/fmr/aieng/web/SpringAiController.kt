@@ -19,9 +19,6 @@ class SpringAiController : BaseController(Demo.SPRING_AI) {
 
     @GetMapping("/demo/spring-ai")
     fun springAiDemo(model: Model): String {
-        model.addAttribute("pageTitle", "Spring AI Demo")
-        model.addAttribute("activeTab", "spring-ai")
-
         if (chatModel == null) {
             model.addAttribute("error", "Spring AI is not available - OPENAI_API_KEY environment variable is required")
             return "spring-ai-demo"
@@ -50,9 +47,6 @@ class SpringAiController : BaseController(Demo.SPRING_AI) {
         @RequestParam("maxWords", defaultValue = "50") maxWords: String,
         model: Model
     ): String {
-        model.addAttribute("pageTitle", "Spring AI Demo")
-        model.addAttribute("activeTab", "spring-ai")
-
         val defaultText =
             "Spring AI provides a comprehensive framework for building AI applications. It offers abstractions for various AI providers, prompt templates, and seamless integration with the Spring ecosystem."
         val inputText = if (text.isBlank()) defaultText else text.trim()

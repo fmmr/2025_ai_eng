@@ -19,9 +19,7 @@ class SupabaseController(
 ) : BaseController(Demo.VECTOR_DATABASE) {
 
     @GetMapping
-    fun supabaseDemo(model: Model): String {
-        model.addAttribute("pageTitle", "Vector Database Search")
-        model.addAttribute("activeTab", "supabase")
+    fun supabaseDemo(): String {
         return "supabase-demo"
     }
 
@@ -31,9 +29,6 @@ class SupabaseController(
         @RequestParam(defaultValue = "5") maxMatches: Int,
         model: Model
     ): String {
-        model.addAttribute("pageTitle", "Vector Database Search")
-        model.addAttribute("activeTab", "supabase")
-        
         if (query.isNotBlank()) {
             try {
                 val queryEmbedding = openAI.createEmbedding(query)

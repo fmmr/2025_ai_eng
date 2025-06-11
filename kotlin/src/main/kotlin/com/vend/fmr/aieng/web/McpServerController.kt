@@ -11,8 +11,6 @@ class McpServerController : BaseController(Demo.MCP_SERVER) {
 
     @GetMapping("/demo/mcp-server")
     fun mcpServerDemo(model: Model): String {
-        model.addAttribute("pageTitle", "MCP Server Demo")
-        model.addAttribute("activeTab", "mcp-server")
         model.addAttribute("availableTools", AgentTool.entries)
         return "mcp-server-demo"
     }

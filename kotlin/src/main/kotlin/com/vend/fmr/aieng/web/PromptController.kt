@@ -17,9 +17,6 @@ class PromptController(
 
     @GetMapping("/demo/prompt-engineering")
     fun promptDemo(model: Model): String {
-        model.addAttribute("pageTitle", "Prompt Engineering")
-        model.addAttribute("activeTab", "prompt-engineering")
-        
         val scenarios = listOf(
             PromptComparison(
                 scenario = "Recipe Generation",
@@ -44,9 +41,6 @@ class PromptController(
         @RequestParam scenarioIndex: Int,
         model: Model
     ): String {
-        model.addAttribute("pageTitle", "Prompt Engineering")
-        model.addAttribute("activeTab", "prompt-engineering")
-
         val scenarios = mutableListOf(
             PromptComparison(
                 scenario = "Recipe Generation",

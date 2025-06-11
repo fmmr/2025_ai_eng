@@ -31,9 +31,6 @@ class ImageEditingController(
 
     @GetMapping("/demo/image-editing")
     fun imageEditingDemo(model: Model): String {
-        model.addAttribute("pageTitle", "AI Image Editing")
-        model.addAttribute("activeTab", "image-editing")
-        
         model.addAttribute("availableSizes", AVAILABLE_SIZES)
         model.addAttribute("demoImages", DEMO_IMAGES)
         model.addAttribute("defaultPrompt", DEFAULT_PROMPT)
@@ -51,9 +48,6 @@ class ImageEditingController(
         @RequestParam("size", defaultValue = "1024x1024") size: String,
         model: Model
     ): String {
-        model.addAttribute("pageTitle", "AI Image Editing")
-        model.addAttribute("activeTab", "image-editing")
-        
         // Preserve form data
         val formData = mutableMapOf<String, String>()
         formData["prompt"] = prompt

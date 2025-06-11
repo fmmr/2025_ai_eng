@@ -5,7 +5,6 @@ import com.vend.fmr.aieng.utils.Demo
 import jakarta.servlet.http.HttpServletRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -23,9 +22,7 @@ class TripPlannerController(private val tripPlanningCoordinator: TripPlanningCoo
     private val activeEmitters = ConcurrentHashMap<String, SseEmitter>()
 
     @GetMapping
-    fun showDemo(model: Model): String {
-        model.addAttribute("pageTitle", Demo.TRAVEL_AGENT.title)
-        model.addAttribute("activeTab", "ai-agents")
+    fun showDemo(): String {
         return "trip-planner-demo"
     }
 

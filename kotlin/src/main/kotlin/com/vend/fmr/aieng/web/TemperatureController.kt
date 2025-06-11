@@ -21,15 +21,10 @@ class TemperatureController(
 
     @GetMapping("/demo/temperature-effects")
     fun temperatureDemo(model: Model): String {
-        model.addAttribute("pageTitle", "Temperature Effects")
-        model.addAttribute("activeTab", "temperature-effects")
-
-
         model.addAttribute("prompt", Prompts.Defaults.CHAT_PARAMETERS_PROMPT)
         model.addAttribute("fixedParam", "top_p = $FIXED_TOP_P")
         model.addAttribute("variableParam", "temperature (0.1 → $WILD)")
         model.addAttribute("explanation", "How temperature affects creativity vs consistency")
-
         return "temperature-demo"
     }
 
@@ -38,9 +33,6 @@ class TemperatureController(
         @RequestParam("customPrompt", defaultValue = "") customPrompt: String,
         model: Model
     ): String {
-        model.addAttribute("pageTitle", "Temperature Effects")
-        model.addAttribute("activeTab", "temperature-effects")
-
         val fixedTopP = 0.9
         val prompt = if (customPrompt.isBlank()) {
             Prompts.Defaults.CHAT_PARAMETERS_PROMPT

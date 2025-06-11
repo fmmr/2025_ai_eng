@@ -77,9 +77,6 @@ class FilmFusionController(
 
     @GetMapping("/demo/film-fusion")
     fun filmFusionDemo(model: Model): String {
-        model.addAttribute("pageTitle", "Film Fusion")
-        model.addAttribute("activeTab", "film-fusion")
-        
         model.addAttribute("movieTitles", MOVIE_TITLES)
         model.addAttribute("artStyles", ART_STYLES)
         model.addAttribute("dalleModels", DALL_E_MODELS)
@@ -101,9 +98,6 @@ class FilmFusionController(
         @RequestParam("quality", required = false) quality: String?,
         model: Model
     ): String {
-        model.addAttribute("pageTitle", "Film Fusion")
-        model.addAttribute("activeTab", "film-fusion")
-        
         val formData = mutableMapOf<String, String>()
         formData["movie"] = movie
         formData["artStyle"] = artStyle

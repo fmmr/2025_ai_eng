@@ -31,6 +31,7 @@ Working in kotlin directory - AI engineering course using Kotlin/Spring Boot.
 ## Development Workflow
 1. **Command Line First** - Build one-liner from Main.kt calling `*Examples.kt` functions
 2. **Web Demo Second** - After command line works, create Spring Boot controller using same impl classes
+3. **Controllers call APIs directly** - Never import from `examples` package in web controllers
 
 ## API Implementation
 - impl classes accept `debug: Boolean = false` parameter (silent by default)

@@ -35,9 +35,6 @@ class LangChain4jController : BaseController(Demo.LANGCHAIN4J) {
 
     @GetMapping("/demo/langchain4j")
     fun langchain4jDemo(model: Model): String {
-        model.addAttribute("pageTitle", "LangChain4j Demo")
-        model.addAttribute("activeTab", "langchain4j")
-        
         if (chatModel is DisabledChatModel) {
             model.addAttribute("error", "LangChain4j is not available - OPENAI_API_KEY environment variable is required")
             return "langchain4j-demo"
@@ -64,9 +61,6 @@ class LangChain4jController : BaseController(Demo.LANGCHAIN4J) {
         @RequestParam("maxWords", defaultValue = "50") maxWords: String,
         model: Model
     ): String {
-        model.addAttribute("pageTitle", "LangChain4j Demo")
-        model.addAttribute("activeTab", "langchain4j")
-        
         val defaultText = "LangChain4j provides a fantastic abstraction layer for AI applications. It simplifies integration with multiple AI providers, offers type-safe interfaces, and includes powerful tools for building production-ready AI systems with minimal boilerplate code."
         val inputText = if (text.isBlank()) defaultText else text.trim()
         val maxWordsInt = maxWords.toIntOrNull() ?: 50

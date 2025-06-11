@@ -17,9 +17,7 @@ class ChatCompletionController(
 ) : BaseController(Demo.CHAT_COMPLETION) {
 
     @GetMapping
-    fun chatCompletionDemo(model: Model): String {
-        model.addAttribute("pageTitle", "OpenAI Chat Completion")
-        model.addAttribute("activeTab", "chat-completion")
+    fun chatCompletionDemo(): String {
         return "chat-completion-demo"
     }
 
@@ -32,9 +30,6 @@ class ChatCompletionController(
         @RequestParam(defaultValue = "0.7") temperature: Double,
         model: Model
     ): String {
-        model.addAttribute("pageTitle", "OpenAI Chat Completion")
-        model.addAttribute("activeTab", "chat-completion")
-        
         if (userPrompt.isNotBlank()) {
             try {
                 val response = openAI.createChatCompletion(

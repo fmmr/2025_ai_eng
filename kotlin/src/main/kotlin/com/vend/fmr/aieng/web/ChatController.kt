@@ -35,9 +35,6 @@ class ChatController(
 
     @GetMapping
     fun chatDemo(model: Model, session: HttpSession): String {
-        model.addAttribute("pageTitle", "Interactive Chat")
-        model.addAttribute("activeTab", "chat")
-
         @Suppress("UNCHECKED_CAST")
         val chatHistory = session.getAttribute("chatHistory") as? MutableList<ChatMessage> ?: mutableListOf<ChatMessage>()
         model.addAttribute("chatHistory", chatHistory)

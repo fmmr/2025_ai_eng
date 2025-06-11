@@ -1,6 +1,6 @@
 package com.vend.fmr.aieng.utils
 
-enum class DemoCategory(val displayName: String, icon: String, val emoji: String, val navbarGroup: NavbarGroup?) {
+enum class DemoCategory(val displayName: String, icon: String, val emoji: String, val navbarGroup: NavbarGroup) {
     CORE_AI("Core AI", "bi-cpu", "🧠", NavbarGroup.CORE_DATA),
     DATA("Data", "bi-database", "🗄️", NavbarGroup.CORE_DATA),
     

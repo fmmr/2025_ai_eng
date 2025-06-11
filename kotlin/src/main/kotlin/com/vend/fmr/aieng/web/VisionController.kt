@@ -80,9 +80,6 @@ class VisionController(
 
     @GetMapping("/demo/gpt4-vision")
     fun visionDemo(model: Model): String {
-        model.addAttribute("pageTitle", "GPT-4 with Vision")
-        model.addAttribute("activeTab", "gpt4-vision")
-        
         model.addAttribute("demoImages", DEMO_IMAGES)
         model.addAttribute("visionModels", VISION_MODELS)
         model.addAttribute("detailLevels", DETAIL_LEVELS)
@@ -98,9 +95,6 @@ class VisionController(
         @RequestParam("detail", defaultValue = "auto") detail: String,
         model: Model
     ): String {
-        model.addAttribute("pageTitle", "GPT-4 with Vision")
-        model.addAttribute("activeTab", "gpt4-vision")
-        
         // Preserve form data
         val formData = mutableMapOf<String, String>()
         formData["selectedImage"] = selectedImage

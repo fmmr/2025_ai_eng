@@ -17,9 +17,6 @@ class HuggingFaceObjectDetectionController(
 
     @GetMapping("/demo/huggingface-object-detection")
     fun objectDetectionDemo(model: Model): String {
-        model.addAttribute("pageTitle", "HuggingFace Object Detection")
-        model.addAttribute("activeTab", "huggingface-object-detection")
-        
         model.addAttribute("defaultImage", "kitchen.png")
         model.addAttribute("explanation", "Detect objects in images using DETR (Detection Transformer) model")
         
@@ -37,9 +34,6 @@ class HuggingFaceObjectDetectionController(
         @RequestParam("useDefault", required = false) useDefault: String?,
         model: Model
     ): String {
-        model.addAttribute("pageTitle", "HuggingFace Object Detection")
-        model.addAttribute("activeTab", "huggingface-object-detection")
-        
         try {
             val imageBytes: ByteArray
             val imageName: String

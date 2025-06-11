@@ -17,9 +17,6 @@ class TopPController(
 
     @GetMapping("/demo/top-p-effects")
     fun topPDemo(model: Model): String {
-        model.addAttribute("pageTitle", "Top-P Effects")
-        model.addAttribute("activeTab", "top-p-effects")
-        
         val fixedTemperature = 0.7
         
         model.addAttribute("prompt", Prompts.Defaults.CHAT_PARAMETERS_PROMPT)
@@ -35,9 +32,6 @@ class TopPController(
         @RequestParam("customPrompt", defaultValue = "") customPrompt: String,
         model: Model
     ): String {
-        model.addAttribute("pageTitle", "Top-P Effects")
-        model.addAttribute("activeTab", "top-p-effects")
-
         val fixedTemperature = 0.7
         val prompt = if (customPrompt.isBlank()) {
             Prompts.Defaults.CHAT_PARAMETERS_PROMPT
