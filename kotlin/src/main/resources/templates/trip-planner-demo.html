@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<!--suppress HtmlRequiredTitleElement -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: common-head}"></head>
+<body>
+    <div th:replace="~{fragments/navigation :: navbar(${activeTab})}"></div>
+
+    <div class="container my-4">
+        <div th:replace="~{fragments/hero-section :: demo-hero(${demo})}"></div>
+
+        <div class="row">
+            <!-- Left Panel: Trip Planning Interface -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>🗺️ Trip Planner</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="destination" class="form-label">Destination:</label>
+                            <input type="text" class="form-control" id="destination" 
+                                   placeholder="Enter a city or country (e.g., Stockholm, Paris, Tokyo)">
+                            <small class="text-muted">Our agents work best with well-known destinations</small>
+                        </div>
+                        
+                        <button class="btn btn-primary mb-3" onclick="planTrip()" id="planTripBtn">
+                            <i class="bi bi-compass"></i> Plan Trip
+                        </button>
+                        
+                        <div class="border-top pt-3">
+                            <h6>🌍 Try these destinations:</h6>
+                            <div class="mb-3">
+                                <small class="text-muted">Nordic destinations (rich data):</small>
+                                <div class="row mt-1">
+                                    <div class="col-md-6">
+                                        <button class="btn btn-outline-info btn-sm mb-2 w-100" onclick="setDestination('Stockholm')">🇸🇪 Stockholm</button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button class="btn btn-outline-info btn-sm mb-2 w-100" onclick="setDestination('Oslo')">🇳🇴 Oslo</button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <button class="btn btn-outline-info btn-sm mb-2 w-100" onclick="setDestination('Copenhagen')">🇩🇰 Copenhagen</button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button class="btn btn-outline-info btn-sm mb-2 w-100" onclick="setDestination('Paris')">🇫🇷 Paris</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <small class="text-muted">Other destinations (generic data):</small>
+                                <div class="row mt-1">
+                                    <div class="col-md-6">
+                                        <button class="btn btn-outline-secondary btn-sm mb-2 w-100" onclick="setDestination('Tokyo')">🇯🇵 Tokyo</button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button class="btn btn-outline-secondary btn-sm mb-2 w-100" onclick="setDestination('New York')">🇺🇸 New York</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Results -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5>🤖 Multi-Agent Processing</h5>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-sm btn-outline-secondary" onclick="clearResults()">Clear Results</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="resultsLog" style="height: 500px; overflow-y: auto; font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; font-size: 12px;">
+                            <div class="text-muted">🗺️ Ready to plan your trip! Select a destination above.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Information Panel at Bottom -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="bi bi-info-circle"></i> How Multi-Agent Trip Planning Works</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="text-center mb-3">
+                                    <div class="badge bg-primary p-3 rounded-circle mb-2">
+                                        <i class="bi bi-search fs-4"></i>
+                                    </div>
+                                    <h6>Research Agent</h6>
+                                    <small class="text-muted">Gathers destination information, attractions, and cultural insights</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-center mb-3">
+                                    <div class="badge bg-info p-3 rounded-circle mb-2">
+                                        <i class="bi bi-cloud-sun fs-4"></i>
+                                    </div>
+                                    <h6>Weather Agent</h6>
+                                    <small class="text-muted">Analyzes weather conditions and provides clothing recommendations</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-center mb-3">
+                                    <div class="badge bg-success p-3 rounded-circle mb-2">
+                                        <i class="bi bi-pin-map fs-4"></i>
+                                    </div>
+                                    <h6>Activity Agent</h6>
+                                    <small class="text-muted">Suggests weather-aware activities and attractions</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-center mb-3">
+                                    <div class="badge bg-warning p-3 rounded-circle mb-2">
+                                        <i class="bi bi-cup-hot fs-4"></i>
+                                    </div>
+                                    <h6>Food Agent</h6>
+                                    <small class="text-muted">Recommends restaurants and local cuisine specialties</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <h6>⚡ Parallel Processing</h6>
+                                <p class="small">All agents run simultaneously using Kotlin coroutines, dramatically reducing total processing time compared to sequential execution.</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>🧠 Intelligent Coordination</h6>
+                                <p class="small">Weather data influences activity suggestions and timeline creation, ensuring practical recommendations.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    <div th:replace="~{fragments/scripts :: common-scripts}"></div>
+    <script th:src="@{/js/trip-planner-demo.js}"></script>
+</body>
+</html>

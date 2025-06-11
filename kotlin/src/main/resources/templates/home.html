@@ -28,8 +28,7 @@
                         <div class="card-body">
                             <h5 class="card-title">
                                 <span th:utext="${demo.iconHtml}"></span> <span th:text="${demo.title}" data-bs-toggle="tooltip" th:data-bs-title="${demo.shortDescription}">Demo</span>
-                                <span th:if="${demo.route != null}" class="badge bg-success ms-2">✓ Done</span>
-                                <span th:if="${demo.route == null}" class="badge ms-2" th:class="'badge ms-2 ' + ${demo.status.badgeClass}" th:text="${demo.status.displayText}">Status</span>
+                                <span class="badge ms-2" th:class="'badge ms-2 ' + ${demo.status.badgeClass}" th:text="${demo.status.displayText}">Status</span>
                                 <span th:utext="${demo.contentType.iconHtml}" class="text-muted ms-1" data-bs-toggle="tooltip" th:data-bs-title="${demo.contentType.tooltip}"></span>
                             </h5>
                             <small th:if="${demo.soloProject}" class="text-muted">Solo Project</small>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<!--suppress HtmlRequiredTitleElement -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <div th:fragment="trip-plan(tripPlan)" class="trip-plan-result">
+        
+        <!-- Summary -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5><i class="bi bi-map"></i> Trip Summary</h5>
+            </div>
+            <div class="card-body">
+                <div class="trip-summary" th:utext="${tripPlan.summary.replace('\n', '<br>')}"></div>
+            </div>
+        </div>
+        
+        <!-- Research Info -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5><i class="bi bi-search"></i> Destination Research</h5>
+            </div>
+            <div class="card-body">
+                <h6 th:text="${tripPlan.researchInfo.cityName + ', ' + tripPlan.researchInfo.country}"></h6>
+                <p th:text="${tripPlan.researchInfo.description}"></p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <strong>Top Attractions:</strong>
+                        <ul>
+                            <li th:each="attraction : ${tripPlan.researchInfo.topAttractions}" th:text="${attraction}"></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Cultural Notes:</strong>
+                        <p th:text="${tripPlan.researchInfo.culturalNotes}"></p>
+                        <strong>Best Time to Visit:</strong>
+                        <p th:text="${tripPlan.researchInfo.bestTimeToVisit}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Weather -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5><i class="bi bi-cloud-sun"></i> Weather Insights</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <strong>Current Conditions:</strong>
+                        <p th:text="${tripPlan.weatherInfo.currentConditions}"></p>
+                        <strong>Recommended Clothing:</strong>
+                        <p th:text="${tripPlan.weatherInfo.recommendedClothing}"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Outdoor Suitability:</strong>
+                        <p th:text="${tripPlan.weatherInfo.outdoorSuitability}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Activities -->
+        <div th:if="${!tripPlan.activities.isEmpty()}" class="card mb-4">
+            <div class="card-header">
+                <h5><i class="bi bi-pin-map"></i> Recommended Activities</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div th:each="activity : ${tripPlan.activities}" class="col-md-6 mb-3">
+                        <div class="activity-card border rounded p-3">
+                            <h6>
+                                <span th:text="${activity.name}"></span>
+                                <span class="badge bg-secondary" th:text="${activity.type}"></span>
+                            </h6>
+                            <p th:text="${activity.description}"></p>
+                            <small class="text-muted">
+                                Duration: <span th:text="${activity.duration}"></span> | 
+                                Cost: <span th:text="${activity.cost}"></span> | 
+                                Weather dependent: <span th:text="${activity.weatherDependent ? 'Yes' : 'No'}"></span>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Restaurants -->
+        <div th:if="${!tripPlan.restaurants.isEmpty()}" class="card mb-4">
+            <div class="card-header">
+                <h5><i class="bi bi-cup-hot"></i> Restaurant Recommendations</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div th:each="restaurant : ${tripPlan.restaurants}" class="col-md-6 mb-3">
+                        <div class="restaurant-card border rounded p-3">
+                            <h6>
+                                <span th:text="${restaurant.name}"></span>
+                                <span class="badge bg-primary" th:text="${restaurant.cuisine}"></span>
+                            </h6>
+                            <p th:text="${restaurant.description}"></p>
+                            <p><strong>Specialty:</strong> <span th:text="${restaurant.specialty}"></span></p>
+                            <small class="text-muted">Price: <span th:text="${restaurant.priceRange}"></span></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Timeline -->
+        <div th:if="${!tripPlan.timeline.isEmpty()}" class="card mb-4">
+            <div class="card-header">
+                <h5><i class="bi bi-clock"></i> Suggested Timeline</h5>
+            </div>
+            <div class="card-body">
+                <div th:each="item : ${tripPlan.timeline}" class="timeline-item mb-3">
+                    <div class="row">
+                        <div class="col-md-3"><strong th:text="${item.time}"></strong></div>
+                        <div class="col-md-6" th:text="${item.activity}"></div>
+                        <div class="col-md-3"><small class="text-muted" th:text="${item.notes}"></small></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</body>
+</html>

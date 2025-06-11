@@ -290,18 +290,7 @@ enum class Demo(
         category = DemoCategory.AI_AGENTS,
         route = "/demo/function-calling"
     ),
-    TRAVEL_AGENT(
-        id = "travel-agent",
-        title = "Trip Wizard",
-        shortDescription = "AI-powered trip planning",
-        longDescription = "Book flights, find accommodations, and create itineraries using multiple APIs.<br>AI reasoning for seamless travel experiences and smart recommendations.",
-        icon = "bi-airplane",
-        emoji = "✈️",
-        status = DemoStatus.TIME,
-        category = DemoCategory.AI_AGENTS,
-        soloProject = true
 
-    ),
     ASSISTANTS_API(
         id = "assistants-api",
         title = "AI Sidekick",
@@ -311,6 +300,19 @@ enum class Demo(
         emoji = "🎯",
         status = DemoStatus.COFFEE,
         category = DemoCategory.AI_AGENTS
+    ),
+
+    TRAVEL_AGENT(
+        id = "trip-planner",
+        title = "Trip Wizard",
+        shortDescription = "Parallel agent trip planning",
+        longDescription = "Multi-agent system using parallel processing to plan comprehensive trips.<br>Research, weather, activities, and food agents working together in real-time.",
+        icon = "bi-airplane",
+        emoji = "✈️",
+        courseContent = false,
+        status = DemoStatus.IN_PROGRESS,
+        category = DemoCategory.AI_AGENTS,
+        route = "/demo/trip-planner"
     ),
 
     // MCP Protocol (Additional Explorations)
