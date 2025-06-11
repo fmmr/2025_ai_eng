@@ -2,6 +2,10 @@ package com.vend.fmr.aieng.agents
 
 import com.vend.fmr.aieng.apis.openai.OpenAI
 import com.vend.fmr.aieng.apis.weather.Weather
+import com.vend.fmr.aieng.utils.Prompts.aiSummarySystem
+import com.vend.fmr.aieng.utils.aiSummaryUser
+import com.vend.fmr.aieng.utils.aiTimelineSystem
+import com.vend.fmr.aieng.utils.aiTimelineUser
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -14,10 +18,7 @@ import org.springframework.stereotype.Service
  * Orchestrates multiple agents working in parallel to create comprehensive trip plans
  */
 @Service
-class TripPlanningCoordinator(
-    weatherService: Weather,
-    private val openAI: OpenAI
-) {
+class TripPlanningCoordinator(weatherService: Weather, private val openAI: OpenAI) {
 
     private val researchAgent = ResearchAgent()
     private val weatherAgent = WeatherAgent(weatherService)
@@ -72,8 +73,7 @@ class TripPlanningCoordinator(
 
             // AI-powered synthesis of comprehensive trip plan
             progressCallback?.invoke("🤖 AI Coordinator: Analyzing all agent data and creating intelligent trip plan...")
-            @Suppress("UNCHECKED_CAST")
-            val tripPlan = synthesizeResults(
+            @Suppress("UNCHECKED_CAST") val tripPlan = synthesizeResults(
                 destination = destination,
                 researchInfo = researchResult.data as? ResearchInfo,
                 weatherInfo = weatherResult.data as? WeatherInfo,
@@ -184,60 +184,18 @@ class TripPlanningCoordinator(
 
         progressCallback?.invoke("✨ AI: Finalizing comprehensive trip plan...")
 
-        return TripPlan(
-            summary = aiSummary,
-            timeline = aiTimeline
-        )
+        return TripPlan(destination, aiSummary, aiTimeline)
     }
 
     /**
      * Generate AI-powered trip summary
      */
     private suspend fun generateAISummary(destination: String, agentData: String): String {
-        val systemPrompt = """
-            You are an expert travel advisor with extensive knowledge of global destinations. Create compelling trip summaries for web display.
-            
-            IMPORTANT: Use your comprehensive knowledge of $destination to create an authentic, detailed trip summary. The agent data is just basic information - you should ENHANCE it with your expertise.
-            
-            For $destination specifically:
-            - Include famous landmarks, neighborhoods, and unique experiences
-            - Mention specific local dishes, restaurants types, and food culture
-            - Reference actual cultural practices, customs, and etiquette 
-            - Suggest realistic activities that match the destination's character
-            - Include practical local tips (transportation, tipping, language, etc.)
-            - Reference seasonal considerations and optimal timing
-            
-            IGNORE generic agent data like "Local Bistro" or "City Walking Tour" - replace with REAL destination-specific recommendations.
-            
-            Format as clean HTML with emojis and Bootstrap 5 classes:
-            - Engaging destination intro with flag emoji and specific highlights
-            - Weather section (use agent data if available, otherwise seasonal guidance)
-            - Top Activities: 4-5 SPECIFIC attractions/experiences for this destination
-            - Restaurants: 3-4 REAL cuisine types or famous food areas
-            - Cultural Tips: SPECIFIC customs, etiquette, language tips in alert box
-            - Local Insights: Transportation, neighborhoods, practical tips in alert box
-            
-            Boostrap 5 is used for styling, so use Bootstrap classes and HTML tags to format the response.
-            Use proper HTML: <h4>, <p>, <ul>, <li>, <div class="alert alert-info">, etc.
-            Make it destination-specific and informative, around 300-400 words.
-        """.trimIndent()
-
-        val userPrompt = """
-            Create a comprehensive trip summary for $destination. Use your extensive knowledge of this destination.
-            
-            Agent data (basic info only - enhance with your knowledge):
-            $agentData
-            
-            Replace any generic content with REAL $destination recommendations. Make it specific and authentic to this destination.
-        """.trimIndent()
-
+        val systemPrompt = aiSummarySystem(destination)
+        val userPrompt = aiSummaryUser(destination, agentData)
         val response = openAI.createChatCompletion(
-            systemMessage = systemPrompt,
-            prompt = userPrompt,
-            maxTokens = 500,
-            temperature = 0.7
+            systemMessage = systemPrompt, prompt = userPrompt, maxTokens = 500, temperature = 0.7
         )
-
         return response.choices.firstOrNull()?.message?.content?.toString() ?: "Summary generation failed"
     }
 
@@ -245,44 +203,11 @@ class TripPlanningCoordinator(
      * Generate AI-powered timeline
      */
     private suspend fun generateAITimeline(destination: String, agentData: String): List<TimelineItem> {
-        val systemPrompt = """
-            You are an expert trip planner with deep knowledge of $destination. Create a realistic daily itinerary.
-            
-            IMPORTANT: Use your knowledge of $destination to suggest REAL places and experiences, not generic activities.
-            Include actual landmark names, neighborhoods, restaurant types, and local experiences specific to $destination.
-            
-            Consider for $destination:
-            - Famous attractions and their optimal visiting times
-            - Local transportation patterns and travel times
-            - Traditional meal times and food culture
-            - Weather patterns and seasonal considerations
-            - Cultural rhythms (siesta, early dinners, etc.)
-            
-            IGNORE generic agent data - use your knowledge of what makes $destination unique.
-            
-            Return ONLY a JSON array in this exact format:
-            [{"time":"Morning (9:00 AM)","activity":"Specific Activity/Place Name","notes":"Why this timing works for this destination"}]
-            
-            Create 4-6 timeline items covering a full day with destination-specific recommendations.
-        """.trimIndent()
-
-        val userPrompt = """
-            Create a realistic daily itinerary for $destination using your knowledge of this destination.
-            Include REAL places, attractions, and experiences specific to $destination.
-            
-            Agent data (basic reference only):
-            $agentData
-            
-            Focus on authentic $destination experiences with proper timing and flow.
-        """.trimIndent()
-
+        val systemPrompt = aiTimelineSystem(destination)
+        val userPrompt = aiTimelineUser(destination, agentData)
         val response = openAI.createChatCompletion(
-            systemMessage = systemPrompt,
-            prompt = userPrompt,
-            maxTokens = 400,
-            temperature = 0.5
+            systemMessage = systemPrompt, prompt = userPrompt, maxTokens = 400, temperature = 0.5
         )
-
         val jsonResponse = response.choices.firstOrNull()?.message?.content?.toString() ?: "[]"
 
         return try {
@@ -296,6 +221,4 @@ class TripPlanningCoordinator(
             )
         }
     }
-
-
 }

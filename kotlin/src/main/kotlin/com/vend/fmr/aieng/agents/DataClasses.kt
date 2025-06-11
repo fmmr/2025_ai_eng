@@ -9,6 +9,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TripPlan(
+    val destination: String,
     val summary: String,
     val timeline: List<TimelineItem>
 )

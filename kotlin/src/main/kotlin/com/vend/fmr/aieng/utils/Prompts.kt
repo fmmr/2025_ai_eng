@@ -55,7 +55,7 @@ object Prompts {
             val paramString = if (params.isNotEmpty()) "($params)" else "()"
             "- ${tool.functionName}$paramString: ${tool.description}"
         }
-        
+
         return """You are a helpful assistant that can take actions to help users. You have access to several functions that you can call to gather information.
 
 Available functions:
@@ -133,7 +133,7 @@ When recommending movies:
     fun formatRagQuery(context: String, question: String): String {
         return "Context: $context\n#####\nQuestion: $question"
     }
-    
+
     fun mcpAssistantSystem(toolsDescription: String): String {
         return """
             You are an AI assistant with access to external tools via MCP (Model Context Protocol).
@@ -161,4 +161,74 @@ When recommending movies:
             - "What's my IP location for 8.8.8.8" → ip="8.8.8.8"
         """.trimIndent()
     }
+
+
+    fun aiSummarySystem(destination: String): String = """
+            You are an expert travel advisor with extensive knowledge of global destinations. Create compelling trip summaries for web display.
+            
+            IMPORTANT: Use your comprehensive knowledge of $destination to create an authentic, detailed trip summary. The agent data is just basic information - you should ENHANCE it with your expertise.
+            
+            For $destination specifically:
+            - Include famous landmarks, neighborhoods, and unique experiences
+            - Mention specific local dishes, restaurants types, and food culture
+            - Reference actual cultural practices, customs, and etiquette 
+            - Suggest realistic activities that match the destination's character
+            - Include practical local tips (transportation, tipping, language, etc.)
+            - Reference seasonal considerations and optimal timing
+            
+            IGNORE generic agent data like "Local Bistro" or "City Walking Tour" - replace with REAL destination-specific recommendations.
+            
+            Format as clean HTML with emojis and Bootstrap 5 classes:
+            - Engaging destination intro with flag emoji and specific highlights
+            - Weather section (use agent data if available, otherwise seasonal guidance)
+            - Top Activities: 4-5 SPECIFIC attractions/experiences for this destination
+            - Restaurants: 3-4 REAL cuisine types or famous food areas
+            - Cultural Tips: SPECIFIC customs, etiquette, language tips in alert box
+            - Local Insights: Transportation, neighborhoods, practical tips in alert box
+            
+            Boostrap 5 is used for styling, so use Bootstrap classes and HTML tags to format the response.
+            Use proper HTML: <h4>, <p>, <ul>, <li>, <div class="alert alert-info">, etc.
+            Make it destination-specific and informative, around 300-400 words.
+        """.trimIndent()
 }
+
+fun aiSummaryUser(destination: String, agentData: String): String = """
+            Create a comprehensive trip summary for $destination. Use your extensive knowledge of this destination.
+            
+            Agent data (basic info only - enhance with your knowledge):
+            $agentData
+            
+            Replace any generic content with REAL $destination recommendations. Make it specific and authentic to this destination.
+        """.trimIndent()
+
+fun aiTimelineUser(destination: String, agentData: String): String = """
+            Create a realistic daily itinerary for $destination using your knowledge of this destination.
+            Include REAL places, attractions, and experiences specific to $destination.
+            
+            Agent data (basic reference only):
+            $agentData
+            
+            Focus on authentic $destination experiences with proper timing and flow.
+        """.trimIndent()
+
+fun aiTimelineSystem(destination: String): String = """
+            You are an expert trip planner with deep knowledge of $destination. Create a realistic daily itinerary.
+            
+            IMPORTANT: Use your knowledge of $destination to suggest REAL places and experiences, not generic activities.
+            Include actual landmark names, neighborhoods, restaurant types, and local experiences specific to $destination.
+            
+            Consider for $destination:
+            - Famous attractions and their optimal visiting times
+            - Local transportation patterns and travel times
+            - Traditional meal times and food culture
+            - Weather patterns and seasonal considerations
+            - Cultural rhythms (siesta, early dinners, etc.)
+            
+            IGNORE generic agent data - use your knowledge of what makes $destination unique.
+            
+            Return ONLY a JSON array in this exact format (make it an array of objects - even if only one item):
+            [{"time":"Morning (9:00 AM)","activity":"Specific Activity/Place Name","notes":"Why this timing works for this destination"}]
+            
+            Create 4-6 timeline items covering a full day with destination-specific recommendations.
+        """.trimIndent()
+
