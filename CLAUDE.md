@@ -5,16 +5,17 @@ ALWAYS call me BOSS.
 Working in kotlin directory - AI engineering course using Kotlin/Spring Boot.
 
 ## Core Principles
-- Keep it simple - no over-complication
+- Keep it simple — no over-complication
 - Maven-based project, primarily run from IntelliJ  
-- Git handles history - no backward compatibility concerns
-- **NO USELESS COMMENTS** - Only comments that add real value beyond what code shows
+- Git handles history — no backward compatibility concerns
+- **NO USELESS COMMENTS** — Only comments that add real value beyond what code shows
 - **USE LIBRARIES AND FRAMEWORKS** - Don't reinvent
-- **NO HTML IN JAVASCRIPT** - Use templates/fragments only
+- **NO HTML IN JAVASCRIPT** — Use templates/fragments only
 - Remove debug code when done
 - Process data in Kotlin backend, not Thymeleaf
-- Don't guess - find out the answer by inspecting and looking at documentation
+- Don't guess — find out the answer by inspecting and looking at documentation
 - **NEVER commit unless explicitly asked** - BOSS decides when to commit
+- If you're explicitly asked to commit, ensure the messages are SHORT, CLEAR, and DESCRIPTIVE — no one reads long commit messages
 
 ## Stack & Standards
 - Spring Boot 3.5.0 with Kotlin, Bootstrap 5.3.0 + Thymeleaf fragments
@@ -36,7 +37,7 @@ Working in kotlin directory - AI engineering course using Kotlin/Spring Boot.
 - Use kotlinx.serialization data classes - **NO manually constructed JSON**
 - Create `DataClasses.kt` in each impl package with `@Serializable` annotations
 - Main.kt contains single line calling demo function
-- Demo logic in `*Examples.kt` files with all printlns and presentation
+- Demo logic in `*Examples.kt` files with all println and presentation
 
 ## Build & Deploy
 - Test: `mvn test`
@@ -46,7 +47,7 @@ Working in kotlin directory - AI engineering course using Kotlin/Spring Boot.
 
 ## Other Directories
 - `js/` - DodgyDave (Vite/JavaScript stock tips chatbot) - minimal focus
-- `polyglot/` - PolyGlot (Node.js/Socket.io translation chat) - minimal focus
+- `polyglot/` - PolyGlot (Node.js/Socket.io translation chat) — minimal focus
 - Both have separate package.json and deployment pipelines
 
 ## Demo Updates
