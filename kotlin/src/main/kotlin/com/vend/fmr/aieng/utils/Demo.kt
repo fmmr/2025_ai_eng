@@ -293,11 +293,11 @@ enum class Demo(
 
     ASSISTANTS_API(
         id = "assistants-api",
-        title = "AI Sidekick",
-        shortDescription = "Persistent AI assistants",
-        longDescription = "Build persistent AI assistants with file handling, code execution, and long-term memory.<br>Advanced capabilities beyond simple chat interactions.",
+        title = "Assistant Builder",
+        shortDescription = "OpenAI's persistent assistants",
+        longDescription = "Build persistent AI assistants using OpenAI's Assistants API with file handling, code execution, and long-term memory.<br>Advanced stateful assistants with tool capabilities beyond simple chat interactions.",
         icon = "bi-robot",
-        emoji = "🎯",
+        emoji = "🤖",
         status = DemoStatus.COFFEE,
         category = DemoCategory.AI_AGENTS
     ),
