@@ -23,7 +23,7 @@ This project implements the core concepts from the Scrimba AI Engineering course
 - **[💬 Chat Studio](https://ai.rodland.no/demo/chat)** - Conversational AI interface
 - **[🌡️ Temperature Play](https://ai.rodland.no/demo/temperature-effects)** - AI creativity vs consistency
 - **[🎯 Top-P Magic](https://ai.rodland.no/demo/top-p-effects)** - Vocabulary selection control
-- **[⚙️ Fine-Tune Factory](https://ai.rodland.no/demo/fine-tuning)** - Custom model training (Maybe Next Year)
+- ⚙️ Fine-Tune Factory - Custom model training (Maybe Next Year)
 - **[🔢 Vector Space](https://ai.rodland.no/demo/embeddings)** - Text to vector conversion
 - **[✂️ Text Slicer](https://ai.rodland.no/demo/chunking)** - Text segmentation tool
 
@@ -32,7 +32,7 @@ This project implements the core concepts from the Scrimba AI Engineering course
 - **[📈 Stock Oracle](https://ai.rodland.no/demo/stock)** - AI-powered financial analysis
 - **[🗄️ Vector Vault](https://ai.rodland.no/demo/supabase)** - Semantic search with embeddings
 - **[🔗 RAG Engine](https://ai.rodland.no/demo/rag)** - Retrieval-Augmented Generation
-- **[🍿 PopChoice](https://ai.rodland.no/demo/popchoice)** - AI movie recommendations (Solo Project - Dreams)
+- 🍿 PopChoice - AI movie recommendations (Solo Project - Dreams)
 
 #### 🚀 Open Source
 
@@ -58,13 +58,13 @@ This project implements the core concepts from the Scrimba AI Engineering course
 - **[🛠️ MCP Toolbox](https://ai.rodland.no/demo/mcp-server)** - Custom AI tool server (Personal Exploration)
 - **[🔗 MCP Decoded](https://ai.rodland.no/demo/mcp-protocol)** - Protocol fundamentals (Hackday)
 - **[🔧 MCP Wizard](https://ai.rodland.no/demo/mcp-assistant)** - Dynamic tool discovery (Hackday)
-- **[🌍 MCP Catalog](https://ai.rodland.no/demo/mcp-registry)** - Server discovery service (Personal Exploration - Wild Ideas)
+- 🌍 MCP Catalog - Server discovery service (Personal Exploration - Wild Ideas)
 
 #### 🏗️ Frameworks
 
 - **[🦜 LangChain Lab](https://ai.rodland.no/demo/langchain4j)** - Declarative AI services (Personal Exploration)
 - **[🍃 Spring AI](https://ai.rodland.no/demo/spring-ai)** - Native Spring integration (Personal Exploration)
-- **[☕ OpenAI Toolkit](https://ai.rodland.no/demo/openai-java)** - Official Java/Kotlin SDK (Personal Exploration - Procrastinating)
+- ☕ OpenAI Toolkit - Official Java/Kotlin SDK (Personal Exploration - Procrastinating)
 
 
 <!-- DEMO_LIST_END -->
