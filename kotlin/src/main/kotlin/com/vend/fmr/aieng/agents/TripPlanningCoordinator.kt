@@ -156,8 +156,9 @@ class TripPlanningCoordinator(weatherService: Weather, private val openAI: OpenA
         val (aiSummary, aiTimeline) = coroutineScope {
             val summaryDeferred = async {
                 try {
+                    progressCallback?.invoke("🧠 Summary start... ")
                     generateAISummary(destination, agentDataSummary).also {
-                        progressCallback?.invoke("🧠 AI: DONE: trip Summary... ${it.length} chars")
+                        progressCallback?.invoke("🧠 Summary done... ${it.length} chars")
                     }
                 } catch (e: Exception) {
                     logger.warn("Failed to generate summary", e)
@@ -167,8 +168,9 @@ class TripPlanningCoordinator(weatherService: Weather, private val openAI: OpenA
 
             val timelineDeferred = async {
                 try {
+                    progressCallback?.invoke("🧠 timeline start...")
                     generateAITimeline(destination, agentDataSummary).also {
-                        progressCallback?.invoke("🧠 AI: DONE: timeline... ${it.size} items")
+                        progressCallback?.invoke("🧠 timeline done... ${it.size} items")
                     }
                 } catch (e: Exception) {
                     logger.warn("Failed to generate summary", e)
