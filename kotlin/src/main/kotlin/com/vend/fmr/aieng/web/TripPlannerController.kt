@@ -6,12 +6,10 @@ import jakarta.servlet.http.HttpServletRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import java.util.concurrent.ConcurrentHashMap
 
@@ -27,28 +25,20 @@ class TripPlannerController(private val tripPlanningCoordinator: TripPlanningCoo
     }
 
 
-    @GetMapping("/stream/{sessionId}", produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
-    suspend fun streamTripPlanning(
-        @PathVariable sessionId: String,
-        @RequestParam destination: String,
-        request: HttpServletRequest
-    ): SseEmitter {
-        val session = request.session
-        val emitter = SseEmitter(300000L) // 5 minute timeout
-        activeEmitters[sessionId] = emitter
-
-        emitter.onCompletion { activeEmitters.remove(sessionId) }
-        emitter.onTimeout { activeEmitters.remove(sessionId) }
-        emitter.onError { activeEmitters.remove(sessionId) }
-
-
-        // Start async processing immediately without blocking the SSE response
-        val startEvent = SseEmitter.event().name("start").data("🚀 Starting trip planning for $destination...")
-        emitter.send(startEvent)
+    @PostMapping("/process")
+    @ResponseBody
+    suspend fun processTripPlanning(@RequestBody request: Map<String, String>, httpRequest: HttpServletRequest): ResponseEntity<Map<String, String>> {
+        val destination = request["destination"] ?: return ResponseEntity.badRequest().body(mapOf("error" to "Missing destination"))
+        val sessionId = request["sessionId"] ?: return ResponseEntity.badRequest().body(mapOf("error" to "Missing sessionId"))
         
-        // Launch trip planning asynchronously - don't wait for it
+        val session = httpRequest.session
+        val emitter = activeEmitters[sessionId] ?: return ResponseEntity.badRequest().body(mapOf("error" to "No active SSE connection"))
+
+        // Launch trip planning asynchronously
         kotlinx.coroutines.CoroutineScope(Dispatchers.IO).launch {
             try {
+                emitter.send(SseEmitter.event().name("start").data("🚀 Starting trip planning for $destination..."))
+                
                 val tripPlan = tripPlanningCoordinator.planTrip(destination) { progress ->
                     try {
                         emitter.send(SseEmitter.event().name("progress").data(progress))
@@ -60,19 +50,29 @@ class TripPlannerController(private val tripPlanningCoordinator: TripPlanningCoo
                 session.setAttribute("tripPlan", tripPlan)
                 
                 // Send completion event
-                val completeEvent = SseEmitter.event().name("complete").data("ready")
-                emitter.send(completeEvent)
-                emitter.complete()
+                emitter.send(SseEmitter.event().name("complete").data("Trip planning completed"))
                 
             } catch (e: Exception) {
-                val errorEvent = SseEmitter.event().name("error").data("❌ Trip planning failed: ${e.message}")
-                emitter.send(errorEvent)
-                emitter.completeWithError(e)
+                emitter.send(SseEmitter.event().name("error").data("❌ Trip planning failed: ${e.message}"))
             }
         }
         
-        return emitter
+        return ResponseEntity.ok(mapOf("status" to "started"))
+    }
 
+    @GetMapping("/stream/{sessionId}", produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
+    fun streamUpdates(@PathVariable sessionId: String): SseEmitter {
+        val emitter = SseEmitter(300000L) // 5 minute timeout
+        activeEmitters[sessionId] = emitter
+
+        emitter.onCompletion { activeEmitters.remove(sessionId) }
+        emitter.onTimeout { activeEmitters.remove(sessionId) }
+        emitter.onError { activeEmitters.remove(sessionId) }
+
+        // Send connected event
+        emitter.send(SseEmitter.event().name("connected").data("SSE stream connected"))
+        
+        return emitter
     }
 
     @Suppress("SpringMVCViewInspection")

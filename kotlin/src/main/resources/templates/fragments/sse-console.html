@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!-- SSE Console Fragment -->
+<div th:fragment="console(title, initialMessage)" class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 th:text="${title}">Console</h5>
+        <div class="d-flex gap-2">
+            <button class="btn btn-outline-info btn-sm" onclick="copyConsole()">
+                📋 Copy
+            </button>
+            <button class="btn btn-outline-secondary btn-sm" onclick="clearConsole()">
+                Clear
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div id="sseConsole" class="console-output" 
+             style="height: 400px; overflow-y: auto; background-color: #f8f9fa; padding: 10px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 14px;">
+            <div class="text-muted" th:text="${initialMessage}">Ready...</div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

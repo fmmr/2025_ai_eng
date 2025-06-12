@@ -35,9 +35,14 @@
                             <small class="text-muted">Controls how much real-time progress you see</small>
                         </div>
                         
-                        <button class="btn btn-primary mb-3" onclick="aiAssistedStreaming()" id="sendBtn">
-                            🤖 Send
-                        </button>
+                        <div class="d-flex gap-2 mb-3">
+                            <button class="btn btn-primary" onclick="aiAssistedStreaming()" id="sendBtn">
+                                🤖 Send
+                            </button>
+                            <button class="btn btn-warning" onclick="newSession()">
+                                🆕 New Session
+                            </button>
+                        </div>
                         
                         <div class="border-top pt-3">
                             <h6>💡 Try these examples:</h6>
@@ -76,20 +81,7 @@
 
             <!-- Right Panel: Results -->
             <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5>💬 Conversation</h5>
-                        <div class="d-flex gap-2">
-                            <button class="btn btn-sm btn-warning" onclick="newSession()">🆕 New Session</button>
-                            <button class="btn btn-sm btn-outline-secondary" onclick="clearLog()">Clear Chat</button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div id="activityLog" style="height: 500px; overflow-y: auto; font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; font-size: 12px;">
-                            <div class="text-muted">🤖 Hello! I'm your AI assistant. Ask me anything!</div>
-                        </div>
-                    </div>
-                </div>
+                <div th:replace="~{fragments/sse-console :: console('💬 AI Assistant', '🤖 Hello! I\'m your AI assistant. Ask me anything!')}"></div>
             </div>
         </div>
 
@@ -147,6 +139,7 @@
 
     <div th:replace="~{fragments/footer :: common-footer}"></div>
     <div th:replace="~{fragments/scripts :: common-scripts}"></div>
+    <script src="/js/sse.js"></script>
     <script src="/js/mcp-assistant-demo.js"></script>
 </body>
 </html>

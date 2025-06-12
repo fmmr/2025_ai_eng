@@ -40,16 +40,7 @@ class AssistantsController(private val openAIAssistant: OpenAIAssistant) : BaseC
         emitter.onTimeout { activeStreams.remove(sessionId) }
         emitter.onError { activeStreams.remove(sessionId) }
 
-        try {
-            emitter.send(
-                SseEmitter.event()
-                    .name("connected")
-                    .data("SSE connection established")
-            )
-        } catch (e: Exception) {
-            logger.error("Failed to send SSE connection event for session $sessionId", e)
-            activeStreams.remove(sessionId)
-        }
+        emitter.send(SseEmitter.event().name("connected").data("SSE stream connected"))
 
         return emitter
     }

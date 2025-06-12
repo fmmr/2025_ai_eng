@@ -68,19 +68,7 @@
 
             <!-- Right Panel: Results -->
             <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5>🤖 Multi-Agent Processing</h5>
-                        <div class="d-flex gap-2">
-                            <button class="btn btn-sm btn-outline-secondary" onclick="clearResults()">Clear Results</button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div id="resultsLog" style="height: 500px; overflow-y: auto; font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; font-size: 12px;">
-                            <div class="text-muted">🗺️ Ready to plan your trip! Select a destination above.</div>
-                        </div>
-                    </div>
-                </div>
+                <div th:replace="~{fragments/sse-console :: console('🤖 Multi-Agent Processing', '🗺️ Ready to plan your trip! Select a destination above.')}"></div>
             </div>
         </div>
 
@@ -163,6 +151,7 @@
 
     <div th:replace="~{fragments/footer :: footer}"></div>
     <div th:replace="~{fragments/scripts :: common-scripts}"></div>
+    <script th:src="@{/js/sse.js}"></script>
     <script th:src="@{/js/trip-planner-demo.js}"></script>
 </body>
 </html>

@@ -43,20 +43,7 @@
 
             <!-- Right Panel: Console/Progress -->
             <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h5>🖥️ Assistant Console</h5>
-                        <button class="btn btn-outline-secondary btn-sm float-end" onclick="clearConsole()">
-                            Clear
-                        </button>
-                    </div>
-                    <div class="card-body">
-                        <div id="assistantConsole" class="console-output" style="height: 400px; overflow-y: auto; background-color: #f8f9fa; padding: 10px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 14px;">
-                            <div class="text-muted">🚀 Ready to build your AI assistant...</div>
-                            <div class="text-muted">Click "Upload movies.txt" to start the process</div>
-                        </div>
-                    </div>
-                </div>
+                <div th:replace="~{fragments/sse-console :: console('🖥️ Assistant Console', '🚀 Ready to build your AI assistant...')}"></div>
             </div>
         </div>
 
@@ -105,6 +92,7 @@
         </div>
     </div>
 
+    <script src="/js/sse.js"></script>
     <script src="/js/assistants-demo.js"></script>
 
     <div th:replace="~{fragments/footer :: footer}"></div>

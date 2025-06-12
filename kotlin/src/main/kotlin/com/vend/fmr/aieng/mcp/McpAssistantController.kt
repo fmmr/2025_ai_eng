@@ -104,30 +104,34 @@ class McpAssistantController(
         }
     }
 
-    @PostMapping("/demo/mcp-assistant/stream-chat")
+    @PostMapping("/demo/mcp-assistant/process")
     @ResponseBody
-    fun mcpStreamChat(@RequestBody request: StreamRequest, session: HttpSession, httpRequest: HttpServletRequest): Map<String, String> = runBlocking {
-        val streamId = "${session.id}-${System.currentTimeMillis()}" // Unique ID for each request
+    fun processMcpRequest(@RequestBody request: Map<String, String>, session: HttpSession, httpRequest: HttpServletRequest): Map<String, String> = runBlocking {
+        val query = request["query"] ?: return@runBlocking mapOf("error" to "Missing query")
+        val verbosity = request["verbosity"] ?: "function_calls"
+        val sessionId = request["sessionId"] ?: return@runBlocking mapOf("error" to "Missing sessionId")
+        
+        val streamRequest = StreamRequest(query, verbosity)
         val clientIp = getClientIpAddress(httpRequest)
         
         // Process in background
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                sendStreamEvent(streamId, StreamEvent(
+                sendStreamEvent(sessionId, StreamEvent(
                     type = "progress",
-                    message = "🤖 AI analyzing request: \"${request.query}\""
+                    message = "🤖 AI analyzing request: \"${streamRequest.query}\""
                 ))
                 
-                processMcpStreamRequest(request, session, clientIp, streamId)
+                processMcpStreamRequest(streamRequest, session, clientIp, sessionId)
             } catch (e: Exception) {
-                sendStreamEvent(streamId, StreamEvent(
+                sendStreamEvent(sessionId, StreamEvent(
                     type = "error",
                     message = "❌ Processing failed: ${e.message}"
                 ))
             }
         }
         
-        mapOf("sessionId" to streamId, "status" to "streaming")
+        mapOf("status" to "started")
     }
     
     private suspend fun processMcpStreamRequest(request: StreamRequest, session: HttpSession, clientIp: String, streamId: String) {
