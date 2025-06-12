@@ -14,8 +14,6 @@ import kotlinx.coroutines.Dispatchers
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
-import java.util.concurrent.ConcurrentHashMap
 
 data class StreamRequest(
     val query: String,
@@ -30,13 +28,12 @@ data class StreamEvent(
 )
 
 @Controller
+@RequestMapping("/demo/mcp-assistant")
 class McpAssistantController(
     private val openAI: OpenAI
 ) : BaseController(Demo.MCP_ASSISTANT) {
-    
-    private val activeStreams = ConcurrentHashMap<String, SseEmitter>()
 
-    @GetMapping("/demo/mcp-assistant")
+    @GetMapping
     fun mcpAssistantDemo(model: Model, session: HttpSession): String {
         model.addAttribute("pageTitle", "MCP Assistant Demo")
         model.addAttribute("activeTab", "mcp-assistant")
@@ -58,53 +55,12 @@ class McpAssistantController(
         return "mcp-assistant-demo"
     }
     
-    @GetMapping("/demo/mcp-assistant/stream/{sessionId}")
-    fun streamEvents(@PathVariable sessionId: String): SseEmitter {
-        val emitter = SseEmitter(0L) // No timeout - let it run until complete
-        
-        activeStreams[sessionId] = emitter
-        
-        emitter.onCompletion {
-            activeStreams.remove(sessionId)
-        }
-        
-        emitter.onTimeout {
-            activeStreams.remove(sessionId)
-        }
-        
-        emitter.onError { ex ->
-            activeStreams.remove(sessionId)
-        }
-        
-        // Send initial keepalive
-        try {
-            emitter.send(SseEmitter.event()
-                .name("connected")
-                .data("{\"message\":\"SSE connection established\",\"sessionId\":\"$sessionId\"}")
-            )
-        } catch (_: Exception) {
-            activeStreams.remove(sessionId)
-        }
-        
-        return emitter
-    }
     
     private fun sendStreamEvent(sessionId: String, event: StreamEvent) {
-        val emitter = activeStreams[sessionId]
-        if (emitter != null) {
-            try {
-                emitter.send(
-                    SseEmitter.event()
-                        .name(event.type)
-                        .data(event)
-                )
-            } catch (_: Exception) {
-                activeStreams.remove(sessionId)
-            }
-        }
+        sendSseEvent(sessionId, event.type, event.message, event.data)
     }
 
-    @PostMapping("/demo/mcp-assistant/process")
+    @PostMapping("/process")
     @ResponseBody
     fun processMcpRequest(@RequestBody request: Map<String, String>, session: HttpSession, httpRequest: HttpServletRequest): Map<String, String> = runBlocking {
         val query = request["query"] ?: return@runBlocking mapOf("error" to "Missing query")
@@ -306,12 +262,12 @@ class McpAssistantController(
                 message = "✅ Processing complete"
             ))
             // Clean up SSE connection after processing
-            activeStreams.remove(streamId)
+            activeEmitters.remove(streamId)
         }
     }
 
     
-    @PostMapping("/demo/mcp-assistant/reset")
+    @PostMapping("/reset")
     @ResponseBody
     fun resetMcpSession(session: HttpSession): Map<String, String> {
         session.removeAttribute("mcpToolsCache")

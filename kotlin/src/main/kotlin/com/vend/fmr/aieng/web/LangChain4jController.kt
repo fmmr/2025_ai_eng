@@ -12,9 +12,11 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
+@RequestMapping("/demo/langchain4j")
 class LangChain4jController : BaseController(Demo.LANGCHAIN4J) {
 
     @Autowired
@@ -33,7 +35,7 @@ class LangChain4jController : BaseController(Demo.LANGCHAIN4J) {
         fun classifySentiment(@V("text") text: String): String
     }
 
-    @GetMapping("/demo/langchain4j")
+    @GetMapping
     fun langchain4jDemo(model: Model): String {
         if (chatModel is DisabledChatModel) {
             model.addAttribute("error", "LangChain4j is not available - OPENAI_API_KEY environment variable is required")
@@ -54,7 +56,7 @@ class LangChain4jController : BaseController(Demo.LANGCHAIN4J) {
         return "langchain4j-demo"
     }
 
-    @PostMapping("/demo/langchain4j")
+    @PostMapping
     fun processLangChain4j(
         @RequestParam("text", defaultValue = "") text: String,
         @RequestParam("operation", defaultValue = "analyze") operation: String,

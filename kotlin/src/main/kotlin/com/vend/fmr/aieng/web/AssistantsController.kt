@@ -8,11 +8,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
-import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
-import java.util.concurrent.ConcurrentHashMap
 
 data class AssistantRequest(
     val operation: String,
@@ -24,41 +21,15 @@ data class AssistantRequest(
 class AssistantsController(private val openAIAssistant: OpenAIAssistant) : BaseController(Demo.ASSISTANTS_API) {
 
     private val logger = LoggerFactory.getLogger(AssistantsController::class.java)
-    private val activeStreams = ConcurrentHashMap<String, SseEmitter>()
 
     @GetMapping
     fun showDemo(): String {
         return "assistants-demo"
     }
 
-    @GetMapping("/stream/{sessionId}", produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
-    fun streamEvents(@PathVariable sessionId: String): SseEmitter {
-        val emitter = SseEmitter(300000L)
-        activeStreams[sessionId] = emitter
-
-        emitter.onCompletion { activeStreams.remove(sessionId) }
-        emitter.onTimeout { activeStreams.remove(sessionId) }
-        emitter.onError { activeStreams.remove(sessionId) }
-
-        emitter.send(SseEmitter.event().name("connected").data("SSE stream connected"))
-
-        return emitter
-    }
 
     private fun sendMessage(sessionId: String, message: String, type: String = "info") {
-        val emitter = activeStreams[sessionId]
-        if (emitter != null) {
-            try {
-                emitter.send(
-                    SseEmitter.event()
-                        .name(type)
-                        .data(message)
-                )
-            } catch (e: Exception) {
-                logger.warn("Failed to send SSE message to session $sessionId: $message", e)
-                activeStreams.remove(sessionId)
-            }
-        }
+        sendSseEvent(sessionId, type, message)
     }
 
     @PostMapping("/process")

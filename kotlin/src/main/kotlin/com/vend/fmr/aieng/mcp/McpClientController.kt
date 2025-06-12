@@ -6,11 +6,13 @@ import com.vend.fmr.aieng.web.BaseController
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
+@RequestMapping("/demo/mcp-protocol")
 class McpClientController : BaseController(Demo.MCP_PROTOCOL_DEMO) {
 
-    @GetMapping("/demo/mcp-protocol")
+    @GetMapping
     fun mcpProtocolDemo(model: Model): String {
         model.addAttribute("pageTitle", "MCP Protocol Demo")
         model.addAttribute("activeTab", "mcp-protocol")

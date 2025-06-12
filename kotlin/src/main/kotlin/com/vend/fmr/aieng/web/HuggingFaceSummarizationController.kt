@@ -6,14 +6,16 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
+@RequestMapping("/demo/huggingface-summarization")
 class HuggingFaceSummarizationController(
     private val huggingface: HuggingFace
 ) : BaseController(Demo.HUGGINGFACE_SUMMARIZATION) {
 
-    @GetMapping("/demo/huggingface-summarization")
+    @GetMapping
     fun summarizationDemo(model: Model): String {
         model.addAttribute("defaultText", """
             The emergence of artificial intelligence has transformed numerous industries and continues to shape our daily lives. 
@@ -30,7 +32,7 @@ class HuggingFaceSummarizationController(
         return "huggingface-summarization-demo"
     }
 
-    @PostMapping("/demo/huggingface-summarization")
+    @PostMapping
     suspend fun processSummarization(
         @RequestParam("text", defaultValue = "") text: String,
         @RequestParam("maxLength", defaultValue = "100") maxLength: String,

@@ -8,9 +8,11 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
+@RequestMapping("/demo/temperature-effects")
 class TemperatureController(
     private val openAI: OpenAI
 ) : BaseController(Demo.TEMPERATURE_EFFECTS) {
@@ -19,7 +21,7 @@ class TemperatureController(
         const val FIXED_TOP_P = 0.9
     }
 
-    @GetMapping("/demo/temperature-effects")
+    @GetMapping
     fun temperatureDemo(model: Model): String {
         model.addAttribute("prompt", Prompts.Defaults.CHAT_PARAMETERS_PROMPT)
         model.addAttribute("fixedParam", "top_p = $FIXED_TOP_P")
@@ -28,7 +30,7 @@ class TemperatureController(
         return "temperature-demo"
     }
 
-    @PostMapping("/demo/temperature-effects")
+    @PostMapping
     suspend fun runTemperatureComparison(
         @RequestParam("customPrompt", defaultValue = "") customPrompt: String,
         model: Model

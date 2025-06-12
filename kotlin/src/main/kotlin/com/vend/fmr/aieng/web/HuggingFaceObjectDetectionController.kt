@@ -7,15 +7,17 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.multipart.MultipartFile
 
 @Controller
+@RequestMapping("/demo/huggingface-object-detection")
 class HuggingFaceObjectDetectionController(
     private val huggingface: HuggingFace
 ) : BaseController(Demo.OBJECT_DETECTION) {
 
-    @GetMapping("/demo/huggingface-object-detection")
+    @GetMapping
     fun objectDetectionDemo(model: Model): String {
         model.addAttribute("defaultImage", "kitchen.png")
         model.addAttribute("explanation", "Detect objects in images using DETR (Detection Transformer) model")
@@ -28,7 +30,7 @@ class HuggingFaceObjectDetectionController(
         return "huggingface-object-detection-demo"
     }
 
-    @PostMapping("/demo/huggingface-object-detection")
+    @PostMapping
     suspend fun processObjectDetection(
         @RequestParam("image", required = false) imageFile: MultipartFile?,
         @RequestParam("useDefault", required = false) useDefault: String?,

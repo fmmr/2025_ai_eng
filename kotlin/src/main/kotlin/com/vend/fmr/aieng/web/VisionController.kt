@@ -7,9 +7,11 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
+@RequestMapping("/demo/gpt4-vision")
 class VisionController(
     private val openAI: OpenAI
 ) : BaseController(Demo.GPT4_VISION) {
@@ -78,7 +80,7 @@ class VisionController(
         val suggestedPrompts: List<String>
     )
 
-    @GetMapping("/demo/gpt4-vision")
+    @GetMapping
     fun visionDemo(model: Model): String {
         model.addAttribute("demoImages", DEMO_IMAGES)
         model.addAttribute("visionModels", VISION_MODELS)
@@ -87,7 +89,7 @@ class VisionController(
         return "vision-demo"
     }
 
-    @PostMapping("/demo/gpt4-vision")
+    @PostMapping
     suspend fun analyzeImage(
         @RequestParam("selectedImage") selectedImage: String,
         @RequestParam("prompt") prompt: String,

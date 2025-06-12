@@ -8,9 +8,11 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
+@RequestMapping("/demo/image-editing")
 class ImageEditingController(
     private val openAI: OpenAI
 ) : BaseController(Demo.IMAGE_EDITING) {
@@ -29,7 +31,7 @@ class ImageEditingController(
         const val DEFAULT_PROMPT = "A hot air balloon floating in the sky"
     }
 
-    @GetMapping("/demo/image-editing")
+    @GetMapping
     fun imageEditingDemo(model: Model): String {
         model.addAttribute("availableSizes", AVAILABLE_SIZES)
         model.addAttribute("demoImages", DEMO_IMAGES)
@@ -42,7 +44,7 @@ class ImageEditingController(
         return "image-editing-demo"
     }
 
-    @PostMapping("/demo/image-editing")
+    @PostMapping
     suspend fun editImage(
         @RequestParam("prompt") prompt: String,
         @RequestParam("size", defaultValue = "1024x1024") size: String,

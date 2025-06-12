@@ -8,14 +8,16 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
+@RequestMapping("/demo/top-p-effects")
 class TopPController(
     private val openAI: OpenAI
 ) : BaseController(Demo.TOP_P_EFFECTS) {
 
-    @GetMapping("/demo/top-p-effects")
+    @GetMapping
     fun topPDemo(model: Model): String {
         val fixedTemperature = 0.7
         
@@ -27,7 +29,7 @@ class TopPController(
         return "top-p-demo"
     }
 
-    @PostMapping("/demo/top-p-effects")
+    @PostMapping
     suspend fun runTopPComparison(
         @RequestParam("customPrompt", defaultValue = "") customPrompt: String,
         model: Model

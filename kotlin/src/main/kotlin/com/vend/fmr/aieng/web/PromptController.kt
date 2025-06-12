@@ -8,14 +8,16 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
+@RequestMapping("/demo/prompt-engineering")
 class PromptController(
     private val openAI: OpenAI
 ) : BaseController(Demo.PROMPT_ENGINEERING) {
 
-    @GetMapping("/demo/prompt-engineering")
+    @GetMapping
     fun promptDemo(model: Model): String {
         val scenarios = listOf(
             PromptComparison(
@@ -36,7 +38,7 @@ class PromptController(
         return "prompt-demo"
     }
 
-    @PostMapping("/demo/prompt-engineering")
+    @PostMapping
     suspend fun runComparison(
         @RequestParam scenarioIndex: Int,
         model: Model

@@ -9,15 +9,17 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
+@RequestMapping("/demo/spring-ai")
 class SpringAiController : BaseController(Demo.SPRING_AI) {
 
     @Autowired(required = false)
     private val chatModel: ChatModel? = null
 
-    @GetMapping("/demo/spring-ai")
+    @GetMapping
     fun springAiDemo(model: Model): String {
         if (chatModel == null) {
             model.addAttribute("error", "Spring AI is not available - OPENAI_API_KEY environment variable is required")
@@ -40,7 +42,7 @@ class SpringAiController : BaseController(Demo.SPRING_AI) {
         return "spring-ai-demo"
     }
 
-    @PostMapping("/demo/spring-ai")
+    @PostMapping
     fun processSpringAi(
         @RequestParam("text", defaultValue = "") text: String,
         @RequestParam("operation", defaultValue = "analyze") operation: String,

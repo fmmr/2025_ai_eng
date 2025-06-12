@@ -7,9 +7,11 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
+@RequestMapping("/demo/film-fusion")
 class FilmFusionController(
     private val openAI: OpenAI
 ) : BaseController(Demo.FILM_FUSION) {
@@ -75,7 +77,7 @@ class FilmFusionController(
         )
     }
 
-    @GetMapping("/demo/film-fusion")
+    @GetMapping
     fun filmFusionDemo(model: Model): String {
         model.addAttribute("movieTitles", MOVIE_TITLES)
         model.addAttribute("artStyles", ART_STYLES)
@@ -88,7 +90,7 @@ class FilmFusionController(
         return "film-fusion-demo"
     }
 
-    @PostMapping("/demo/film-fusion")
+    @PostMapping
     suspend fun generateFilmFusionPoster(
         @RequestParam("movie") movie: String,
         @RequestParam("artStyle") artStyle: String,

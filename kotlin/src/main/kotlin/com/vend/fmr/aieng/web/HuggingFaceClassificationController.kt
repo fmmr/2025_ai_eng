@@ -6,14 +6,16 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
+@RequestMapping("/demo/huggingface-classification")
 class HuggingFaceClassificationController(
     private val huggingface: HuggingFace
 ) : BaseController(Demo.HUGGINGFACE_CLASSIFICATION) {
 
-    @GetMapping("/demo/huggingface-classification")
+    @GetMapping
     fun classificationDemo(model: Model): String {
         model.addAttribute("defaultText", "I love this new product, it works amazing!")
         model.addAttribute("defaultLabels", "positive, negative, neutral")
@@ -22,7 +24,7 @@ class HuggingFaceClassificationController(
         return "huggingface-classification-demo"
     }
 
-    @PostMapping("/demo/huggingface-classification")
+    @PostMapping
     suspend fun processClassification(
         @RequestParam("text", defaultValue = "") text: String,
         @RequestParam("labels", defaultValue = "") labels: String,
