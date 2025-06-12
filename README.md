@@ -95,10 +95,11 @@ Implementing concepts from the **Scrimba AI Engineering Path** - a practical cou
 - **[GitHub Kotlin](https://github.com/fmmr/2025_ai_eng/tree/main/kotlin)** - View kotlin code on GitHub
 - **[GitHub Actions](https://github.com/fmmr/2025_ai_eng/actions)** - CI/CD pipeline status
 - **[Docker Hub](https://hub.docker.com/repository/docker/fmmr/aieng)** - Container registry
-- **[Northflank](https://app.northflank.com/t/fmrs-team/project/aieng/services/aieng)** 🔒 - Production deployment
-- **[Cloudflare (dodgy dave)](https://dash.cloudflare.com/da5ff37dc3a56b099d74be433465c853/pages/view/2025-ai-eng)** 🔒 - Edge deployment dashboard
-- **[Render (kotlin)](https://dashboard.render.com/web/srv-d0sal4emcj7s73advd5g)** 🔒 - Backup deployment dashboard
-- **[Render (polyglot)](https://dashboard.render.com/web/srv-d11dtore5dus738lm9mg)** 🔒 - Node.js app deployment dashboard
+- **[Supabase Dashboard](https://supabase.com/dashboard/project/qplquwknowszjlzqxmha/database/schemas)** - Supabase DB dashboard
+- **[Kotlin APP (northflank)](https://app.northflank.com/t/fmrs-team/project/aieng/services/aieng)** 🔒 - Production deployment
+- **[Kotlin APP (render)](https://dashboard.render.com/web/srv-d0sal4emcj7s73advd5g)** 🔒 - Backup deployment dashboard
+- **[Dodgy Dave: (cloudflare)](https://dash.cloudflare.com/da5ff37dc3a56b099d74be433465c853/pages/view/2025-ai-eng)** 🔒 - Edge deployment dashboard
+- **[Polyglot (render)](https://dashboard.render.com/web/srv-d11dtore5dus738lm9mg)** 🔒 - Node.js app deployment dashboard
 
 <!-- OPERATIONS_END -->
 
