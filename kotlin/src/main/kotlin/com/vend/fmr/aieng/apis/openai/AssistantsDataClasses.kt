@@ -1,7 +1,8 @@
 package com.vend.fmr.aieng.apis.openai
 
 import com.vend.fmr.aieng.utils.Models
-import kotlinx.serialization.*
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -37,6 +38,12 @@ data class VectorStoreRequest(
 )
 
 @Serializable
+data class ExpiresAfter(
+    val anchor: String,
+    val days: Int
+)
+
+@Serializable
 data class VectorStoreResponse(
     val id: String,
     val `object`: String,
@@ -45,11 +52,35 @@ data class VectorStoreResponse(
     @SerialName("usage_bytes") val usageBytes: Long,
     @SerialName("file_counts") val fileCounts: FileCounts,
     val status: String,
-    @SerialName("expires_after") val expiresAfter: String? = null,
+    @SerialName("expires_after") val expiresAfter: ExpiresAfter? = null,
     @SerialName("expires_at") val expiresAt: Long? = null,
     @SerialName("last_active_at") val lastActiveAt: Long? = null,
     val metadata: Map<String, String>? = null
-)
+) {
+    val createdDate = Instant.ofEpochSecond(createdAt)
+        .atZone(ZoneId.systemDefault())
+        .format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))
+
+    val expiresInfo = expiresAfter?.let { "${it.anchor}+${it.days}d" } ?: "Never"
+    val statusColor = if (status == "completed") "success" else "warning"
+
+
+    fun toSSEHtml(): String {
+        return """
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>📚 ${name ?: "Unnamed"}</strong>
+                        <div class="small text-muted">${id}</div>
+                    </div>
+                    <div class="text-end">
+                        <span class="badge bg-${statusColor} me-1">${status}</span>
+                        <span class="badge bg-info me-1">${fileCounts.total} files</span>
+                        <div class="small">${createdDate} | Exp: ${expiresInfo}</div>
+                    </div>
+                </div>
+            """.trimIndent()
+    }
+}
 
 @Serializable
 data class FileCounts(
@@ -205,10 +236,27 @@ data class FileData(
     val status: String,
     @SerialName("status_details") val statusDetails: String? = null
 ) {
-    val createdAtFormatted: String
-        get() = Instant.ofEpochSecond(createdAt)
-            .atZone(ZoneId.systemDefault())
-            .format(DateTimeFormatter.ofPattern("YYYYMMDD_HHmmss"))
+    val createdAtFormatted: String = Instant.ofEpochSecond(createdAt)
+        .atZone(ZoneId.systemDefault())
+        .format(DateTimeFormatter.ofPattern("YYYYMMDD_HHmmss"))
+
+    val sizeKB = bytes / 1024
+
+    fun toSSEHtml(): String {
+        return """
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>📁 ${filename}</strong>
+                                <div class="small text-muted">${id}</div>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge bg-secondary me-1">${sizeKB}KB</span>
+                                <div class="small">${createdAtFormatted}</div>
+                            </div>
+                        </div>
+                    """.trimIndent()
+
+    }
 }
 
 @Serializable

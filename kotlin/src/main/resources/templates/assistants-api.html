@@ -25,15 +25,34 @@
                             <small class="text-muted d-block mt-1">Upload file to OpenAI</small>
                         </div>
 
+                        <!-- Vector Store Creation -->
+                        <div class="mb-3">
+                            <h6>2. Create Vector Store</h6>
+                            <button class="btn btn-outline-success btn-sm" onclick="processOperation('create-vector-store')">
+                                📚 Create Vector Store
+                            </button>
+                            <small class="text-muted d-block mt-1">Create searchable database from uploaded file</small>
+                        </div>
+
                         <!-- Management Actions -->
                         <div class="border-top pt-3">
-                            <h6>🛠️ File Management</h6>
+                            <h6>🛠️ Resource Management</h6>
                             <div class="mb-3">
-                                <button class="btn btn-outline-info btn-sm me-2" onclick="processOperation('list')">
-                                    📋 List Files
+                                <button class="btn btn-outline-info btn-sm me-2 mb-2" onclick="processOperation('list')">
+                                    📋 List Resources
                                 </button>
-                                <button class="btn btn-outline-danger btn-sm" onclick="processOperation('cleanup')">
-                                    🗑️ Delete All Files
+                            </div>
+                            
+                            <h6>🗑️ Cleanup Options</h6>
+                            <div class="mb-3">
+                                <button class="btn btn-outline-warning btn-sm me-2 mb-1" onclick="processOperation('cleanup-files')">
+                                    📁 Delete Files
+                                </button>
+                                <button class="btn btn-outline-warning btn-sm me-2 mb-1" onclick="processOperation('cleanup-vector-stores')">
+                                    📚 Delete Vector Stores
+                                </button>
+                                <button class="btn btn-outline-danger btn-sm mb-1" onclick="processOperation('cleanup-all')">
+                                    🧹 Delete All Resources
                                 </button>
                             </div>
                         </div>
@@ -60,29 +79,31 @@
                                 <h6>🎯 Current Scope</h6>
                                 <ul>
                                     <li><strong>Upload:</strong> Send movies.txt to OpenAI</li>
-                                    <li><strong>List:</strong> View all uploaded files</li>
-                                    <li><strong>Cleanup:</strong> Delete assistant files</li>
+                                    <li><strong>Vector Store:</strong> Create searchable database</li>
+                                    <li><strong>List:</strong> View files and vector stores</li>
+                                    <li><strong>Cleanup:</strong> Granular deletion controls</li>
                                     <li><strong>SSE:</strong> Real-time progress updates</li>
                                 </ul>
                                 
                                 <h6>🚀 Status</h6>
-                                <p class="text-muted">Building solid foundation with file operations first. Vector stores, assistants, and chat will be added once file handling is rock-solid.</p>
+                                <p class="text-muted">Vector store creation added! Next: listing all resources and assistant creation.</p>
                             </div>
                             <div class="col-md-6">
                                 <h6>🔄 Simple Workflow</h6>
                                 <ol>
-                                    <li><strong>Upload:</strong> Test file upload</li>
-                                    <li><strong>List:</strong> Verify file appears</li>
-                                    <li><strong>Cleanup:</strong> Test deletion works</li>
-                                    <li><strong>Repeat:</strong> Ensure reliability</li>
+                                    <li><strong>Upload:</strong> Send movies.txt to OpenAI</li>
+                                    <li><strong>Vector Store:</strong> Create searchable database</li>
+                                    <li><strong>List:</strong> Verify resources appear</li>
+                                    <li><strong>Test:</strong> Ensure step works before next</li>
                                 </ol>
                                 
                                 <h6>💡 Next Steps</h6>
                                 <ul>
-                                    <li>Vector store creation</li>
+                                    <li>✅ Vector store creation</li>
+                                    <li>✅ List all resources (files + vector stores)</li>
+                                    <li>✅ Granular cleanup controls</li>
                                     <li>Assistant setup</li>
                                     <li>Chat interface</li>
-                                    <li>Background monitoring</li>
                                 </ul>
                             </div>
                         </div>

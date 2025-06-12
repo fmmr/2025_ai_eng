@@ -63,7 +63,7 @@ class SSEManager {
         };
 
         // Handle all event types automatically
-        ['connected', 'start', 'progress', 'info', 'success', 'error', 'result', 'complete'].forEach(eventType => {
+        ['connected', 'start', 'progress', 'info', 'success', 'error', 'result', 'complete', 'final_result'].forEach(eventType => {
             this.eventSource.addEventListener(eventType, (e) => {
                 const data = parseData(e.data);
                 const message = typeof data === 'object' ? data.message : data;
@@ -81,6 +81,8 @@ class SSEManager {
                     if (window.onSSEComplete) {
                         window.onSSEComplete();
                     }
+                } else if (eventType === 'final_result') {
+                    this.log(message, 'final_result');
                 } else {
                     // Standard message logging
                     this.log(message, eventType === 'connected' ? 'info' : eventType);
