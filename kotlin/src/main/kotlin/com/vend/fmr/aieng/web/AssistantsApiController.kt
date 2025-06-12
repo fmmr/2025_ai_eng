@@ -1,7 +1,9 @@
 package com.vend.fmr.aieng.web
 
+import com.vend.fmr.aieng.apis.openai.AssistantTool
 import com.vend.fmr.aieng.apis.openai.OpenAIAssistant
 import com.vend.fmr.aieng.utils.Demo
+import com.vend.fmr.aieng.utils.Prompts.MOVIE_ASSISTANT_PROMPT
 import com.vend.fmr.aieng.utils.read
 import jakarta.servlet.http.HttpSession
 import kotlinx.coroutines.CoroutineScope
@@ -16,7 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody
 
 data class AssistantRequest(
     val operation: String,
-    val sessionId: String
+    val sessionId: String,
+    val message: String? = null
 )
 
 @Controller
@@ -39,9 +42,12 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
                 when (request.operation) {
                     "upload" -> processUpload(request.sessionId, session)
                     "create-vector-store" -> processCreateVectorStore(request.sessionId, session)
+                    "create-assistant" -> processCreateAssistant(request.sessionId, session)
+                    "query" -> processQuery(request.sessionId, request.message ?: "", session)
                     "list" -> processList(request.sessionId)
                     "cleanup-files" -> processCleanupFiles(request.sessionId, session)
                     "cleanup-vector-stores" -> processCleanupVectorStores(request.sessionId, session)
+                    "cleanup-assistants" -> processCleanupAssistants(request.sessionId, session)
                     "cleanup-all" -> processCleanupAll(request.sessionId, session)
                     else -> sendMessage(request.sessionId, "Unknown operation: ${request.operation}", "error")
                 }
@@ -118,6 +124,126 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
         }
     }
 
+    private suspend fun processCreateAssistant(sessionId: String, session: HttpSession) {
+        sendMessage(sessionId, "🤖 Starting assistant creation...", "progress")
+
+        try {
+            // Get vector store ID from session or find existing one
+            var vectorStoreId = session.getAttribute("vectorStoreId") as String?
+            
+            if (vectorStoreId == null) {
+                sendMessage(sessionId, "🔍 No vector store in session, checking for existing ones...", "progress")
+                val vectorStores = openAIAssistant.listVectorStores(debug = false)
+                
+                if (vectorStores.data.isEmpty()) {
+                    sendMessage(sessionId, "❌ No vector stores available. Please create a vector store first.", "error")
+                    return
+                }
+                
+                vectorStoreId = vectorStores.data.first().id
+                sendMessage(sessionId, "✅ Found existing vector store: ${vectorStores.data.first().name} (${vectorStoreId})", "info")
+            } else {
+                sendMessage(sessionId, "✅ Using vector store from session: $vectorStoreId", "info")
+            }
+
+            sendMessage(sessionId, "🔧 Creating movie recommendation assistant...", "progress")
+            
+            val assistant = openAIAssistant.createAssistant(
+                name = "Movie Recommendation Expert",
+                instructions = MOVIE_ASSISTANT_PROMPT,
+                tools = listOf(AssistantTool("file_search")),
+                vectorStoreIds = listOf(vectorStoreId),
+                debug = false
+            )
+
+            session.setAttribute("assistantId", assistant.id)
+            sendMessage(sessionId, "✅ Assistant created successfully!", "success")
+            sendMessage(sessionId, assistant.toSSEHtml(), "final_result")
+
+        } catch (e: Exception) {
+            logger.error("Assistant creation failed for session $sessionId", e)
+            sendMessage(sessionId, "❌ Assistant creation failed: ${e.message}", "error")
+        }
+    }
+
+    private suspend fun processQuery(sessionId: String, userMessage: String, session: HttpSession) {
+        if (userMessage.isBlank()) {
+            sendMessage(sessionId, "❌ Please provide a message to query the assistant", "error")
+            return
+        }
+
+        // Display user question first
+        sendMessage(sessionId, userMessage, "user_question")
+        sendMessage(sessionId, "💬 Starting chat with assistant...", "progress")
+
+        try {
+            // Get assistant ID from session or find existing one
+            var assistantId = session.getAttribute("assistantId") as String?
+            
+            if (assistantId == null) {
+                sendMessage(sessionId, "🔍 No assistant in session, checking for existing ones...", "progress")
+                val assistants = openAIAssistant.listAssistants(debug = false)
+                
+                if (assistants.data.isEmpty()) {
+                    sendMessage(sessionId, "❌ No assistants available. Please create an assistant first.", "error")
+                    return
+                }
+                
+                assistantId = assistants.data.first().id
+                sendMessage(sessionId, "✅ Found existing assistant: ${assistants.data.first().name} (${assistantId})", "info")
+            } else {
+                sendMessage(sessionId, "✅ Using assistant from session: $assistantId", "info")
+            }
+
+            // Get or create thread
+            var threadId = session.getAttribute("threadId") as String?
+            
+            if (threadId == null) {
+                sendMessage(sessionId, "🧵 Creating new conversation thread...", "progress")
+                val thread = openAIAssistant.createThread(debug = false)
+                threadId = thread.id
+                session.setAttribute("threadId", threadId)
+                sendMessage(sessionId, "✅ New conversation started!", "info")
+            } else {
+                sendMessage(sessionId, "🧵 Continuing conversation in existing thread...", "progress")
+            }
+
+            // Add message to thread
+            sendMessage(sessionId, "📝 Adding your message to thread...", "progress")
+            openAIAssistant.addMessageToThread(threadId, userMessage, debug = false)
+
+            // Run assistant
+            sendMessage(sessionId, "⚡ Running assistant...", "progress")
+            val run = openAIAssistant.runAssistant(threadId, assistantId, debug = false)
+
+            // Poll for completion
+            var runStatus = run
+            while (runStatus.status == "queued" || runStatus.status == "in_progress") {
+                sendMessage(sessionId, "⏳ Assistant is thinking... (${runStatus.status})", "progress")
+                kotlinx.coroutines.delay(2000)
+                runStatus = openAIAssistant.getRunStatus(threadId, run.id, debug = false)
+            }
+
+            if (runStatus.status == "completed") {
+                sendMessage(sessionId, "✅ Assistant completed! Getting response...", "progress")
+                val messages = openAIAssistant.getMessages(threadId, debug = false)
+                val assistantReply = messages.data
+                    .filter { it.role == "assistant" }
+                    .maxByOrNull { it.createdAt }
+                    ?.content?.firstOrNull()?.text?.value
+                    ?: "No response found"
+
+                sendMessage(sessionId, assistantReply, "final_result")
+            } else {
+                sendMessage(sessionId, "❌ Assistant run failed with status: ${runStatus.status}", "error")
+            }
+
+        } catch (e: Exception) {
+            logger.error("Assistant query failed for session $sessionId", e)
+            sendMessage(sessionId, "❌ Query failed: ${e.message}", "error")
+        }
+    }
+
     private suspend fun processList(sessionId: String) {
         sendMessage(sessionId, "📋 Listing all resources...", "progress")
 
@@ -141,6 +267,16 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
                 sendMessage(sessionId, "No vector stores found", "info")
             } else {
                 vectorStores.data.forEach { vs -> sendMessage(sessionId, vs.toSSEHtml(), "final_result") }
+            }
+
+            // List Assistants
+            val assistants = openAIAssistant.listAssistants(debug = false)
+
+            sendMessage(sessionId, "🤖 Assistants (${assistants.data.size}):", "info")
+            if (assistants.data.isEmpty()) {
+                sendMessage(sessionId, "No assistants found", "info")
+            } else {
+                assistants.data.forEach { assistant -> sendMessage(sessionId, assistant.toSSEHtml(), "final_result") }
             }
 
         } catch (e: Exception) {
@@ -170,6 +306,7 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
             }
 
             session.removeAttribute("fileId")
+            session.removeAttribute("threadId") // Clear thread when files are deleted
             sendMessage(sessionId, "🧹 File cleanup complete! Deleted $deletedCount files.", "success")
 
         } catch (e: Exception) {
@@ -205,38 +342,48 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
         }
     }
 
-    private suspend fun processCleanupAll(sessionId: String, session: HttpSession) {
-        sendMessage(sessionId, "🗑️ Starting complete cleanup (files + vector stores)...", "progress")
+    private suspend fun processCleanupAssistants(sessionId: String, session: HttpSession) {
+        sendMessage(sessionId, "🗑️ Starting assistant cleanup...", "progress")
 
         try {
-            // Delete vector stores first
-            val vectorStores = openAIAssistant.listVectorStores(debug = false)
-            var deletedVS = 0
+            val assistants = openAIAssistant.listAssistants(debug = false)
+            var deletedCount = 0
+            
+            sendMessage(sessionId, "🔍 Found ${assistants.data.size} assistants to delete...", "progress")
 
-            sendMessage(sessionId, "📚 Deleting ${vectorStores.data.size} vector stores...", "progress")
-            vectorStores.data.forEach { vs ->
-                if (openAIAssistant.deleteVectorStore(vs.id, debug = false)) {
-                    deletedVS++
-                    sendMessage(sessionId, "  ✅ Deleted vector store: ${vs.name ?: "Unnamed"}", "progress")
+            assistants.data.forEach { assistant ->
+                if (openAIAssistant.deleteAssistant(assistant.id, debug = false)) {
+                    deletedCount++
+                    sendMessage(sessionId, "  ✅ Deleted: ${assistant.name ?: "Unnamed"}, ${assistant.id}", "progress")
+                } else {
+                    sendMessage(sessionId, "  ❌ Failed to delete: ${assistant.name ?: "Unnamed"}", "progress")
                 }
             }
 
-            // Then delete files
-            val files = openAIAssistant.listFiles(debug = false)
-            var deletedFiles = 0
-            val filesToDelete = files.data.filter { it.purpose == "assistants" }
+            session.removeAttribute("assistantId")
+            session.removeAttribute("threadId") // Clear thread when assistants are deleted
+            sendMessage(sessionId, "🧹 Assistant cleanup complete! Deleted $deletedCount assistants.", "success")
 
-            sendMessage(sessionId, "📁 Deleting ${filesToDelete.size} files...", "progress")
-            filesToDelete.forEach { file ->
-                if (openAIAssistant.deleteFile(file.id, debug = false)) {
-                    deletedFiles++
-                    sendMessage(sessionId, "  ✅ Deleted file: ${file.filename}", "progress")
-                }
-            }
+        } catch (e: Exception) {
+            logger.error("Assistant cleanup failed for session $sessionId", e)
+            sendMessage(sessionId, "❌ Assistant cleanup failed: ${e.message}", "error")
+        }
+    }
 
-            session.removeAttribute("fileId")
-            session.removeAttribute("vectorStoreId")
-            sendMessage(sessionId, "🧹 Complete cleanup done! Deleted $deletedVS vector stores and $deletedFiles files.", "success")
+    private suspend fun processCleanupAll(sessionId: String, session: HttpSession) {
+        sendMessage(sessionId, "🗑️ Starting complete cleanup (assistants + vector stores + files)...", "progress")
+
+        try {
+            // Delete assistants first (they depend on vector stores)
+            processCleanupAssistants(sessionId, session)
+            
+            // Then delete vector stores (they depend on files)
+            processCleanupVectorStores(sessionId, session)
+            
+            // Finally delete files
+            processCleanupFiles(sessionId, session)
+            
+            sendMessage(sessionId, "🧹 Complete cleanup finished!", "success")
 
         } catch (e: Exception) {
             logger.error("Complete cleanup failed for session $sessionId", e)

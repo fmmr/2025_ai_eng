@@ -108,7 +108,29 @@ data class AssistantResponse(
     val tools: List<AssistantTool>? = null,
     @SerialName("file_ids") val fileIds: List<String>? = null,
     val metadata: Map<String, String>? = null
-)
+) {
+    val createdDate = Instant.ofEpochSecond(createdAt)
+        .atZone(ZoneId.systemDefault())
+        .format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))
+
+    fun toSSEHtml(): String {
+        val toolsInfo = tools?.joinToString(", ") { it.type } ?: "No tools"
+        
+        return """
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>🤖 ${name ?: "Unnamed"}</strong>
+                        <div class="small text-muted">${id}</div>
+                    </div>
+                    <div class="text-end">
+                        <span class="badge bg-primary me-1">${model}</span>
+                        <span class="badge bg-secondary me-1">${toolsInfo}</span>
+                        <div class="small">${createdDate}</div>
+                    </div>
+                </div>
+            """.trimIndent()
+    }
+}
 
 @Serializable
 data class ThreadRequest(

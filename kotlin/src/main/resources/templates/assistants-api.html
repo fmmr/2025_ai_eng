@@ -34,6 +34,29 @@
                             <small class="text-muted d-block mt-1">Create searchable database from uploaded file</small>
                         </div>
 
+                        <!-- Assistant Creation -->
+                        <div class="mb-3">
+                            <h6>3. Create Assistant</h6>
+                            <button class="btn btn-outline-primary btn-sm" onclick="processOperation('create-assistant')">
+                                🤖 Create Assistant
+                            </button>
+                            <small class="text-muted d-block mt-1">Create movie recommendation AI assistant</small>
+                        </div>
+
+                        <!-- Chat Interface -->
+                        <div class="mb-3">
+                            <h6>4. Chat with Assistant</h6>
+                            <div class="input-group">
+                                <input type="text" id="chatMessage" class="form-control form-control-sm" 
+                                       placeholder="Ask about movies..." 
+                                       onkeypress="if(event.key==='Enter') queryAssistant()">
+                                <button class="btn btn-outline-success btn-sm" onclick="queryAssistant()">
+                                    💬 Ask
+                                </button>
+                            </div>
+                            <small class="text-muted d-block mt-1">Query the AI assistant about movie recommendations</small>
+                        </div>
+
                         <!-- Management Actions -->
                         <div class="border-top pt-3">
                             <h6>🛠️ Resource Management</h6>
@@ -50,6 +73,9 @@
                                 </button>
                                 <button class="btn btn-outline-warning btn-sm me-2 mb-1" onclick="processOperation('cleanup-vector-stores')">
                                     📚 Delete Vector Stores
+                                </button>
+                                <button class="btn btn-outline-warning btn-sm me-2 mb-1" onclick="processOperation('cleanup-assistants')">
+                                    🤖 Delete Assistants
                                 </button>
                                 <button class="btn btn-outline-danger btn-sm mb-1" onclick="processOperation('cleanup-all')">
                                     🧹 Delete All Resources
@@ -71,39 +97,69 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5>📖 File Management Demo</h5>
+                        <h5>📖 OpenAI Assistants API Implementation</h5>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <h6>🎯 Current Scope</h6>
-                                <ul>
-                                    <li><strong>Upload:</strong> Send movies.txt to OpenAI</li>
-                                    <li><strong>Vector Store:</strong> Create searchable database</li>
-                                    <li><strong>List:</strong> View files and vector stores</li>
-                                    <li><strong>Cleanup:</strong> Granular deletion controls</li>
-                                    <li><strong>SSE:</strong> Real-time progress updates</li>
-                                </ul>
+                                <h6>🎯 OpenAI Assistants API</h6>
+                                <p class="text-muted">Complete implementation of OpenAI's Assistants API in Kotlin with Spring Boot. Creates intelligent AI assistants with file search capabilities.</p>
                                 
-                                <h6>🚀 Status</h6>
-                                <p class="text-muted">Vector store creation added! Next: listing all resources and assistant creation.</p>
+                                <h6>🔧 Architecture</h6>
+                                <ul class="small">
+                                    <li><strong>RAG Pipeline:</strong> File → Vector Store → Assistant → Chat</li>
+                                    <li><strong>Async Operations:</strong> Coroutines with SSE progress tracking</li>
+                                    <li><strong>Session Management:</strong> Smart resource detection</li>
+                                    <li><strong>Bootstrap UI:</strong> Real-time updates via Server-Sent Events</li>
+                                </ul>
+
+                                <h6>💻 Core Implementation</h6>
+                                <pre><code class="language-kotlin small">// Upload & Index
+val file = openAIAssistant.uploadFile(
+    fileBytes = movieFile.toByteArray(),
+    filename = "movies.txt", 
+    purpose = "assistants"
+)
+
+// Create Vector Store
+val vectorStore = openAIAssistant.createVectorStore(
+    name = "Movie Database",
+    fileIds = listOf(file.id)
+)</code></pre>
                             </div>
                             <div class="col-md-6">
-                                <h6>🔄 Simple Workflow</h6>
-                                <ol>
-                                    <li><strong>Upload:</strong> Send movies.txt to OpenAI</li>
-                                    <li><strong>Vector Store:</strong> Create searchable database</li>
-                                    <li><strong>List:</strong> Verify resources appear</li>
-                                    <li><strong>Test:</strong> Ensure step works before next</li>
-                                </ol>
-                                
-                                <h6>💡 Next Steps</h6>
-                                <ul>
-                                    <li>✅ Vector store creation</li>
-                                    <li>✅ List all resources (files + vector stores)</li>
-                                    <li>✅ Granular cleanup controls</li>
-                                    <li>Assistant setup</li>
-                                    <li>Chat interface</li>
+                                <h6>🤖 Assistant Creation</h6>
+                                <pre><code class="language-kotlin small">// Create Assistant with File Search
+val assistant = openAIAssistant.createAssistant(
+    name = "Movie Expert",
+    instructions = MOVIE_ASSISTANT_PROMPT,
+    model = Models.Chat.GPT_4O,
+    tools = listOf(AssistantTool("file_search")),
+    vectorStoreIds = listOf(vectorStore.id)
+)</code></pre>
+
+                                <h6>💬 Async Chat Flow</h6>
+                                <pre><code class="language-kotlin small">// Multi-step async conversation
+val thread = assistant.createThread()
+assistant.addMessageToThread(thread.id, userMessage)
+val run = assistant.runAssistant(thread.id, assistant.id)
+
+// Poll for completion
+while (run.status == "in_progress") {
+    delay(2000)
+    runStatus = assistant.getRunStatus(thread.id, run.id)
+}
+
+val response = assistant.getMessages(thread.id)
+    .data.filter { it.role == "assistant" }
+    .maxByOrNull { it.createdAt }</code></pre>
+
+                                <h6>✨ Features</h6>
+                                <ul class="small">
+                                    <li>🔄 Smart fallback (DB → general knowledge)</li>
+                                    <li>🎨 Bootstrap-formatted responses</li>
+                                    <li>📡 Real-time SSE progress updates</li>
+                                    <li>🧹 Granular resource cleanup</li>
                                 </ul>
                             </div>
                         </div>

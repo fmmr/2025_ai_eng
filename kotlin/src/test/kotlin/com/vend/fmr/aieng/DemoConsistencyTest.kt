@@ -48,8 +48,8 @@ class DemoConsistencyTest {
     @EnumSource(Demo::class)
     fun `all demos should have a controller and the controller should be named correctly`(demo: Demo) {
         val expectedNumberOfControllers = when {
-            !demo.local() -> 0 // External demos or non-local demos should not have controllers
-            else -> 1 // Local demos (completed or in-progress) should have exactly one controller
+            demo.local() -> 1
+            else -> 0
         }
         assert(allControllers.filter { it.demo == demo }.size == expectedNumberOfControllers) {
             "External Demo '${demo.id}' should have not have any controllers, but found ${allControllers.filter { it.demo == demo }.size}"

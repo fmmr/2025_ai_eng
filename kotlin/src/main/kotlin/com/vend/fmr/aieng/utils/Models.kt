@@ -39,12 +39,12 @@ object Models {
     
     // Default models for specific use cases
     object Defaults {
-        const val CHAT_COMPLETION = Chat.GPT_4
+        const val CHAT_COMPLETION = Chat.GPT_4O_MINI
         const val EMBEDDING = Embeddings.TEXT_EMBEDDING_ADA_002
         const val IMAGE_GENERATION = ImageGeneration.DALL_E_3
         const val VISION_ANALYSIS = Vision.GPT_4O
-        const val FUNCTION_CALLING = Chat.GPT_4
-        const val REACT_AGENT = Chat.GPT_4
+        const val FUNCTION_CALLING = Chat.GPT_4O_MINI
+        const val REACT_AGENT = Chat.GPT_4O_MINI
     }
 
     object HuggingFace{
