@@ -50,7 +50,7 @@ Comprehensive Spring Boot web application with interactive demos covering all ma
 
 - **[🧠 ReAct Playground](https://ai.rodland.no/demo/react)** - Reasoning + Acting pattern
 - **[🛠️ Tool Master](https://ai.rodland.no/demo/function-calling)** - Native OpenAI tool integration
-- **[🤖 Assistant Builder](https://ai.rodland.no/demo/assistants-api)** - OpenAI's persistent assistants (WIP)
+- **[🤖 Assistant Builder](https://ai.rodland.no/demo/assistants-api)** - OpenAI's persistent assistants
 - **[✈️ Trip Wizard](https://ai.rodland.no/demo/trip-planner)** - Parallel agent trip planning (Personal Exploration)
 
 #### 🔗 MCP Protocol
