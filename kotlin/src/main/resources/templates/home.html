@@ -9,8 +9,14 @@
 <div class="container my-4">
     <section class="hero-section">
         <h1>AI Engineering Course - Kotlin Implementation</h1>
-        <p>Kotlin implementations of <a href="https://scrimba.com/the-ai-engineer-path-c02v" target="_blank" class="text-decoration-none text-white">Scrimba AI Engineering Path</a> assignments and
-            examples</p>
+        <div class="mb-3 text-start">
+            <p class="small">Fredrik Rødland's Kotlin implementations of the <a href="https://scrimba.com/the-ai-engineer-path-c02v" target="_blank" class="text-decoration-none text-white">Scrimba AI Engineering Path</a> course assignments and examples. 
+            While the original course focuses on JavaScript, I chose Kotlin to concentrate on learning AI engineering concepts without syntax distractions. 
+            Built on Spring Boot with extensive use of Server-Sent Events (SSE) for real-time communication.</p>
+            
+            <p class="small">Throughout development, I've relied heavily on Claude Code CLI as both a development accelerator and learning tool. 
+            This repository serves as a personal reference and demonstrates how traditional backend technologies combine with cutting-edge AI capabilities.</p>
+        </div>
         <p class="build-info">
             <span th:text="'Built: ' + ${buildInfo.buildTimestamp} + ' - Git: '">Built: Unknown</span>
             <a th:href="'https://github.com/fmmr/2025_ai_eng/commit/' + ${buildInfo.gitCommit}" th:text="${buildInfo.gitCommit}" class="text-decoration-none text-white" target="_blank">commit</a>
