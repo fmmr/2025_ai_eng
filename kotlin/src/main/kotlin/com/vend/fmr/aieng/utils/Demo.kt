@@ -287,7 +287,7 @@ enum class Demo(
         longDescription = "Build persistent AI assistants using OpenAI's Assistants API with file handling, code execution, and long-term memory.<br>Advanced stateful assistants with tool capabilities beyond simple chat interactions.",
         icon = "bi-robot",
         emoji = "🤖",
-        status = DemoStatus.IN_PROGRESS,
+        status = DemoStatus.COMPLETED,
         category = DemoCategory.AI_AGENTS,
         hasJavaScript = true,
     ),
