@@ -19,7 +19,7 @@ object ReadmeGenerator {
                     val projectType = getProjectTypeText(demo, statusText)
                     
                     // Format based on completion status
-                    val titleFormat = if (demo.route != null) {
+                    val titleFormat = if (demo.showLink()) {
                         // Completed demo - bold with link to ai.rodland.no
                         "**[$emoji ${demo.title}](https://ai.rodland.no${demo.route})**"
                     } else {

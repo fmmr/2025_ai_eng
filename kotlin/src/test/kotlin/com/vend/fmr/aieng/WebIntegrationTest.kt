@@ -20,7 +20,7 @@ import java.time.Duration
 @SpringBootTest(classes = [Application::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class DemoWebIntegrationTest {
+class WebIntegrationTest {
 
     @LocalServerPort
     private var port: Int = 0
@@ -49,6 +49,17 @@ class DemoWebIntegrationTest {
         assert(response.body!!.contains(demo.title)) {
             "Demo ${demo.id} page should contain title '${demo.title}'"
         }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getNonExistingDemos")
+    fun `all not started demos should return 404`(demo: Demo) {
+        val url = "http://localhost:$port${demo.route}"
+        val response = restTemplate.getForEntity(url, String::class.java)
+        assert(response.statusCode == HttpStatus.NOT_FOUND) {
+            "Demo ${demo.id} at ${demo.route} should return 404 NOT_FOUND but got ${response.statusCode}"
+        }
+        assert(response.body!!.contains(demo.route)) { "Demo ${demo.id} page should contain error" }
     }
 
     @ParameterizedTest
@@ -120,6 +131,7 @@ class DemoWebIntegrationTest {
     }
 
     fun getLocalDemos(): List<Demo> = Demo.entries.filter { it.local() }
+    fun getNonExistingDemos(): List<Demo> = Demo.entries.filterNot { it.showLink() }
 
     fun getDemosWithJavaScript(): List<Demo> = Demo.entries.filter { it.hasJavaScript }
 }

@@ -403,6 +403,8 @@ enum class Demo(
 
     fun local(): Boolean = !external() && (status == DemoStatus.COMPLETED || status == DemoStatus.IN_PROGRESS)
 
+    fun showLink(): Boolean = external() || status == DemoStatus.COMPLETED || status == DemoStatus.IN_PROGRESS
+
     val iconHtml: String = iconHtml(icon, title)
 
     fun expectedControllerName(): String = id.split("-").joinToString("") { it.replaceFirstChar { c -> c.uppercase() } } + "Controller"
