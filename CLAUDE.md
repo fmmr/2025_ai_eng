@@ -13,6 +13,7 @@ Working in kotlin directory - AI engineering course using Kotlin/Spring Boot.
 - **NO HTML IN JAVASCRIPT** — Use templates/fragments only
 - Remove debug code when done
 - Process data in Kotlin backend, not Thymeleaf
+- Keep javascript in `js/` directory, not in templates
 - Don't guess — find out the answer by inspecting and looking at documentation
 - **NEVER commit unless explicitly asked** - BOSS decides when to commit
 - If you're explicitly asked to commit, ensure the messages are SHORT, CLEAR, and DESCRIPTIVE — no one reads long commit messages

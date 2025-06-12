@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<!--suppress HtmlRequiredTitleElement -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: common-head}"></head>
+<body>
+    <div th:replace="~{fragments/navigation :: navbar(${activeTab})}"></div>
+
+    <div class="container my-4">
+        <div th:replace="~{fragments/hero-section :: demo-hero(${demo})}"></div>
+
+        <div class="row">
+            <!-- Left Panel: Assistant Management Interface -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>🤖 Assistant Builder</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- File Upload -->
+                        <div class="mb-3">
+                            <h6>1. Upload Movie File</h6>
+                            <button class="btn btn-outline-primary btn-sm" onclick="processOperation('upload')">
+                                📁 Upload movies.txt
+                            </button>
+                            <small class="text-muted d-block mt-1">Upload file to OpenAI</small>
+                        </div>
+
+                        <!-- Management Actions -->
+                        <div class="border-top pt-3">
+                            <h6>🛠️ File Management</h6>
+                            <div class="mb-3">
+                                <button class="btn btn-outline-info btn-sm me-2" onclick="processOperation('list')">
+                                    📋 List Files
+                                </button>
+                                <button class="btn btn-outline-danger btn-sm" onclick="processOperation('cleanup')">
+                                    🗑️ Delete All Files
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Console/Progress -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>🖥️ Assistant Console</h5>
+                        <button class="btn btn-outline-secondary btn-sm float-end" onclick="clearConsole()">
+                            Clear
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="assistantConsole" class="console-output" style="height: 400px; overflow-y: auto; background-color: #f8f9fa; padding: 10px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 14px;">
+                            <div class="text-muted">🚀 Ready to build your AI assistant...</div>
+                            <div class="text-muted">Click "Upload movies.txt" to start the process</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Information Panel -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>📖 File Management Demo</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>🎯 Current Scope</h6>
+                                <ul>
+                                    <li><strong>Upload:</strong> Send movies.txt to OpenAI</li>
+                                    <li><strong>List:</strong> View all uploaded files</li>
+                                    <li><strong>Cleanup:</strong> Delete assistant files</li>
+                                    <li><strong>SSE:</strong> Real-time progress updates</li>
+                                </ul>
+                                
+                                <h6>🚀 Status</h6>
+                                <p class="text-muted">Building solid foundation with file operations first. Vector stores, assistants, and chat will be added once file handling is rock-solid.</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>🔄 Simple Workflow</h6>
+                                <ol>
+                                    <li><strong>Upload:</strong> Test file upload</li>
+                                    <li><strong>List:</strong> Verify file appears</li>
+                                    <li><strong>Cleanup:</strong> Test deletion works</li>
+                                    <li><strong>Repeat:</strong> Ensure reliability</li>
+                                </ol>
+                                
+                                <h6>💡 Next Steps</h6>
+                                <ul>
+                                    <li>Vector store creation</li>
+                                    <li>Assistant setup</li>
+                                    <li>Chat interface</li>
+                                    <li>Background monitoring</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/assistants-demo.js"></script>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    <div th:replace="~{fragments/scripts :: common-scripts}"></div>
+</body>
+</html>

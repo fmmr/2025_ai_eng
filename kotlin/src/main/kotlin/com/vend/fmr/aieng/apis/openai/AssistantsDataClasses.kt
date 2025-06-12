@@ -2,17 +2,11 @@ package com.vend.fmr.aieng.apis.openai
 
 import com.vend.fmr.aieng.utils.Models
 import kotlinx.serialization.*
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
-@Serializable
-data class FileUploadResponse(
-    val id: String,
-    val bytes: Int,
-    val filename: String,
-    val purpose: String,
-    @SerialName("created_at") val createdAt: Long,
-    val status: String,
-    @SerialName("status_details") val statusDetails: String? = null
-)
+typealias FileUploadResponse = FileData
 
 @Serializable
 data class AssistantRequest(
@@ -208,8 +202,14 @@ data class FileData(
     @SerialName("created_at") val createdAt: Long,
     val filename: String,
     val purpose: String,
-    val status: String
-)
+    val status: String,
+    @SerialName("status_details") val statusDetails: String? = null
+) {
+    val createdAtFormatted: String
+        get() = Instant.ofEpochSecond(createdAt)
+            .atZone(ZoneId.systemDefault())
+            .format(DateTimeFormatter.ofPattern("YYYYMMDD_HHmmss"))
+}
 
 @Serializable
 data class AssistantListResponse(
