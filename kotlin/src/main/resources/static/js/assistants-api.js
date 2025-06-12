@@ -41,4 +41,14 @@ function queryAssistant() {
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
     sse.connect();
+    
+    // Add Enter key listener for chat input
+    const chatInput = document.getElementById('chatMessage');
+    if (chatInput) {
+        chatInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                queryAssistant();
+            }
+        });
+    }
 });

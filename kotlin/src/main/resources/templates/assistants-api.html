@@ -45,11 +45,11 @@
 
                         <!-- Chat Interface -->
                         <div class="mb-3">
-                            <h6>4. Chat with Assistant</h6>
+                            <h6><label for="chatMessage" class="form-label">4. Chat with Assistant</label></h6>
                             <div class="input-group">
                                 <input type="text" id="chatMessage" class="form-control form-control-sm" 
                                        placeholder="Ask about movies..." 
-                                       onkeypress="if(event.key==='Enter') queryAssistant()">
+                                       aria-label="Movie query input">
                                 <button class="btn btn-outline-success btn-sm" onclick="queryAssistant()">
                                     💬 Ask
                                 </button>
