@@ -2,26 +2,23 @@ package com.vend.fmr.aieng.web
 
 import com.vend.fmr.aieng.apis.huggingface.HuggingFace
 import com.vend.fmr.aieng.utils.Demo
+import jakarta.servlet.http.HttpSession
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 @RequestMapping("/demo/huggingface-classification")
-class HuggingFaceClassificationController(
+class HuggingfaceClassificationController(
     private val huggingface: HuggingFace
 ) : BaseController(Demo.HUGGINGFACE_CLASSIFICATION) {
 
-    @GetMapping
-    fun classificationDemo(model: Model): String {
+    override fun addDefaultModel(model: Model, session: HttpSession) {
         model.addAttribute("defaultText", "I love this new product, it works amazing!")
         model.addAttribute("defaultLabels", "positive, negative, neutral")
         model.addAttribute("explanation", "Classify text using open-source BART model")
-        
-        return "huggingface-classification-demo"
     }
 
     @PostMapping
@@ -71,6 +68,6 @@ class HuggingFaceClassificationController(
         model.addAttribute("defaultLabels", "positive, negative, neutral")
         model.addAttribute("explanation", "Classify text using open-source BART model")
         
-        return "huggingface-classification-demo"
+        return demo.id
     }
 }

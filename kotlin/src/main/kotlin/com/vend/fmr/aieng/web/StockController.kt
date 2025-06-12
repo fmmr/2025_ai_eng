@@ -7,7 +7,6 @@ import com.vend.fmr.aieng.utils.Demo
 import com.vend.fmr.aieng.utils.Prompts
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -18,11 +17,6 @@ class StockController(
     private val openAI: OpenAI,
     private val polygon: Polygon
 ) : BaseController(Demo.STOCK_DATA) {
-
-    @GetMapping
-    fun stockDemo(): String {
-        return "stock-demo"
-    }
 
     @PostMapping
     suspend fun processStockQuery(
@@ -69,7 +63,7 @@ class StockController(
             }
         }
         
-        return "stock-demo"
+        return demo.id
     }
 }
 

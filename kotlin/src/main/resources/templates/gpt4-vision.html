@@ -228,7 +228,7 @@ val analysis = visionResponse.text()</code></pre>
     <div th:replace="~{fragments/footer :: common-footer}"></div>
     <div th:replace="~{fragments/scripts :: common-scripts}"></div>
     
-    <script src="/js/vision-demo.js"></script>
+    <script th:src="@{'/js/' + ${demo.id} + '.js'}"></script>
     
     <script>
         function copyAnalysis() {

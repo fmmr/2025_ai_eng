@@ -4,7 +4,6 @@ import com.vend.fmr.aieng.apis.chunker.Chunker
 import com.vend.fmr.aieng.utils.Demo
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -14,11 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam
 class ChunkingController(
     private val chunker: Chunker
 ) : BaseController(Demo.CHUNKING) {
-
-    @GetMapping
-    fun chunkingDemo(): String {
-        return "chunking-demo"
-    }
 
     @PostMapping
     fun processChunking(
@@ -51,7 +45,7 @@ class ChunkingController(
             model.addAttribute("formData", ChunkingFormData(chunkSize, chunkOverlap, textInput))
         }
         
-        return "chunking-demo"
+        return demo.id
     }
     
     private fun findOverlap(text1: String, text2: String): String {

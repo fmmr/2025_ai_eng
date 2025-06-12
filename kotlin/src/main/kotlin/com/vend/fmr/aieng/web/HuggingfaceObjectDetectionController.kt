@@ -2,10 +2,10 @@ package com.vend.fmr.aieng.web
 
 import com.vend.fmr.aieng.apis.huggingface.HuggingFace
 import com.vend.fmr.aieng.utils.Demo
+import jakarta.servlet.http.HttpSession
 import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -13,12 +13,11 @@ import org.springframework.web.multipart.MultipartFile
 
 @Controller
 @RequestMapping("/demo/huggingface-object-detection")
-class HuggingFaceObjectDetectionController(
+class HuggingfaceObjectDetectionController(
     private val huggingface: HuggingFace
 ) : BaseController(Demo.OBJECT_DETECTION) {
 
-    @GetMapping
-    fun objectDetectionDemo(model: Model): String {
+    override fun addDefaultModel(model: Model, session: HttpSession) {
         model.addAttribute("defaultImage", "kitchen.png")
         model.addAttribute("explanation", "Detect objects in images using DETR (Detection Transformer) model")
         
@@ -26,8 +25,6 @@ class HuggingFaceObjectDetectionController(
         model.addAttribute("showBefore", true)
         model.addAttribute("beforeImageSrc", "/images/kitchen.png")
         model.addAttribute("beforeImageName", "kitchen.png")
-        
-        return "huggingface-object-detection-demo"
     }
 
     @PostMapping
@@ -105,6 +102,6 @@ class HuggingFaceObjectDetectionController(
         model.addAttribute("defaultImage", "kitchen.png")
         model.addAttribute("explanation", "Detect objects in images using DETR (Detection Transformer) model")
         
-        return "huggingface-object-detection-demo"
+        return demo.id
     }
 }

@@ -3,9 +3,9 @@ package com.vend.fmr.aieng.web
 import com.vend.fmr.aieng.apis.openai.OpenAI
 import com.vend.fmr.aieng.utils.Demo
 import com.vend.fmr.aieng.utils.Models
+import jakarta.servlet.http.HttpSession
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -77,8 +77,7 @@ class FilmFusionController(
         )
     }
 
-    @GetMapping
-    fun filmFusionDemo(model: Model): String {
+    override fun addDefaultModel(model: Model, session: HttpSession) {
         model.addAttribute("movieTitles", MOVIE_TITLES)
         model.addAttribute("artStyles", ART_STYLES)
         model.addAttribute("dalleModels", DALL_E_MODELS)
@@ -86,8 +85,6 @@ class FilmFusionController(
         model.addAttribute("dalle3Sizes", DALL_E_3_SIZES)
         model.addAttribute("dalle3Styles", DALL_E_3_STYLES)
         model.addAttribute("qualityOptions", QUALITY_OPTIONS)
-        
-        return "film-fusion-demo"
     }
 
     @PostMapping
@@ -150,6 +147,6 @@ class FilmFusionController(
             model.addAttribute("error", "Failed to generate image: ${e.message}")
         }
 
-        return "film-fusion-demo"
+        return demo.id
     }
 }

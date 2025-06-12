@@ -1,14 +1,16 @@
 package com.vend.fmr.aieng.web
 
-import com.vend.fmr.aieng.utils.Demo
-import com.vend.fmr.aieng.apis.openai.*
-import com.vend.fmr.aieng.utils.Prompts
+import com.vend.fmr.aieng.apis.openai.Message
+import com.vend.fmr.aieng.apis.openai.OpenAI
+import com.vend.fmr.aieng.apis.openai.TextContent
 import com.vend.fmr.aieng.utils.AgentTool
+import com.vend.fmr.aieng.utils.Demo
+import com.vend.fmr.aieng.utils.Prompts
 import com.vend.fmr.aieng.utils.truncate
+import jakarta.servlet.http.HttpSession
 import kotlinx.coroutines.runBlocking
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -22,17 +24,15 @@ data class ReActStep(
 
 @Controller
 @RequestMapping("/demo/react")
-class ReActController(
+class ReactController(
     private val openAI: OpenAI
 ) : BaseController(Demo.REACT_AGENT) {
 
-    @GetMapping
-    fun reactDemo(model: Model): String {
+    override fun addDefaultModel(model: Model, session: HttpSession) {
         model.addAttribute("defaultQuery", Prompts.Defaults.REACT_AGENT_QUERY)
         model.addAttribute("systemPrompt", Prompts.getReActSystemPrompt())
         model.addAttribute("systemPromptTruncated", Prompts.getReActSystemPrompt().truncate())
         model.addAttribute("availableTools", AgentTool.entries)
-        return "react-demo"
     }
 
     @PostMapping

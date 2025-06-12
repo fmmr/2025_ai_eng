@@ -108,6 +108,6 @@
         // Make tool defaults from Tools enum available to JavaScript
         window.toolDefaults = /*[[${toolDefaults}]]*/ {};
     </script>
-    <script src="/js/mcp-client-demo.js"></script>
+    <script th:src="@{'/js/' + ${demo.id} + '.js'}"></script>
 </body>
 </html>

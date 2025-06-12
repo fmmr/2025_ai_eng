@@ -113,6 +113,6 @@
         // Make tools available to JavaScript
         window.availableTools = /*[[${availableTools}]]*/ [];
     </script>
-    <script src="/js/mcp-demo.js"></script>
+    <script th:src="@{'/js/' + ${demo.id} + '.js'}"></script>
 </body>
 </html>

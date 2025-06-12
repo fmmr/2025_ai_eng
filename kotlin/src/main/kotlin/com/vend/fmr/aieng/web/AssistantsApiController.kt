@@ -17,16 +17,10 @@ data class AssistantRequest(
 )
 
 @Controller
-@RequestMapping("/demo/assistants")
-class AssistantsController(private val openAIAssistant: OpenAIAssistant) : BaseController(Demo.ASSISTANTS_API) {
+@RequestMapping("/demo/assistants-api")
+class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : BaseController(Demo.ASSISTANTS_API) {
 
-    private val logger = LoggerFactory.getLogger(AssistantsController::class.java)
-
-    @GetMapping
-    fun showDemo(): String {
-        return "assistants-demo"
-    }
-
+    private val logger = LoggerFactory.getLogger(AssistantsApiController::class.java)
 
     private fun sendMessage(sessionId: String, message: String, type: String = "info") {
         sendSseEvent(sessionId, type, message)

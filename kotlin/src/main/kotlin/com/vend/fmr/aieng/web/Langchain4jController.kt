@@ -1,23 +1,23 @@
 package com.vend.fmr.aieng.web
 
 import com.vend.fmr.aieng.utils.Demo
+import dev.langchain4j.model.chat.ChatModel
+import dev.langchain4j.model.chat.DisabledChatModel
 import dev.langchain4j.service.AiServices
 import dev.langchain4j.service.UserMessage
 import dev.langchain4j.service.V
-import dev.langchain4j.model.chat.ChatModel
-import dev.langchain4j.model.chat.DisabledChatModel
+import jakarta.servlet.http.HttpSession
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 @RequestMapping("/demo/langchain4j")
-class LangChain4jController : BaseController(Demo.LANGCHAIN4J) {
+class Langchain4jController : BaseController(Demo.LANGCHAIN4J) {
 
     @Autowired
     @Qualifier("langchain4jChatModel")
@@ -35,11 +35,9 @@ class LangChain4jController : BaseController(Demo.LANGCHAIN4J) {
         fun classifySentiment(@V("text") text: String): String
     }
 
-    @GetMapping
-    fun langchain4jDemo(model: Model): String {
+    override fun addDefaultModel(model: Model, session: HttpSession) {
         if (chatModel is DisabledChatModel) {
             model.addAttribute("error", "LangChain4j is not available - OPENAI_API_KEY environment variable is required")
-            return "langchain4j-demo"
         }
         
         model.addAttribute("defaultText", "LangChain4j provides a fantastic abstraction layer for AI applications. It simplifies integration with multiple AI providers, offers type-safe interfaces, and includes powerful tools for building production-ready AI systems with minimal boilerplate code.")
@@ -52,8 +50,6 @@ class LangChain4jController : BaseController(Demo.LANGCHAIN4J) {
         formData["operation"] = "analyze"
         formData["maxWords"] = "50"
         model.addAttribute("formData", formData)
-        
-        return "langchain4j-demo"
     }
 
     @PostMapping
@@ -75,7 +71,7 @@ class LangChain4jController : BaseController(Demo.LANGCHAIN4J) {
         
         if (chatModel is DisabledChatModel) {
             model.addAttribute("error", "LangChain4j is not available - OPENAI_API_KEY environment variable is required")
-            return "langchain4j-demo"
+            return demo.id
         }
         
         try {
@@ -110,6 +106,6 @@ class LangChain4jController : BaseController(Demo.LANGCHAIN4J) {
         model.addAttribute("defaultMaxWords", 50)
         model.addAttribute("explanation", "Compare LangChain4j's declarative approach vs. our custom HTTP implementations")
         
-        return "langchain4j-demo"
+        return demo.id
     }
 }

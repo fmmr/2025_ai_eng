@@ -3,16 +3,16 @@ package com.vend.fmr.aieng.web
 import com.vend.fmr.aieng.apis.openai.OpenAI
 import com.vend.fmr.aieng.utils.Demo
 import com.vend.fmr.aieng.utils.Models
+import jakarta.servlet.http.HttpSession
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 @RequestMapping("/demo/gpt4-vision")
-class VisionController(
+class Gpt4VisionController(
     private val openAI: OpenAI
 ) : BaseController(Demo.GPT4_VISION) {
 
@@ -80,13 +80,10 @@ class VisionController(
         val suggestedPrompts: List<String>
     )
 
-    @GetMapping
-    fun visionDemo(model: Model): String {
+    override fun addDefaultModel(model: Model, session: HttpSession) {
         model.addAttribute("demoImages", DEMO_IMAGES)
         model.addAttribute("visionModels", VISION_MODELS)
         model.addAttribute("detailLevels", DETAIL_LEVELS)
-        
-        return "vision-demo"
     }
 
     @PostMapping
@@ -144,6 +141,6 @@ class VisionController(
             model.addAttribute("error", "Failed to analyze image: ${e.message}")
         }
 
-        return "vision-demo"
+        return demo.id
     }
 }

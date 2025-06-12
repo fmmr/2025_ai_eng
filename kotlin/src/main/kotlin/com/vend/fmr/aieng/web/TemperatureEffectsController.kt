@@ -1,19 +1,19 @@
 package com.vend.fmr.aieng.web
 
-import com.vend.fmr.aieng.dtos.ParameterSet
 import com.vend.fmr.aieng.apis.openai.OpenAI
+import com.vend.fmr.aieng.dtos.ParameterSet
 import com.vend.fmr.aieng.utils.Demo
 import com.vend.fmr.aieng.utils.Prompts
+import jakarta.servlet.http.HttpSession
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 @RequestMapping("/demo/temperature-effects")
-class TemperatureController(
+class TemperatureEffectsController(
     private val openAI: OpenAI
 ) : BaseController(Demo.TEMPERATURE_EFFECTS) {
     companion object {
@@ -21,13 +21,11 @@ class TemperatureController(
         const val FIXED_TOP_P = 0.9
     }
 
-    @GetMapping
-    fun temperatureDemo(model: Model): String {
+    override fun addDefaultModel(model: Model, session: HttpSession) {
         model.addAttribute("prompt", Prompts.Defaults.CHAT_PARAMETERS_PROMPT)
         model.addAttribute("fixedParam", "top_p = $FIXED_TOP_P")
         model.addAttribute("variableParam", "temperature (0.1 → $WILD)")
         model.addAttribute("explanation", "How temperature affects creativity vs consistency")
-        return "temperature-demo"
     }
 
     @PostMapping
@@ -103,7 +101,7 @@ class TemperatureController(
             model.addAttribute("formData", formData)
         }
 
-        return "temperature-demo"
+        return demo.id
     }
 
     private fun commonModelAttributes(

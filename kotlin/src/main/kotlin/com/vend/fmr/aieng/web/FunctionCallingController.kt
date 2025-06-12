@@ -1,14 +1,16 @@
 package com.vend.fmr.aieng.web
 
-import com.vend.fmr.aieng.utils.Demo
-import com.vend.fmr.aieng.apis.openai.*
-import com.vend.fmr.aieng.utils.Prompts
+import com.vend.fmr.aieng.apis.openai.Message
+import com.vend.fmr.aieng.apis.openai.OpenAI
+import com.vend.fmr.aieng.apis.openai.TextContent
 import com.vend.fmr.aieng.utils.AgentTool
+import com.vend.fmr.aieng.utils.Demo
+import com.vend.fmr.aieng.utils.Prompts
 import com.vend.fmr.aieng.utils.truncate
+import jakarta.servlet.http.HttpSession
 import kotlinx.coroutines.runBlocking
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -28,13 +30,11 @@ class FunctionCallingController(
     private val openAI: OpenAI
 ) : BaseController(Demo.FUNCTION_CALLING) {
 
-    @GetMapping
-    fun functionCallingDemo(model: Model): String {
+    override fun addDefaultModel(model: Model, session: HttpSession) {
         model.addAttribute("defaultQuery", "Do you have any ideas for activities I can do at my location?")
         model.addAttribute("systemPrompt", Prompts.FUNCTION_CALLING_SYSTEM)
         model.addAttribute("systemPromptTruncated", Prompts.FUNCTION_CALLING_SYSTEM.truncate())
         model.addAttribute("availableTools", AgentTool.entries)
-        return "function-calling-demo"
     }
 
     @PostMapping

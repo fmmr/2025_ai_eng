@@ -140,6 +140,6 @@
     <div th:replace="~{fragments/footer :: common-footer}"></div>
     <div th:replace="~{fragments/scripts :: common-scripts}"></div>
     <script src="/js/sse.js"></script>
-    <script src="/js/mcp-assistant-demo.js"></script>
+    <script th:src="@{'/js/' + ${demo.id} + '.js'}"></script>
 </body>
 </html>

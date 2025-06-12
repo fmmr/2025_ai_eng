@@ -4,21 +4,20 @@ import com.vend.fmr.aieng.apis.openai.OpenAI
 import com.vend.fmr.aieng.dtos.PromptComparison
 import com.vend.fmr.aieng.utils.Demo
 import com.vend.fmr.aieng.utils.Prompts
+import jakarta.servlet.http.HttpSession
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 @RequestMapping("/demo/prompt-engineering")
-class PromptController(
+class PromptEngineeringController(
     private val openAI: OpenAI
 ) : BaseController(Demo.PROMPT_ENGINEERING) {
 
-    @GetMapping
-    fun promptDemo(model: Model): String {
+    override fun addDefaultModel(model: Model, session: HttpSession) {
         val scenarios = listOf(
             PromptComparison(
                 scenario = "Recipe Generation",
@@ -35,7 +34,6 @@ class PromptController(
         )
         
         model.addAttribute("scenarios", scenarios)
-        return "prompt-demo"
     }
 
     @PostMapping
@@ -87,6 +85,6 @@ class PromptController(
             model.addAttribute("error", "Invalid scenario selected")
         }
 
-        return "prompt-demo"
+        return demo.id
     }
 }

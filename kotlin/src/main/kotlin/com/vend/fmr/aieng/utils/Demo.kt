@@ -11,7 +11,7 @@ enum class Demo(
     val emoji: String,
     val status: DemoStatus,
     val category: DemoCategory,
-    val route: String? = null,
+    val route: String = "/demo/$id",
     val courseContent: Boolean = true,
     val soloProject: Boolean = false,
     val contentType: DemoContentType = if (soloProject) COURSE_CONTENT_SOLO else (if (courseContent) COURSE_CONTENT else PERSONAL_EXPLORATION)
@@ -28,7 +28,6 @@ enum class Demo(
         emoji = "📝",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.CORE_AI,
-        route = "/demo/prompt-engineering"
     ),
 
     CHAT_COMPLETION(
@@ -40,7 +39,6 @@ enum class Demo(
         emoji = "🤖",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.CORE_AI,
-        route = "/demo/chat-completion"
     ),
 
     CHAT_INTERACTIVE(
@@ -52,7 +50,6 @@ enum class Demo(
         emoji = "💬",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.CORE_AI,
-        route = "/demo/chat"
     ),
 
     TEMPERATURE_EFFECTS(
@@ -64,7 +61,6 @@ enum class Demo(
         emoji = "🌡️",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.CORE_AI,
-        route = "/demo/temperature-effects"
     ),
 
     TOP_P_EFFECTS(
@@ -76,7 +72,6 @@ enum class Demo(
         emoji = "🎯",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.CORE_AI,
-        route = "/demo/top-p-effects"
     ),
 
     FINE_TUNING(
@@ -100,7 +95,6 @@ enum class Demo(
         emoji = "🔢",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.CORE_AI,
-        route = "/demo/embeddings"
     ),
 
     CHUNKING(
@@ -112,7 +106,6 @@ enum class Demo(
         emoji = "✂️",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.CORE_AI,
-        route = "/demo/chunking"
     ),
 
     POLY_GLOT(
@@ -139,7 +132,6 @@ enum class Demo(
         emoji = "📈",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.DATA,
-        route = "/demo/stock"
     ),
 
     DODGY_DAVE(
@@ -165,7 +157,6 @@ enum class Demo(
         emoji = "🗄️",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.DATA,
-        route = "/demo/supabase"
     ),
 
     RAG(
@@ -177,7 +168,6 @@ enum class Demo(
         emoji = "🔗",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.DATA,
-        route = "/demo/rag"
     ),
 
     POPCHOICE(
@@ -202,7 +192,6 @@ enum class Demo(
         emoji = "🏷️",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.OPEN_SOURCE,
-        route = "/demo/huggingface-classification"
     ),
 
     HUGGINGFACE_SUMMARIZATION(
@@ -214,7 +203,6 @@ enum class Demo(
         emoji = "📄",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.OPEN_SOURCE,
-        route = "/demo/huggingface-summarization"
     ),
 
     OBJECT_DETECTION(
@@ -226,7 +214,6 @@ enum class Demo(
         emoji = "🔍",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.OPEN_SOURCE,
-        route = "/demo/huggingface-object-detection"
     ),
 
     // Vision & Image
@@ -239,7 +226,6 @@ enum class Demo(
         emoji = "🎬",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.VISION_IMAGE,
-        route = "/demo/film-fusion"
     ),
 
     IMAGE_EDITING(
@@ -251,7 +237,6 @@ enum class Demo(
         emoji = "✏️",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.VISION_IMAGE,
-        route = "/demo/image-editing"
     ),
 
     GPT4_VISION(
@@ -263,7 +248,6 @@ enum class Demo(
         emoji = "👁️",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.VISION_IMAGE,
-        route = "/demo/gpt4-vision"
     ),
 
     // AI Agents
@@ -276,7 +260,6 @@ enum class Demo(
         emoji = "🧠",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.AI_AGENTS,
-        route = "/demo/react"
     ),
 
     FUNCTION_CALLING(
@@ -288,7 +271,6 @@ enum class Demo(
         emoji = "🛠️",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.AI_AGENTS,
-        route = "/demo/function-calling"
     ),
 
     ASSISTANTS_API(
@@ -300,7 +282,6 @@ enum class Demo(
         emoji = "🤖",
         status = DemoStatus.IN_PROGRESS,
         category = DemoCategory.AI_AGENTS,
-        route = "/demo/assistants"
     ),
 
     TRAVEL_AGENT(
@@ -313,7 +294,6 @@ enum class Demo(
         courseContent = false,
         status = DemoStatus.COMPLETED,
         category = DemoCategory.AI_AGENTS,
-        route = "/demo/trip-planner"
     ),
 
     // MCP Protocol (Additional Explorations)
@@ -326,7 +306,6 @@ enum class Demo(
         emoji = "🛠️",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.MCP_PROTOCOL,
-        route = "/demo/mcp-server",
         courseContent = false,
     ),
 
@@ -339,7 +318,6 @@ enum class Demo(
         emoji = "🔗",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.MCP_PROTOCOL,
-        route = "/demo/mcp-protocol",
         courseContent = false,
         contentType = HACKDAY
     ),
@@ -353,7 +331,6 @@ enum class Demo(
         emoji = "🔧",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.MCP_PROTOCOL,
-        route = "/demo/mcp-assistant",
         courseContent = false,
         contentType = HACKDAY
     ),
@@ -368,7 +345,6 @@ enum class Demo(
         emoji = "🦜",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.FRAMEWORKS,
-        route = "/demo/langchain4j",
         courseContent = false
     ),
 
@@ -381,7 +357,6 @@ enum class Demo(
         emoji = "🍃",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.FRAMEWORKS,
-        route = "/demo/spring-ai",
         courseContent = false
     ),
 
@@ -411,9 +386,11 @@ enum class Demo(
         courseContent = false
     );
 
-    fun external(): Boolean = route?.startsWith("http") ?: false
+    fun external(): Boolean = route.startsWith("http")
 
     val iconHtml: String = iconHtml(icon, title)
+
+    fun expectedControllerName(): String = id.split("-").joinToString("") { it.replaceFirstChar { c -> c.uppercase() } } + "Controller"
 
     companion object {
         fun getByCategory(category: DemoCategory): List<Demo> {

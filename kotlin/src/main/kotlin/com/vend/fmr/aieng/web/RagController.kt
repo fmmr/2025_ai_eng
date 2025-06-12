@@ -7,7 +7,6 @@ import com.vend.fmr.aieng.utils.Demo
 import com.vend.fmr.aieng.utils.Prompts
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -18,11 +17,6 @@ class RagController(
     private val openAI: OpenAI,
     private val supabase: Supabase
 ) : BaseController(Demo.RAG) {
-
-    @GetMapping
-    fun ragDemo(): String {
-        return "rag-demo"
-    }
 
     @PostMapping
     suspend fun processRagQuery(
@@ -62,7 +56,7 @@ class RagController(
             }
         }
         
-        return "rag-demo"
+        return demo.id
     }
 }
 

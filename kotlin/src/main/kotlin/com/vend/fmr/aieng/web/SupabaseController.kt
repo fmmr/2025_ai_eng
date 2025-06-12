@@ -6,7 +6,6 @@ import com.vend.fmr.aieng.apis.supabase.Supabase
 import com.vend.fmr.aieng.utils.Demo
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -17,11 +16,6 @@ class SupabaseController(
     private val openAI: OpenAI,
     private val supabase: Supabase
 ) : BaseController(Demo.VECTOR_DATABASE) {
-
-    @GetMapping
-    fun supabaseDemo(): String {
-        return "supabase-demo"
-    }
 
     @PostMapping
     suspend fun processVectorSearch(
@@ -50,7 +44,7 @@ class SupabaseController(
             }
         }
         
-        return "supabase-demo"
+        return demo.id
     }
 }
 

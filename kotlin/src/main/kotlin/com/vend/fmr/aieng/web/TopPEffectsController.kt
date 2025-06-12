@@ -4,29 +4,25 @@ import com.vend.fmr.aieng.apis.openai.OpenAI
 import com.vend.fmr.aieng.dtos.ParameterSet
 import com.vend.fmr.aieng.utils.Demo
 import com.vend.fmr.aieng.utils.Prompts
+import jakarta.servlet.http.HttpSession
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 @RequestMapping("/demo/top-p-effects")
-class TopPController(
+class TopPEffectsController(
     private val openAI: OpenAI
 ) : BaseController(Demo.TOP_P_EFFECTS) {
 
-    @GetMapping
-    fun topPDemo(model: Model): String {
+    override fun addDefaultModel(model: Model, session: HttpSession) {
         val fixedTemperature = 0.7
-        
         model.addAttribute("prompt", Prompts.Defaults.CHAT_PARAMETERS_PROMPT)
         model.addAttribute("fixedParam", "temperature = $fixedTemperature")
         model.addAttribute("variableParam", "top_p (0.1 → 1.0)")
         model.addAttribute("explanation", "How top-p affects vocabulary restriction vs exploration")
-        
-        return "top-p-demo"
     }
 
     @PostMapping
@@ -110,6 +106,6 @@ color = "🔴"
             model.addAttribute("formData", formData)
         }
 
-        return "top-p-demo"
+        return demo.id
     }
 }

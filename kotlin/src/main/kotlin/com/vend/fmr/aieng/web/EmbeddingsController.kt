@@ -4,7 +4,6 @@ import com.vend.fmr.aieng.apis.openai.OpenAI
 import com.vend.fmr.aieng.utils.Demo
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -14,11 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam
 class EmbeddingsController(
     private val openAI: OpenAI
 ) : BaseController(Demo.EMBEDDINGS) {
-
-    @GetMapping
-    fun embeddingsDemo(): String {
-        return "embeddings-demo"
-    }
 
     @PostMapping
     suspend fun processEmbeddings(
@@ -49,7 +43,7 @@ class EmbeddingsController(
             }
         }
         
-        return "embeddings-demo"
+        return demo.id
     }
 }
 

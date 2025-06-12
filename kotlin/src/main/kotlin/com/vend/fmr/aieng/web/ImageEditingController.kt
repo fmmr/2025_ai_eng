@@ -3,45 +3,40 @@ package com.vend.fmr.aieng.web
 import com.vend.fmr.aieng.apis.openai.OpenAI
 import com.vend.fmr.aieng.utils.Demo
 import com.vend.fmr.aieng.utils.Models
+import jakarta.servlet.http.HttpSession
 import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 @RequestMapping("/demo/image-editing")
-class ImageEditingController(
-    private val openAI: OpenAI
-) : BaseController(Demo.IMAGE_EDITING) {
+class ImageEditingController(private val openAI: OpenAI) : BaseController(Demo.IMAGE_EDITING) {
 
     companion object {
         val AVAILABLE_SIZES = listOf(
             "256x256" to "256×256",
-            "512x512" to "512×512", 
+            "512x512" to "512×512",
             "1024x1024" to "1024×1024"
         )
-        
+
         val DEMO_IMAGES = mapOf(
             "ski.png" to "ski_mask.png"
         )
-        
+
         const val DEFAULT_PROMPT = "A hot air balloon floating in the sky"
     }
 
-    @GetMapping
-    fun imageEditingDemo(model: Model): String {
+    override fun addDefaultModel(model: Model, session: HttpSession) {
         model.addAttribute("availableSizes", AVAILABLE_SIZES)
         model.addAttribute("demoImages", DEMO_IMAGES)
         model.addAttribute("defaultPrompt", DEFAULT_PROMPT)
-        
+
         // Ensure boolean attributes are set for Thymeleaf
         model.addAttribute("success", false)
         model.addAttribute("error", null)
-        
-        return "image-editing-demo"
     }
 
     @PostMapping
@@ -55,12 +50,12 @@ class ImageEditingController(
         formData["prompt"] = prompt
         formData["size"] = size
         model.addAttribute("formData", formData)
-        
+
         // Add all dropdown options back
         model.addAttribute("availableSizes", AVAILABLE_SIZES)
         model.addAttribute("demoImages", DEMO_IMAGES)
         model.addAttribute("defaultPrompt", DEFAULT_PROMPT)
-        
+
         // Initialize boolean attributes
         model.addAttribute("success", false)
         model.addAttribute("error", null)
@@ -69,10 +64,10 @@ class ImageEditingController(
             // Load the demo images from classpath
             val originalImageResource = ClassPathResource("static/images/ski.png")
             val maskImageResource = ClassPathResource("static/images/ski_mask.png")
-            
+
             val originalImageBytes = originalImageResource.inputStream.readBytes()
             val maskImageBytes = maskImageResource.inputStream.readBytes()
-            
+
             val editResponse = openAI.editImage(
                 prompt = prompt,
                 imageFile = originalImageBytes,
@@ -83,7 +78,7 @@ class ImageEditingController(
             )
 
             val editedImageUrl = editResponse.data.firstOrNull()?.url
-            
+
             if (editedImageUrl != null) {
                 model.addAttribute("editedImageUrl", editedImageUrl)
                 model.addAttribute("originalImageUrl", "/images/ski.png")
@@ -99,6 +94,6 @@ class ImageEditingController(
             model.addAttribute("error", "Failed to edit image: ${e.message}")
         }
 
-        return "image-editing-demo"
+        return demo.id
     }
 }

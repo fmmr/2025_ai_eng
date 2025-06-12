@@ -14,12 +14,6 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/demo/trip-planner")
 class TripPlannerController(private val tripPlanningCoordinator: TripPlanningCoordinator) : BaseController(Demo.TRAVEL_AGENT) {
 
-    @GetMapping
-    fun showDemo(): String {
-        return "trip-planner-demo"
-    }
-
-
     @PostMapping("/process")
     @ResponseBody
     suspend fun processTripPlanning(@RequestBody request: Map<String, String>, httpRequest: HttpServletRequest): ResponseEntity<Map<String, String>> {

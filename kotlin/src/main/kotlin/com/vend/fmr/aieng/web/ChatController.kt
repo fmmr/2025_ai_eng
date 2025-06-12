@@ -33,13 +33,9 @@ class ChatController(
     private val openAI: OpenAI
 ) : BaseController(Demo.CHAT_INTERACTIVE) {
 
-    @GetMapping
-    fun chatDemo(model: Model, session: HttpSession): String {
-        @Suppress("UNCHECKED_CAST")
-        val chatHistory = session.getAttribute("chatHistory") as? MutableList<ChatMessage> ?: mutableListOf<ChatMessage>()
+    override fun addDefaultModel(model: Model, session: HttpSession) {
+        val chatHistory = session.getAttribute("chatHistory") as? MutableList<*> ?: mutableListOf<ChatMessage>()
         model.addAttribute("chatHistory", chatHistory)
-
-        return "chat-demo"
     }
 
     @PostMapping("/message")
@@ -85,7 +81,7 @@ class ChatController(
         } catch (e: Exception) {
             val errorMessage = "Sorry, I encountered an error: ${e.message}"
             chatHistory.add(ChatMessage(Prompts.Roles.ASSISTANT, errorMessage))
-            
+
             ChatResponse(
                 status = "error",
                 error = errorMessage
