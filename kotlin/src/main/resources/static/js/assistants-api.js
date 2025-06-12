@@ -1,4 +1,4 @@
-let sse = createSSE('/demo/assistants');
+let sse = createSSE('/demo/assistants-api');
 
 function processOperation(operation) {
     sse.log(`🚀 Starting: ${operation}`, 'info');
