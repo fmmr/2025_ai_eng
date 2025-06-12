@@ -14,6 +14,7 @@ enum class Demo(
     val route: String = "/demo/$id",
     val courseContent: Boolean = true,
     val soloProject: Boolean = false,
+    val hasJavaScript: Boolean = false,
     val contentType: DemoContentType = if (soloProject) COURSE_CONTENT_SOLO else (if (courseContent) COURSE_CONTENT else PERSONAL_EXPLORATION)
 ) {
 
@@ -192,6 +193,7 @@ enum class Demo(
         emoji = "🏷️",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.OPEN_SOURCE,
+        hasJavaScript = true,
     ),
 
     HUGGINGFACE_SUMMARIZATION(
@@ -203,6 +205,7 @@ enum class Demo(
         emoji = "📄",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.OPEN_SOURCE,
+        hasJavaScript = true,
     ),
 
     OBJECT_DETECTION(
@@ -214,6 +217,7 @@ enum class Demo(
         emoji = "🔍",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.OPEN_SOURCE,
+        hasJavaScript = true,
     ),
 
     // Vision & Image
@@ -226,6 +230,7 @@ enum class Demo(
         emoji = "🎬",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.VISION_IMAGE,
+        hasJavaScript = true,
     ),
 
     IMAGE_EDITING(
@@ -237,6 +242,7 @@ enum class Demo(
         emoji = "✏️",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.VISION_IMAGE,
+        hasJavaScript = true,
     ),
 
     GPT4_VISION(
@@ -248,6 +254,7 @@ enum class Demo(
         emoji = "👁️",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.VISION_IMAGE,
+        hasJavaScript = true,
     ),
 
     // AI Agents
@@ -282,6 +289,7 @@ enum class Demo(
         emoji = "🤖",
         status = DemoStatus.IN_PROGRESS,
         category = DemoCategory.AI_AGENTS,
+        hasJavaScript = true,
     ),
 
     TRAVEL_AGENT(
@@ -294,6 +302,7 @@ enum class Demo(
         courseContent = false,
         status = DemoStatus.COMPLETED,
         category = DemoCategory.AI_AGENTS,
+        hasJavaScript = true,
     ),
 
     // MCP Protocol (Additional Explorations)
@@ -307,6 +316,7 @@ enum class Demo(
         status = DemoStatus.COMPLETED,
         category = DemoCategory.MCP_PROTOCOL,
         courseContent = false,
+        hasJavaScript = true,
     ),
 
     MCP_PROTOCOL_DEMO(
@@ -319,6 +329,7 @@ enum class Demo(
         status = DemoStatus.COMPLETED,
         category = DemoCategory.MCP_PROTOCOL,
         courseContent = false,
+        hasJavaScript = true,
         contentType = HACKDAY
     ),
 
@@ -332,6 +343,7 @@ enum class Demo(
         status = DemoStatus.COMPLETED,
         category = DemoCategory.MCP_PROTOCOL,
         courseContent = false,
+        hasJavaScript = true,
         contentType = HACKDAY
     ),
 
@@ -357,7 +369,8 @@ enum class Demo(
         emoji = "🍃",
         status = DemoStatus.COMPLETED,
         category = DemoCategory.FRAMEWORKS,
-        courseContent = false
+        courseContent = false,
+        hasJavaScript = true,
     ),
 
 
@@ -387,6 +400,8 @@ enum class Demo(
     );
 
     fun external(): Boolean = route.startsWith("http")
+
+    fun local(): Boolean = !external() && (status == DemoStatus.COMPLETED || status == DemoStatus.IN_PROGRESS)
 
     val iconHtml: String = iconHtml(icon, title)
 

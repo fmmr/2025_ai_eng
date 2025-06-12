@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import java.util.concurrent.ConcurrentHashMap
 
-abstract class BaseController(protected val demo: Demo) {
+abstract class BaseController(val demo: Demo) {
     init {
         // Runtime validation
         require (this::class.simpleName == demo.expectedControllerName()) {

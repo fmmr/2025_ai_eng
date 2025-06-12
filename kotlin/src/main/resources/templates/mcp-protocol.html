@@ -102,12 +102,10 @@
     </div>
 
     <div th:replace="~{fragments/footer :: common-footer}"></div>
-    <div th:replace="~{fragments/scripts :: common-scripts}"></div>
     
     <script th:inline="javascript">
         // Make tool defaults from Tools enum available to JavaScript
         window.toolDefaults = /*[[${toolDefaults}]]*/ {};
     </script>
-    <script th:src="@{'/js/' + ${demo.id} + '.js'}"></script>
 </body>
 </html>

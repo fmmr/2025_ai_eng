@@ -107,12 +107,10 @@
     </div>
 
     <div th:replace="~{fragments/footer :: common-footer}"></div>
-    <div th:replace="~{fragments/scripts :: common-scripts}"></div>
     
     <script th:inline="javascript">
         // Make tools available to JavaScript
         window.availableTools = /*[[${availableTools}]]*/ [];
     </script>
-    <script th:src="@{'/js/' + ${demo.id} + '.js'}"></script>
 </body>
 </html>
