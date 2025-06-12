@@ -42,36 +42,44 @@ enum class OperationsLink(
         description = "Container registry"
     ),
 
+    SUPABASE(
+        id = "supabase",
+        title = "Supabase Dashboard",
+        url = "https://supabase.com/dashboard/project/qplquwknowszjlzqxmha/database/schemas",
+        icon = "/images/supabase.svg",
+        description = "Supabase DB dashboard"
+    ),
+
     NORTHFLANK(
         id = "northflank",
-        title = "Northflank",
+        title = "Kotlin APP (northflank)",
         url = "https://app.northflank.com/t/fmrs-team/project/aieng/services/aieng",
         icon = "bi-cloud",
         description = "Production deployment",
         requiresLogin = true
     ),
 
-    CLOUDFLARE_DODGY_DAVE(
-        id = "cloudflare-dodgy-dave",
-        title = "Cloudflare (dodgy dave)",
-        url = "https://dash.cloudflare.com/da5ff37dc3a56b099d74be433465c853/pages/view/2025-ai-eng",
-        icon = "/images/cloudflare.svg",
-        description = "Edge deployment dashboard",
-        requiresLogin = true
-    ),
-
     RENDER_KOTLIN(
         id = "render-kotlin",
-        title = "Render (kotlin)",
+        title = "Kotlin APP (render)",
         url = "https://dashboard.render.com/web/srv-d0sal4emcj7s73advd5g",
         icon = "/images/render.svg",
         description = "Backup deployment dashboard",
         requiresLogin = true
     ),
 
+    CLOUDFLARE_DODGY_DAVE(
+        id = "cloudflare-dodgy-dave",
+        title = "Dodgy Dave: (cloudflare)",
+        url = "https://dash.cloudflare.com/da5ff37dc3a56b099d74be433465c853/pages/view/2025-ai-eng",
+        icon = "/images/cloudflare.svg",
+        description = "Edge deployment dashboard",
+        requiresLogin = true
+    ),
+
     RENDER_POLYGLOT(
         id = "render-polyglot",
-        title = "Render (polyglot)",
+        title = "Polyglot (render)",
         url = "https://dashboard.render.com/web/srv-d11dtore5dus738lm9mg",
         icon = "/images/render.svg",
         description = "Node.js app deployment dashboard",
