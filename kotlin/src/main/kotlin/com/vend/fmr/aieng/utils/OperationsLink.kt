@@ -31,7 +31,7 @@ enum class OperationsLink(
         id = "github-source",
         title = "GitHub Kotlin",
         url = "https://github.com/fmmr/2025_ai_eng/tree/main/kotlin",
-        icon = "/images/kotlin.svg",
+        icon = "/images/github.svg",
         description = "View kotlin code on GitHub",
         dropdownGroup = DropdownGroup.BUILD
     ),
