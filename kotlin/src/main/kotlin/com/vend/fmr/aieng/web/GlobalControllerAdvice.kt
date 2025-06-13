@@ -21,6 +21,6 @@ class GlobalControllerAdvice {
             )
         }
         model.addAttribute("navbarGroups", navbarData)
-        model.addAttribute("operationsLinks", OperationsLink.entries)
+        model.addAttribute("operationsLinks", OperationsLink.groupedEntries())
     }
 }

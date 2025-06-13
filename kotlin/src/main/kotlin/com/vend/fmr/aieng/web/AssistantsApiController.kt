@@ -27,6 +27,12 @@ data class AssistantRequest(
 class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : BaseController(Demo.ASSISTANTS_API) {
 
     private val logger = LoggerFactory.getLogger(AssistantsApiController::class.java)
+    
+    companion object {
+        private const val FMR_FILE_PREFIX = "fmr-movies.txt"
+        private const val FMR_VECTOR_STORE_NAME = "fmr-Movie Database"
+        private const val FMR_ASSISTANT_NAME = "fmr-Movie Recommendation Expert"
+    }
 
     private fun sendMessage(sessionId: String, message: String, type: String = "info") {
         sendSseEvent(sessionId, type, message)
@@ -69,7 +75,7 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
 
             val file = openAIAssistant.uploadFile(
                 fileBytes = movieFile.toByteArray(),
-                filename = "movies.txt",
+                filename = FMR_FILE_PREFIX,
                 purpose = "assistants",
                 debug = false
             )
@@ -91,17 +97,17 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
             var fileId = session.getAttribute("fileId") as String?
 
             if (fileId == null) {
-                sendMessage(sessionId, "🔍 No file in session, checking for existing files...", "progress")
+                sendMessage(sessionId, "🔍 No file in session, checking for existing FMR files...", "progress")
                 val files = openAIAssistant.listFiles(debug = false)
-                val assistantFiles = files.data.filter { it.purpose == "assistants" }
+                val fmrFiles = files.data.filter { it.purpose == "assistants" && it.isFmr }
 
-                if (assistantFiles.isEmpty()) {
-                    sendMessage(sessionId, "❌ No files available. Please upload a file first.", "error")
+                if (fmrFiles.isEmpty()) {
+                    sendMessage(sessionId, "❌ No FMR files available. Please upload a file first.", "error")
                     return
                 }
 
-                fileId = assistantFiles.first().id
-                sendMessage(sessionId, "✅ Found existing file: ${assistantFiles.first().filename} (${fileId})", "info")
+                fileId = fmrFiles.first().id
+                sendMessage(sessionId, "✅ Found existing FMR file: ${fmrFiles.first().filename} (${fileId})", "info")
             } else {
                 sendMessage(sessionId, "✅ Using file from session: $fileId", "info")
             }
@@ -109,7 +115,7 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
             sendMessage(sessionId, "🔧 Creating vector store with file...", "progress")
 
             val vectorStore = openAIAssistant.createVectorStore(
-                name = "Movie Database",
+                name = FMR_VECTOR_STORE_NAME,
                 fileIds = listOf(fileId),
                 debug = false
             )
@@ -132,16 +138,17 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
             var vectorStoreId = session.getAttribute("vectorStoreId") as String?
             
             if (vectorStoreId == null) {
-                sendMessage(sessionId, "🔍 No vector store in session, checking for existing ones...", "progress")
+                sendMessage(sessionId, "🔍 No vector store in session, checking for existing FMR ones...", "progress")
                 val vectorStores = openAIAssistant.listVectorStores(debug = false)
+                val fmrVectorStores = vectorStores.data.filter { it.isFmr }
                 
-                if (vectorStores.data.isEmpty()) {
-                    sendMessage(sessionId, "❌ No vector stores available. Please create a vector store first.", "error")
+                if (fmrVectorStores.isEmpty()) {
+                    sendMessage(sessionId, "❌ No FMR vector stores available. Please create a vector store first.", "error")
                     return
                 }
                 
-                vectorStoreId = vectorStores.data.first().id
-                sendMessage(sessionId, "✅ Found existing vector store: ${vectorStores.data.first().name} (${vectorStoreId})", "info")
+                vectorStoreId = fmrVectorStores.first().id
+                sendMessage(sessionId, "✅ Found existing FMR vector store: ${fmrVectorStores.first().name} (${vectorStoreId})", "info")
             } else {
                 sendMessage(sessionId, "✅ Using vector store from session: $vectorStoreId", "info")
             }
@@ -149,7 +156,7 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
             sendMessage(sessionId, "🔧 Creating movie recommendation assistant...", "progress")
             
             val assistant = openAIAssistant.createAssistant(
-                name = "Movie Recommendation Expert",
+                name = FMR_ASSISTANT_NAME,
                 instructions = MOVIE_ASSISTANT_PROMPT,
                 tools = listOf(AssistantTool("file_search")),
                 vectorStoreIds = listOf(vectorStoreId),
@@ -181,16 +188,17 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
             var assistantId = session.getAttribute("assistantId") as String?
             
             if (assistantId == null) {
-                sendMessage(sessionId, "🔍 No assistant in session, checking for existing ones...", "progress")
+                sendMessage(sessionId, "🔍 No assistant in session, checking for existing FMR ones...", "progress")
                 val assistants = openAIAssistant.listAssistants(debug = false)
+                val fmrAssistants = assistants.data.filter { it.isFmr }
                 
-                if (assistants.data.isEmpty()) {
-                    sendMessage(sessionId, "❌ No assistants available. Please create an assistant first.", "error")
+                if (fmrAssistants.isEmpty()) {
+                    sendMessage(sessionId, "❌ No FMR assistants available. Please create an assistant first.", "error")
                     return
                 }
                 
-                assistantId = assistants.data.first().id
-                sendMessage(sessionId, "✅ Found existing assistant: ${assistants.data.first().name} (${assistantId})", "info")
+                assistantId = fmrAssistants.first().id
+                sendMessage(sessionId, "✅ Found existing FMR assistant: ${fmrAssistants.first().name} (${assistantId})", "info")
             } else {
                 sendMessage(sessionId, "✅ Using assistant from session: $assistantId", "info")
             }
@@ -248,35 +256,44 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
         sendMessage(sessionId, "📋 Listing all resources...", "progress")
 
         try {
-            // List Files
+            // List All Files
             val files = openAIAssistant.listFiles(debug = false)
             val assistantFiles = files.data.filter { it.purpose == "assistants" }
+            val fmrFileCount = assistantFiles.count { it.isFmr }
 
-            sendMessage(sessionId, "📁 Files (${assistantFiles.size}):", "info")
+            sendMessage(sessionId, "📁 Files (${assistantFiles.size} total, $fmrFileCount FMR):", "info")
             if (assistantFiles.isEmpty()) {
                 sendMessage(sessionId, "No files found", "info")
             } else {
-                assistantFiles.forEach { file -> sendMessage(sessionId, file.toSSEHtml(), "final_result") }
+                assistantFiles.forEach { file -> 
+                    sendMessage(sessionId, file.toSSEHtml(), "final_result") 
+                }
             }
 
-            // List Vector Stores
+            // List All Vector Stores
             val vectorStores = openAIAssistant.listVectorStores(debug = false)
+            val fmrVectorStoreCount = vectorStores.data.count { it.isFmr }
 
-            sendMessage(sessionId, "📚 Vector Stores (${vectorStores.data.size}):", "info")
+            sendMessage(sessionId, "📚 Vector Stores (${vectorStores.data.size} total, $fmrVectorStoreCount FMR):", "info")
             if (vectorStores.data.isEmpty()) {
                 sendMessage(sessionId, "No vector stores found", "info")
             } else {
-                vectorStores.data.forEach { vs -> sendMessage(sessionId, vs.toSSEHtml(), "final_result") }
+                vectorStores.data.forEach { vs -> 
+                    sendMessage(sessionId, vs.toSSEHtml(), "final_result") 
+                }
             }
 
-            // List Assistants
+            // List All Assistants
             val assistants = openAIAssistant.listAssistants(debug = false)
+            val fmrAssistantCount = assistants.data.count { it.isFmr }
 
-            sendMessage(sessionId, "🤖 Assistants (${assistants.data.size}):", "info")
+            sendMessage(sessionId, "🤖 Assistants (${assistants.data.size} total, $fmrAssistantCount FMR):", "info")
             if (assistants.data.isEmpty()) {
                 sendMessage(sessionId, "No assistants found", "info")
             } else {
-                assistants.data.forEach { assistant -> sendMessage(sessionId, assistant.toSSEHtml(), "final_result") }
+                assistants.data.forEach { assistant -> 
+                    sendMessage(sessionId, assistant.toSSEHtml(), "final_result") 
+                }
             }
 
         } catch (e: Exception) {
@@ -292,9 +309,9 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
             val files = openAIAssistant.listFiles(debug = false)
             var deletedCount = 0
 
-            val filesToDelete = files.data.filter { it.purpose == "assistants" }
+            val filesToDelete = files.data.filter { it.purpose == "assistants" && it.isFmr }
 
-            sendMessage(sessionId, "🔍 Found ${filesToDelete.size} files to delete...", "progress")
+            sendMessage(sessionId, "🔍 Found ${filesToDelete.size} FMR files to delete...", "progress")
 
             filesToDelete.forEach { file ->
                 if (openAIAssistant.deleteFile(file.id, debug = false)) {
@@ -307,7 +324,7 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
 
             session.removeAttribute("fileId")
             session.removeAttribute("threadId") // Clear thread when files are deleted
-            sendMessage(sessionId, "🧹 File cleanup complete! Deleted $deletedCount files.", "success")
+            sendMessage(sessionId, "🧹 FMR file cleanup complete! Deleted $deletedCount files.", "success")
 
         } catch (e: Exception) {
             logger.error("File cleanup failed for session $sessionId", e)
@@ -321,10 +338,11 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
         try {
             val vectorStores = openAIAssistant.listVectorStores(debug = false)
             var deletedCount = 0
+            val fmrVectorStores = vectorStores.data.filter { it.isFmr }
 
-            sendMessage(sessionId, "🔍 Found ${vectorStores.data.size} vector stores to delete...", "progress")
+            sendMessage(sessionId, "🔍 Found ${fmrVectorStores.size} FMR vector stores to delete...", "progress")
 
-            vectorStores.data.forEach { vs ->
+            fmrVectorStores.forEach { vs ->
                 if (openAIAssistant.deleteVectorStore(vs.id, debug = false)) {
                     deletedCount++
                     sendMessage(sessionId, "  ✅ Deleted: ${vs.name ?: "Unnamed"}, ${vs.id}", "progress")
@@ -334,7 +352,7 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
             }
 
             session.removeAttribute("vectorStoreId")
-            sendMessage(sessionId, "🧹 Vector store cleanup complete! Deleted $deletedCount vector stores.", "success")
+            sendMessage(sessionId, "🧹 FMR vector store cleanup complete! Deleted $deletedCount vector stores.", "success")
 
         } catch (e: Exception) {
             logger.error("Vector store cleanup failed for session $sessionId", e)
@@ -348,10 +366,11 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
         try {
             val assistants = openAIAssistant.listAssistants(debug = false)
             var deletedCount = 0
+            val fmrAssistants = assistants.data.filter { it.isFmr }
             
-            sendMessage(sessionId, "🔍 Found ${assistants.data.size} assistants to delete...", "progress")
+            sendMessage(sessionId, "🔍 Found ${fmrAssistants.size} FMR assistants to delete...", "progress")
 
-            assistants.data.forEach { assistant ->
+            fmrAssistants.forEach { assistant ->
                 if (openAIAssistant.deleteAssistant(assistant.id, debug = false)) {
                     deletedCount++
                     sendMessage(sessionId, "  ✅ Deleted: ${assistant.name ?: "Unnamed"}, ${assistant.id}", "progress")
@@ -362,7 +381,7 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
 
             session.removeAttribute("assistantId")
             session.removeAttribute("threadId") // Clear thread when assistants are deleted
-            sendMessage(sessionId, "🧹 Assistant cleanup complete! Deleted $deletedCount assistants.", "success")
+            sendMessage(sessionId, "🧹 FMR assistant cleanup complete! Deleted $deletedCount assistants.", "success")
 
         } catch (e: Exception) {
             logger.error("Assistant cleanup failed for session $sessionId", e)
@@ -371,7 +390,7 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
     }
 
     private suspend fun processCleanupAll(sessionId: String, session: HttpSession) {
-        sendMessage(sessionId, "🗑️ Starting complete cleanup (assistants + vector stores + files)...", "progress")
+        sendMessage(sessionId, "🗑️ Starting complete FMR cleanup (assistants + vector stores + files)...", "progress")
 
         try {
             // Delete assistants first (they depend on vector stores)
@@ -383,7 +402,7 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
             // Finally delete files
             processCleanupFiles(sessionId, session)
             
-            sendMessage(sessionId, "🧹 Complete cleanup finished!", "success")
+            sendMessage(sessionId, "🧹 Complete FMR cleanup finished!", "success")
 
         } catch (e: Exception) {
             logger.error("Complete cleanup failed for session $sessionId", e)

@@ -7,6 +7,10 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
+object FmrConstants {
+    const val PREFIX = "fmr"
+}
+
 typealias FileUploadResponse = FileData
 
 @Serializable
@@ -63,13 +67,20 @@ data class VectorStoreResponse(
 
     val expiresInfo = expiresAfter?.let { "${it.anchor}+${it.days}d" } ?: "Never"
     val statusColor = if (status == "completed") "success" else "warning"
+    val isFmr = name?.startsWith(FmrConstants.PREFIX) == true
 
 
     fun toSSEHtml(): String {
+        val ownershipBadge = if (isFmr) {
+            "<span class=\"badge bg-success ms-1\">FMR</span>"
+        } else {
+            "<span class=\"badge bg-secondary ms-1\">Other</span>"
+        }
+        
         return """
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <strong>📚 ${name ?: "Unnamed"}</strong>
+                        <strong>📚 ${name ?: "Unnamed"}</strong>$ownershipBadge
                         <div class="small text-muted">${id}</div>
                     </div>
                     <div class="text-end">
@@ -112,14 +123,20 @@ data class AssistantResponse(
     val createdDate = Instant.ofEpochSecond(createdAt)
         .atZone(ZoneId.systemDefault())
         .format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))
+    val isFmr = name?.startsWith(FmrConstants.PREFIX) == true
 
     fun toSSEHtml(): String {
         val toolsInfo = tools?.joinToString(", ") { it.type } ?: "No tools"
+        val ownershipBadge = if (isFmr) {
+            "<span class=\"badge bg-success ms-1\">FMR</span>"
+        } else {
+            "<span class=\"badge bg-secondary ms-1\">Other</span>"
+        }
         
         return """
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <strong>🤖 ${name ?: "Unnamed"}</strong>
+                        <strong>🤖 ${name ?: "Unnamed"}</strong>$ownershipBadge
                         <div class="small text-muted">${id}</div>
                     </div>
                     <div class="text-end">
@@ -263,12 +280,19 @@ data class FileData(
         .format(DateTimeFormatter.ofPattern("YYYYMMDD_HHmmss"))
 
     val sizeKB = bytes / 1024
+    val isFmr = filename.startsWith(FmrConstants.PREFIX)
 
     fun toSSEHtml(): String {
+        val ownershipBadge = if (isFmr) {
+            "<span class=\"badge bg-success ms-1\">FMR</span>"
+        } else {
+            "<span class=\"badge bg-secondary ms-1\">Other</span>"
+        }
+        
         return """
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <strong>📁 ${filename}</strong>
+                                <strong>📁 ${filename}</strong>$ownershipBadge
                                 <div class="small text-muted">${id}</div>
                             </div>
                             <div class="text-end">

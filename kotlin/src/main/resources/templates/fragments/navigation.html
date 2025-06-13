@@ -49,12 +49,18 @@
                         <i class="bi-link-45deg"></i> Links
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="linksDropdown">
-                        <li th:each="link : ${operationsLinks}">
-                            <a th:href="${link.url}" class="dropdown-item" target="_blank" th:title="${link.description}">
-                                <span th:utext="${link.iconHtml}"></span> <span th:text="${link.title}">Link</span>
-                                <i th:if="${link.requiresLogin}" class="bi-lock ms-1 text-muted small"></i>
-                            </a>
-                        </li>
+                        <th:block th:each="group, groupStat : ${operationsLinks}">
+                            <li><h6 class="dropdown-header" th:text="${group.key}">Group</h6></li>
+                            <th:block th:each="link : ${group.value}">
+                                <li>
+                                    <a th:href="${link.url}" class="dropdown-item" target="_blank" th:title="${link.description}">
+                                        <span th:utext="${link.iconHtml}"></span> <span th:text="${link.title}">Link</span>
+                                        <i th:if="${link.requiresLogin}" class="bi-lock ms-1 text-muted small"></i>
+                                    </a>
+                                </li>
+                            </th:block>
+                            <li th:unless="${groupStat.last}"><hr class="dropdown-divider"></li>
+                        </th:block>
                     </ul>
                 </div>
             </div>
