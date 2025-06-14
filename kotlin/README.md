@@ -58,7 +58,6 @@ This project implements the core concepts from the Scrimba AI Engineering course
 - **[🛠️ MCP Toolbox](https://ai.rodland.no/demo/mcp-server)** - Custom AI tool server (Personal Exploration)
 - **[🔗 MCP Decoded](https://ai.rodland.no/demo/mcp-protocol)** - Protocol fundamentals (Hackday)
 - **[🔧 MCP Wizard](https://ai.rodland.no/demo/mcp-assistant)** - Dynamic tool discovery (Hackday)
-- 🌍 MCP Catalog - Server discovery service (Personal Exploration - Wild Ideas)
 
 #### 🏗️ Frameworks
 
