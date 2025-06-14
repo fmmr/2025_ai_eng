@@ -373,20 +373,6 @@ enum class Demo(
         hasJavaScript = true,
     ),
 
-
-    // Additional Explorations (Future)
-    MCP_REGISTRY(
-        id = "mcp-registry",
-        title = "MCP Catalog",
-        shortDescription = "Server discovery service",
-        longDescription = "Browse, connect, and manage multiple MCP servers with a unified interface.<br>Central registry for discovering and organizing AI tool ecosystems.",
-        icon = "bi-globe",
-        emoji = "\uD83C\uDF0D",
-        status = DemoStatus.WILD_IDEAS,
-        category = DemoCategory.MCP_PROTOCOL,
-        courseContent = false
-    ),
-
     OPENAI_JAVA(
         id = "openai-java",
         title = "OpenAI Toolkit",
