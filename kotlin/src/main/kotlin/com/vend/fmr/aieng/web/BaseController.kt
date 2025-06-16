@@ -3,6 +3,7 @@ package com.vend.fmr.aieng.web
 import com.vend.fmr.aieng.utils.Demo
 import jakarta.servlet.http.HttpSession
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -13,6 +14,9 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import java.util.concurrent.ConcurrentHashMap
 
 abstract class BaseController(val demo: Demo) {
+    
+    @Autowired
+    protected lateinit var sseConnectionManager: SseConnectionManager
     init {
         // Runtime validation
         require (this::class.simpleName == demo.expectedControllerName()) {
@@ -61,12 +65,22 @@ abstract class BaseController(val demo: Demo) {
      */
     @GetMapping("/stream/{sessionId}", produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
     fun streamUpdates(@PathVariable sessionId: String): SseEmitter {
-        val emitter = SseEmitter(300000L) // 5 minute timeout
+        val emitter = SseEmitter(30000L) // 30 second timeout for development
         activeEmitters[sessionId] = emitter
+        sseConnectionManager.registerEmitter("${demo.id}:$sessionId", emitter)
 
-        emitter.onCompletion { activeEmitters.remove(sessionId) }
-        emitter.onTimeout { activeEmitters.remove(sessionId) }
-        emitter.onError { activeEmitters.remove(sessionId) }
+        emitter.onCompletion { 
+            activeEmitters.remove(sessionId)
+            sseConnectionManager.unregisterEmitter("${demo.id}:$sessionId")
+        }
+        emitter.onTimeout { 
+            activeEmitters.remove(sessionId)
+            sseConnectionManager.unregisterEmitter("${demo.id}:$sessionId")
+        }
+        emitter.onError { 
+            activeEmitters.remove(sessionId)
+            sseConnectionManager.unregisterEmitter("${demo.id}:$sessionId")
+        }
 
         // Send connected event
         emitter.send(SseEmitter.event().name("connected").data("SSE stream connected"))
@@ -106,6 +120,7 @@ abstract class BaseController(val demo: Demo) {
             }
         }
     }
+
 
     companion object {
         private val logger = LoggerFactory.getLogger(BaseController::class.java)

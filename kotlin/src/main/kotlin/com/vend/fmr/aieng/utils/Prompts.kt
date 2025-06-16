@@ -211,6 +211,9 @@ Be enthusiastic and helpful in your responses, focusing on what makes each movie
             Boostrap 5 is used for styling, so use Bootstrap classes and HTML tags to format the response.
             Use proper HTML: <h4>, <p>, <ul>, <li>, <div class="alert alert-info">, etc.
             Make it destination-specific and informative, around 300-400 words.
+            
+            CRITICAL: Return ONLY the HTML content - no explanations, no markdown code blocks, no ```html``` wrappers.
+            Start your response directly with HTML tags like <h4> or <div>. No introductory text.
         """.trimIndent()
 }
 
@@ -250,6 +253,9 @@ fun aiTimelineSystem(destination: String): String = """
             
             Return ONLY a JSON array in this exact format (make it an array of objects - even if only one item):
             [{"time":"Morning (9:00 AM)","activity":"Specific Activity/Place Name","notes":"Why this timing works for this destination"}]
+            
+            CRITICAL: Return ONLY the JSON array - no explanations, no markdown code blocks, no ```json``` wrappers.
+            Start your response directly with [ and end with ]. Nothing else.
             
             Create 4-6 timeline items covering a full day with destination-specific recommendations.
         """.trimIndent()

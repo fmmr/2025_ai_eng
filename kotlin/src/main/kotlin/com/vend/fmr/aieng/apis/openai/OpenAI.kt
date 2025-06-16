@@ -13,6 +13,7 @@ import io.ktor.serialization.kotlinx.json.*
 import io.ktor.utils.io.core.*
 import kotlinx.serialization.json.Json
 import org.springframework.stereotype.Service
+import jakarta.annotation.PreDestroy
 
 
 @Suppress("unused")
@@ -259,8 +260,11 @@ class OpenAI(val client: HttpClient, val json: Json) : Closeable {
         )
     }
 
+    @PreDestroy
     override fun close() {
+        println("🔄 Closing OpenAI HttpClient...")
         client.close()
+        println("✅ OpenAI HttpClient closed")
     }
 }
 

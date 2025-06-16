@@ -213,7 +213,6 @@ class TripPlanningCoordinator(weatherService: Weather, private val openAI: OpenA
         val jsonResponse = response.choices.firstOrNull()?.message?.content?.toString() ?: "[]"
 
         return try {
-            // Parse AI response as JSON
             val json = Json { ignoreUnknownKeys = true }
             json.decodeFromString<List<TimelineItem>>(jsonResponse)
         } catch (e: Exception) {
