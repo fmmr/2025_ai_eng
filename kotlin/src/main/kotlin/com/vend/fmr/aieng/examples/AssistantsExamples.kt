@@ -3,8 +3,9 @@
 package com.vend.fmr.aieng.examples
 
 import com.vend.fmr.aieng.apis.openai.OpenAIAssistant
-import com.vend.fmr.aieng.utils.*
+import com.vend.fmr.aieng.utils.Models
 import com.vend.fmr.aieng.utils.Prompts.MOVIE_ASSISTANT_PROMPT
+import com.vend.fmr.aieng.utils.read
 
 suspend fun uploadMovieFile(assistant: OpenAIAssistant, debug: Boolean = false): String {
     val movieFile = "/movies.txt".read()

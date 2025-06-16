@@ -1,17 +1,17 @@
 package com.vend.fmr.aieng
 
+import com.vend.fmr.aieng.utils.createHttpClient
+import com.vend.fmr.aieng.utils.createJson
+import com.vend.fmr.aieng.utils.isValidApiKey
 import dev.langchain4j.model.chat.ChatModel
 import dev.langchain4j.model.chat.DisabledChatModel
 import dev.langchain4j.model.openai.OpenAiChatModel
+import io.ktor.client.*
+import kotlinx.serialization.json.Json
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
-import com.vend.fmr.aieng.utils.isValidApiKey
-import com.vend.fmr.aieng.utils.createJson
-import com.vend.fmr.aieng.utils.createHttpClient
-import io.ktor.client.*
-import kotlinx.serialization.json.Json
 
 @SpringBootApplication(exclude = [R2dbcAutoConfiguration::class])
 class Application {

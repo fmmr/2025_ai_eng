@@ -2,14 +2,16 @@
 
 package com.vend.fmr.aieng.examples
 
-import com.vend.fmr.aieng.utils.*
-import com.vend.fmr.aieng.dtos.*
 import com.vend.fmr.aieng.apis.chunker.Chunker
-import com.vend.fmr.aieng.apis.supabase.Document
-import com.vend.fmr.aieng.apis.supabase.DocumentMatch
 import com.vend.fmr.aieng.apis.openai.OpenAI
 import com.vend.fmr.aieng.apis.polygon.Polygon
+import com.vend.fmr.aieng.apis.supabase.Document
+import com.vend.fmr.aieng.apis.supabase.DocumentMatch
 import com.vend.fmr.aieng.apis.supabase.Supabase
+import com.vend.fmr.aieng.dtos.ParameterSet
+import com.vend.fmr.aieng.dtos.PromptComparison
+import com.vend.fmr.aieng.utils.Prompts
+import com.vend.fmr.aieng.utils.read
 
 
 suspend fun tickers(openAI: OpenAI, polygon: Polygon, vararg tickers: String, debug: Boolean = false): String {

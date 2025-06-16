@@ -1,15 +1,18 @@
 package com.vend.fmr.aieng.web
 
 import com.vend.fmr.aieng.apis.openai.Message
-import com.vend.fmr.aieng.apis.openai.TextContent
 import com.vend.fmr.aieng.apis.openai.OpenAI
+import com.vend.fmr.aieng.apis.openai.TextContent
 import com.vend.fmr.aieng.utils.Demo
 import com.vend.fmr.aieng.utils.Prompts
 import jakarta.servlet.http.HttpSession
 import kotlinx.coroutines.runBlocking
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.ResponseBody
 
 data class ChatMessage(
     val role: String,

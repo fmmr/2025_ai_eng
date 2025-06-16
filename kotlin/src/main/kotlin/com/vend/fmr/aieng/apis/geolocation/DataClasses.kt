@@ -1,6 +1,7 @@
 package com.vend.fmr.aieng.apis.geolocation
 
-import kotlinx.serialization.*
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class GeolocationError(

@@ -1,6 +1,7 @@
 package com.vend.fmr.aieng.apis.weather
 
-import kotlinx.serialization.*
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class WeatherResponse(

@@ -2,8 +2,11 @@
 
 package com.vend.fmr.aieng.examples
 
-import com.vend.fmr.aieng.utils.*
-import com.vend.fmr.aieng.apis.openai.*
+import com.vend.fmr.aieng.apis.openai.Message
+import com.vend.fmr.aieng.apis.openai.OpenAI
+import com.vend.fmr.aieng.apis.openai.TextContent
+import com.vend.fmr.aieng.utils.AgentTool
+import com.vend.fmr.aieng.utils.Prompts
 
 /**
  * OpenAI Function Calling Examples
