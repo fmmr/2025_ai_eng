@@ -1,4 +1,7 @@
-/* Reset and base styles */
+/* =============================================================================
+   RESET & BASE STYLES
+   ============================================================================= */
+
 * {
     margin: 0;
     padding: 0;
@@ -12,20 +15,10 @@ body {
     background-color: #f8f9fa;
 }
 
-/* Parameter demo color classes */
-.🔵 { border-color: #0d6efd !important; }
-.🔵 .card-header { background-color: #0d6efd !important; color: white !important; }
+/* =============================================================================
+   NAVIGATION STYLES
+   ============================================================================= */
 
-.🟢 { border-color: #198754 !important; }
-.🟢 .card-header { background-color: #198754 !important; color: white !important; }
-
-.🟡 { border-color: #ffc107 !important; }
-.🟡 .card-header { background-color: #ffc107 !important; color: #212529 !important; }
-
-.🔴 { border-color: #dc3545 !important; }
-.🔴 .card-header { background-color: #dc3545 !important; color: white !important; }
-
-/* Navigation */
 .navbar {
     background-color: #1f2937 !important;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -46,23 +39,18 @@ body {
     background-color: #374151 !important;
 }
 
-/* Make Simple Icons match Bootstrap icon color in dark navbar (only top-level links, not dropdowns) */
+/* Simple Icons styling in navbar */
 .navbar-dark > .container-fluid .nav-link > span img[src^="/images/"] {
     filter: brightness(0) invert(1) opacity(0.6);
 }
 
-/* Make Simple Icons white and properly sized in hero section */
-.hero-section img[src^="/images/"] {
-    filter: brightness(0) invert(1);
-    width: 1em;
-    height: 1em;
-}
+/* =============================================================================
+   HERO SECTION
+   ============================================================================= */
 
-
-/* Page sections */
 .hero-section {
     text-align: center;
-    padding: 3rem 10rem;
+    padding: 2rem 1rem;
     background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
     color: white;
     margin: -2rem -1rem 2rem -1rem;
@@ -70,15 +58,17 @@ body {
 }
 
 .hero-section h1 {
-    font-size: 2.5rem;
+    font-size: 1.75rem;
     margin-bottom: 1rem;
     font-weight: 700;
+    line-height: 1.2;
 }
 
 .hero-section p {
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
     opacity: 0.9;
+    line-height: 1.4;
 }
 
 .hero-section .build-info {
@@ -88,52 +78,75 @@ body {
     font-style: italic;
 }
 
-/* Custom card hover effect for Bootstrap cards */
+.hero-section img[src^="/images/"] {
+    filter: brightness(0) invert(1);
+    width: 1em;
+    height: 1em;
+}
+
+/* =============================================================================
+   CARD STYLES
+   ============================================================================= */
+
 .card:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Chunking demo styles */
-.chunking-table {
-    font-size: 0.9rem;
+/* =============================================================================
+   DEMO-SPECIFIC STYLES
+   ============================================================================= */
+
+/* Parameter demo color classes */
+.🔵 { border-color: #0d6efd !important; }
+.🔵 .card-header { background-color: #0d6efd !important; color: white !important; }
+
+.🟢 { border-color: #198754 !important; }
+.🟢 .card-header { background-color: #198754 !important; color: white !important; }
+
+.🟡 { border-color: #ffc107 !important; }
+.🟡 .card-header { background-color: #ffc107 !important; color: #212529 !important; }
+
+.🔴 { border-color: #dc3545 !important; }
+.🔴 .card-header { background-color: #dc3545 !important; color: white !important; }
+
+/* Demo sections */
+.demo-section {
+    background: white;
+    border-radius: 8px;
+    padding: 2rem;
+    margin: 2rem 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.chunking-table td {
-    vertical-align: top;
-    text-align: left !important;
+.demo-section h2 {
+    color: #1f2937;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #3b82f6;
+    padding-bottom: 0.5rem;
 }
 
-.chunking-table .col-number {
-    width: 6%;
-}
-
-.chunking-table .col-text {
-    width: 76%;
-}
-
-.overlap-legend {
+.demo-controls {
+    margin: 1.5rem 0;
     display: flex;
-    gap: 20px;
-    margin-bottom: 15px;
-    font-size: 0.9rem;
+    gap: 1rem;
+    flex-wrap: wrap;
 }
 
-.overlap-legend-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+.demo-output {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 1rem;
+    margin: 1rem 0;
+    min-height: 100px;
 }
 
-.overlap-legend-color {
-    width: 20px;
-    height: 16px;
-    border-radius: 3px;
-    display: inline-block;
-}
+/* =============================================================================
+   CHAT INTERFACE STYLES
+   ============================================================================= */
 
-/* Chat interface styles */
 .chat-container {
     background: linear-gradient(to bottom, #f8f9fa 0%, #e9ecef 100%);
 }
@@ -176,8 +189,10 @@ body {
     box-shadow: 0 2px 8px rgba(107, 114, 128, 0.3);
 }
 
+/* =============================================================================
+   CODE DISPLAY STYLES
+   ============================================================================= */
 
-/* Code display */
 .code-block {
     background-color: #1f2937;
     color: #f9fafb;
@@ -192,88 +207,51 @@ body {
     margin: 0;
 }
 
-/* Demo sections */
-.demo-section {
-    background: white;
-    border-radius: 8px;
-    padding: 2rem;
-    margin: 2rem 0;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+/* =============================================================================
+   CHUNKING DEMO STYLES
+   ============================================================================= */
+
+.chunking-table {
+    font-size: 0.9rem;
 }
 
-.demo-section h2 {
-    color: #1f2937;
-    margin-bottom: 1rem;
-    border-bottom: 2px solid #3b82f6;
-    padding-bottom: 0.5rem;
+.chunking-table td {
+    vertical-align: top;
+    text-align: left !important;
 }
 
-.demo-controls {
-    margin: 1.5rem 0;
+.chunking-table .col-number {
+    width: 6%;
+}
+
+.chunking-table .col-text {
+    width: 76%;
+}
+
+.overlap-legend {
     display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
 }
 
-.demo-output {
-    background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-radius: 4px;
-    padding: 1rem;
-    margin: 1rem 0;
-    min-height: 100px;
+.overlap-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-/* Footer */
-.footer {
-    background-color: #1f2937;
-    color: #d1d5db;
-    text-align: center;
-    padding: 2rem 0;
-    margin-top: 3rem;
+.overlap-legend-color {
+    width: 20px;
+    height: 16px;
+    border-radius: 3px;
+    display: inline-block;
 }
 
-.footer-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
-}
+/* =============================================================================
+   REACT & FUNCTION CALLING STEP STYLES
+   ============================================================================= */
 
-/* Responsive design */
-@media (max-width: 768px) {
-    .nav-container {
-        flex-direction: column;
-        gap: 1rem;
-        align-items: center;
-    }
-    
-    .nav-menu {
-        justify-content: center;
-    }
-    
-    .hero-section h1 {
-        font-size: 2rem;
-    }
-    
-    .hero-section p {
-        font-size: 1rem;
-    }
-    
-    .card-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .demo-controls {
-        flex-direction: column;
-    }
-    
-    .chat-message .bg-primary,
-    .chat-message .bg-secondary {
-        max-width: 85% !important;
-    }
-}
-
-/* ReAct and Function Calling Step Styles */
 .react-steps, .function-steps {
     margin: 2rem 0;
 }
@@ -323,7 +301,7 @@ body {
     line-height: 1.4;
 }
 
-/* ReAct specific styles */
+/* ReAct specific step styles */
 .step-thought {
     border-left-color: #0066cc;
 }
@@ -357,7 +335,7 @@ body {
     background: #6f42c1;
 }
 
-/* Function Calling specific styles */
+/* Function Calling specific step styles */
 .step-user_query {
     border-left-color: #17a2b8;
 }
@@ -398,7 +376,10 @@ body {
     font-family: 'Courier New', monospace;
 }
 
-/* Function cards */
+/* =============================================================================
+   FUNCTION CARD STYLES
+   ============================================================================= */
+
 .function-card {
     background: #f8f9fa;
     border: 1px solid #dee2e6;
@@ -419,7 +400,10 @@ body {
     font-size: 0.9rem;
 }
 
-/* System prompt styles */
+/* =============================================================================
+   SYSTEM PROMPT STYLES
+   ============================================================================= */
+
 .system-prompt-section {
     margin: 3rem 0;
     padding: 2rem;
@@ -446,7 +430,10 @@ body {
     margin: 3rem 0;
 }
 
-/* Prompt Engineering Demo Styles */
+/* =============================================================================
+   PROMPT ENGINEERING DEMO STYLES
+   ============================================================================= */
+
 .response-box {
     background-color: #f8f9fa;
     border: 1px solid #dee2e6;
@@ -461,4 +448,149 @@ body {
 .spinner-border-sm {
     width: 1rem;
     height: 1rem;
+}
+
+/* =============================================================================
+   FOOTER STYLES
+   ============================================================================= */
+
+.footer {
+    background-color: #1f2937;
+    color: #d1d5db;
+    text-align: center;
+    padding: 2rem 0;
+    margin-top: 3rem;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* =============================================================================
+   RESPONSIVE DESIGN - TABLET (992px - 577px)
+   ============================================================================= */
+
+@media (max-width: 991px) {
+    /* Navigation adjustments */
+    .navbar-brand {
+        font-size: 1.25rem;
+    }
+    
+    .navbar-nav .nav-link {
+        padding: 0.75rem 1rem;
+    }
+    
+    .dropdown-menu {
+        margin-top: 0.25rem;
+    }
+    
+    /* Fix navbar scrolling */
+    .navbar-collapse {
+        max-height: calc(100vh - 120px);
+        overflow-y: auto;
+    }
+}
+
+@media (max-width: 992px) and (min-width: 577px) {
+    /* Hero section */
+    .hero-section {
+        padding: 2rem 1rem;
+    }
+    
+    .hero-section h1 {
+        font-size: 1.6rem;
+    }
+    
+    .hero-section p {
+        font-size: 0.9rem;
+    }
+    
+    /* Demo controls */
+    .demo-controls {
+        flex-direction: column;
+    }
+    
+    /* Chat messages */
+    .chat-message .bg-primary,
+    .chat-message .bg-secondary {
+        max-width: 85% !important;
+    }
+}
+
+/* =============================================================================
+   RESPONSIVE DESIGN - PHONE (576px and below)
+   ============================================================================= */
+
+@media (max-width: 576px) {
+    /* Hero section */
+    .hero-section {
+        padding: 1rem 0.5rem;
+        margin: -0.5rem -0.5rem 1rem -0.5rem;
+    }
+    
+    .hero-section h1 {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+        line-height: 1.3;
+    }
+    
+    .hero-section p {
+        font-size: 0.8rem;
+        margin-bottom: 0.75rem;
+        line-height: 1.5;
+    }
+    
+    .hero-section .build-info {
+        font-size: 0.7rem;
+    }
+    
+    /* Demo controls */
+    .demo-controls {
+        flex-direction: column;
+    }
+    
+    /* Chat messages */
+    .chat-message .bg-primary,
+    .chat-message .bg-secondary {
+        max-width: 90% !important;
+    }
+    
+    /* Card spacing and layout */
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .mb-5 {
+        margin-bottom: 0.625rem !important; /* Reduce space between card groups */
+    }
+    
+    .card-title {
+        font-size: 0.95rem;
+        line-height: 1.3;
+    }
+    
+    .card-text {
+        font-size: 0.85rem;
+        line-height: 1.4;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    /* Buttons and badges - smaller on phones */
+    .btn {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.6rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .badge {
+        font-size: 0.65rem;
+        padding: 0.15rem 0.35rem;
+    }
+    
+    /* Card body - remove bottom padding to eliminate space below buttons */
+    .card-body {
+        padding: 1rem 1rem 0 1rem;
+    }
 }
