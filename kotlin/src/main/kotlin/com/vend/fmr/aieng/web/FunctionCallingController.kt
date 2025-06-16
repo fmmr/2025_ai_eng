@@ -57,7 +57,7 @@ class FunctionCallingController(
             model.addAttribute("success", false)
         }
 
-        return@runBlocking "function-calling-demo"
+        return@runBlocking demo.id
     }
 
     private suspend fun runFunctionCallingAgent(userQuery: String, maxIterations: Int = 5): List<FunctionCallingStep> {
@@ -79,7 +79,7 @@ class FunctionCallingController(
             content = userQuery
         ))
 
-        for (@Suppress("UNUSED_VARIABLE") iteration in 0 until maxIterations) {
+        while (stepCounter <= maxIterations * 3) { // Allow more steps since each iteration can create multiple steps
             val response = openAI.createChatCompletion(
                 messages = messages,
                 tools = tools,

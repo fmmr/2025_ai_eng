@@ -55,7 +55,7 @@ class ReactController(
             model.addAttribute("success", false)
         }
 
-        return@runBlocking "react-demo"
+        return@runBlocking demo.id
     }
 
     private suspend fun runReActAgent(userQuery: String, maxIterations: Int = 10): List<ReActStep> {
@@ -66,7 +66,7 @@ class ReactController(
         messages.add(Message(Prompts.Roles.SYSTEM, TextContent(Prompts.getReActSystemPrompt())))
         messages.add(Message(Prompts.Roles.USER, TextContent(userQuery)))
 
-        for (iteration in 0 until maxIterations) {
+        while (stepCounter <= maxIterations) {
             val aiResponse = openAI.createChatCompletion(
                 messages = messages,
                 temperature = 0.1,
