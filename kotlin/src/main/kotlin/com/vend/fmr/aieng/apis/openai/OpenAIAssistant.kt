@@ -335,7 +335,8 @@ class OpenAIAssistant(val client: HttpClient, val json: Json) : Closeable {
             throw Exception("List files failed with status ${response.status}: $responseText")
         }
 
-        return json.decodeFromString<FileListResponse>(responseText)
+        val list = json.decodeFromString<FileListResponse>(responseText)
+        return list.copy(data = list.data.filter { it.isFmr })
     }
 
     suspend fun listAssistants(debug: Boolean = false): AssistantListResponse {
@@ -356,7 +357,8 @@ class OpenAIAssistant(val client: HttpClient, val json: Json) : Closeable {
             throw Exception("List assistants failed with status ${response.status}: $responseText")
         }
 
-        return json.decodeFromString<AssistantListResponse>(responseText)
+        val list = json.decodeFromString<AssistantListResponse>(responseText)
+        return list.copy(data = list.data.filter { it.isFmr })
     }
 
     suspend fun listVectorStores(debug: Boolean = false): VectorStoreListResponse {
@@ -377,7 +379,8 @@ class OpenAIAssistant(val client: HttpClient, val json: Json) : Closeable {
             throw Exception("List vector stores failed with status ${response.status}: $responseText")
         }
 
-        return json.decodeFromString<VectorStoreListResponse>(responseText)
+        val list = json.decodeFromString<VectorStoreListResponse>(responseText)
+        return list.copy(data = list.data.filter { it.isFmr })
     }
 
     override fun close() {
