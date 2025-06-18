@@ -37,7 +37,7 @@ class TripPlannerController(private val tripPlanningCoordinator: TripPlanningCoo
                 sendSseEvent(sessionId, "complete", "Trip planning completed")
                 
             } catch (e: Exception) {
-                sendSseEvent(sessionId, "error", "❌ Trip planning failed: ${e.message}")
+                sendSseEvent(sessionId, "app_error", "❌ Trip planning failed: ${e.message}")
             }
         }
         
