@@ -12,47 +12,9 @@
         <div th:replace="~{fragments/hero-section :: demo-hero(${demo})}"></div>
 
         <div class="row">
+            <!-- Left Panel: User Input -->
             <div class="col-md-6">
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h5>🔗 What is MCP?</h5>
-                    </div>
-                    <div class="card-body">
-                        <p>Model Context Protocol (MCP) is an open standard for connecting AI assistants to external tools and data sources.</p>
-                        <ul>
-                            <li><strong>JSON-RPC 2.0</strong> - Simple request/response protocol</li>
-                            <li><strong>Tools</strong> - Functions that AI can discover and call</li>
-                            <li><strong>Resources</strong> - Data sources AI can read from</li>
-                            <li><strong>Universal</strong> - Works with Claude Desktop, VS Code, and more</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h5>🧰 Available Tools</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="list-group">
-                            <div th:each="tool : ${availableTools}" class="list-group-item">
-                                <strong th:text="${tool.functionName}">tool_name</strong>
-                                <p class="mb-1" th:text="${tool.description}">Tool description</p>
-                                <small class="text-muted" th:if="${!tool.parameters.isEmpty()}">
-                                    Parameters: 
-                                    <span th:each="parameter, iterStat : ${tool.parameters}" 
-                                          th:text="${parameter.key + ' (' + parameter.value.type + ')' + (parameter.value.required ? ' - required' : ' - optional') + (!iterStat.last ? ', ' : '')}">
-                                        param_name (type)
-                                    </span>
-                                </small>
-                                <small class="text-muted" th:if="${tool.parameters.isEmpty()}">No parameters required</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="card mb-4">
+                <div class="card">
                     <div class="card-header">
                         <h5>🧪 Test MCP Server</h5>
                     </div>
@@ -66,8 +28,9 @@
                         <button class="btn btn-info btn-sm mb-2" onclick="testToolsList()">List Tools</button>
                         
                         <h6>3. Test Tools</h6>
-                        <div th:each="tool : ${availableTools}">
-                            <button class="btn btn-outline-primary btn-sm mb-2 tool-test-btn" 
+                        <div class="mb-2">
+                            <button class="btn btn-outline-primary btn-sm me-2 mb-2 tool-test-btn" 
+                                    th:each="tool : ${availableTools}"
                                     th:data-tool-name="${tool.functionName}"
                                     th:text="${tool.functionName}">
                                 Tool Name
@@ -75,31 +38,79 @@
                         </div>
                         
                         <div class="mt-3">
-                            <strong>Response:</strong>
-                            <pre id="response" class="bg-light p-2 mt-2" style="min-height: 100px; white-space: pre-wrap;"></pre>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h5>💻 Connect Claude Desktop</h5>
-                    </div>
-                    <div class="card-body">
-                        <p>Add this to your Claude Desktop MCP settings:</p>
-                        <pre class="bg-dark text-light p-3"><code>{
+                            <h6>💻 Connect Claude Desktop</h6>
+                            <p class="small">Add this to your Claude Desktop MCP settings:</p>
+                            <pre class="bg-dark text-light p-2 small"><code>{
   "mcpServers": {
     "kotlin-ai-server": {
       "command": "curl",
       "args": [
         "-X", "POST",
         "-H", "Content-Type: application/json",
-        "http://localhost:8080/mcp"
+        "https://ai.rodland.no/mcp"
       ]
     }
   }
 }</code></pre>
-                        <small class="text-muted">Note: This is a simplified example. Real Claude Desktop integration requires stdio transport.</small>
+                            <small class="text-muted">Note: Simplified example. Real integration requires stdio transport.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Server Feedback -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5>📡 Server Response</h5>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="clearResponse()">Clear</button>
+                    </div>
+                    <div class="card-body">
+                        <div id="response" style="height: 400px; overflow-y: auto; font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; font-size: 11px; white-space: pre-wrap;">
+                            <div class="text-muted">🔗 Start testing MCP server operations...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Information Panel at Bottom -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>🔗 Model Context Protocol (MCP) Server</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>🌟 What is MCP?</h6>
+                                <p>Model Context Protocol (MCP) is an open standard for connecting AI assistants to external tools and data sources.</p>
+                                <ul>
+                                    <li><strong>JSON-RPC 2.0</strong> - Simple request/response protocol</li>
+                                    <li><strong>Tools</strong> - Functions that AI can discover and call</li>
+                                    <li><strong>Resources</strong> - Data sources AI can read from</li>
+                                    <li><strong>Universal</strong> - Works with Claude Desktop, VS Code, and more</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>🧰 Available Tools</h6>
+                                <div class="list-group">
+                                    <div th:each="tool : ${availableTools}" class="list-group-item">
+                                        <strong th:text="${tool.functionName}">tool_name</strong>
+                                        <p class="mb-1 small" th:text="${tool.description}">Tool description</p>
+                                        <small class="text-muted" th:if="${!tool.parameters.isEmpty()}">
+                                            Parameters: 
+                                            <span th:each="parameter, iterStat : ${tool.parameters}" 
+                                                  th:text="${parameter.key + ' (' + parameter.value.type + ')' + (parameter.value.required ? ' - required' : ' - optional') + (!iterStat.last ? ', ' : '')}">
+                                                param_name (type)
+                                            </span>
+                                        </small>
+                                        <small class="text-muted" th:if="${tool.parameters.isEmpty()}">No parameters required</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
