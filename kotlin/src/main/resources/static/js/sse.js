@@ -63,7 +63,7 @@ class SSEManager {
         };
 
         // Handle all event types automatically
-        ['connected', 'start', 'progress', 'info', 'success', 'error', 'result', 'complete', 'final_result', 'user_question'].forEach(eventType => {
+        ['connected', 'start', 'progress', 'info', 'success', 'error', 'result', 'complete', 'final_result', 'user_question', 'app_error'].forEach(eventType => {
             this.eventSource.addEventListener(eventType, (e) => {
                 const data = parseData(e.data);
                 const message = typeof data === 'object' ? data.message : data;

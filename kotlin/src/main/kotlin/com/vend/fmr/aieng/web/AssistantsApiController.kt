@@ -27,7 +27,7 @@ data class AssistantRequest(
 class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : BaseController(Demo.ASSISTANTS_API) {
 
     private val logger = LoggerFactory.getLogger(AssistantsApiController::class.java)
-    
+
     companion object {
         private const val FMR_FILE_PREFIX = "fmr-movies.txt"
         private const val FMR_VECTOR_STORE_NAME = "fmr-Movie Database"
@@ -55,11 +55,11 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
                     "cleanup-vector-stores" -> processCleanupVectorStores(request.sessionId, session)
                     "cleanup-assistants" -> processCleanupAssistants(request.sessionId, session)
                     "cleanup-all" -> processCleanupAll(request.sessionId, session)
-                    else -> sendMessage(request.sessionId, "Unknown operation: ${request.operation}", "error")
+                    else -> sendMessage(request.sessionId, "Unknown operation: ${request.operation}", "app_error")
                 }
             } catch (e: Exception) {
                 logger.error("Operation ${request.operation} failed for session ${request.sessionId}", e)
-                sendMessage(request.sessionId, "Operation failed: ${e.message}", "error")
+                sendMessage(request.sessionId, "Operation failed: ${e.message}", "app_error")
             }
         }
 
@@ -86,7 +86,7 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
 
         } catch (e: Exception) {
             logger.error("File upload failed for session $sessionId", e)
-            sendMessage(sessionId, "❌ Upload failed: ${e.message}", "error")
+            sendMessage(sessionId, "❌ Upload failed: ${e.message}", "app_error")
         }
     }
 
@@ -102,7 +102,7 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
                 val fmrFiles = files.data.filter { it.purpose == "assistants" && it.isFmr }
 
                 if (fmrFiles.isEmpty()) {
-                    sendMessage(sessionId, "❌ No FMR files available. Please upload a file first.", "error")
+                    sendMessage(sessionId, "❌ No FMR files available. Please upload a file first.", "app_error")
                     return
                 }
 
@@ -126,7 +126,7 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
 
         } catch (e: Exception) {
             logger.error("Vector store creation failed for session $sessionId", e)
-            sendMessage(sessionId, "❌ Vector store creation failed: ${e.message}", "error")
+            sendMessage(sessionId, "❌ Vector store creation failed: ${e.message}", "app_error")
         }
     }
 
@@ -136,17 +136,17 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
         try {
             // Get vector store ID from session or find existing one
             var vectorStoreId = session.getAttribute("vectorStoreId") as String?
-            
+
             if (vectorStoreId == null) {
                 sendMessage(sessionId, "🔍 No vector store in session, checking for existing FMR ones...", "progress")
                 val vectorStores = openAIAssistant.listVectorStores(debug = false)
                 val fmrVectorStores = vectorStores.data.filter { it.isFmr }
-                
+
                 if (fmrVectorStores.isEmpty()) {
-                    sendMessage(sessionId, "❌ No FMR vector stores available. Please create a vector store first.", "error")
+                    sendMessage(sessionId, "❌ No FMR vector stores available. Please create a vector store first.", "app_error")
                     return
                 }
-                
+
                 vectorStoreId = fmrVectorStores.first().id
                 sendMessage(sessionId, "✅ Found existing FMR vector store: ${fmrVectorStores.first().name} (${vectorStoreId})", "info")
             } else {
@@ -154,7 +154,7 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
             }
 
             sendMessage(sessionId, "🔧 Creating movie recommendation assistant...", "progress")
-            
+
             val assistant = openAIAssistant.createAssistant(
                 name = FMR_ASSISTANT_NAME,
                 instructions = MOVIE_ASSISTANT_PROMPT,
@@ -169,13 +169,13 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
 
         } catch (e: Exception) {
             logger.error("Assistant creation failed for session $sessionId", e)
-            sendMessage(sessionId, "❌ Assistant creation failed: ${e.message}", "error")
+            sendMessage(sessionId, "❌ Assistant creation failed: ${e.message}", "app_error")
         }
     }
 
     private suspend fun processQuery(sessionId: String, userMessage: String, session: HttpSession) {
         if (userMessage.isBlank()) {
-            sendMessage(sessionId, "❌ Please provide a message to query the assistant", "error")
+            sendMessage(sessionId, "❌ Please provide a message to query the assistant", "app_error")
             return
         }
 
@@ -186,18 +186,19 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
         try {
             // Get assistant ID from session or find existing one
             var assistantId = session.getAttribute("assistantId") as String?
-            
+
             if (assistantId == null) {
                 sendMessage(sessionId, "🔍 No assistant in session, checking for existing FMR ones...", "progress")
                 val assistants = openAIAssistant.listAssistants(debug = false)
                 val fmrAssistants = assistants.data.filter { it.isFmr }
-                
+
                 if (fmrAssistants.isEmpty()) {
-                    sendMessage(sessionId, "❌ No FMR assistants available. Please create an assistant first.", "error")
+                    sendMessage(sessionId, "❌ No FMR assistants available. Please create an assistant first.", "app_error")
                     return
                 }
-                
+
                 assistantId = fmrAssistants.first().id
+                session.setAttribute("assistantId", assistantId)
                 sendMessage(sessionId, "✅ Found existing FMR assistant: ${fmrAssistants.first().name} (${assistantId})", "info")
             } else {
                 sendMessage(sessionId, "✅ Using assistant from session: $assistantId", "info")
@@ -205,12 +206,13 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
 
             // Get or create thread
             var threadId = session.getAttribute("threadId") as String?
-            
+
             if (threadId == null) {
                 sendMessage(sessionId, "🧵 Creating new conversation thread...", "progress")
                 val thread = openAIAssistant.createThread(debug = false)
                 threadId = thread.id
                 session.setAttribute("threadId", threadId)
+                openAIAssistant.addMessageToThread(threadId, MOVIE_ASSISTANT_PROMPT, role = "system", debug = false)
                 sendMessage(sessionId, "✅ New conversation started!", "info")
             } else {
                 sendMessage(sessionId, "🧵 Continuing conversation in existing thread...", "progress")
@@ -243,12 +245,12 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
 
                 sendMessage(sessionId, assistantReply, "final_result")
             } else {
-                sendMessage(sessionId, "❌ Assistant run failed with status: ${runStatus.status}", "error")
+                sendMessage(sessionId, "❌ Assistant run failed with status: ${runStatus.status}", "app_error")
             }
 
         } catch (e: Exception) {
             logger.error("Assistant query failed for session $sessionId", e)
-            sendMessage(sessionId, "❌ Query failed: ${e.message}", "error")
+            sendMessage(sessionId, "❌ Query failed: ${e.message}", "app_error")
         }
     }
 
@@ -265,8 +267,8 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
             if (assistantFiles.isEmpty()) {
                 sendMessage(sessionId, "No files found", "info")
             } else {
-                assistantFiles.forEach { file -> 
-                    sendMessage(sessionId, file.toSSEHtml(), "final_result") 
+                assistantFiles.forEach { file ->
+                    sendMessage(sessionId, file.toSSEHtml(), "final_result")
                 }
             }
 
@@ -278,8 +280,8 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
             if (vectorStores.data.isEmpty()) {
                 sendMessage(sessionId, "No vector stores found", "info")
             } else {
-                vectorStores.data.forEach { vs -> 
-                    sendMessage(sessionId, vs.toSSEHtml(), "final_result") 
+                vectorStores.data.forEach { vs ->
+                    sendMessage(sessionId, vs.toSSEHtml(), "final_result")
                 }
             }
 
@@ -291,14 +293,14 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
             if (assistants.data.isEmpty()) {
                 sendMessage(sessionId, "No assistants found", "info")
             } else {
-                assistants.data.forEach { assistant -> 
-                    sendMessage(sessionId, assistant.toSSEHtml(), "final_result") 
+                assistants.data.forEach { assistant ->
+                    sendMessage(sessionId, assistant.toSSEHtml(), "final_result")
                 }
             }
 
         } catch (e: Exception) {
             logger.error("Resource listing failed for session $sessionId", e)
-            sendMessage(sessionId, "❌ List failed: ${e.message}", "error")
+            sendMessage(sessionId, "❌ List failed: ${e.message}", "app_error")
         }
     }
 
@@ -328,7 +330,7 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
 
         } catch (e: Exception) {
             logger.error("File cleanup failed for session $sessionId", e)
-            sendMessage(sessionId, "❌ File cleanup failed: ${e.message}", "error")
+            sendMessage(sessionId, "❌ File cleanup failed: ${e.message}", "app_error")
         }
     }
 
@@ -356,7 +358,7 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
 
         } catch (e: Exception) {
             logger.error("Vector store cleanup failed for session $sessionId", e)
-            sendMessage(sessionId, "❌ Vector store cleanup failed: ${e.message}", "error")
+            sendMessage(sessionId, "❌ Vector store cleanup failed: ${e.message}", "app_error")
         }
     }
 
@@ -367,7 +369,7 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
             val assistants = openAIAssistant.listAssistants(debug = false)
             var deletedCount = 0
             val fmrAssistants = assistants.data.filter { it.isFmr }
-            
+
             sendMessage(sessionId, "🔍 Found ${fmrAssistants.size} FMR assistants to delete...", "progress")
 
             fmrAssistants.forEach { assistant ->
@@ -385,7 +387,7 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
 
         } catch (e: Exception) {
             logger.error("Assistant cleanup failed for session $sessionId", e)
-            sendMessage(sessionId, "❌ Assistant cleanup failed: ${e.message}", "error")
+            sendMessage(sessionId, "❌ Assistant cleanup failed: ${e.message}", "app_error")
         }
     }
 
@@ -395,18 +397,18 @@ class AssistantsApiController(private val openAIAssistant: OpenAIAssistant) : Ba
         try {
             // Delete assistants first (they depend on vector stores)
             processCleanupAssistants(sessionId, session)
-            
+
             // Then delete vector stores (they depend on files)
             processCleanupVectorStores(sessionId, session)
-            
+
             // Finally delete files
             processCleanupFiles(sessionId, session)
-            
+
             sendMessage(sessionId, "🧹 Complete FMR cleanup finished!", "success")
 
         } catch (e: Exception) {
             logger.error("Complete cleanup failed for session $sessionId", e)
-            sendMessage(sessionId, "❌ Complete cleanup failed: ${e.message}", "error")
+            sendMessage(sessionId, "❌ Complete cleanup failed: ${e.message}", "app_error")
         }
     }
 }

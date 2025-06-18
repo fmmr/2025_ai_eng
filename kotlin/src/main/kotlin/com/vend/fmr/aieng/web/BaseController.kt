@@ -65,7 +65,7 @@ abstract class BaseController(val demo: Demo) {
      */
     @GetMapping("/stream/{sessionId}", produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
     fun streamUpdates(@PathVariable sessionId: String): SseEmitter {
-        val emitter = SseEmitter(30000L) // 30 second timeout for development
+        val emitter = SseEmitter(0L) // 30 second timeout for development
         activeEmitters[sessionId] = emitter
         sseConnectionManager.registerEmitter("${demo.id}:$sessionId", emitter)
 
