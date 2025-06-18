@@ -27,7 +27,7 @@ data class ClientInfo(
 @Serializable
 data class McpResponse(
     val jsonrpc: String = "2.0",
-    val id: Int? = null,
+    val id: Int,
     val result: McpResult? = null,
     val error: McpError? = null
 )
@@ -38,7 +38,9 @@ data class McpResult(
     val serverInfo: ServerInfo? = null,
     val capabilities: Capabilities? = null,
     val tools: List<Tool>? = null,
-    val content: List<Content>? = null
+    val content: List<Content>? = null,
+    val resources: List<Resource>? = null,
+    val prompts: List<Prompt>? = null
 )
 
 @Serializable
@@ -75,6 +77,28 @@ data class PropertySchema(
 data class Content(
     val type: String = "text",
     val text: String
+)
+
+@Serializable
+data class Resource(
+    val uri: String,
+    val name: String,
+    val description: String? = null,
+    val mimeType: String? = null
+)
+
+@Serializable
+data class Prompt(
+    val name: String,
+    val description: String,
+    val arguments: List<PromptArgument>? = null
+)
+
+@Serializable
+data class PromptArgument(
+    val name: String,
+    val description: String,
+    val required: Boolean = false
 )
 
 @Serializable

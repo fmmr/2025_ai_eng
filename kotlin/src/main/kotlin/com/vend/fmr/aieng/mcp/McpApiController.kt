@@ -38,17 +38,19 @@ class McpApiController {
                 "initialize" -> handleInitialize(mcpRequest.id)
                 "tools/list" -> handleToolsList(mcpRequest.id)
                 "tools/call" -> handleToolsCall(mcpRequest, mcpRequest.id, httpRequest)
+                "resources/list" -> handleResourcesList(mcpRequest.id)
+                "prompts/list" -> handlePromptsList(mcpRequest.id)
                 else -> createErrorResponse(mcpRequest.id, -32601, "Method not found: ${mcpRequest.method}")
             }
         } catch (e: Exception) {
             println("❌ MCP Error: ${e.message}")
-            createErrorResponse(null, -32700, "Parse error: ${e.message}")
+            createErrorResponse(0, -32700, "Parse error: ${e.message}")
         }
     }
 
     private fun handleInitialize(id: Int?): String {
         val response = McpResponse(
-            id = id,
+            id = id ?: 0,
             result = McpResult(
                 protocolVersion = "2024-11-05",
                 serverInfo = ServerInfo(
@@ -65,7 +67,7 @@ class McpApiController {
         val tools = AgentTool.entries.map { it.toMcpTool() }
         
         val response = McpResponse(
-            id = id,
+            id = id ?: 0,
             result = McpResult(tools = tools)
         )
         return json.encodeToString(McpResponse.serializer(), response)
@@ -88,7 +90,7 @@ class McpApiController {
 
     private fun createSuccessResponse(id: Int?, text: String): String {
         val response = McpResponse(
-            id = id,
+            id = id ?: 0,
             result = McpResult(
                 content = listOf(Content(text = text))
             )
@@ -96,9 +98,25 @@ class McpApiController {
         return json.encodeToString(McpResponse.serializer(), response)
     }
 
+    private fun handleResourcesList(id: Int?): String {
+        val response = McpResponse(
+            id = id ?: 0,
+            result = McpResult(resources = emptyList())
+        )
+        return json.encodeToString(McpResponse.serializer(), response)
+    }
+
+    private fun handlePromptsList(id: Int?): String {
+        val response = McpResponse(
+            id = id ?: 0,
+            result = McpResult(prompts = emptyList())
+        )
+        return json.encodeToString(McpResponse.serializer(), response)
+    }
+
     private fun createErrorResponse(id: Int?, code: Int, message: String): String {
         val response = McpResponse(
-            id = id,
+            id = id ?: 0,
             error = McpError(code = code, message = message)
         )
         return json.encodeToString(McpResponse.serializer(), response)
