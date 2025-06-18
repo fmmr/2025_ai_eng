@@ -27,7 +27,7 @@ data class ClientInfo(
 @Serializable
 data class McpResponse(
     val jsonrpc: String = "2.0",
-    val id: Int,
+    val id: Int?,
     val result: McpResult? = null,
     val error: McpError? = null
 )

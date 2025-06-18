@@ -44,13 +44,13 @@ class McpApiController {
             }
         } catch (e: Exception) {
             println("❌ MCP Error: ${e.message}")
-            createErrorResponse(0, -32700, "Parse error: ${e.message}")
+            createParseErrorResponse("Parse error: ${e.message}")
         }
     }
 
     private fun handleInitialize(id: Int?): String {
         val response = McpResponse(
-            id = id ?: 0,
+            id = id,
             result = McpResult(
                 protocolVersion = "2024-11-05",
                 serverInfo = ServerInfo(
@@ -67,7 +67,7 @@ class McpApiController {
         val tools = AgentTool.entries.map { it.toMcpTool() }
         
         val response = McpResponse(
-            id = id ?: 0,
+            id = id,
             result = McpResult(tools = tools)
         )
         return json.encodeToString(McpResponse.serializer(), response)
@@ -90,7 +90,7 @@ class McpApiController {
 
     private fun createSuccessResponse(id: Int?, text: String): String {
         val response = McpResponse(
-            id = id ?: 0,
+            id = id,
             result = McpResult(
                 content = listOf(Content(text = text))
             )
@@ -100,7 +100,7 @@ class McpApiController {
 
     private fun handleResourcesList(id: Int?): String {
         val response = McpResponse(
-            id = id ?: 0,
+            id = id,
             result = McpResult(resources = emptyList())
         )
         return json.encodeToString(McpResponse.serializer(), response)
@@ -108,7 +108,7 @@ class McpApiController {
 
     private fun handlePromptsList(id: Int?): String {
         val response = McpResponse(
-            id = id ?: 0,
+            id = id,
             result = McpResult(prompts = emptyList())
         )
         return json.encodeToString(McpResponse.serializer(), response)
@@ -116,8 +116,16 @@ class McpApiController {
 
     private fun createErrorResponse(id: Int?, code: Int, message: String): String {
         val response = McpResponse(
-            id = id ?: 0,
+            id = id,
             error = McpError(code = code, message = message)
+        )
+        return json.encodeToString(McpResponse.serializer(), response)
+    }
+
+    private fun createParseErrorResponse(message: String): String {
+        val response = McpResponse(
+            id = null,
+            error = McpError(code = -32700, message = message)
         )
         return json.encodeToString(McpResponse.serializer(), response)
     }
