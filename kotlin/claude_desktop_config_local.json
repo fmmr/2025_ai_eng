@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "kotlin-ai-server": {
+      "command": "node",
+      "args": [
+        "-e",
+        "const http = require('http'); let buffer = ''; process.stdin.on('data', (data) => { buffer += data; const lines = buffer.split('\\n'); buffer = lines.pop(); lines.forEach(line => { if (line.trim()) { const req = http.request({ hostname: 'local.finn.no', port: 8080, path: '/mcp/', method: 'POST', headers: { 'Content-Type': 'application/json' } }, (res) => { let body = ''; res.on('data', chunk => body += chunk); res.on('end', () => {process.stdout.write(body + '\\n'); }); }); req.write(line); req.end(); }}); });"
+      ]
+    }
+  }
+}

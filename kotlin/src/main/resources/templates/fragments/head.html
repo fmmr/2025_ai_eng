@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${pageTitle != null ? pageTitle + ' - AI Engineering Course' : 'AI Engineering Course'}">AI Engineering Course</title>
+    <link rel="canonical" th:href="${demo != null ? 'https://ai.rodland.no' + demo.route : 'https://ai.rodland.no/'}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/css/main.css}">

@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "kotlin-ai-server": {
+      "command": "node",
+      "args": [
+        "-e",
+        "const https = require('https'); let buffer = ''; process.stdin.on('data', (data) => { buffer += data; const lines = buffer.split('\\n'); buffer = lines.pop(); lines.forEach(line => { if (line.trim()) { const req = https.request({ hostname: 'ai.rodland.no', port: 443, path: '/mcp/', method: 'POST', headers: { 'Content-Type': 'application/json' } }, (res) => { let body = ''; res.on('data', chunk => body += chunk); res.on('end', () => {process.stdout.write(body + '\\n'); }); }); req.write(line); req.end(); }}); });"
+      ]
+    }
+  }
+}
